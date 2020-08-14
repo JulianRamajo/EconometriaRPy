@@ -1,0 +1,40 @@
+---
+title: "Modelos no lineales: regresión segmentada"
+author: "J. Ramajo"
+date: '2020'
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(alr4)
+plot(C ~ Temp, segreg, xlab="Temperatura media del mes (ºF)", ylab="Consumo de electricidad (KWH/día)")
+#
+segm.reg.1 <- nls(C ~ th0 + th1 * (pmax(0, Temp - gamma)), data=segreg, start=list(th0=70, th1=.5, gamma=40))
+summary(segm.reg.1)
+#
+plot(C ~ Temp, segreg, xlab="Temperatura media (ºF)", ylab="Consumo de electricidad (KWH/día")
+x <- (0:90)
+lines(x, predict(segm.reg.1, data.frame(Temp=x)))
+#
+segm.reg.boot <- Boot(segm.reg.1, R=999)
+summary(segm.reg.boot)
+confint(segm.reg.boot)
+hist(segm.reg.boot, layout=c(1, 3))
+#
+# Ejercicio: Permitir dos pendientes distintas
+#
+segm.reg.2 <- nls(C ~ th0 + th1*Temp + th2 * (pmax(0, Temp - gamma)), data=segreg, start=list(th0=70, th1=.1, th2=.5, gamma=40))
+summary(segm.reg.2)
+#
+plot(C ~ Temp, segreg, xlab="Temperatura media (ºF)", ylab="Consumo de electricidad (KWH/día")
+x <- (0:90)
+lines(x, predict(segm.reg.2, data.frame(Temp=x)))
+```
+

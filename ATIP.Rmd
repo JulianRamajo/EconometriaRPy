@@ -1,0 +1,114 @@
+---
+title: "Datos atípicos"
+author: "J. Ramajo"
+date: '2020'
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+library(car)
+library(MASS)
+library(effects)
+library(tidyverse)
+library(RcmdrMisc)
+library(sfsmisc)
+library(quantreg)
+#
+ATIP <- read_csv("ATIP.csv")
+View(ATIP)
+summary(ATIP)
+#
+# Diagrama de puntos
+#
+ggplot(ATIP, aes(x=X, y=Y)) + geom_point() + labs(title="Diagrama de puntos", x="X", y="Y")
+#
+# Modelo de regresión lineal
+S(lm_YX <- lm(Y ~ X, data = ATIP))
+plot(Y ~ X , data=ATIP)
+abline(lm_YX)
+plot(lm_YX, which = 1:6)
+#
+# Observaciones atípicas en las variables explicativas (leverages <-> apalancamiento)
+#
+hat <- hatvalues(lm_YX)
+hat
+which(hat > 2 * mean(hat))
+plot(hat)
+abline(h = mean(hat), col = 4)
+abline(h = 2 * mean(hat), col = 2)
+id <- which(hat > 2 * mean(hat))
+text(id, hat[id], rownames(ATIP)[id], pos = 1, xpd = TRUE)
+#
+# Observaciones atÍpicas en la variable dependiente (outliers)
+#
+slm_YX <- summary(lm_YX)
+# Residuos estandarizados
+r <- lm_YX$residuals/slm_YX$sigma
+r
+densityPlot(r)
+which(abs(r) > 2.5)
+plot(r)
+abline(h = c(0,-2.5, 2.5), col = 4)
+id <- which(abs(r) > 2.5)
+text(id, r[id], rownames(ATIP)[id], pos = 1, xpd = TRUE)
+# Residuos estudentizados (internamente)
+rs <- rstandard(lm_YX)
+rs
+densityPlot(rs)
+which(abs(rs) > 2)
+plot(r)
+abline(h = c(0,-2, 2)*sd(rs), col = 4)
+id <- which(abs(r) > 2*sd(rs))
+text(id, r[id], rownames(ATIP)[id], pos = 1, xpd = TRUE)
+# Residuos estudentizados (externamente)
+rt <- rstudent(lm_YX)
+rt
+densityPlot(rs)
+outlierTest(lm_YX)
+# 
+spreadLevelPlot(lm_YX)
+# Chequeo de errores no-normales (comparación de los residuos estudentizados con una distribution t)
+qqPlot(lm_YX)
+#
+# Diagnósticos
+#
+# Observaciones influyentes (cálculo de DFBETAS_i, DFFITS_i, COVRATIO_i, DCOOK_i y h_i ; inf -> señala obs. inusuales para al menos una medida)
+#
+influence.measures(lm_YX)
+S(influence.measures(lm_YX))
+influencePlot(lm_YX, xlab="Hat values")
+influenceIndexPlot(lm_YX, vars=c("hat", "Studentized","Cook"))
+# Medidas individuales
+hat <- hatvalues(lm_YX)
+dfbetas <-  dfbetas(lm_YX)
+dffits <-  dffits(lm_YX)
+dcook <-  cooks.distance(lm_YX)
+hat ; dfbetas ; dffits; dcook
+#
+# Gráficos de variable añadida, buscando casos influyentes
+avPlots(lm_YX, id=list(cex=0.60, method="mahal"))
+# Chequeo de no linealidad: gráficos de componente+residuo
+crPlots(lm_YX, smooth=list(span=0.7))
+#
+# Regresión cuartilítica
+S(qr_YX <- rq(Y ~ X, data = ATIP))
+#
+qr_YX <- rq(Y ~ X, tau = c(0.25, 0.50, 0.75), data = ATIP)
+sqr_YX <- summary(qr_YX)
+sqr_YX
+plot(sqr_YX)
+#
+plot(Y ~ X , data=ATIP)
+abline(lm_YX)
+abline(qr_YX, lty=2)
+legend("topleft", c("Regresión MCO", "Regresión MDA"), lty = c(1, 2), bty = "n")
+#
+```
