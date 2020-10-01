@@ -1,0 +1,16 @@
+library(readr)
+library(alr4)
+FUEL_CONS <- read_csv("FUEL_CONS.csv")
+summary(FUEL_CONS)
+pairs(FCpc ~ Tax + DLpc + INCpc + log(Miles), data=FUEL_CONS)
+scatterplotMatrix(~ FCpc + Tax + DLpc + INCpc + log(Miles), data=FUEL_CONS, smooth=FALSE, regLine=TRUE)
+dem.reg <- lm(formula = FCpc ~ Tax + DLpc + INCpc + log(Miles), data=FUEL_CONS)
+S(dem.reg)
+anova(dem.reg) # Type I tests
+Anova(dem.reg) # # Type II tests
+avPlots(dem.reg, id=F)
+plot(allEffects(dem.reg))
+# plot(Effect("Tax", dem.reg), grid=TRUE, rug=TRUE)
+# plot(Effect("Miles", fuel1), grid=TRUE, rug=TRUE)
+effs <- allEffects(dem.reg)
+plot(effs, ask=FALSE, multiline=TRUE, main="", rug=FALSE, grid=TRUE, ci.style="bars")

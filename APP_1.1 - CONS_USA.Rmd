@@ -1,0 +1,53 @@
+---
+title: 'Ejemplo 1: Consumo privado en Estados Unidos'
+output:
+  word_document: default
+  html_notebook: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+**Lectura de datos**
+
+```{r}
+library(fpp3) # Este package contiene varios elementos
+CONS_USA <- readr::read_csv("CONS_USA.csv")
+```
+
+**Tidyversización de los datos**
+
+```{r}
+CY_USA <-  CONS_USA[,2:3] %>%
+  mutate(Year = 1959:2015) %>%
+  as_tsibble(index = Year)
+```
+
+**Gráfico**
+
+```{r}
+CY_USA %>% autoplot(vars(C,Y)) +
+  ggtitle("Consumo privado y renta disponible en Estados Unidos") +
+  ylab("$ million") + xlab("Year")
+```
+
+**Diagrama de puntos + regresión**
+
+```{r}
+CY_USA %>%
+  ggplot(aes(x=Y, y=C)) +
+  ylab("Consumo") +
+  xlab("Renta") +
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+```
+
+**Modelo de regresión lineal**
+
+```{r}
+CY_USA %>%
+  model(tslm = TSLM(C ~ Y)) %>% 
+  report()
+```
+
+

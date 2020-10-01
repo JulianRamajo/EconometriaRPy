@@ -1,0 +1,270 @@
+#
+library(readr)
+HDI_2018 <- read_delim("HDI_2018.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+# Reescalamiento de variables
+HDI_2018$HDI <- 100*(HDI_2018$HDI) # (0-100 scores)
+HDI_2018$GNIpc <- (HDI_2018$GNIpc)/1000 # ( miles $ 2011 PPP)
+head(HDI_2018, n=10)
+dim(HDI_2018)
+summary(HDI_2018)
+#
+# RELACIÓN ENTRE EL HDI Y SUS DIMENSIONES BÁSICAS
+library(car)
+library(sfsmisc)
+#
+scatterplotMatrix(~HDI + GNIpc + LifExp + Educ, data=HDI_2018, 
+                  var.labels=c("HDI", "GNIpc", "LifExp", "Educ"),
+                  smooth=list(smoother=loessLine, var=FALSE, lwd.smooth=3), 
+                  col="black")
+#
+scatterplot(HDI ~ GNIpc, data=HDI_2018, smooth=list(smoother=loessLine, var=FALSE, 
+                                                    lwd.smooth=3), col="black",
+            regLine=list(lwd=3),
+            xlab="GNIpc", 
+            ylab="HDI")
+#
+scatterplot(HDI ~ LifExp, data=HDI_2018, smooth=list(smoother=loessLine, var=FALSE, 
+                                                     lwd.smooth=3), col="black",
+            regLine=list(lwd=3),
+            xlab="LifExp", 
+            ylab="HDI")
+#
+scatterplot(HDI ~ Educ, data=HDI_2018, smooth=list(smoother=loessLine, var=FALSE, 
+                                                   lwd.smooth=3), col="black",
+            regLine=list(lwd=3),
+            xlab="Educ", 
+            ylab="HDI")
+# Regresión por MCO
+MRL <- lm(HDI ~ GNIpc + LifExp + Educ, data=HDI_2018)
+S(MRL)
+cis <- confint(MRL)
+cis
+b <- coef(MRL)
+b
+#
+confidenceEllipse(MRL, L=c("GNIpc", "LifExp"), segments=500, levels=c(0.95), col="black", fill=TRUE, axes=TRUE, ann=TRUE, grid=TRUE)
+box()
+usr <- par("usr")
+abline(v=cis[2, ], h=cis[3, ], lty=2)
+lines(x=c(usr[1], b[2]), y=c(b[3], b[3]))
+lines(x=c(b[2], b[2]), y=c(usr[3], b[3]))
+par <- par("xpd"=TRUE)
+p.arrows(cis[2, 1], usr[3], cis[2, 2], usr[3], lwd=3, fill="black", 
+         xpd=TRUE, size=1.25)
+p.arrows(cis[2, 2], usr[3], cis[2, 1], usr[3], lwd=3, fill="black", 
+         xpd=TRUE, size=1.25)
+p.arrows(usr[1], cis[3, 1], usr[1], cis[3, 2], lwd=3, fill="black", 
+         xpd=TRUE, size=1.25)
+p.arrows(usr[1], cis[3, 2], usr[1], cis[3, 1], lwd=3, fill="black", 
+         xpd=TRUE, size=1.25)
+par(par)
+#
+confidenceEllipse(MRL, L=c("GNIpc", "Educ"), segments=500, levels=c(0.95), col="black", fill=TRUE, axes=TRUE, ann=TRUE, grid=TRUE)
+box()
+usr <- par("usr")
+abline(v=cis[2, ], h=cis[4, ], lty=2)
+lines(x=c(usr[1], b[2]), y=c(b[4], b[4]))
+lines(x=c(b[2], b[2]), y=c(usr[3], b[4]))
+par <- par("xpd"=TRUE)
+p.arrows(cis[2, 1], usr[3], cis[2, 2], usr[3], lwd=3, fill="black", 
+         xpd=TRUE, size=1.25)
+p.arrows(cis[2, 2], usr[3], cis[2, 1], usr[3], lwd=3, fill="black", 
+         xpd=TRUE, size=1.25)
+p.arrows(usr[1], cis[4, 1], usr[1], cis[4, 2], lwd=3, fill="black", 
+         xpd=TRUE, size=1.25)
+p.arrows(usr[1], cis[4, 2], usr[1], cis[4, 1], lwd=3, fill="black", 
+         xpd=TRUE, size=1.25)
+par(par) 
+#
+# ANÁLISIS Y TRANSFORMACIÓN DE DATOS
+library(car)
+library(RcmdrMisc)
+# Análisis gráficos del índice de desarrollo humano
+par(mfrow=c(2, 2))
+Hist(HDI_2018$HDI, xlab="HDI", ylab="Frecuencia", col="gray", main="(a)")
+Boxplot(~HDI, data=HDI_2018, main="(b)", ylab="HDI")
+densityPlot(~HDI, data=HDI_2018, xlab="HDI", ylab = "Densidad", main="(c)")
+qqPlot(~HDI, data=HDI_2018, ylab="HDI", xlab="Cuantiles N(0,1)", main="(d)")
+par(par)
+# Heterogeneidad (por categorías de desarrollo)
+Boxplot(HDI ~ HDI_group, data=HDI_2018, id=list(location="Country"), 
+        ylab="HDI", xlab="Categoría de desarrollo (de 1 a 4)")
+#
+spreadLevelPlot(HDI ~ HDI_group, data=HDI_2018, main="", xlab="Mediana",
+                ylab="Rango intercuartilítico", col.lines="black")
+# Transformación de la variable HDI
+# La transformación de Box-Cox
+par(mfrow=c(1, 1))
+#
+n <- 500
+x <- seq(0.1, 3, length=n)
+x1 <- bcPower(x, 1)
+x0.5 <- bcPower(x, 0.5)
+x0 <- bcPower(x, 0)
+xm0.5 <- bcPower(x, -0.5)
+xm1 <- bcPower(x, -1)
+x2 <- bcPower(x, 2)
+x3 <- bcPower(x, 3)
+xlim <- range(c(x1, x0.5, x0, xm0.5, xm1, x2, x3))
+#
+plot(range(x)+ c(-0.6, 0.5), c(-5, 10), type="n", xlab="", ylab="", las=1)
+usr <- par("usr")
+text(usr[2], usr[3] - 1, label="x", xpd=TRUE)
+text(usr[1] - 0.2, usr[4] + 0.75, label=expression(t[BC](x, lambda)), xpd=TRUE)
+lines(x, x1, lwd=2)
+text(x[n]+0.0625, x1[n], labels=expression(lambda == 1), adj=c(0, 0.2))
+lines(x, x2, lwd=2)
+text(x[n]+0.0625, x2[n], labels=expression(lambda == 2), adj=c(0, 0.2))
+lines(x, x3, lwd=2)
+text(x[n]+0.0625, x3[n], labels=expression(lambda == 3), adj=c(0, 0.2))
+lines(x, x0.5, lwd=2)
+text(x[1]-0.025, x0.5[1], labels=expression(lambda == 0.5), adj=c(1, 0.3))
+lines(x, x0, lwd=2)
+text(x[1]-0.025, x0[1], labels=expression(lambda == 0), adj=c(1, 0.3))
+lines(x, xm0.5, lwd=2)
+text(x[1]-0.025, xm0.5[1], labels=expression(lambda == -0.5), adj=c(1, 0.3))
+lines(x=c(1, 1), y=c(usr[3], 0), lty=2)
+lines(x=c(usr[1], 1), y=c(0, 0), lty=2)
+par(par)
+# HDI: boxplots de las variables transformadas 
+symbox(~HDI, data=HDI_2018, xlab=expression("Potencias,"~lambda), ylab="", 
+       powers = c(-1, -0.5, 0, 0.33, 0.5, 1))
+mtext(2, 1, text=expression(t[BC]("HDI",~lambda)))
+# Estimación del parámetro lambda para HDI
+S(tBC <- powerTransform(HDI ~ 1, data=HDI_2018))
+tBC$lambda # estimated lambda
+sqrt(tBC$invHess) # SE
+# Estimación del parámetro lambda para todas las variables del modelo
+S(tBC_all <- powerTransform(cbind(HDI, GNIpc, LifExp, Educ) ~ 1, data=HDI_2018))
+#
+scatterplotMatrix( ~basicPower(HDI, 1.3) + log(GNIpc) + basicPower(LifExp, 3.5) + Educ,                   data=HDI_2018,
+                   var.labels=c(expression("tBC(HDI)"), 
+                                expression("tBC(GNIpc)"), 
+                                expression("tBC(LifExp)"), 
+                                expression("tBC(Educ)")),
+                   smooth=list(smoother=loessLine, var=FALSE, lwd.smooth=3), 
+                   col="black")
+#
+# DATOS ATÍPICOS
+library(MASS)
+library(car)
+S(MRL <- lm(HDI ~ GNIpc + LifExp + Educ, data=HDI_2018))
+# Medidas de diagnosis de valores atípicos
+max(hatvalues(MRL))
+which.max(hatvalues(MRL))
+outlierTest(MRL)
+max(cooks.distance(MRL))
+which.max(cooks.distance(MRL))
+# Una vez encontrado el atípico(s)
+dffits(MRL)[41]
+which.max(abs(dffits(MRL)))
+round(dfbeta(MRL)[41, ], 5)
+round(dfbetas(MRL)[41, ], 5)
+# Graficos av (added-variable)
+avPlots(MRL, id=FALSE, col.lines="black", main="")
+#
+par <- par(mfrow=c(1, 3))
+avPlot(MRL,"GNIpc", main="(a)", id=list(method="mahal", n=3), 
+       xlab="GNIpc | Resto de Xs", ylab="HDI | Resto de Xs",
+       col.lines="black")
+avPlot(MRL,"LifExp", main="(b)", id=list(method="mahal", n=3), 
+       xlab="LifExp | Resto de Xs", ylab="HDI | Resto de Xs",
+       col.lines="black")
+avPlot(MRL,"Educ", main="(c)", id=list(method="mahal", n=3), 
+       xlab="Educ | Resto de Xs", ylab="HDI | Resto de Xs",
+       col.lines="black")
+par(par)
+# Outlier & Leverages
+influencePlot(MRL, xlab="Hatvalues")
+# Nueva regresión eliminando los atípicos
+S(update(MRL, subset=-c(18, 41, 183)))
+#
+# NO NORMALIDAD Y HETEROSCEDASTICIDAD
+#
+# Análisis de la hipótesis de normalidad
+#
+MRL <- lm(HDI ~ GNIpc + LifExp + Educ, data=HDI_2018)
+# Gráfica de densidad de losresiduos estudentizados
+densityPlot(rstudent(MRL), adjust=0.75, n=1000, xlab="Studentized Residuals")
+# Gráfica QQ de los residuos estudentizados
+qqPlot(MRL, reps=1000, id=FALSE, col.lines="black", 
+       ylab="Ordered Studentized Residuals")
+# Gráfico de cajas de los residuos estudentizados 
+Boxplot(rstudent(MRL), id=FALSE, xlab="Boxplot", ylab="Studentized Residuals")
+#
+# Análisis de la hipótesis de homoscedasticidad
+#
+# Gráfico de los residuos estudentizados vs valores ajustados 
+scatterplot(fitted(MRL), rstudent(MRL), smooth=list(span=2/3, 
+                                                    lwd.smooth=3, lwd.spread=3), regLine=FALSE,
+            boxplots=FALSE, col=c("black", "black"), main="",
+            xlab="Fitted Values", ylab="Studentized Residuals")
+abline(0, 0)
+# Gráfico de amplitud (spread-level)
+spreadLevelPlot(MRL, main="", smooth=FALSE, col.lines="black")
+# Contraste de Breusch-Pagan
+ncvTest(MRL)
+ncvTest(MRL, var.formula= ~ GNIpc + LifExp + Educ)
+# Correcciones: errores estándar robustos y errores re-muestreados (bootstrapped)
+S(MRL, vcov.=hccm(MRL))
+boot.MRL <- Boot(MRL, R=1000)
+S(MRL, vcov.=vcov(boot.MRL))
+#
+# NO LINEALIDAD
+MRL <- lm(HDI ~ GNIpc + LifExp + Educ, data=HDI_2018)
+S(MRL)
+# Gráficos C+R (Component-plus-Residuals o residuos parciales) y CERES
+crPlots(MRL)
+# Figuras individuales
+crPlot(MRL, "GNIpc", xlab="GNIpc", col.lines=c("black", "black"), 
+       ylab="Component+Residual", 
+       smooth=list(span=3/4), main="")
+crPlot(MRL, "LifExp", xlab="LifExp", 
+       col.lines=c("black", "black"), ylab="Component+Residual", 
+       smooth=list(span=3/4), main="")
+crPlot(MRL, "Educ", xlab="Educ", 
+       col.lines=c("black", "black"), ylab="Component+Residual", 
+       smooth=list(span=3/4), main="")
+#
+ceresPlots(MRL)
+#
+# Modelo re-especificado: incluye un término cuadrático en la variable GNIpc
+MRL.2 <- update(MRL, . ~ poly(GNIpc, 2, raw=TRUE) + LifExp + Educ)
+S(MRL.2)
+#
+anova(MRL, MRL.2)
+# Graficos C+R del modelo re-especificado
+crPlot(MRL.2, "poly(GNIpc, 2, raw = TRUE)", 
+       xlab="GNIpc (cuadrático)", 
+       col.lines=c("black", "black"), ylab="Component+Residual", 
+       smooth=list(span=3/4), main="(b)")
+crPlot(MRL.2, "LifExp", xlab="LifExp", 
+       col.lines=c("black", "black"), ylab="Component+Residual", 
+       smooth=list(span=3/4), main="")
+crPlot(MRL.2, "Educ", xlab="Educ", 
+       col.lines=c("black", "black"), ylab="Component+Residual", 
+       smooth=list(span=3/4), main="")
+# Graficos C+R frente a las variables Xs sin transformar
+library(effects)
+plot(Effect("GNIpc", MRL.2, residuals=TRUE), 
+     lines=list(col=c("black", "black"), lty=2), 
+     axes=list(grid=TRUE), confint=FALSE, 
+     partial.residuals=list(plot=TRUE, smooth.col="black", lty=1, span=3/4), 
+     xlab="GNIpc", ylab="Component+Residual", main="")
+plot(Effect("LifExp", MRL.2, residuals=TRUE), 
+     lines=list(col=c("black", "black"), lty=2), 
+     axes=list(grid=TRUE), confint=FALSE, 
+     partial.residuals=list(plot=TRUE, smooth.col="black", lty=1, span=3/4), 
+     xlab="LifExp", ylab="Component+Residual", main="")
+plot(Effect("Educ", MRL.2, residuals=TRUE), 
+     lines=list(col=c("black", "black"), lty=2), 
+     axes=list(grid=TRUE), confint=FALSE, 
+     partial.residuals=list(plot=TRUE, smooth.col="black", lty=1, span=3/4), 
+     xlab="Educ", ylab="Component+Residual", main="")
+# Gráficos de modelos marginales
+mmps(MRL.2, sd=TRUE)
+#
+# MULTICOLINEALIDAD
+S(MRL.2)
+vif(MRL.2)
+#

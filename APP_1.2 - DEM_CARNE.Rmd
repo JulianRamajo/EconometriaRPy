@@ -1,0 +1,69 @@
+---
+title: 'Aplicación 1.2: Demanda de carne'
+output:
+  word_document: default
+  html_notebook: default
+---
+
+```{r}
+library(readr)
+DEM_CARNE <- read_csv("DEM_CARNE.csv")
+DEM_CARNE
+attach(DEM_CARNE)
+#
+# Método R estándar
+#
+# Gráficas
+#
+plot(Q ~ P, xlab="P", ylab="Q")
+plot(Q ~ Y, xlab="Y", ylab="Q")
+#
+# Regresiones
+#
+lin_model <- lm(Q ~ P + Y)
+summary(lin_model)
+#
+log_model <- lm(log(Q) ~ log(P) + log(Y))
+summary(log_model)
+#
+n_lin_mod <- nls(Q ~  c1 + c2*P + c3*Y, start = list(c1=1, c2=-0.5, c3=0.1))
+summary(n_lin_mod)
+#
+nonlin_mod <- nls(Q ~  c1 + c2*P + c3*(Y^c4), start = list(c1=5, c2=-0.5, c3=0.001, c4=3))
+summary(nonlin_mod)
+#
+# Método R moderno: tidyverse
+#
+# Estadísticos descriptivos
+#
+library(skimr)
+skim(DEM_CARNE)
+#
+library(tidyverse)
+#
+# Gráficas
+#
+g1 <- ggplot(DEM_CARNE, aes(x=P, y=Q)) +
+  geom_point() + geom_smooth(method = "lm", se = FALSE) + labs(x = "P", y = "Q", 
+                                                               title = "Relación parcial Q - P")
+g1
+g2 <- ggplot(DEM_CARNE, aes(x=Y, y=Q)) +
+  geom_point() + geom_smooth(method = "lm", se = FALSE) + labs(x = "Y", y = "Q", 
+                                                                title = "Relación parcial Q - Y")
+g2
+#
+library(moderndive)
+## Correlaciones
+#
+DEM_CARNE %>% get_correlation(Q ~ P)
+DEM_CARNE %>% get_correlation(Q ~ Y)
+#
+# Regresión lineal:
+modelo_lineal <- lm(Q ~ P + Y, data = DEM_CARNE)
+# Tabla de resultados regression table:
+get_regression_table(modelo_lineal)
+get_regression_points(modelo_lineal)
+#
+```
+
+
