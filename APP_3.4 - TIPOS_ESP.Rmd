@@ -1,5 +1,5 @@
 ---
-title: "Modelos dinámicos"
+title: "Autocorrelación y modelos dinámicos"
 author: "J. Ramajo"
 date: '2020'
 output:
@@ -19,6 +19,7 @@ library(car)
 library(lmtest)
 library(sandwich)
 library(orcutt)
+#
 TIPOS_ESP <- read_csv("TIPOS_ESP.csv")
 TIPOS_ESP_ts <- ts(TIPOS_ESP, start=c(1982,1), end = c(1990,3), frequency = 4)
 plot(TIPOS_ESP_ts)
@@ -27,28 +28,38 @@ RL <- TIPOS_ESP_ts[,"RL"]
 R3M <- TIPOS_ESP_ts[,"R3M"] 
 RD <- TIPOS_ESP_ts[,"RD"]
 #
+# Modelo de Klein-Monti
+#
 S(lm_KM <- lm(RL ~ R3M + RD))
 #
-# Modelo ARDL(0,0,0) -estático- 
+# Especificación ARDL(0,0,0) - modelo estático- 
 #
 S(dynlm_KM_0 <- dynlm(RL ~ R3M + RD))
-# Contrastes de correlación serial (autocorrelación)
 #
-# Correlograma
+# Contrastes de correlación en los errores (autocorrelación)
+#
 r <-residuals(dynlm_KM_0)
 plot(r)
 abline(h=0, lty=2)
+#
+# Correlograma de los residuos
+#
 corr <- acf(r)
 corr$acf[2:10]
+#
 # Test de Durbin-Watson
+#
 dwtest(dynlm_KM_0, alternative = "two.sided")
 dwtest(dynlm_KM_0, alternative = "greater")
+#
 # Test de Breusch-Godfrey
+#
 bgtest(dynlm_KM_0, order=1, type="Chisq", fill=0)
 #
-# Corrección de la autocorrelación: MCO corregidos, MCG-AR, modelos ARDL
+# Corrección de la autocorrelación: MCO corregidos, MCG-AR, modelos dinámicos del tipo ARDL
 #
-# Errores estándar robustos, HAC (Newey-West)
+# MCO corregidos: errores estándar robustos, HAC (Newey-West)
+#
 S(dynlm_KM_0 <- dynlm(RL ~ R3M + RD), vcov.=vcovHAC(dynlm_KM_0))
 #
 # Mínimos cuadrados generalizados (MCG): errores AR(1)
@@ -58,4 +69,5 @@ cochrane.orcutt(dynlm_KM_0)
 # Modelo -dinámico ARDL(1,1,1) 
 #
 S(dynlm_KM_1 <- dynlm(RL ~ L(RL, 1:1) + L(R3M, 0:1) + L(RD, 0:1)))
+#
 ```

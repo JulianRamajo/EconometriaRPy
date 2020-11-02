@@ -6,6 +6,11 @@ library(tidyverse)
 library(RcmdrMisc)
 library(sfsmisc)
 library(quantreg)
+library(lmtest)
+library(sandwich)
+library(dynlm)
+library(moments)
+library(tseries)
 #
 ATIP <- read_csv("ATIP.csv")
 View(ATIP)
@@ -13,13 +18,50 @@ summary(ATIP)
 #
 # Diagrama de puntos
 #
+scatterplotMatrix(~ Y + X, id=list(n=3), smooth=list(span=0.7), data=ATIP)
 ggplot(ATIP, aes(x=X, y=Y)) + geom_point() + labs(title="Diagrama de puntos", x="X", y="Y")
 #
 # Modelo de regresión lineal
+#
 S(lm_YX <- lm(Y ~ X, data = ATIP))
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
 plot(lm_YX, which = 1:6)
+#
+# Distribución de los errores del modelo
+#
+plot(lm_YX$residuals)
+#
+hist(lm_YX$residuals, main = "")
+box()
+#
+densityPlot(residuals(lm_YX))
+#
+qqnorm(residuals(lm_YX))
+qqline(residuals(lm_YX))
+#
+qqPlot(lm_YX, distribution="norm")
+#
+# Contrastes de normalidad
+#
+r <- resid(lm_YX)
+rbar <- mean(r)
+sdr <- sd(r)
+hist(lm_YX$residuals, col="grey", freq=FALSE, main="Distribución de los residuos", ylab="Density", xlab="residuos")
+curve(dnorm(x, rbar, sdr), col=2, add=TRUE, ylab="Density", xlab="r")
+#
+# Librería moments
+skewness(lm_YX$residuals)
+kurtosis(lm_YX$residuals)
+agostino.test(lm_YX$residuals)
+anscombe.test(lm_YX$residuals)
+jarque.test(lm_YX$residuals)
+# librería tseries
+jarque.bera.test(lm_YX$residuals)
+shapiro.test(lm_YX$residuals)
+ks.test(lm_YX$residuals, pnorm)
+#
+# Detección de observaciones atípicas
 #
 # Observaciones atípicas en las variables explicativas (leverages <-> apalancamiento)
 #
@@ -49,19 +91,16 @@ rs <- rstandard(lm_YX)
 rs
 densityPlot(rs)
 which(abs(rs) > 2)
-plot(r)
+plot(rs)
 abline(h = c(0,-2, 2)*sd(rs), col = 4)
 id <- which(abs(r) > 2*sd(rs))
 text(id, r[id], rownames(ATIP)[id], pos = 1, xpd = TRUE)
 # Residuos estudentizados (externamente)
 rt <- rstudent(lm_YX)
 rt
-densityPlot(rs)
-outlierTest(lm_YX)
-# 
-spreadLevelPlot(lm_YX)
-# Chequeo de errores no-normales (comparación de los residuos estudentizados con una distribution t)
+densityPlot(rt)
 qqPlot(lm_YX)
+outlierTest(lm_YX)
 #
 # Diagnósticos
 #
@@ -69,8 +108,8 @@ qqPlot(lm_YX)
 #
 influence.measures(lm_YX)
 S(influence.measures(lm_YX))
-influencePlot(lm_YX, xlab="Hat values")
 influenceIndexPlot(lm_YX, vars=c("hat", "Studentized","Cook"))
+influencePlot(lm_YX, xlab="Hat values")
 # Medidas individuales
 hat <- hatvalues(lm_YX)
 dfbetas <-  dfbetas(lm_YX)
@@ -78,21 +117,31 @@ dffits <-  dffits(lm_YX)
 dcook <-  cooks.distance(lm_YX)
 hat ; dfbetas ; dffits; dcook
 #
+max(hatvalues(lm_YX))
+which.max(hatvalues(lm_YX))
+#
+max(abs(dffits(lm_YX)))
+which.max(abs(dffits(lm_YX)))
+#
+max(cooks.distance(lm_YX))
+which.max(cooks.distance(lm_YX))
+#
 # Gráficos de variable añadida, buscando casos influyentes
 avPlots(lm_YX, id=list(cex=0.60, method="mahal"))
-# Chequeo de no linealidad: gráficos de componente+residuo
-crPlots(lm_YX, smooth=list(span=0.7))
 #
 # Regresión cuartilítica
-S(qr_YX <- rq(Y ~ X, data = ATIP))
 #
-qr_YX <- rq(Y ~ X, tau = c(0.25, 0.50, 0.75), data = ATIP)
-sqr_YX <- summary(qr_YX)
-sqr_YX
-plot(sqr_YX)
-#
+S(lm_YX <- lm(Y ~ X, data = ATIP))
+S(qr_YX <- rq(Y ~ X, data = ATIP)) # tau=0.5
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
 abline(qr_YX, lty=2)
 legend("topleft", c("Regresión MCO", "Regresión MDA"), lty = c(1, 2), bty = "n")
+#
+# rq secuencial
+S(qr_YX <- rq(Y ~ X, data = ATIP, tau=seq(0.1,0.9,0.1)))
+plot(summary(qr_YX), level=0.95)
+# rq discreto
+S(qr_YX <- rq(Y ~ X, tau = c(0.25, 0.50, 0.75), data = ATIP))
+plot(qr_YX)
 #

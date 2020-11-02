@@ -1,16 +1,22 @@
 library(readr)
 library(car)
 library(strucchange)
+#
 EXP_ESP <- read_csv("EXP_ESP.csv")
 EXP_ESP_ts <- ts(EXP_ESP, start=c(1970), end = c(1997), frequency = 1)
-plot(EXP_ESP_ts)
+plot(EXP_ESP_ts[,2:5])
 #
 XGS <- EXP_ESP_ts[,"XGS"]
 WGDP <- EXP_ESP_ts[,"WGDP"]
 REER <- EXP_ESP_ts[,"REER"]
 DUE <- EXP_ESP_ts[,"DUE"]
 #
+scatterplot(XGS ~ WGDP| DUE, data=EXP_ESP, smooth=FALSE, boxplots=FALSE, ylab="Relación parcial Exportaciones/PIB mundial")
+scatterplot(XGS ~ REER| DUE, data=EXP_ESP, smooth=FALSE, boxplots=FALSE, ylab="Relación parcial Exportaciones/Tipo de cambio")
+#
+#
 # Ecuación de exportaciones (1970-1997)
+#
 lm_X_ESP <- lm(log(XGS) ~ log(WGDP) + log(REER))
 S(lm_X_ESP)
 #
@@ -40,28 +46,31 @@ T2 <- nobs(lm_X_ESP_UE)
 T2
 # Comparación de parámetros
 compareCoefs(lm_X_ESP_nUE,lm_X_ESP_UE)
-# Test de Chow
+# Cálculo manual del test de Chow
 CHOW=((SRCT-(SRC1+SRC2))/K)/((SRC1+SRC2)/(T-2*K))
 CHOW
 pval <-  1-pf(CHOW,3,(28-2*3))
 pval
+#
+# Cálculo automático del test de Chow
 #
 sctest(log(XGS) ~ log(WGDP) + log(REER), data=EXP_ESP_ts, type = "Chow", point = T1)
 #
 # Test de Chow recursivo
 # 
 fs <- Fstats(lm(log(XGS) ~ log(WGDP) + log(REER)), data=EXP_ESP_ts, from = 0.15, to = 0.85)
-## plot the F statistics
-plot(fs, alpha = 0.01)
-## and the corresponding p values
-plot(fs, pval = TRUE, alpha = 0.01)
+# Gráfica de los estadísticos F 
+plot(fs, alpha = 0.05)
+# Gráfica de los correspondientes P-valores
+plot(fs, pval = TRUE, alpha = 0.05)
 #
-# Ecuación de exportaciones por tramos
+# Regresión diferenciada por tramos
 #
 lm_X_ESP_2 <- lm(log(XGS) ~ (log(WGDP) + log(REER))*DUE)
 S(lm_X_ESP_2)
-#
+# Versión alternativa
 UE <- factor(DUE, labels=c("nUE", "UE"))
 lm_X_ESP_3 <- lm(log(XGS) ~ (log(WGDP) + log(REER))*UE)
 S(lm_X_ESP_3)
 #
+compareCoefs(lm_X_ESP, lm_X_ESP_2)
