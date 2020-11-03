@@ -18,9 +18,4 @@ delta <- coef(reg_nl)[[2]]
 #
 curve(gamma*x^delta, from=0, to=100, xlab="Unidades producidas", ylab="Costes medios" )
 #
-set.seed(10131985)
-reg_nl.boot <- Boot(reg_nl, R=999)
-summary(reg_nl.boot)
-confint(reg_nl.boot)
-hist(reg_nl.boot, layout=c(1, 2))
 

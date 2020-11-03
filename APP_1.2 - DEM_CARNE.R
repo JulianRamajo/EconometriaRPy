@@ -15,14 +15,12 @@ plot(Q ~ Y, xlab="Y", ylab="Q")
 lin_model <- lm(Q ~ P + Y)
 summary(lin_model)
 #
+library(coefplot)
+coefplot(lin_model)
+#
 log_model <- lm(log(Q) ~ log(P) + log(Y))
 summary(log_model)
-#
-n_lin_mod <- nls(Q ~  c1 + c2*P + c3*Y, start = list(c1=1, c2=-0.5, c3=0.1))
-summary(n_lin_mod)
-#
-nonlin_mod <- nls(Q ~  c1 + c2*P + c3*(Y^c4), start = list(c1=5, c2=-0.5, c3=0.001, c4=3))
-summary(nonlin_mod)
+coefplot(log_model)
 #
 # Método R moderno: tidyverse
 #
