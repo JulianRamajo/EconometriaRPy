@@ -1,0 +1,10 @@
+---
+title: "R Tydiverse: Ejemplo Gapminder"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+gapminder <- read_csv("https://raw.githubusercontent.com/CerebralMastication/r_for_the_student/master/01_data/gapminder.csv")
+gapminder
+```

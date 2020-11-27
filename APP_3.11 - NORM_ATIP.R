@@ -26,7 +26,17 @@ ggplot(ATIP, aes(x=X, y=Y)) + geom_point() + labs(title="Diagrama de puntos", x=
 S(lm_YX <- lm(Y ~ X, data = ATIP))
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
-plot(lm_YX, which = 1:6)
+#
+par(mfrow=c(2,2))
+plot(lm_YX)
+#
+S(lm_YX_1 <- lm(Y ~ X, data = ATIP))
+S(lm_YX_2 <- lm(Y ~ X, data = ATIP[1:19,]))
+compareCoefs(lm_YX_1,lm_YX_2)
+plot(Y ~ X , data=ATIP)
+abline(lm_YX_1)
+abline(lm_YX_2, lty=2)
+legend("topleft", c("MCO muestra completa", "MCO muestra recortada"), lty = c(1, 2), bty = "n")
 #
 # Distribución de los errores del modelo
 #
@@ -50,13 +60,13 @@ sdr <- sd(r)
 hist(lm_YX$residuals, col="grey", freq=FALSE, main="Distribución de los residuos", ylab="Density", xlab="residuos")
 curve(dnorm(x, rbar, sdr), col=2, add=TRUE, ylab="Density", xlab="r")
 #
-# Librería moments
+# Librer?a moments
 skewness(lm_YX$residuals)
 kurtosis(lm_YX$residuals)
 agostino.test(lm_YX$residuals)
 anscombe.test(lm_YX$residuals)
 jarque.test(lm_YX$residuals)
-# librería tseries
+# librer?a tseries
 jarque.bera.test(lm_YX$residuals)
 shapiro.test(lm_YX$residuals)
 ks.test(lm_YX$residuals, pnorm)
@@ -136,7 +146,7 @@ S(qr_YX <- rq(Y ~ X, data = ATIP)) # tau=0.5
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
 abline(qr_YX, lty=2)
-legend("topleft", c("Regresión MCO", "Regresión MDA"), lty = c(1, 2), bty = "n")
+legend("topleft", c("Regresi?n MCO", "Regresi?n MDA"), lty = c(1, 2), bty = "n")
 #
 # rq secuencial
 S(qr_YX <- rq(Y ~ X, data = ATIP, tau=seq(0.1,0.9,0.1)))
