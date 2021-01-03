@@ -4,6 +4,7 @@ library(car)
 library(corrplot)
 library(broom)
 library(cowplot)
+library(mctest)
 #
 RENTAB_EMP <- read_delim("RENTAB_EMP.csv", ";", escape_double = FALSE, trim_ws = TRUE)
 View(RENTAB_EMP)
@@ -12,6 +13,10 @@ lm_1 <- lm(RENTAB ~ log(VT) + R1 + R2 + R3 + R4 + R5 + R6 + R7 + R8 + R9 + R10, 
 S(lm_1)
 #
 # DETECCIÓN DEL PROBLEMA
+#
+# Presencia global de multicolinealidad
+#
+mctest::omcdiag(lm_1)
 #
 # Matríz de correlaciones de las variables explicativas (sin incluir la constante)
 #
@@ -26,6 +31,9 @@ vif(lm_1)
 vif(lm_1) > 10 # problema de colinealidad (se coresponde con un VIF=10, es decir, Rj^2=0.90)
 sqrt(vif(lm_1))
 sqrt(vif(lm_1)) > 2 # cota alternativa (se coresponde con un VIF=4, es decir, Rj^2=0.75)
+#
+mctest::imcdiag(lm_1, method = "VIF", vif=10)
+mctest::imcdiag(lm_1, method = "VIF", vif=4)
 #
 # TRATAMIENTO DEL PROBLEMA
 #
