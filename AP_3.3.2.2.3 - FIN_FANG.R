@@ -39,7 +39,8 @@ IPI_ESP %>%
 # Estacionalidad
 IPI_ESP %>%
   plot_seasonal_diagnostics(date, price, .interactive = FALSE)
-# Acciones de Facebook, Amazon, Netflix y Google (FANG)
+# Acciones de Facebook, Amazon, Netflix y Google (FANG) 
+# Si se añade Apple (AAPL) quedaría el grupo FANGA
 FANG_prices <- tq_get(c("FB" , "AMZN", "NFLX", "GOOG"), get = "stock.prices", from = "2015-01-01")
 FANG_prices
 #
