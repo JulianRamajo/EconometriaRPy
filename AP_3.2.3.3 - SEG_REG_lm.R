@@ -1,6 +1,8 @@
-# Piecewise regression is a great method to model and capture changes in a series slope, by using knots to create different segments. 
-# The plot below demonstrates the usage of piecewise regression to capture the structural changes in the US total construction spending 
-# series (orange dotted line). Added a linear trend (red dashed line) for comparison.
+
+# Para obtener una visión general de las tendencias segmentadas pueden consultarse las siguientes notas:
+# https://robjhyndman.com/hyndsight/piecewise-linear-trends/
+# Las regresiones segmentadas permiten modelizar los cambios en la pendiente de una serie o, de forma más general,
+# pueden usarse para capturar el cambio estructural en una regresión.
 
 library(readr)
 library(plotly)
