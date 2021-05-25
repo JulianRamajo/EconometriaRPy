@@ -8,7 +8,7 @@ skim(gapminder)
 #
 # Operaciones básicas del Tidyverse
 #
-# dplyr verbs
+# "Verbos" de dplyr
 #
 # select
 #
@@ -35,7 +35,7 @@ gapminder_summarised <- summarise(gapminder_grouped, AVG_GDP=mean(GDP))
 gapminder_arranged_ascending <- arrange(gapminder_summarised, AVG_GDP)
 gapminder_arranged_descending <- arrange(gapminder_summarised, -AVG_GDP)
 #
-# The pipe operator (%>%)
+# El operador "tubería" (pipe) (%>%)
 #
 AVG_GDP <- 
   gapminder %>% 

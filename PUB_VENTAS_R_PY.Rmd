@@ -1,0 +1,60 @@
+---
+title: "R Notebook"
+subtitle: "Efectos diferenciados de la publicidad sobre las ventas"
+output:
+  html_document:
+    df_print: paged
+---
+
+# R code
+
+```{r}
+#
+library(readr)
+#
+PUB_VENTAS <- read_csv("~/Documents/GitHub/EcoMetricsRPy/PUB_VENTAS.csv")
+#
+library(plotly)
+library(magrittr)
+#  
+model1 <- lm(data = PUB_VENTAS, formula = VENTAS ~ TV + RADIO)
+summary(model1)
+plot_ly(data = PUB_VENTAS) %>%
+    add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, mode = "markers", type = "scatter3d",
+              marker = list(size = 5, color = "blue", symbol = 104), name = "Observaciones") %>% 
+    add_trace(z = model1$fitted.values, x = ~TV, y = ~RADIO, type = "mesh3d", 
+              name = "Valores ajustados") %>%
+    layout(scene = list(xaxis = list(title = 'TV'), yaxis = list(title = 'RADIO'),
+                        camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
+                        zaxis = list(title = 'VENTAS'), aspectmode='cube'))
+#
+model2 <- lm(data = PUB_VENTAS, formula = VENTAS ~ TV * RADIO)
+summary(model2)
+plot_ly(data = PUB_VENTAS) %>%
+    add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, mode = "markers", type = "scatter3d",
+              marker = list(size = 5, color = "blue", symbol = 104), name = "Observaciones") %>% 
+    add_trace(z = model2$fitted.values, x = ~TV, y = ~RADIO, type = "mesh3d", 
+              name = "Valores ajustados") %>%
+    layout(scene = list(xaxis = list(title = 'TV'), yaxis = list(title = 'RADIO'),
+                        camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
+                        zaxis = list(title = 'VENTAS'), aspectmode='cube'))
+#
+```
+
+# Python code
+
+```{python}
+# 
+import pandas as pd
+import numpy as np
+import statsmodels.formula.api as sms
+#
+PUB_VENTAS = pd.read_csv('~/Documents/GitHub/EcoMetricsRPy/PUB_VENTAS.csv')
+#
+model1 = sms.ols('VENTAS ~ TV + RADIO', data=PUB_VENTAS)
+print(model1.fit().summary())
+#
+model2 = sms.ols('VENTAS ~ TV * RADIO', data=PUB_VENTAS)
+print(model2.fit().summary())
+```
+

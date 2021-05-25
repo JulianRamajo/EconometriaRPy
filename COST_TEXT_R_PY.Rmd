@@ -1,0 +1,44 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+# R code
+
+```{r}
+#
+library(readr)
+#
+COST_TEXT <- read_csv("~/Documents/GitHub/EcoMetricsRPy/COST_TEXT.csv")
+#
+library(ggplot2)
+ggplot(COST_TEXT, aes(x = Q, y = COST)) + geom_point()
+#
+model1 <- lm(COST ~ Q + I(Q^2), data = COST_TEXT)
+summary(model1)
+# 
+# model2 <- lm(COST ~ poly(Q, 2, raw = TRUE), data = COST_TEXT)
+# summary(model2)
+```
+
+# Python code
+
+```{python}
+# 
+import pandas as pd
+import numpy as np
+import statsmodels.formula.api as sms
+import matplotlib.pyplot as plt
+plt.style.use('seaborn-whitegrid')
+#
+COST_TEXT = pd.read_csv('~/Documents/GitHub/EcoMetricsRPy/COST_TEXT.csv')
+# 
+plt.scatter(COST_TEXT['Q'], COST_TEXT['COST'], marker='o', color='black')
+plt.show()
+#
+model1 = sms.ols('COST ~ Q + I(Q**2)', data=COST_TEXT)
+print(model1.fit().summary())
+```
+

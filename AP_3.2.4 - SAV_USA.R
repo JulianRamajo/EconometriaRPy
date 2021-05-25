@@ -2,6 +2,7 @@ library(tidyverse)
 library(dynlm)
 library(car)
 library(lmtest)
+library(performance)
 #
 SAV_USA <- read_csv("SAV_USA.csv")
 AHORRO_RENTA_ts <- ts(SAV_USA[,2:3], start=c(1970), end = c(2005))
@@ -29,3 +30,9 @@ jtest(dynlm_A, dynlm_B)
 #
 S(dynlm_AB <- dynlm(AH ~ L(AH, 1:2)  + L(Y, 0:0)))
 #
+# Comparación de modelos (librería performance)
+#
+model_performance(dynlm_A)
+model_performance(dynlm_B)
+compare_performance(dynlm_A, dynlm_B, rank = TRUE)
+plot(compare_performance(dynlm_A, dynlm_B, rank = TRUE))
