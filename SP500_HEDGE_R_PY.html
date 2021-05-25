@@ -265,8 +265,8 @@ summary(model_returns)</code></pre>
 import numpy as np
 import statsmodels.formula.api as smf
 #
-data = pd.read_excel(&#39;/Users/JulianRamajo/Documents/R/R_Python_Ramajo/IE4F/SP500_HEDGE.xls&#39;, index_col=0)
-data.head()</code></pre>
+SPhedge = pd.read_excel(&#39;/Users/JulianRamajo/Documents/R/R_Python_Ramajo/IE4F/SP500_HEDGE.xls&#39;, index_col=0)
+SPhedge.head()</code></pre>
 <pre><code>##                   Spot  Futures
 ## Date                           
 ## 1997-09-01  947.280029   954.50
@@ -274,7 +274,7 @@ data.head()</code></pre>
 ## 1997-11-01  955.400024   955.00
 ## 1997-12-01  970.429993   979.25
 ## 1998-01-01  980.280029   987.75</code></pre>
-<pre class="python"><code>data.describe()
+<pre class="python"><code>SPhedge.describe()
 #</code></pre>
 <pre><code>##               Spot      Futures
 ## count   247.000000   247.000000
@@ -286,7 +286,7 @@ data.head()</code></pre>
 ## 75%    1540.000000  1546.450000
 ## max    2823.810059  2825.750000</code></pre>
 <pre class="python"><code>formula = &#39;Spot ~ Futures&#39;
-results = smf.ols(formula, data).fit()
+results = smf.ols(formula, SPhedge).fit()
 print(results.summary())</code></pre>
 <pre><code>##                             OLS Regression Results                            
 ## ==============================================================================
@@ -294,7 +294,7 @@ print(results.summary())</code></pre>
 ## Model:                            OLS   Adj. R-squared:                  1.000
 ## Method:                 Least Squares   F-statistic:                 1.005e+06
 ## Date:                mar, 25 may 2021   Prob (F-statistic):               0.00
-## Time:                        20:14:45   Log-Likelihood:                -826.86
+## Time:                        20:30:17   Log-Likelihood:                -826.86
 ## No. Observations:                 247   AIC:                             1658.
 ## Df Residuals:                     245   BIC:                             1665.
 ## Df Model:                           1                                         
@@ -322,30 +322,15 @@ print(F_test)
 <pre><code>## &lt;F test: F=array([[2.58463856]]), p=0.10919294686221338, df_denom=245, df_num=1&gt;</code></pre>
 <pre class="python"><code>def LogDiff(x):
     x_diff = 100*np.log(x/x.shift(1))
-    x_diff = x_diff.dropna()
     return x_diff
-data = pd.DataFrame({&#39;r_Spot&#39;:LogDiff(data[&#39;Spot&#39;]), &#39;r_Futures&#39;:LogDiff(data[&#39;Futures&#39;])})
-data.head()</code></pre>
-<pre><code>##               r_Spot  r_Futures
-## Date                           
-## 1997-10-01 -3.508608  -3.247557
-## 1997-11-01  4.362145   3.299927
-## 1997-12-01  1.560914   2.507563
-## 1998-01-01  1.009901   0.864266
-## 1998-02-01  6.807837   6.159189</code></pre>
-<pre class="python"><code>data.describe()
-#</code></pre>
-<pre><code>##            r_Spot   r_Futures
-## count  246.000000  246.000000
-## mean     0.416776    0.414017
-## std      4.333323    4.419049
-## min    -18.563647  -18.944697
-## 25%     -1.831388   -1.931400
-## 50%      0.918522    0.997641
-## 75%      3.276468    3.133588
-## max     10.230659   10.387184</code></pre>
-<pre class="python"><code>formula = &#39;r_Spot ~ r_Futures&#39;
-results = smf.ols(formula, data).fit()
+SPhedge[&#39;r_Spot&#39;] = LogDiff(SPhedge[&#39;Spot&#39;])
+SPhedge[&#39;r_Futures&#39;] = LogDiff(SPhedge[&#39;Futures&#39;])
+# data = pd.DataFrame({&#39;r_Spot&#39;:LogDiff(data[&#39;Spot&#39;]), &#39;r_Futures&#39;:LogDiff(data[&#39;Futures&#39;])})
+# data.head()
+# data.describe()
+#
+formula = &#39;r_Spot ~ r_Futures&#39;
+results = smf.ols(formula, SPhedge).fit()
 print(results.summary())</code></pre>
 <pre><code>##                             OLS Regression Results                            
 ## ==============================================================================
@@ -353,7 +338,7 @@ print(results.summary())</code></pre>
 ## Model:                            OLS   Adj. R-squared:                  0.989
 ## Method:                 Least Squares   F-statistic:                 2.147e+04
 ## Date:                mar, 25 may 2021   Prob (F-statistic):          7.54e-240
-## Time:                        20:14:46   Log-Likelihood:                -157.16
+## Time:                        20:30:17   Log-Likelihood:                -157.16
 ## No. Observations:                 246   AIC:                             318.3
 ## Df Residuals:                     244   BIC:                             325.3
 ## Df Model:                           1                                         
