@@ -1,28 +1,34 @@
 ---
+title: 'Aplicación 1.2: Demanda familiar de carne'
 output:
-  html_document: default
-  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
 ---
+
+# Código R
 
 ## Lectura de datos y EDA
 
 ```{r}
 library(tidyverse)
-library(ggplot2)
 library(GGally)
+library(skimr)
+library(coefplot)
 
-datos <- read_csv("DEM_CARNE.csv")
-head(datos)
-str(datos)
-summary(datos)
+DEM_CARNE <- read_csv("DEM_CARNE.csv")
+head(DEM_CARNE)
+str(DEM_CARNE)
+summary(DEM_CARNE)
+skim(DEM_CARNE)
 ```
 
 ## Gráficas parciales
 
 ```{r}
-GGally::ggpairs(datos)
+GGally::ggpairs(DEM_CARNE)
 
-ggplot(datos, aes(x = P, y = Q)) +
+ggplot(DEM_CARNE, aes(x = P, y = Q)) +
   geom_point(color = "blue") +
   geom_jitter(color = "blue") +
   geom_function(fun = function(x) {y = mean(datos$Q)}, linetype = "dotdash") +
@@ -31,7 +37,7 @@ ggplot(datos, aes(x = P, y = Q)) +
   ylab("Q (cantidad)") +
   theme_minimal()
 
-ggplot(datos, aes(x = Y, y = Q)) +
+ggplot(DEM_CARNE, aes(x = Y, y = Q)) +
   geom_point(color = "blue") +
   geom_jitter(color = "blue") +
   geom_function(fun = function(x) {y = mean(datos$Q)}, linetype = "dotdash") +
@@ -41,26 +47,14 @@ ggplot(datos, aes(x = Y, y = Q)) +
   theme_minimal()
 ```
 
-## Regresión MCO
+## Regresión MCO del modelo lineal:
+
 $$Q = \beta_0 + \beta_1P + \beta_2Q + e$$
 
-### Con R
-
 ```{r}
-model <- lm(data = datos, formula = Q ~ P + Y)
-summary(model)
-```
-
-### Con Python
-
-```{python}
-import pandas as pd
-import statsmodels.formula.api as smf
-
-datos = pd.read_csv("DEM_CARNE.csv")
-model = smf.ols(formula = "Q ~ P + Y", data = datos)
-dem_model = model.fit()
-print(dem_model.summary())
+lin_model <- lm(formula = Q ~ P + Y, data = DEM_CARNE)
+summary(lin_model)
+coefplot(lin_model)
 ```
 
 ## Visualización 3D de los datos y del plano ajustado del modelo
@@ -69,8 +63,8 @@ print(dem_model.summary())
   library(plotly)
   library(magrittr)
   
-model <- lm(data = datos, formula = Q ~ P + Y)  
-plot_ly(data = datos) %>%
+model <- lm(data = DEM_CARNE, formula = Q ~ P + Y)  
+plot_ly(data = DEM_CARNE) %>%
     add_trace(x = ~P, y = ~Y, z = ~Q, mode = "markers", type = "scatter3d",
               marker = list(size = 5, color = "blue", symbol = 104), name = "Observaciones") %>% 
     add_trace(z = model$fitted.values, x = ~P, y = ~Y, type = "mesh3d", 
@@ -79,3 +73,48 @@ plot_ly(data = datos) %>%
                         camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
                         zaxis = list(title = 'Q'), aspectmode='cube')) 
 ```
+
+# Código Python
+
+## Regresión MCO del modelo lineal:
+
+$$Q = \beta_0 + \beta_1P + \beta_2Q + e$$
+
+```{python}
+import pandas as pd
+import statsmodels.formula.api as smf
+
+DEM_CARNE = pd.read_csv("DEM_CARNE.csv")
+model = smf.ols(formula = "Q ~ P + Y", data = DEM_CARNE)
+lin_model = model.fit()
+print(lin_model.summary())
+```
+
+
+## Regresión MCO del modelo logarítmico-lineal:
+
+$$log(Q) = \beta_0 + \beta_1log(P) + \beta_2log(Q) + e$$
+
+```{python}
+import numpy as np
+# import pandas as pd
+import statsmodels.formula.api as smf
+
+# DEM_CARNE = pd.read_csv("DEM_CARNE.csv")
+model = smf.ols(formula = "np.log(Q) ~ np.log(P) + np.log(Y)", data = DEM_CARNE)
+log_model = model.fit()
+print(log_model.summary())
+```
+
+# Anexo: Regresiones logarítmica (lineal) y potencial (no lineal) con R
+
+```{r}
+#
+log_model <- lm(formula = log(Q) ~ log(P) + log(Y), data = DEM_CARNE)
+summary(log_model)
+coefplot(log_model)
+#
+nonlin_model <- nls(Q ~ c1 + c2*P + c3*(Y^c4), start = list(c1=5, c2=-0.5, c3=0.01, c4=3), data = DEM_CARNE)
+summary(nonlin_model)
+```
+
