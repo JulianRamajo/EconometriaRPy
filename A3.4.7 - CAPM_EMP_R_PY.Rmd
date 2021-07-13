@@ -1,0 +1,65 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+# R code
+
+```{r}
+library(readxl)
+#
+panel <- read_excel("~/Dropbox/Mi Mac (Mac Pro de Julián)/Documents/GitHub/EcoMetricsRPy/CAPM_EMP_UK.xls",col_types = c("numeric","numeric","numeric","numeric"),na = 'NA')
+head(panel)
+#
+library(plm)
+data = pdata.frame(panel, index=c("firm_ident", "year"))
+pdim(data)
+summary(data[c("return","beta")])
+# Pool MCO
+pooled = plm(return~beta, model="pooling", data=data)
+summary(pooled)
+# Modelo de efectos fijos
+fixed = plm(return~beta, model="within", data=data)
+summary(fixed)
+# Modelo de efectos aleatorios
+random = plm(return~beta, model="random", data=data)
+summary(random)
+# Test de Hausman
+phtest(fixed, random)
+```
+
+# Python code
+
+```{python}
+# 
+import pandas as pd
+from linearmodels import PooledOLS, PanelOLS, RandomEffects
+#
+data = pd.read_excel('~/Dropbox/Mi Mac (Mac Pro de Julián)/Documents/GitHub/EcoMetricsRPy/CAPM_EMP_UK.xls')
+data.head()
+# Note: can not use 'return' as a variable name as it is one of Python keywords
+data=data.rename(columns={'return':'ret'})
+# data summary
+data['ret'].describe()
+data['beta'].describe()
+# dropna, Note: regression can not be performed if nan exists in the dataset
+data = data.dropna()
+# set up a multi-index
+data = data.set_index(['firm_ident','year'])
+# Pool MCO
+model = PooledOLS.from_formula('ret ~ 1 + beta',data)
+res = model.fit()
+print(res)
+# Modelo de efectos fijos
+model = PanelOLS.from_formula('ret ~ 1 + beta + EntityEffects',data)
+res = model.fit()
+print(res)
+# Modelo de efectos aleatorios
+model = RandomEffects.from_formula('ret ~ 1 + beta',data)
+res = model.fit()
+print(res)
+```
+
+
