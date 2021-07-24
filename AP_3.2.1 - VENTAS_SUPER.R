@@ -9,7 +9,7 @@ summary(VENTAS)
 #
 ## Matriz de diagrama de puntos de las variables
 #
-library("alr4")
+library(alr4)
 scatterplotMatrix(~ V + P + A, id=list(n=3), smooth=list(span=0.75), data=VENTAS)
 #
 ## Modelo econométrico
@@ -27,6 +27,12 @@ library(gvlma)
 gvmodel <- gvlma(modelo.ventas.1)
 summary(gvmodel)
 plot(gvmodel)
+#
+## Funcionamiento general del modelo
+#
+library(performance)
+model_performance(modelo.ventas.1)
+check_model(modelo.ventas.1)
 #
 ## Test RESET de Ramsey de especificación funcional
 #
@@ -67,4 +73,10 @@ plot(Effect("P", modelo.ventas.2))
 plot(Effect("A", modelo.ventas.2))
 compareCoefs(modelo.ventas.1, modelo.ventas.2)
 anova(modelo.ventas.1, modelo.ventas.2)
+ccompare_performance(modelo.ventas.1, modelo.ventas.2, rank = TRUE)
+plot(compare_performance(modelo.ventas.1, modelo.ventas.2, rank = TRUE))
+test_performance(modelo.ventas.1, modelo.ventas.2)
+test_wald(modelo.ventas.1, modelo.ventas.2)
+test_bf(modelo.ventas.1, modelo.ventas.2)
+test_vuong(modelo.ventas.1, modelo.ventas.2)
 #
