@@ -1,0 +1,43 @@
+---
+title: 'TEMA X: XX'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación X.X: X'
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+---
+
+# Introducción
+
+En esta aplicación se estimará ...:
+
+$$
+C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}
+$$
+
+
+# Código R
+
+```{r, message=FALSE}
+library(tidyverse)
+#
+```
+
+# Código Python
+
+```{python, message=FALSE}
+import pandas as pd
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+#
+```
+

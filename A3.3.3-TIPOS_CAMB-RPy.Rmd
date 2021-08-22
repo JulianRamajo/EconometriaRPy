@@ -1,0 +1,73 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+# R Code
+
+```{r}
+library(readxl)
+#
+data <- read_excel("~/Dropbox/Mi Mac (Mac Pro de Julián)/Documents/GitHub/EcoMetricsRPy/TIPOS_CAMB.xls")
+#
+data$reur = c(NA,100*diff(log(data$EUR)))
+data$rgbp = c(NA,100*diff(log(data$GBP)))
+data$rjpy = c(NA,100*diff(log(data$JPY)))
+#
+data = data[-1,]
+#
+library(vars)
+VARselect(data[c("reur","rgbp","rjpy")], lag.max = 10)
+VAR(data[c("reur","rgbp","rjpy")],p = 2)
+#
+var = VAR(data[c("reur","rgbp","rjpy")],p = 2)
+#
+causality(var,cause = c("rgbp","rjpy"))$Granger
+causality(var,cause = c("reur","rjpy"))$Granger
+causality(var,cause = c("reur","rgbp"))$Granger
+#
+ir = irf(var,n.ahead = 20)
+plot(ir)
+vd = fevd(var,n.ahead = 20)
+plot(vd)
+```
+
+# Python code
+
+```{python}
+import pandas as pd
+import numpy as np
+import statsmodels.tsa.api as smt
+import matplotlib.pyplot as plt
+#
+data = pd.read_excel('~/Dropbox/Mi Mac (Mac Pro de Julián)/Documents/GitHub/EcoMetricsRPy/TIPOS_CAMB.xls', index_col=0)
+#
+def LogDiff(x):
+    x_diff = 100*np.log(x/x.shift(1))
+    x_diff = x_diff.dropna()
+    return x_diff
+#
+data = pd.DataFrame({'reur':LogDiff(data['EUR']),
+                     'rgbp':LogDiff(data['GBP']),
+                     'rjpy':LogDiff(data['JPY'])})
+#
+# VAR 
+#
+model = smt.VAR(data)
+res = model.select_order(maxlags=10)
+print(res.summary())
+#
+res = model.fit(maxlags=2)
+print(res.summary())
+# Impulse Response Analysis
+irf = res.irf(20)
+fig = irf.plot()
+plt.show()
+# Forecast Error Variance Decomposition (FEVD)
+fevd = res.fevd(20)
+fig = fevd.plot()
+plt.show()
+```
+

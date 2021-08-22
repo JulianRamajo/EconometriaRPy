@@ -1,0 +1,46 @@
+R - CRAN Task Views installations:
+
+install.packages("ctv")
+
+ctv::install.views("Econometrics")
+ctv::install.views("Finance")
+ctv::install.views("TimeSeries")
+ctv::install.views("Graphics")
+ctv::install.views("NumericalMathematics")
+ctv::install.views("Psychometrics")
+ctv::install.views("SocialSciences")
+ctv::install.views("MachineLearning")
+ctv::install.views("MissingData")
+ctv::install.views("Cluster")
+ctv::install.views("Distributions")
+ctv::install.views("Environmetrics")
+ctv::install.views("Multivariate")
+ctv::install.views("OfficialStatistics")
+ctv::install.views("Optimization")
+ctv::install.views("Robust")
+ctv::install.views("Spatial")
+ctv::install.views("SpatioTemporal")
+ctv::install.views("gR")
+
+PYTHON - CONDA/PIP installations:
+
+library(reticulate)
+
+print(reticulate::py_config())
+# py_install("numpy")
+py_install("pandas")
+py_install("matplotlib")
+py_install("seaborn")
+py_install("plotly")
+py_install("plotnine")
+py_install("scipy")
+py_install("scikit-learn")
+py_install("linearmodels")
+py_install("statsmodels")
+py_install("semopy", pip = TRUE)
+py_install("lifelines")
+py_install("arch-py")
+py_install("pysal")
+py_install("appelpy", pip = TRUE)
+py_install("datetime", pip =  TRUE)
+
