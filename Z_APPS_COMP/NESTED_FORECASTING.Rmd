@@ -1,86 +1,36 @@
-install.packages("fpp3")
-library(fpp3)
-library(reticulate)
-miniconda_update()
-py_install("torch")
-py_install("torch", pip=TRUE)
-install.packages(c("gert", "insight", "RPostgreSQL", "survival"))
-repl_python()
-py_install("torchvision", pip = TRUE)
-py_install("torchaudio", pip = TRUE)
-repl_python()
-library(reticulate)
-py_install("pytorch", pip = TRUE)
-py_install("pytorch")
-py_install("tensorflow")
-repl_python()
-library(reticulate)
-repl_python()
-install.packages("DT")
-library(DT)
-datatable(iris)
-class(iris)
-datatable(iris, editable = 'cell')
-install.packages("vcd")
-install.packages("vcdExtra")
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
 remotes::install_github("business-science/modeltime", dependencies = TRUE)
-install.packages(c("brolgar", "datawizard", "gert", "httpuv", "ibdreg", "keras", "magick", "matlib", "packrat", "partykit", "RCurl", "rgl", "RJSONIO", "RPostgreSQL", "RSQLite", "see", "survival", "tensorflow", "torch", "XML"))
-install.packages("tscopula")
-library(tscopula)
-data(bitcoin)
-X <- (diff(log(bitcoin))[-1]) * 100 # log-returns (as percentages)
-length(X)
-plot(X, type = "h")
-View(bitcoin)
-View(X)
-?plot
+# Getting Started
 library(tidymodels)
 library(modeltime)
 library(tidyverse)
 library(timetk)
+# Dataset
 data_tbl <- walmart_sales_weekly %>%
 select(id, Date, Weekly_Sales) %>%
 set_names(c("id", "date", "value"))
 data_tbl
 help("walmart_sales_weekly", package="timetk")
-View(bitcoin)
-View(data_tbl)
-View(data_tbl)
-?write_csv
-class(bitcoin)
-?write
-bitcoin
-head(bitcoin)
-?saveRDS
-saveRDS(bitcoin, file = "Bitcoin_2016_2019")
-readRDS(Bitcoin_2016_2019)
-setwd("~/")
-readRDS(Bitcoin_2016_2019)
-?readRDS
-file <- tempfile("bitcoin", fileext = ".rds")
-saveRDS(bitcoin, file)
-readRDS("Bitcoin_2016_2019")
-head(bitcoin)
-BTCUSD <- readRDS("Bitcoin_2016_2019")
-plot(BTCUSD)
-plot(X)
-data_tbl %>%
-group_by(id) %>%
-plot_time_series(
-date, value, .interactive = F, .facet_ncol = 2
-)
+# Graphs
+data_tbl %>% group_by(id) %>% plot_time_series(date, value, .interactive = F, .facet_ncol = 2)
 walmart_sales_weekly
-data_tbl
-View(data_tbl)
-data_tbl %>%
-select(id==1_1) %>%
-plot_time_series(date, value, .interactive = F)
+#
 data_tbl %>%
 filter(id == "1_1") %>%
 plot_time_series(date, value, .interactive = F)
+
 Store1_Department1 <-  data_tbl %>%
 filter(id == "1_1")
 View(Store1_Department1)
+#
+# Nested Forecasting Preparation
+# Data Preparation (Nesting)
+#
 nested_data_tbl <- data_tbl %>%
 # 1. Extending: We'll predict 52 weeks into the future.
 extend_timeseries(
@@ -103,6 +53,8 @@ split_nested_timeseries(
 .length_test = 39
 )
 nested_data_tbl
+# Nested Modeltime Workflow
+# Step 1: Create Tidymodels Workflows
 rec_prophet <- recipe(value ~ date, training(nested_data_tbl$.splits[[1]]))
 wflw_prophet <- workflow() %>%
 add_model(
@@ -110,6 +62,7 @@ prophet_reg("regression", seasonality_yearly = TRUE) %>%
 set_engine("prophet")
 ) %>%
 add_recipe(rec_prophet)
+
 rec_xgb <- recipe(value ~ ., training(nested_data_tbl$.splits[[1]])) %>%
 step_timeseries_signature(date) %>%
 step_rm(date) %>%
@@ -118,6 +71,7 @@ step_dummy(all_nominal_predictors(), one_hot = TRUE)
 wflw_xgb <- workflow() %>%
 add_model(boost_tree("regression") %>% set_engine("xgboost")) %>%
 add_recipe(rec_xgb)
+# Step 2: Nested Modeltime Tables
 nested_modeltime_tbl <- modeltime_nested_fit(
 # Nested data
 nested_data = nested_data_tbl,
@@ -126,6 +80,7 @@ wflw_prophet,
 wflw_xgb
 )
 nested_modeltime_tbl
+# Step 3: Logged Attributes
 nested_modeltime_tbl %>%
 extract_nested_test_accuracy() %>%
 table_modeltime_accuracy(.interactive = F)
@@ -138,6 +93,7 @@ plot_modeltime_forecast(
 View(Store1_Department1)
 nested_modeltime_tbl %>%
 extract_nested_error_report()
+# Step 4: Select the Best
 best_nested_modeltime_tbl <- nested_modeltime_tbl %>%
 modeltime_nested_select_best(
 metric                = "rmse",
@@ -154,23 +110,16 @@ plot_modeltime_forecast(
 .facet_ncol  = 2,
 .interactive = FALSE
 )
+# Step 5: Refitting and Future Forecast
 nested_modeltime_refit_tbl <- best_nested_modeltime_tbl %>%
 modeltime_nested_refit(control = control_nested_refit(verbose = TRUE))
 nested_modeltime_refit_tbl
+
 nested_modeltime_refit_tbl %>%
 extract_nested_future_forecast() %>%
 group_by(id) %>%
 plot_modeltime_forecast(
 .interactive = FALSE,
 .facet_ncol  = 2)
-remotes::install_github("business-science/timetk", dependencies = TRUE)
-install.packages("RPostgreSQL")
-library(fpp3)
-autoplot(gold)
-help("fpp3")
-autoplot(us_gasoline)
-tsoutliers::tso(us_gasoline)
-class(us_gasoline)
-autoplot(tsclean(us_gasoline))
-tsoutliers::tso0(us_gasoline)
-setwd("~/Dropbox/Mi Mac (Mac Pro de Julián)/Documents/GitHub/EconMetricsRPy/Z_APPS_COMP")
+#
+```

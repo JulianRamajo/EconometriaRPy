@@ -25,8 +25,8 @@ ctv::install.views("gR")
 PYTHON - CONDA/PIP installations:
 
 library(reticulate)
-
 print(reticulate::py_config())
+
 # py_install("numpy")
 py_install("pandas")
 py_install("matplotlib")
@@ -39,8 +39,11 @@ py_install("linearmodels")
 py_install("statsmodels")
 py_install("semopy", pip = TRUE)
 py_install("lifelines")
-py_install("arch-py")
+py_install("arch", pip=TRUE)
+py_install("pyhdfe", pip=TRUE) # Sólo si la instalación de 'arch' da un mensaje final de error
 py_install("pysal")
 py_install("appelpy", pip = TRUE)
 py_install("datetime", pip =  TRUE)
-
+py_install("stargazer", pip = TRUE)
+py_install("mizani")
+py_install("xlrd")

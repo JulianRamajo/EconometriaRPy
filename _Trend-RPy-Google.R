@@ -17,3 +17,6 @@ plot(trend_4)
 trend_5 <- gtrends(c("R machine learning", "Python machine learning"))
 plot(trend_5)
 #
+# Para búsquedas directas en la página web de Google Trends usar el link:
+# https://trends.google.com/trends/explore?date=all&q=r%20statistics,python%20statistics
+# NOTA: Cambiar "statistics" por "econometrics", "data%20science" , ...

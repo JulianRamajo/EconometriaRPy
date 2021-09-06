@@ -1,174 +1,56 @@
 ---
-title: 'Configuración de R y Python en RStudio'
+title: "Programación conjunta en R y Python con reticulate (usando un fichero R Markdown)"
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 0.0: Instalación del software necesario'
+subtitle: 'Aplicación 0.2b: Ejemplo en interoperabilidad entre R y Python usando RStudio'
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
   html_document:
     theme: journal
     highlight: haddock
     toc: yes
     toc_depth: 2
     toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Configuración del entorno R
-
-1. Descargar e instalar **R**: <https://cloud.r-project.org/>
-
-2. Descargar e instalar **RStudio**: <https://www.rstudio.com/products/rstudio/download/>
-
-3. Abrir RStudio e instalar la librería `tidyverse`:
-
-install.packages("tidyverse")
-
-4. Instalar la librería `Rcpp` y el software **Rtools**:
-
-install.packages("Rcpp")
-
-<https://cran.r-project.org/bin/windows/Rtools/>
-
-NOTA: Rcpp y Rtools se necesitan con frecuencia para acelerar algunas partes del código, así como para compilar paquetes más nuevos en instalaciones antiguas de R.
-
-5. Una vez instalados R y RStudio, el siguiente paso consiste en instalar las librerías específicas para realizar estudios cuantitativos.
-
-Hay una gama increíblemente grande de paquetes disponibles en R: <https://cran.r-project.org/web/packages/available_packages_by_name.html>
-
-Afortunadamente, la mayoría de los paquetes más populares, o muy especializados, están agrupados en diferentes categorías en CRAN TASK Views:  <https://cran.r-project.org/web/views/>
-
-Puedes instalar muy fácilmente el paquete ctv:
-
-install.packages("ctv")
-
-y posteriormente instalar "paquetes de librerías" específicas:
-
-**ctv::install.views("Econometrics")**
-ctv::install.views("Finance")
-ctv::install.views("TimeSeries")
-ctv::install.views("MissingData")
-ctv::install.views("Graphics")
-ctv::install.views("NumericalMathematics")
-ctv::install.views("Psychometrics")
-ctv::install.views("SocialSciences")
-ctv::install.views("Environmetrics")
-ctv::install.views("MachineLearning")
-ctv::install.views("Cluster")
-ctv::install.views("Survival")
-ctv::install.views("Distributions")
-ctv::install.views("Multivariate")
-ctv::install.views("Optimization")
-ctv::install.views("Robust")
-ctv::install.views("Spatial")
-ctv::install.views("SpatioTemporal")
-ctv::install.views("OfficialStatistics")
-
-NOTA: Mi recomiendación es instalar sólo los paquetes necesarios para el análisis econométrico básico (<https://cran.r-project.org/web/views/Econometrics.html>). Siempre se pueden instalar paquetes adicionales más adelante; de hecho, RStudio nos avisará cuándo un _script_ contiene alguna librería no instalada y no dará la opción de instalarla antes de ejecutar el código.
-
-# Configuración del entorno Python
-
-Hay varias formas de configurar Python en un ordenador. Los tres métodos más frecuentes son los siguientes:
-
-a) Distribución estándar de Python: <https://www.python.org/downloads/>
-b) Distribución **Miniconda** de Python: <https://docs.conda.io/en/latest/miniconda.html>
-c) Distribución **Anaconda** de Python: <https://www.anaconda.com/>
-
-Tanto la distribución Miniconda como Anaconda utilizan la librería `conda` en sus instalaciones de Python, la cual permite descargar e instalar paquetes adicionales de Python. La instalación estándar de Python utiliza el paquete `pip` para descargar e instalar librerías adicionales de Python.
-
-Para las necesidades de este curso usaremos la distribución **Miniconda**. Lo primero que hay que hacer es configurar el entorno de Python con la librería `reticulate`. Cuando se ejecuta por primera vez dicha librería se crea una instalación **miniconda** adaptada a R llamada _R-Miniconda_; también se puede instalar _Miniconda_ manualmente utilizando el comando _install_miniconda()_.
-
-```{r}
-install.packages("reticulate")
-library(reticulate)
-repl_python()
-quit
-conda_list()
-# install_miniconda() # Sólo si no aparece ninguna instalción de Python
-```
-
-Para comprobar que el entorno Python ha sido creado adecuadamente habrá que ver si la instalación ha sido correcta:
-
-```{r conda_setup, include = TRUE, echo=TRUE}
-conda_version()
-print(reticulate::py_config())
-```
-
-## Creación de un entorno conda propio (opcional, para aislar entornos de trabajo)
-
-Crear un entorno propio es tan sencillo como generar un nuevo nombre de entorno, tal y como se muestra a continuación:
-
-```{r conda_my_env_setup, eval=FALSE, include=FALSE}
-mi_entorno <- "econmetrics"
-conda_create(mi_entorno)
-```
-
-Para usar el nuevo entorno de Python en lugar del estándar (`r-reticulate`) debe usarse el siguiente script:
-
-```{r using_env, eval=FALSE, include=FALSE}
-use_condaenv(mi_entorno)
-conda_version()
-conda_list()
-```
-
-## Instalación de librerías Python
-
-El siguiente paso consiste en instalar las librerías de Python pertinentes en el entorno de R-Miniconda. La razón por la que queremos usar `reticulate` es para poder acceder a todas las librerías de Python que instalemos desde _dentro de R_.
-
-
-```{r installing_packages_into_R, include = TRUE, echo=TRUE, eval=TRUE}
-# py_install("numpy")
-py_install("pandas")
-py_install("matplotlib")
-py_install("seaborn")
-py_install("plotly")
-py_install("plotnine")
-py_install("scipy")
-py_install("scikit-learn")
-py_install("linearmodels")
-py_install("statsmodels")
-py_install("semopy", pip = TRUE)
-py_install("lifelines")
-py_install("arch-py")
-py_install("pysal")
-py_install("appelpy", pip = TRUE)
-py_install("datetime", pip =  TRUE)
-py_install("stargazer", pip = TRUE)
-py_install("mizani")
-py_install("xlrd")
-```
-
-# Ejemplo: Importando librerías Python al estilo _reticulate_
+# Importando librerías Python al estilo _reticulate_
 
 Para los usuarios de Python, esta parte les parecerá poco familiar, ya que estamos acostumbrados a declarar importaciones de esta manera _desde mi paquete importar submódulo_. Reticulate en R necesita que las librerías o submódulos se almacenen como objetos R y que cada tipo se establezca como si fuese una variable:
 
 ```{r importing_packages, include = TRUE, echo=TRUE, eval=TRUE}
+library(reticulate)
+library(tidyverse)
+library(tidymodels)
+library(caret)
+library(magrittr)
+library(plotly)
+library(data.table)
 # Librerías pandas y numpy
 pandas <- import("pandas")
 numpy <- import("numpy")
 
+# Librerías de visualización
+sns <- import('seaborn')
+plt <- import('matplotlib.pyplot')
+
 # Librerías de scikit-learn
-sl_model_selection <- import("sklearn.model_selection")
+skl_model_selection <- import("sklearn.model_selection")
 skl <- import("sklearn")
 skl_ensemble <- import("sklearn.ensemble")
 skl_pipeline <- import("sklearn.pipeline")
 skl_metrics <- import("sklearn.metrics")
 skl_externals <- import("sklearn.externals")
 skl_lm <- import("sklearn.linear_model")
-
-# Librerías de visualización
-sns <- import('seaborn')
-plt <- import('matplotlib.pyplot')
 ```
 
-El _setup_ se ha completado.
+El _setup_ de este ejemplo se ha completado.
 
 # Functions from Python in Reticulate
 
@@ -178,49 +60,51 @@ Functions in Python start with def() and to utilise a Python function in R you n
 
 ```{r functions, include = TRUE, echo=TRUE, eval=TRUE}
 py_run_string("def square_root(x):
-                value = x * 0.5
+                value = x ** 0.5
                 return(value)")
 ```
+
 At first you will think, this did absolutely nothing, but it is hidden at the moment. To access Python objects you then need to use the function, as hereunder:
+
 ```{r use_the_function, include = TRUE, echo=TRUE, eval=TRUE}
 py$square_root(10)
 ```
-The <strong>py</strong> command will show you the list of Python objects that have been made available to R. Now I can access my custom square root function and pass a value to it, this is my preferred way. Another way this can be achieved is in an eval type statement:
+
+The `py` command will show you the list of Python objects that have been made available to R. Now I can access my custom square root function and pass a value to it, this is my preferred way. Another way this can be achieved is in an eval type statement:
 
 ```{r use_the_function_eval, include = TRUE, echo=TRUE, eval=TRUE}
 py_eval("square_root(10)")
 ```
 
-## Modelling with Python and R - with the help of reticulate
+# Modelling with Python and R - with the help of reticulate
 
 The first step is to do some data preparation and wrangling to get the data into the right format. We are going to make this a regression task and I am going to try and predict the temperature based on some other collected variables. 
 
-
-### Data Setup
+# Data Setup
 
 I am now going to set up the data and use my custom function to upsize the data:
 
 ```{r df_setup, include = TRUE, echo=TRUE, eval=TRUE}
-ttbs <- read_csv("Data/TTBS_Prediction.csv")
+ttbs <- read_csv("TTBS.csv")
 ttbs %<>% 
   sample_frac(size=0.2)
 ```
 
 The data is now ready, has been upsized, the relevant fields selected and nulls removed from the data frame.
 
-### Splitting data
+# Splitting data
 
 Next, I split the data into predictors(features) and predicted:
 
 ```{r data_splitting, include = TRUE, echo=TRUE, eval=TRUE}
-# X and Y predictions
+# X and Y (predictors and predicted)
 X <- ttbs[,1:3]
 Y <- data.frame(ttbs[,4])
 ```
 
-### Casting to a Python object
+# Casting to a Python object
 
-The important command to use here is the <strong>r_to_py()</strong> command to convert the data frame, or R object, into the associate Python Panda's data frame, or numpy array, etc. R handles this conversion for you.
+The important command to use here is the `_r_to_py()` command to convert the data frame, or R object, into the associate Python Panda's data frame, or numpy array, etc. R handles this conversion for you.
 
 I will cast the air data frame, the X and Y splits over to Python to use the train test split functionality in Python.
 
@@ -235,13 +119,13 @@ py_ttbs$describe() # Python describe method, same as summary in R
 py_len(py_ttbs) # Get the length of the dataset
 ```
 
-### Using Python's train and test split
+# Using Python's train and test split
 
 I will now use sklearn's train_test_split function to split my data to sample into training and test splits, for utilisation with sklearn later on:
 
 ```{r py_train_test, include = TRUE, echo=TRUE, eval=TRUE}
-split <- sl_model_selection$train_test_split(X, Y, test_size=0.75)
-#Tap into the model_selection sub module in sklearn to get train_test_split function
+split <- skl_model_selection$train_test_split(X, Y, test_size=0.75)
+#Tap into the model_selection sub-module in sklearn to get train_test_split function
 ```
 
 This will return a list of elements, as this is how it is held as a tuple in Python. Python is cool as it allows for multiple assignment, but R does not have that capability so I have to index select the relevant data frames stored in a list:
@@ -251,11 +135,9 @@ py_X_train <- r_to_py(split[[2]])
 py_X_test <- r_to_py(split[[1]])
 py_Y_train <- r_to_py(split[[4]])
 py_Y_test <- r_to_py(split[[3]])
-
-py_X_train$head() #Use head method in Python
 ```
 
-### Fitting a model in Sci-kit learn (Python's ML library)
+# Fitting a model in Sci-kit learn (Python's ML library)
 
 The next steps fit a linear regression model in sci-kit learn. Unlike R, Sci-kit learn requires you to instantiate the model object before fitting. The code below shows the process:
 
@@ -263,7 +145,7 @@ The next steps fit a linear regression model in sci-kit learn. Unlike R, Sci-kit
 sk_lm_model <- skl_lm$LinearRegression() #Instantiate the linear regression method
 model <- sk_lm_model$fit(py_X_train, py_Y_train) #Fit the model object to the training set - Python takes its inputs in as separate numpy arrays
 r_squared <- model$score(py_X_test, py_Y_test) #The model score, for this model, is the r squared value indicating how well the chosen predictors fit the temperature we are trying to predict
-
+r_squared
 ```
 
 To access the model results we use the following code - this will bring back the intercept terms and the coefficients:
@@ -275,7 +157,7 @@ print(model_intercept)
 print(model_coef)
 ```
 
-### Making predictions with the model
+# Making predictions with the model
 
 To make predictions with the model we will use the testing set that we created when we used the sci-kit learn splitting function. This will allow us to validate the model fit visually:
 
@@ -288,11 +170,11 @@ model_results <- data.frame(Predicted_Temp=model_predict,
 colnames(model_results) <- c("Predicted", "Actual", "Residual")
 ```
 
-The model predict converts to an R object, however the py_Y_test is still in a native Python format, so I need to use the reverse casting function <strong>py_to_r()</strong> to convert it back to an object that R can work with. If I tried to pass this directly without the conversion, then I would get an exception error.
+The model predict converts to an R object, however the py_Y_test is still in a native Python format, so I need to use the reverse casting function `py_to_r()` to convert it back to an object that R can work with. If I tried to pass this directly without the conversion, then I would get an exception error.
 
 The model_results creates a data frame and then I use the colnames() R function to change the names of the columns in the data frame, these names have been passed to a R vector.
 
-### Visualising the fit with Seaborn
+# Visualising the fit with Seaborn
 
 I will now convert my model_results frame back to a Python format (a Pandas data frame) to allow seaborn to interact with the columns and rows in the df. 
 
@@ -309,11 +191,12 @@ Finally, we will pass this visual through to Seaborn to do something with:
 ```{r visualise_sns_seab, include = TRUE, echo=TRUE, eval=TRUE}
 #Create line plot in seaborn
 sns$lineplot(data=py_mod_results, x="Actual", y="Predicted")
+plt$show()
 ```
 
 The plot returned is a Python plot, this varies slightly from the R code, as I could use plt$show() directly after the code to view the chart, however this opens in Python and then cannot be integrated into the Markdown book. 
 
-### Create the same plot in R
+# Create the same plot in R
 
 I will now create a similar plot in R:
 
@@ -322,9 +205,8 @@ plot <- model_results %>%
   ggplot(aes(x=Actual, 
              y=Predicted)) + geom_point(color="blue") +
   geom_smooth(method = 'lm', formula = "y ~ x") 
-
+plot
 plotly::ggplotly(plot) # Convert to a plotly object
-
 ```
 
 # Running an external python script
@@ -335,31 +217,33 @@ First, we need to write out the results from our R environment. I will use data.
 ttbs_reduced <- ttbs %>% 
   dplyr::select(-EDPres30days)
 # Get rid of the ED presentation within last 30 days due to zero variance
-data.table::fwrite(ttbs_reduced, "Data/ttbs.csv")
+data.table::fwrite(ttbs_reduced, "ttbs_reduced.csv")
 ```
 
 The below example shows how to run an external Python script. This Python script picks up the data from the air data frame and creates an sns pairplot:
 
 ```{r python_plots, include = TRUE, echo=TRUE, eval=TRUE}
 # Here we have two plots we will now use to pass python objects through to
-py_run_file("sns_plot.py") #This has a call to pick up the data and a function 
-# to create a pair plot
-plt$savefig("Images/snspairplot.png")
-knitr::include_graphics("Images/snspairplot.png")
+py_run_file("sns_plot.py") #This has a call to pick up the data and a function to create a pair plot
+plt$show()
+#
+plt$savefig("sns_pair_plot.png")
+knitr::include_graphics("sns_pair_plot.png")
 ```
 
 This ran the external python script, returned the chart object, I saved this (as R Markdown cannot view matplotlib plots) and then I load this back in to display. 
 
-## Creating a correlation matrix with Python's heatmap
+# Creating a correlation matrix with Python's heatmap
 
-The final example, I will demonstrate how to create a heatmap in Python:
+The final example, I will demonstrate how to create a correlation matrix and a heatmap in Python:
 
 ```{r python_plots_heatmap, include = TRUE, echo=TRUE, eval=TRUE}
-# Finally we will create a correlation matrix in matplot lib 
-
 corr <- py_ttbs$corr()
+corr
 plt$clf()#Get rid of previous figure
 sns$heatmap(corr, annot=TRUE, cmap="YlGnBu")
-plt$savefig("Images/correlation_plot.png")
-knitr::include_graphics("Images/correlation_plot.png")
+plt$show()
+#
+plt$savefig("sns_correlation_plot.png")
+knitr::include_graphics("sns_correlation_plot.png")
 ```

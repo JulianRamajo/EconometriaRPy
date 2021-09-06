@@ -133,7 +133,6 @@ promotion_model = model.fit()
 
 # Resultados
 print(promotion_model.summary())
-
 ```
 
 Sin embargo, te das cuenta de que estos datos son en realidad jerárquicos ya que el mismo `iid` individual puede tener múltiples fechas, así que es necesario estimar un _modelo de regresión logística de efectos mixtos_, ¡pero no puedes encontrar ningún programa en Python que lo haga! Sin problema, se lo mandas a un colega para que lo estime en R:
@@ -147,7 +146,6 @@ iid_intercept_model <- lme4:::glmer(dec ~ agediff + samerace + attr + intel + pr
 summary(iid_intercept_model)
 
 coefficients <- coef(iid_intercept_model)$iid
-
 ```
 
 
@@ -156,6 +154,5 @@ Ahora se pueden recuperar los resultados en Python y echar un vistazo a las esti
 ```{python}
 coefs = r.coefficients
 print(coefs.head())
-
 ```
 
