@@ -1,0 +1,177 @@
+---
+title: 'Configuración de R y Python en RStudio'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 0.0.a: Instalación del software necesario'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Configuración de R
+
+1. Descargar e instalar **R**: <https://cloud.r-project.org/>
+
+2. Descargar e instalar **RStudio**: <https://www.rstudio.com/products/rstudio/download/>
+
+3. Abrir RStudio e instalar las librerías `tidyverse`, `tidymodels`, `shiny`, `rmarkdown` y `flexdashboard`:
+
+install.packages("tidyverse")
+
+install.packages("tidymodels")
+
+install.packages("shiny")
+
+install.packages("rmarkdown")
+
+install.packages("flexdashboard")
+
+4. Instalar la librería `Rcpp` y el software **Rtools**:
+
+install.packages("Rcpp")
+
+<https://cran.r-project.org/bin/windows/Rtools/>
+
+NOTA: Rcpp y Rtools se necesitan con frecuencia para acelerar algunas partes del código, así como para compilar paquetes más nuevos en instalaciones antiguas de R.
+
+5. Una vez instalados R y RStudio, el siguiente paso consiste en instalar las librerías específicas para realizar estudios cuantitativos.
+
+Hay una gama increíblemente grande de paquetes disponibles en R: <https://cran.r-project.org/web/packages/available_packages_by_name.html>
+
+Afortunadamente, la mayoría de los paquetes más populares, o muy especializados, están agrupados en diferentes categorías en CRAN TASK Views:  <https://cran.r-project.org/web/views/>
+
+Puedes instalar muy fácilmente el paquete ctv:
+
+install.packages("ctv")
+
+y posteriormente instalar "paquetes de librerías" específicas:
+
+**ctv::install.views("Econometrics")**
+
+ctv::install.views("Finance")
+
+ctv::install.views("TimeSeries")
+
+ctv::install.views("MissingData")
+
+ctv::install.views("Graphics")
+
+ctv::install.views("NumericalMathematics")
+
+ctv::install.views("Psychometrics")
+
+ctv::install.views("SocialSciences")
+
+ctv::install.views("Environmetrics")
+
+ctv::install.views("MachineLearning")
+
+ctv::install.views("Cluster")
+
+ctv::install.views("Survival")
+
+ctv::install.views("Distributions")
+
+ctv::install.views("Multivariate")
+
+ctv::install.views("Optimization")
+
+ctv::install.views("Robust")
+
+ctv::install.views("Spatial")
+
+ctv::install.views("SpatioTemporal")
+
+ctv::install.views("OfficialStatistics")
+
+NOTA: Mi recomendación es instalar sólo los paquetes necesarios para el análisis econométrico básico (<https://cran.r-project.org/web/views/Econometrics.html>). Siempre se pueden instalar paquetes adicionales más adelante; de hecho, RStudio nos avisará cuándo un _script_ contiene alguna librería no instalada y nos dará la opción de instalarla antes de ejecutar el código.
+
+# Configuración de Python
+
+Hay varias formas de configurar Python en un ordenador. Los tres métodos más frecuentes son los siguientes:
+
+a) Distribución estándar de Python: <https://www.python.org/downloads/>
+b) Distribución **Miniconda** de Python: <https://docs.conda.io/en/latest/miniconda.html>
+c) Distribución **Anaconda** de Python: <https://www.anaconda.com/>
+
+Tanto la distribución Miniconda como Anaconda utilizan la librería `conda` en sus instalaciones de Python, la cual permite descargar e instalar paquetes adicionales de Python. La instalación estándar de Python utiliza el paquete `pip` para descargar e instalar librerías adicionales de Python.
+
+Para las necesidades de este curso usaremos la distribución **Miniconda**. Lo primero que hay que hacer es configurar el entorno de Python con la librería `reticulate`. Cuando se ejecuta por primera vez dicha librería se crea una instalación **miniconda** adaptada a R llamada _R-Miniconda_; también se puede instalar _Miniconda_ manualmente utilizando el comando _install_miniconda()_.
+
+```{r install_reticulate, eval=FALSE}
+install.packages("reticulate")
+library(reticulate)
+install_miniconda()
+conda_list()
+conda_version()
+py_config()
+# Para comprobar que el entorno Python ha sido creado adecuadamente 
+# habrá que ver si la instalación ha sido correcta
+repl_python()
+x = 42 * 2
+print(x)
+quit
+# install_miniconda() # Sólo si no aparece ninguna instalación de Python
+```
+
+## Creación de un entorno conda propio
+
+(Opcional, para aislar entornos de trabajo)
+
+Crear un entorno propio es tan sencillo como generar un nuevo nombre de entorno, tal y como se muestra a continuación:
+
+```{r conda_mi_entorno_setup, eval=FALSE}
+mi_entorno <- "econometria"
+conda_create(mi_entorno)
+```
+
+Para usar el nuevo entorno de Python en lugar del estándar (`r-reticulate`) debe usarse el siguiente script:
+
+```{r using_env, eval=FALSE}
+use_condaenv(mi_entorno)
+conda_version()
+conda_list()
+```
+
+## Instalación de librerías Python
+
+El siguiente paso consiste en instalar las librerías de Python pertinentes en el entorno de R-Miniconda. La razón por la que queremos usar `reticulate` es para poder acceder a todas las librerías de Python que instalemos desde _dentro de R_.
+
+
+```{r installing_packages_into_R, eval=FALSE}
+library(reticulate)
+# py_install("numpy")
+py_install("pandas")
+py_install("matplotlib")
+py_install("seaborn")
+py_install("plotly")
+py_install("plotnine")
+py_install("scipy")
+py_install("scikit-learn")
+py_install("linearmodels")
+py_install("statsmodels")
+py_install("semopy", pip = TRUE)
+py_install("lifelines")
+py_install("arch", pip=TRUE)
+# Si la instalación de 'arch' da un mensaje final de error
+py_install("pyhdfe", pip=TRUE)
+py_install("pysal")
+py_install("appelpy", pip = TRUE)
+py_install("datetime", pip =  TRUE)
+py_install("stargazer", pip = TRUE)
+py_install("mizani")
+py_install("xlrd")
+```

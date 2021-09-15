@@ -1,8 +1,19 @@
 ---
-title: "Aplicación 0: Lectura, filtrado, selección, transformación y representación de datos en R con Tidyverse"
+title: 'Lectura, filtrado, selección, transformación y representación de datos en R con Tidyverse'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 0.3: Tidyverse'
 output:
   html_document:
-    df_print: paged
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
 # Código R
@@ -58,7 +69,7 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   transition_time(year) +
   ease_aes('linear')
 #
-# Análisis exploratori de datos (EDA)
+# Análisis exploratorio de datos (EDA)
 #
 library(skimr)
 skim(gapminder)

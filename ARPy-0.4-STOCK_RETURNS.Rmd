@@ -1,8 +1,19 @@
 ---
-title: "Aplicación 0: Lectura, filtrado, selección, transformación y representación de datos en R y Python"
+title: 'Lectura, filtrado, selección, transformación y representación de datos en R y Python'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 0.4: Manejo de datos en R y Python'
 output:
   html_document:
-    df_print: paged
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
 # Código R
@@ -13,7 +24,7 @@ library(tidyverse)
 library(lubridate)
 library(scales)
 #
-stock_data<-read_csv("~/Dropbox/Mi Mac (Mac Pro de Julián)/Documents/GitHub/EcoMetricsRPy/sp500_45.csv")
+stock_data<-read_csv("sp500_45.csv")
 head(stock_data)
 
 # filter
@@ -94,7 +105,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 
 # 
-stock_data = pd.read_csv("~/Dropbox/Mi Mac (Mac Pro de Julián)/Documents/GitHub/EcoMetricsRPy/sp500_45.csv")
+stock_data = pd.read_csv("sp500_45.csv")
 stock_data.head()
 MSFT = stock_data[stock_data['ticker']=='MSFT']
 p_MSFT = MSFT[['ref.date','price.close']]. \
@@ -121,17 +132,13 @@ data_daily['month'] = data_daily['date'].dt.month
 data_daily['l_MSFT']=data_daily['p_MSFT'].map(lambda x:np.log(x))
 data_daily['l_SP500']=data_daily['p_SP500'].map(lambda x:np.log(x))
 
-# (ggplot(data_daily) 
-#        + geom_line(aes('date','p_MSFT'), size = 0.5) 
-#        + scale_y_continuous(expand = [0.01,0.01],limits = [0,120]) 
-#        + labs(y = "Precio de las acciones de Microsoft (US $)",x= "Date (day)") 
-#        + theme_bw())
-
-# (ggplot(data_daily) 
-#        + geom_line(aes('date','p_SP500'), size = 0.5) 
-#        + scale_y_continuous(expand = [0.01,0.01]) 
-#        + labs(y = "Índice S&P 500 del mercado bursátil",x= "Date (day)") 
-#        + theme_bw())
+# ggplot en Python
+#ggplot(data_daily) + geom_line(aes('date','p_MSFT'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01],limits = [0,120]) 
+#+ labs(y = "Precio de las acciones de Microsoft (US $)",x= "Date (day)") + theme_bw())
+#plt.show()
+#ggplot(data_daily) + geom_line(aes('date','p_SP500'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
+#+ labs(y = "Índice S&P 500 del mercado bursátil",x= "Date (day)") + theme_bw())
+#plt.show()
 
 data_daily['l.p_MSFT'] = data_daily['p_MSFT'].shift()
 data_daily['l.p_SP500'] = data_daily['p_SP500'].shift()

@@ -3,7 +3,7 @@ title: "Programación conjunta en R y Python con reticulate (usando un fichero R
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 0.2: Ejemplos en interoperabilidad entre R y Python usando RStudio'
+subtitle: 'Aplicación 0.2.a: Ejemplos en interoperabilidad entre R y Python usando RStudio'
 output:
   html_document:
     theme: journal

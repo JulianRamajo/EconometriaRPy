@@ -1,9 +1,19 @@
 ---
-title: 'Aplicación 1.2: Demanda familiar de carne'
+title: 'TEMA 1: INTRODUCCIÓN A LA ECONOMETRÍA'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 1.2: Demanda familiar de carne'
 output:
   html_document:
-    df_print: paged
-  word_document: default
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
 # Código R

@@ -3,7 +3,7 @@ title: "Programación conjunta en R y Python con reticulate (usando un fichero R
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 0.2b: Ejemplo en interoperabilidad entre R y Python usando RStudio'
+subtitle: 'Aplicación 0.2b: Ejemplo avanzado en interoperabilidad entre R y Python usando RStudio'
 output:
   html_document:
     theme: journal
@@ -22,9 +22,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Importando librerías Python al estilo _reticulate_
 
-Para los usuarios de Python, esta parte les parecerá poco familiar, ya que estamos acostumbrados a declarar importaciones de esta manera _desde mi paquete importar submódulo_. Reticulate en R necesita que las librerías o submódulos se almacenen como objetos R y que cada tipo se establezca como si fuese una variable:
+Para los usuarios de Python, esta parte les parecerá poco familiar, ya que estamos acostumbrados a declarar importaciones de esta manera _desde mi paquete importar submódulo_. `reticulate` en R necesita que las librerías o submódulos se almacenen como objetos R y que cada tipo se establezca como si fuese una variable:
 
 ```{r importing_packages, include = TRUE, echo=TRUE, eval=TRUE}
+# Librerías R
 library(reticulate)
 library(tidyverse)
 library(tidymodels)
@@ -32,14 +33,13 @@ library(caret)
 library(magrittr)
 library(plotly)
 library(data.table)
+# Librerías Python
 # Librerías pandas y numpy
 pandas <- import("pandas")
 numpy <- import("numpy")
-
 # Librerías de visualización
 sns <- import('seaborn')
 plt <- import('matplotlib.pyplot')
-
 # Librerías de scikit-learn
 skl_model_selection <- import("sklearn.model_selection")
 skl <- import("sklearn")
@@ -50,13 +50,11 @@ skl_externals <- import("sklearn.externals")
 skl_lm <- import("sklearn.linear_model")
 ```
 
-El _setup_ de este ejemplo se ha completado.
+# Funciones de Python en reticulate
 
-# Functions from Python in Reticulate
+A continuación veremos algunos aspectos básicos, antes de pasar a ver cómo usar R y Python juntos pasando un conjunto de datos desde R a los paquetes ML de Python, hacer algunas visualizaciones en Python, pasar de nuevo a R, y finalmente de nuevo a un archivo externo de Python. 
 
-The next section will look at some basics, before jumping into how to use R and Python together to pass a data frame from R, to the Python ML packages, do some Python visuals, pass back to R and then back to an external Python file again. 
-
-Functions in Python start with def() and to utilise a Python function in R you need to follow the below steps:
+Las funciones en Python comienzan con def() y para utilizar una función de Python en R hay que seguir los siguientes pasos:
 
 ```{r functions, include = TRUE, echo=TRUE, eval=TRUE}
 py_run_string("def square_root(x):
@@ -64,37 +62,37 @@ py_run_string("def square_root(x):
                 return(value)")
 ```
 
-At first you will think, this did absolutely nothing, but it is hidden at the moment. To access Python objects you then need to use the function, as hereunder:
+Al principio pensaréis que el anterior script no ha hecho absolutamente nada, pero está oculto por el momento. Para acceder a los objetos de Python es necesario utilizar la función, tal y como se muestra a continuación:
 
 ```{r use_the_function, include = TRUE, echo=TRUE, eval=TRUE}
 py$square_root(10)
 ```
 
-The `py` command will show you the list of Python objects that have been made available to R. Now I can access my custom square root function and pass a value to it, this is my preferred way. Another way this can be achieved is in an eval type statement:
+El comando `py` le mostrará la lista de objetos de Python que han sido puestos a disposición de R. Ahora puedo acceder a mi función personalizada de raíz cuadrada y pasarle un valor. 
+
+Otra forma en que se puede lograr esto es en una declaración de tipo eval:
 
 ```{r use_the_function_eval, include = TRUE, echo=TRUE, eval=TRUE}
 py_eval("square_root(10)")
 ```
 
-# Modelling with Python and R - with the help of reticulate
+# Modelización con Python y R con la ayuda de reticulate
 
-The first step is to do some data preparation and wrangling to get the data into the right format. We are going to make this a regression task and I am going to try and predict the temperature based on some other collected variables. 
+El primer paso es hacer algo de `preparación y manipulación´ de los datos para ponerlos en el formato adecuado. Vamos a hacer primero una regresión y luego voy a intentar predecir la temperatura en función de otras variables recogidas en el estudio.
 
-# Data Setup
+## Configuración de los datos
 
-I am now going to set up the data and use my custom function to upsize the data:
+Ahora voy a configurar los datos, utilizando una función para recortar el tamaño de la base:
 
 ```{r df_setup, include = TRUE, echo=TRUE, eval=TRUE}
 ttbs <- read_csv("TTBS.csv")
 ttbs %<>% 
-  sample_frac(size=0.2)
+  slice_sample(prop = 0.2)
 ```
 
-The data is now ready, has been upsized, the relevant fields selected and nulls removed from the data frame.
+## Dividir los datos
 
-# Splitting data
-
-Next, I split the data into predictors(features) and predicted:
+A continuación, divido los datos en predictores (características) y predichos:
 
 ```{r data_splitting, include = TRUE, echo=TRUE, eval=TRUE}
 # X and Y (predictors and predicted)
@@ -102,33 +100,31 @@ X <- ttbs[,1:3]
 Y <- data.frame(ttbs[,4])
 ```
 
-# Casting to a Python object
+## Conversión a un objeto de Python
 
-The important command to use here is the `_r_to_py()` command to convert the data frame, or R object, into the associate Python Panda's data frame, or numpy array, etc. R handles this conversion for you.
+El comando importante a utilizar aquí es el comando `_r_to_py()` para convertir el marco de datos, o el objeto de R, en el marco de datos asociado de Python `panda`, o el array de `numpy`, etc. R maneja esta conversión por ti.
 
-I will cast the air data frame, the X and Y splits over to Python to use the train test split functionality in Python.
+Voy a lanzar el conjunto de datos y las divisiones X e Y a Python para utilizar la funcionalidad de división en Python:
 
 ```{r py_casting, include = TRUE, echo=TRUE, eval=TRUE}
 py_ttbs <- r_to_py(ttbs)
 py_X <- r_to_py(X)
 py_Y <- r_to_py(Y)
-py_ttbs$head() # Call the head on the Python object
-py_ttbs$dtypes # Python data types method
-py_ttbs$nunique # Python number of unique items method
-py_ttbs$describe() # Python describe method, same as summary in R
-py_len(py_ttbs) # Get the length of the dataset
+py_ttbs$head() 
+py_ttbs$dtypes
+py_ttbs$describe()
+py_len(py_ttbs)
 ```
 
-# Using Python's train and test split
+## Usando la división de entrenamiento y prueba de Python
 
-I will now use sklearn's train_test_split function to split my data to sample into training and test splits, for utilisation with sklearn later on:
+Ahora usaré la función train_test_split de sklearn para dividir mis datos en dos splits de entrenamiento y de prueba, para utilizarlos con sklearn más adelante:
 
 ```{r py_train_test, include = TRUE, echo=TRUE, eval=TRUE}
 split <- skl_model_selection$train_test_split(X, Y, test_size=0.75)
-#Tap into the model_selection sub-module in sklearn to get train_test_split function
 ```
 
-This will return a list of elements, as this is how it is held as a tuple in Python. Python is cool as it allows for multiple assignment, but R does not have that capability so I have to index select the relevant data frames stored in a list:
+Esto devolverá una lista de elementos, ya que así es como se mantiene como una tupla en Python. Python es genial, ya que permite la asignación múltiple, pero R no tiene esa capacidad, así que tengo que indexar los marcos de datos relevantes almacenados en una lista:
 
 ```{r py_convert_splits, include = TRUE, echo=TRUE, eval=TRUE}
 py_X_train <- r_to_py(split[[2]])
@@ -137,18 +133,18 @@ py_Y_train <- r_to_py(split[[4]])
 py_Y_test <- r_to_py(split[[3]])
 ```
 
-# Fitting a model in Sci-kit learn (Python's ML library)
+## Ajuste de un modelo de regresión en Sci-kit learn (biblioteca ML de Python)
 
-The next steps fit a linear regression model in sci-kit learn. Unlike R, Sci-kit learn requires you to instantiate the model object before fitting. The code below shows the process:
+Los siguientes pasos ajustan un modelo de regresión lineal en Sci-kit learn. A diferencia de R, Sci-kit learn requiere que se inicialice el objeto modelo antes de ajustarlo. El código siguiente muestra el proceso:
 
 ```{r fit_ml_model, include = TRUE, echo=TRUE, eval=TRUE}
-sk_lm_model <- skl_lm$LinearRegression() #Instantiate the linear regression method
-model <- sk_lm_model$fit(py_X_train, py_Y_train) #Fit the model object to the training set - Python takes its inputs in as separate numpy arrays
-r_squared <- model$score(py_X_test, py_Y_test) #The model score, for this model, is the r squared value indicating how well the chosen predictors fit the temperature we are trying to predict
+sk_lm_model <- skl_lm$LinearRegression() 
+model <- sk_lm_model$fit(py_X_train, py_Y_train)
+r_squared <- model$score(py_X_test, py_Y_test)
 r_squared
 ```
 
-To access the model results we use the following code - this will bring back the intercept terms and the coefficients:
+Para acceder a los resultados del modelo utilizamos el siguiente código, que nos devolverá la ordenada en el origen (`intercept`) y los coeficientes estimados:
 
 ```{r fit_access_metrics, include = TRUE, echo=TRUE, eval=TRUE}
 model_intercept <- model$intercept_
@@ -157,26 +153,25 @@ print(model_intercept)
 print(model_coef)
 ```
 
-# Making predictions with the model
+## Realización de predicciones con el modelo
 
-To make predictions with the model we will use the testing set that we created when we used the sci-kit learn splitting function. This will allow us to validate the model fit visually:
+Para realizar predicciones con el modelo utilizaremos el conjunto de datos de prueba que creamos al utilizar la función de división de sci-kit learn. Esto nos permitirá validar el ajuste del modelo visualmente:
 
 ```{r making predictions, include = TRUE, echo=TRUE, eval=TRUE}
 model_predict <- model$predict(py_X_test)
-#Create a data frame with the predictions
 model_results <- data.frame(Predicted_Temp=model_predict, 
                             py_to_r(py_Y_test),
                             py_to_r(py_Y_test) - model_predict)
 colnames(model_results) <- c("Predicted", "Actual", "Residual")
 ```
 
-The model predict converts to an R object, however the py_Y_test is still in a native Python format, so I need to use the reverse casting function `py_to_r()` to convert it back to an object that R can work with. If I tried to pass this directly without the conversion, then I would get an exception error.
+El modelo predicho se convierte en un objeto de R, sin embargo el py_Y_test está todavía en un formato nativo de Python, por lo que se necesita utilizar la función de casting inverso `py_to_r()` para convertirlo de nuevo en un objeto con el que R pueda trabajar. Si intentara pasarlo directamente sin la conversión, obtendría un error de excepción.
 
-The model_results creates a data frame and then I use the colnames() R function to change the names of the columns in the data frame, these names have been passed to a R vector.
+El model_results crea un marco de datos y luego se usa la función R colnames() para cambiar los nombres de las columnas en el marco de datos.
 
-# Visualising the fit with Seaborn
+## Visualización del ajuste con Seaborn
 
-I will now convert my model_results frame back to a Python format (a Pandas data frame) to allow seaborn to interact with the columns and rows in the df. 
+Ahora convertiré mi marco model_results a un formato de Python (un marco de datos `pandas`) para permitir que `seaborn` interactúe con las columnas y filas del data.frame de R. 
 
 ```{r visualise_sns_conv, include = TRUE, echo=TRUE, eval=TRUE}
 # Convert model results back to Python to do stuff with
@@ -184,21 +179,20 @@ py_mod_results <- r_to_py(model_results)
 py_mod_results$dtypes
 ```
 
-This will print out the data types of the Python object. In Python, this code would look like this py_mod_results.dtypes, the dollar ($) notation would be replaced with a period (.).
+Esto imprimirá los tipos de datos del objeto Python. En Python, este código se vería así py_mod_results.dtypes, es decir, la notación del dólar ($) se reemplazaría por un punto (.).
 
-Finally, we will pass this visual through to Seaborn to do something with:
+Finalmente, pasaremos estos datos a Seaborn para hacer alguna gráfica:
 
 ```{r visualise_sns_seab, include = TRUE, echo=TRUE, eval=TRUE}
-#Create line plot in seaborn
 sns$lineplot(data=py_mod_results, x="Actual", y="Predicted")
 plt$show()
 ```
 
-The plot returned is a Python plot, this varies slightly from the R code, as I could use plt$show() directly after the code to view the chart, however this opens in Python and then cannot be integrated into the Markdown book. 
+El gráfico devuelto es un gráfico de Python, es decir, se abre en Python y por tanto no se puede integrar en el libro de Markdown. 
 
-# Create the same plot in R
+## Crear el mismo gráfico en R
 
-I will now create a similar plot in R:
+Ahora crearé un gráfico similar en R, en dos versión, una sencilla y otra dinámica:
 
 ```{r visualise_ggplot, include = TRUE, echo=TRUE, eval=TRUE}
 plot <- model_results %>% 
@@ -206,44 +200,5 @@ plot <- model_results %>%
              y=Predicted)) + geom_point(color="blue") +
   geom_smooth(method = 'lm', formula = "y ~ x") 
 plot
-plotly::ggplotly(plot) # Convert to a plotly object
-```
-
-# Running an external python script
-
-First, we need to write out the results from our R environment. I will use data.table to write this out quickly:
-
-```{r write_to_csv, include = TRUE, echo=TRUE, eval=TRUE}
-ttbs_reduced <- ttbs %>% 
-  dplyr::select(-EDPres30days)
-# Get rid of the ED presentation within last 30 days due to zero variance
-data.table::fwrite(ttbs_reduced, "ttbs_reduced.csv")
-```
-
-The below example shows how to run an external Python script. This Python script picks up the data from the air data frame and creates an sns pairplot:
-
-```{r python_plots, include = TRUE, echo=TRUE, eval=TRUE}
-# Here we have two plots we will now use to pass python objects through to
-py_run_file("sns_plot.py") #This has a call to pick up the data and a function to create a pair plot
-plt$show()
-#
-plt$savefig("sns_pair_plot.png")
-knitr::include_graphics("sns_pair_plot.png")
-```
-
-This ran the external python script, returned the chart object, I saved this (as R Markdown cannot view matplotlib plots) and then I load this back in to display. 
-
-# Creating a correlation matrix with Python's heatmap
-
-The final example, I will demonstrate how to create a correlation matrix and a heatmap in Python:
-
-```{r python_plots_heatmap, include = TRUE, echo=TRUE, eval=TRUE}
-corr <- py_ttbs$corr()
-corr
-plt$clf()#Get rid of previous figure
-sns$heatmap(corr, annot=TRUE, cmap="YlGnBu")
-plt$show()
-#
-plt$savefig("sns_correlation_plot.png")
-knitr::include_graphics("sns_correlation_plot.png")
+plotly::ggplotly(plot)
 ```
