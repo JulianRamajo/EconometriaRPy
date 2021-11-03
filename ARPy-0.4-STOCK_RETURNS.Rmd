@@ -77,15 +77,13 @@ data_daily <- data_daily %>%
 data_daily <- data_daily %>% mutate(r_MSFT=(d.p_MSFT/l.p_MSFT)*100, r_SP500=(d.p_SP500/l.p_SP500)*100)
 head(data_daily)
 
-
 p3 <- ggplot(data_daily, aes(r_SP500,y=r_MSFT)) + 
                geom_point() +  
                stat_smooth(method=lm) +  
                labs(x="Rendimiento diario del índice S&P 500 (%)",y="Rendimiento diario de Microsoft (%)")
-
 p3
 
-#   Regresión 
+# Regresión 
 #  
 reg <- lm(r_MSFT ~ r_SP500, data=data_daily)
 summary(reg)
@@ -133,12 +131,12 @@ data_daily['l_MSFT']=data_daily['p_MSFT'].map(lambda x:np.log(x))
 data_daily['l_SP500']=data_daily['p_SP500'].map(lambda x:np.log(x))
 
 # ggplot en Python
-#ggplot(data_daily) + geom_line(aes('date','p_MSFT'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01],limits = [0,120]) 
-#+ labs(y = "Precio de las acciones de Microsoft (US $)",x= "Date (day)") + theme_bw())
-#plt.show()
-#ggplot(data_daily) + geom_line(aes('date','p_SP500'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
-#+ labs(y = "Índice S&P 500 del mercado bursátil",x= "Date (day)") + theme_bw())
-#plt.show()
+(ggplot(data_daily) + geom_line(aes('date','p_MSFT'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01],limits = [0,120]) 
++ labs(y = "Precio de las acciones de Microsoft (US $)",x= "Date (day)") + theme_bw())
+plt.show()
+(ggplot(data_daily) + geom_line(aes('date','p_SP500'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
++ labs(y = "Índice S&P 500 del mercado bursátil",x= "Date (day)") + theme_bw())
+plt.show()
 
 data_daily['l.p_MSFT'] = data_daily['p_MSFT'].shift()
 data_daily['l.p_SP500'] = data_daily['p_SP500'].shift()
@@ -148,12 +146,9 @@ data_daily['r_MSFT'] = data_daily['d.p_MSFT']/data_daily['l.p_MSFT']*100
 data_daily['r_SP500'] = data_daily['d.p_SP500']/data_daily['l.p_SP500']*100
 data_daily.head()
 
-# (ggplot(data_daily,aes('PctRetSP500','PctRetMSFT'))
-#  + geom_point()
-#  + geom_smooth(method='lm',se=False)
-#  + labs(x="Rendimiento diario del índice S&P 500 (%)",y="Rendimiento diario de Microsoft (%)")
-#  + theme_bw())
+(ggplot(data_daily,aes('r_SP500','r_MSFT')) + geom_point() + geom_smooth(method='lm',se=False) + labs(x="Rendimiento diario del índice S&P 500 (%)",y="Rendimiento diario de Microsoft (%)") + theme_bw())
 
+# Regresión 
 reg = smf.ols('r_MSFT ~ r_SP500', data=data_daily).fit()
 print(reg.summary())
 ```

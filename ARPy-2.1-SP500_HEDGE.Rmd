@@ -1,0 +1,76 @@
+---
+title: 'TEMA 2: Mercados financieros'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 2.1:  Modelo de egresión lineal simple (con sólo una variable explicativa)'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+# Código R
+
+```{r, message=FALSE}
+library(tidyverse)
+library(readxl)
+SPhedge <- read_excel("SP500_HEDGE.xls", col_types = c("date", "numeric", "numeric"))
+head(SPhedge)
+summary(SPhedge[,2:3])
+#
+model_prices = lm(Spot ~ Futures,data = SPhedge)
+summary(model_prices)
+library(car)
+linearHypothesis(model_prices,c("Futures=1"))
+#
+SPhedge$r_Spot = c(NA,100*diff(log(SPhedge$Spot)))
+SPhedge$r_Futures = c(NA,100*diff(log(SPhedge$Futures))) 
+summary(SPhedge[c("r_Spot","r_Futures")])
+#
+model_returns = lm(r_Spot ~ r_Futures,data = SPhedge)
+summary(model_returns)
+linearHypothesis(model_returns,c("r_Futures=1"))
+```
+
+# Código Python
+
+```{python, message=FALSE}
+import pandas as pd
+import numpy as np
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+#
+SPhedge = pd.read_excel('SP500_HEDGE.xls', index_col=0)
+SPhedge.head()
+SPhedge.describe()
+#
+formula = 'Spot ~ Futures'
+results = smf.ols(formula, SPhedge).fit()
+print(results.summary())
+hypotheses = 'Futures = 1'
+F_test = results.f_test(hypotheses)
+print(F_test)
+# 
+def LogDiff(x):
+    x_diff = 100*np.log(x/x.shift(1))
+    return x_diff
+SPhedge['r_Spot'] = LogDiff(SPhedge['Spot'])
+SPhedge['r_Futures'] = LogDiff(SPhedge['Futures'])
+# data = pd.DataFrame({'r_Spot':LogDiff(data['Spot']), 'r_Futures':LogDiff(data['Futures'])})
+# data.head()
+# data.describe()
+#
+formula = 'r_Spot ~ r_Futures'
+results = smf.ols(formula, SPhedge).fit()
+print(results.summary())
+hypotheses = 'r_Futures = 1'
+F_test = results.f_test(hypotheses)
+print(F_test)
+```

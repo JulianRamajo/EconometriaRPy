@@ -59,7 +59,7 @@ ggplot(DEM_CARNE, aes(x = Y, y = Q)) +
 
 ## Regresión MCO del modelo lineal:
 
-$$Q = \beta_0 + \beta_1P + \beta_2Q + e$$
+$$Q = \beta_0 + \beta_1P + \beta_2Y + e$$
 
 ```{r}
 lin_model <- lm(formula = Q ~ P + Y, data = DEM_CARNE)
@@ -88,7 +88,7 @@ plot_ly(data = DEM_CARNE) %>%
 
 ## Regresión MCO del modelo lineal:
 
-$$Q = \beta_0 + \beta_1P + \beta_2Q + e$$
+$$Q = \beta_0 + \beta_1P + \beta_2Y + e$$
 
 ```{python}
 import pandas as pd
@@ -103,7 +103,7 @@ print(lin_model.summary())
 
 ## Regresión MCO del modelo logarítmico-lineal:
 
-$$log(Q) = \beta_0 + \beta_1log(P) + \beta_2log(Q) + e$$
+$$log(Q) = \beta_0 + \beta_1log(P) + \beta_2log(Y) + e$$
 
 ```{python}
 import numpy as np

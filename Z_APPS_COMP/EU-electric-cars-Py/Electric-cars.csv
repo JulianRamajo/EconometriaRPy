@@ -1,0 +1,181 @@
+﻿Name;Subtitle (Battery Electric Vehicle, kWh);Acceleration;TopSpeed;Range;Efficiency;FastChargeSpeed;Drive;NumberofSeats;PriceinGermany;PriceinUK;Manufacturer
+Opel Ampera-e ;58;7.3;150;335;173;210;Front Wheel Drive;5;42,990;N/A;Opel
+Renault Kangoo Maxi ZE 33;31;22.4;130;160;194;-;Front Wheel Drive;5;N/A;31,680;Renault
+Nissan Leaf ;36;7.9;144;220;164;230;Front Wheel Drive;5;29,990;25,995;Nissan
+Audi e-tron Sportback 55 quattro;86.5;5.7;200;375;231;600;All Wheel Drive;5;N/A;79,900;Audi
+Porsche Taycan Turbo S;83.7;2.8;260;390;215;860;All Wheel Drive;4;186,336;138,830;Porsche
+Nissan e-NV200 Evalia ;36;14;123;165;218;170;Front Wheel Drive;7;43,433;30,255;Nissan
+Volkswagen ID.3 Pure Performance;45;8.9;160;275;164;260;Rear Wheel Drive;5;31,960;27,120;Volkswagen
+BMW iX3 ;74;6.8;180;385;192;520;Rear Wheel Drive;5;66,300;58,850;BMW
+Nissan Leaf e+;56;7.3;157;325;172;390;Front Wheel Drive;5;38,350;30,445;Nissan
+BMW i3 120 Ah;37.9;7.3;150;235;161;270;Rear Wheel Drive;4;39,000;31,305;BMW
+Mercedes EQA 250;66.5;8.9;160;355;187;420;Front Wheel Drive;5;47,541;43,495;Mercedes
+DS 3 Crossback E-Tense;45;8.7;150;250;180;330;Front Wheel Drive;5;30,040;31,500;DS
+BMW i3s 120 Ah;37.9;6.9;160;230;165;260;Rear Wheel Drive;4;42,600;32,305;BMW
+Sono Sion ;47;9;140;260;181;310;Front Wheel Drive;5;25,500;N/A;Sono
+Audi e-tron GT RS;85;3.3;250;405;210;810;All Wheel Drive;4;138,200;110,950;Audi
+Kia e-Soul 64 kWh;64;7.9;167;370;173;350;Front Wheel Drive;5;N/A;37,545;Kia
+Renault Zoe ZE50 R110;52;11.4;135;315;165;230;Front Wheel Drive;5;31,990;26,795;Renault
+Hyundai IONIQ Electric;38.3;9.7;165;250;153;220;Front Wheel Drive;5;35,350;30,550;Hyundai
+Lightyear One ;60;10;150;575;104;540;All Wheel Drive;5;149,000;N/A;Lightyear
+Tesla Roadster ;200;2.1;410;970;206;920;All Wheel Drive;4;215,000;189,000;Tesla
+Peugeot e-208 ;45;8.1;150;275;164;370;Front Wheel Drive;5;30,450;27,225;Peugeot
+Honda e ;28.5;9;145;170;168;190;Rear Wheel Drive;4;33,850;27,660;Honda
+CUPRA Born 110 kW - 55 kWh;45;8.9;160;275;164;440;Rear Wheel Drive;5;32,700;28,500;CUPRA
+Audi Q4 e-tron 35;51.5;9;160;280;184;390;Rear Wheel Drive;5;41,900;40,750;Audi
+Tesla Model Y Long Range Dual Motor;76;5.1;217;450;169;750;All Wheel Drive;7;59,965;54,000;Tesla
+Tesla Model Y Performance;76;3.7;241;430;177;720;All Wheel Drive;7;66,965;60,000;Tesla
+Porsche Taycan 4 Cross Turismo;83.7;5.1;220;405;207;850;All Wheel Drive;4;93,635;79,340;Porsche
+Skoda Enyaq iV 50;52;11.3;160;295;176;240;Rear Wheel Drive;5;33,800;N/A;Skoda
+Volkswagen e-Up! ;32.3;11.9;130;205;158;170;Front Wheel Drive;4;N/A;N/A;Volkswagen
+SEAT Mii Electric ;32.3;12.3;130;205;158;170;Front Wheel Drive;4;24,650;N/A;SEAT
+Opel Corsa-e ;45;8.1;150;275;164;370;Front Wheel Drive;5;29,000;27,140;Opel
+MG ZS EV;42.5;8.2;140;220;193;260;Front Wheel Drive;5;31,990;25,995;MG
+Volkswagen ID.3 Pro;58;9.6;160;350;166;440;Rear Wheel Drive;5;34,995;28,420;Volkswagen
+Volkswagen ID.3 Pro S;77;7.9;160;450;171;550;Rear Wheel Drive;4;41,995;38,800;Volkswagen
+Hyundai Kona Electric 64 kWh;64;7.9;167;395;162;370;Front Wheel Drive;5;41,850;N/A;Hyundai
+Renault Zoe ZE50 R135;52;9.5;140;310;168;230;Front Wheel Drive;5;33,990;28,795;Renault
+Peugeot e-2008 SUV ;45;8.5;150;250;180;330;Front Wheel Drive;5;35,450;30,730;Peugeot
+Audi e-tron 50 quattro;64.7;6.8;190;280;231;470;All Wheel Drive;5;69,100;60,600;Audi
+Porsche Taycan Turbo;83.7;3.2;260;400;209;840;All Wheel Drive;4;153,016;115,860;Porsche
+Smart EQ fortwo coupe;16.7;11.6;130;100;167;-;Rear Wheel Drive;2;18,460;19,200;Smart
+Smart EQ fortwo cabrio;16.7;11.9;130;95;176;-;Rear Wheel Drive;2;21,720;21,620;Smart
+Smart EQ forfour ;16.7;12.7;130;95;176;-;Rear Wheel Drive;4;19,120;19,795;Smart
+Honda e Advance;28.5;8.3;145;170;168;190;Rear Wheel Drive;4;38,000;30,160;Honda
+Byton M-Byte 72 kWh 2WD;72;7.5;190;325;222;420;Rear Wheel Drive;5;53,500;50,000;Byton
+Byton M-Byte 95 kWh 4WD;95;5.5;190;390;244;460;All Wheel Drive;5;64,000;60,000;Byton
+Renault Zoe ZE40 R110;41;11.4;135;255;161;230;Front Wheel Drive;5;29,990;N/A;Renault
+Porsche Taycan 4S;71;4;250;375;189;750;All Wheel Drive;4;106,487;83,580;Porsche
+Porsche Taycan 4S Plus;83.7;4;250;435;192;910;All Wheel Drive;4;113,008;88,193;Porsche
+Hyundai Kona Electric 39 kWh;39.2;9.9;155;250;157;210;Front Wheel Drive;5;34,850;N/A;Hyundai
+Mercedes EQV 300 Long;90;12.1;160;320;281;280;Front Wheel Drive;7;71,388;70,665;Mercedes
+Mazda MX-30 ;30;9.7;140;170;176;180;Front Wheel Drive;5;34,490;26,045;Mazda
+Ford Mustang Mach-E SR RWD;68;6.9;180;345;197;380;Rear Wheel Drive;5;46,900;41,330;Ford
+Ford Mustang Mach-E ER RWD;88;7;180;440;200;430;Rear Wheel Drive;5;54,475;49,980;Ford
+Ford Mustang Mach-E SR AWD;68;6.3;180;330;206;360;All Wheel Drive;5;54,000;46,650;Ford
+Ford Mustang Mach-E ER AWD;88;5.8;180;420;210;410;All Wheel Drive;5;62,900;57,030;Ford
+Ford Mustang Mach-E GT;88;4.4;200;410;215;400;All Wheel Drive;5;N/A;67,225;Ford
+Audi e-tron Sportback 50 quattro;64.7;6.8;190;295;219;490;All Wheel Drive;5;71,350;69,100;Audi
+Tesla Cybertruck Single Motor;100;7;180;390;256;740;Rear Wheel Drive;7;45,000;39,000;Tesla
+Tesla Cybertruck Dual Motor;120;5;190;460;261;710;All Wheel Drive;7;55,000;48,000;Tesla
+Tesla Cybertruck Tri Motor;200;3;210;750;267;710;All Wheel Drive;7;75,000;68,000;Tesla
+Lexus UX 300e;50;7.5;160;260;192;150;Front Wheel Drive;5;47,550;43,900;Lexus
+BMW i4 eDrive40;80.7;5.7;190;475;170;660;Rear Wheel Drive;5;58,300;51,905;BMW
+Audi e-tron 55 quattro;86.5;5.7;200;365;237;590;All Wheel Drive;5;N/A;71,500;Audi
+Aiways U5 ;63;7.5;150;335;188;350;Front Wheel Drive;5;35,993;N/A;Aiways
+Renault Twingo Electric;21.3;12.6;135;130;164;-;Rear Wheel Drive;4;24,790;N/A;Renault
+Audi e-tron S 55 quattro;86.5;4.5;210;320;270;510;All Wheel Drive;5;93,800;87,000;Audi
+Audi e-tron S Sportback 55 quattro;86.5;4.5;210;335;258;540;All Wheel Drive;5;96,050;88,700;Audi
+Volkswagen ID.4 1st;77;8.5;160;410;188;500;Rear Wheel Drive;5;N/A;40,800;Volkswagen
+Byton M-Byte 95 kWh 2WD;95;7.5;190;400;238;480;Rear Wheel Drive;5;62,000;57,500;Byton
+Fiat 500e Cabrio;37.3;9;150;245;152;410;Front Wheel Drive;4;30,560;26,645;Fiat
+Opel Mokka-e ;45;8.5;150;255;176;340;Front Wheel Drive;5;34,110;30,540;Opel
+Skoda Enyaq iV 60;58;8.7;160;330;176;420;Rear Wheel Drive;5;38,850;31,995;Skoda
+Skoda Enyaq iV 80;77;8.6;160;420;183;510;Rear Wheel Drive;5;43,950;39,350;Skoda
+Skoda Enyaq iV 80X;77;6.9;160;405;190;500;All Wheel Drive;5;47,000;42,000;Skoda
+Skoda Enyaq iV RS;77;6.2;180;395;195;480;All Wheel Drive;5;50,000;45,000;Skoda
+Fiat 500e Hatchback 42 kWh;37.3;9;150;250;149;420;Front Wheel Drive;4;27,560;23,995;Fiat
+Citroen e-C4 ;45;9.7;150;250;180;330;Front Wheel Drive;5;34,640;30,895;Citroen
+Jaguar I-Pace EV400;84.7;4.8;200;365;232;340;All Wheel Drive;5;77,300;65,195;Jaguar
+Kia e-Soul 64 kWh;64;7.9;167;370;173;350;Front Wheel Drive;5;37,790;N/A;Kia
+Kia e-Soul 39 kWh;39.2;9.9;157;230;170;220;Front Wheel Drive;5;33,990;N/A;Kia
+Audi Q4 Sportback e-tron 35;51.5;9;160;295;175;410;Rear Wheel Drive;5;43,900;42,250;Audi
+Nissan Ariya 63kWh;63;7.5;160;335;188;450;Front Wheel Drive;5;45,000;40,000;Nissan
+Nissan Ariya 87kWh;87;7.6;160;445;196;530;Front Wheel Drive;5;50,000;45,000;Nissan
+Nissan Ariya e-4ORCE 63kWh;63;5.9;200;325;194;440;All Wheel Drive;5;50,000;45,000;Nissan
+Nissan Ariya e-4ORCE 87kWh;87;5.7;200;420;207;500;All Wheel Drive;5;57,500;52,500;Nissan
+Nissan Ariya e-4ORCE 87kWh Performance;87;5.1;200;385;226;460;All Wheel Drive;5;65,000;57,500;Nissan
+Volkswagen ID.3 Pro Performance;58;7.3;160;350;166;440;Rear Wheel Drive;5;36,495;29,740;Volkswagen
+MG MG5 EV;48.8;7.7;185;295;165;340;Front Wheel Drive;5;N/A;25,095;MG
+Volkswagen ID.4 Pro Performance;77;8.5;160;410;188;500;Rear Wheel Drive;5;44,450;41,570;Volkswagen
+Mercedes EQV 300 Extra-Long;90;12.1;160;320;281;280;Front Wheel Drive;7;72,281;N/A;Mercedes
+Lucid Air Grand Touring;110;3.2;270;660;167;1380;All Wheel Drive;5;140,000;125,000;Lucid
+Lucid Air Touring;85;3.4;250;530;160;1390;All Wheel Drive;5;95,000;90,000;Lucid
+Lucid Air Pure;85;4.2;200;540;157;1410;Rear Wheel Drive;5;80,000;70,000;Lucid
+Dacia Spring Electric;26.8;15;125;170;158;120;Front Wheel Drive;4;20,490;N/A;Dacia
+Tesla Model 3 Standard Range Plus LFP;51;5.6;225;340;150;570;Rear Wheel Drive;5;43,560;40,990;Tesla
+Tesla Model 3 Long Range Dual Motor;70;4.4;233;455;154;570;All Wheel Drive;5;N/A;48,490;Tesla
+Tesla Model 3 Performance;76;3.3;261;470;162;790;All Wheel Drive;5;58,560;59,990;Tesla
+Fiat 500e Hatchback 24 kWh;23.8;9.5;135;165;144;260;Front Wheel Drive;4;23,560;20,495;Fiat
+Fiat 500e 3+1;37.3;9;150;245;152;410;Front Wheel Drive;4;29,560;N/A;Fiat
+Mercedes EQC 400 4MATIC;80;5.1;180;370;216;440;All Wheel Drive;5;66,069;65,720;Mercedes
+Kia e-Niro 64 kWh;64;7.8;167;370;173;350;Front Wheel Drive;5;39,090;32,445;Kia
+Kia e-Niro 39 kWh;39.2;9.8;155;235;167;230;Front Wheel Drive;5;35,290;30,345;Kia
+Citroen e-SpaceTourer XS 50 kWh;45;12.1;130;185;243;250;Front Wheel Drive;7;50,880;N/A;Citroen
+Citroen e-SpaceTourer M 50 kWh;45;12.1;130;185;243;250;Front Wheel Drive;7;51,440;31,995;Citroen
+Citroen e-SpaceTourer XL 50 kWh;45;12.1;130;180;250;240;Front Wheel Drive;7;52,230;N/A;Citroen
+Citroen e-SpaceTourer M 75 kWh;68;13.3;130;270;252;290;Front Wheel Drive;7;57,440;N/A;Citroen
+Citroen e-SpaceTourer XL 75 kWh;68;13.3;130;270;252;290;Front Wheel Drive;7;58,230;N/A;Citroen
+Opel Zafira-e Life S 50 kWh;45;12.1;130;185;243;250;Front Wheel Drive;7;56,700;N/A;Opel
+Opel Zafira-e Life M 50 kWh;45;12.1;130;185;243;250;Front Wheel Drive;7;53,800;N/A;Opel
+Opel Zafira-e Life L 50 kWh;45;12.1;130;180;250;240;Front Wheel Drive;7;54,625;49,465;Opel
+Opel Zafira-e Life M 75 kWh;68;13.3;130;270;252;290;Front Wheel Drive;7;59,800;N/A;Opel
+Opel Zafira-e Life L 75 kWh;68;13.3;130;270;252;290;Front Wheel Drive;7;60,625;N/A;Opel
+Peugeot e-Traveller Compact 50 kWh;45;12.1;130;185;243;250;Front Wheel Drive;7;50,880;N/A;Peugeot
+Peugeot e-Traveller Standard 50 kWh;45;13.1;130;185;243;250;Front Wheel Drive;7;55,900;49,065;Peugeot
+Peugeot e-Traveller Long 50 kWh;45;13.1;130;185;243;250;Front Wheel Drive;7;56,690;49,905;Peugeot
+Peugeot e-Traveller Standard 75 kWh;68;13.3;130;270;252;290;Front Wheel Drive;7;57,440;N/A;Peugeot
+Peugeot e-Traveller Long 75 kWh;68;13.3;130;270;252;290;Front Wheel Drive;7;58,230;N/A;Peugeot
+Audi e-tron 55 quattro;86.5;5.7;200;365;237;590;All Wheel Drive;5;81,500;N/A;Audi
+Audi e-tron Sportback 55 quattro;86.5;5.7;200;375;231;600;All Wheel Drive;5;83,750;N/A;Audi
+Seres 3 ;52;8.9;155;270;193;390;Front Wheel Drive;5;N/A;N/A;Seres
+Hyundai IONIQ 5 Project 45;72.6;5.2;185;370;196;860;All Wheel Drive;5;59,550;48,000;Hyundai
+Porsche Taycan ;71;5.4;230;395;180;790;Rear Wheel Drive;4;83,520;70,690;Porsche
+Porsche Taycan Plus;83.7;5.4;230;460;182;960;Rear Wheel Drive;4;89,244;74,739;Porsche
+Tesla Model S Long Range;90;3.2;250;555;162;830;All Wheel Drive;5;86,990;83,980;Tesla
+Tesla Model S Plaid;90;2.1;322;535;168;800;All Wheel Drive;5;126,990;118,980;Tesla
+Tesla Model X Long Range;90;3.9;250;475;189;710;All Wheel Drive;7;95,990;90,980;Tesla
+Tesla Model X Plaid;90;2.6;262;455;198;680;All Wheel Drive;7;116,990;110,980;Tesla
+Mini Cooper SE ;28.9;7.3;150;185;156;260;Front Wheel Drive;4;32,500;26,000;Mini
+JAC iEV7s ;39;12;132;225;173;160;Front Wheel Drive;5;N/A;N/A;JAC
+Volkswagen ID.4 Pure Performance;52;9;160;285;182;410;Rear Wheel Drive;5;38,450;36,030;Volkswagen
+Audi e-tron GT quattro;85;4.1;245;420;202;840;All Wheel Drive;4;99,800;79,900;Audi
+Volvo C40 Recharge;75;4.7;180;340;221;440;All Wheel Drive;5;62,050;57,400;Volvo
+Hyundai Kona Electric 39 kWh;39.2;9.9;155;250;157;210;Front Wheel Drive;5;35,650;27,950;Hyundai
+Hyundai Kona Electric 64 kWh;64;7.9;167;395;162;370;Front Wheel Drive;5;41,850;32,550;Hyundai
+Porsche Taycan 4S Cross Turismo;83.7;4.1;240;405;207;850;All Wheel Drive;4;111,842;87,820;Porsche
+Porsche Taycan Turbo Cross Turismo;83.7;3.3;250;385;217;800;All Wheel Drive;4;154,444;116,950;Porsche
+Porsche Taycan Turbo S Cross Turismo;83.7;2.9;250;380;220;790;All Wheel Drive;4;187,746;139,910;Porsche
+Kia EV6 GT;77.4;3.5;260;395;196;920;All Wheel Drive;5;65,990;58,295;Kia
+BMW iX xDrive40;71;6.1;200;350;203;470;All Wheel Drive;5;77,300;69,905;BMW
+BMW iX xDrive50;105.2;4.6;200;505;208;620;All Wheel Drive;5;98,000;91,905;BMW
+MG MG5 Electric;57;8.3;180;340;168;440;Front Wheel Drive;5;35,000;N/A;MG
+MG Marvel R Performance;65;4.9;200;330;197;380;All Wheel Drive;5;50,000;N/A;MG
+Hyundai IONIQ 5 Standard Range 2WD;58;8.5;185;310;187;720;Rear Wheel Drive;5;41,900;36,995;Hyundai
+Hyundai IONIQ 5 Standard Range AWD;58;6.1;185;305;190;710;All Wheel Drive;5;45,700;N/A;Hyundai
+Hyundai IONIQ 5 Long Range 2WD;72.6;7.4;185;385;189;890;Rear Wheel Drive;5;45,100;41,945;Hyundai
+Hyundai IONIQ 5 Long Range AWD;72.6;5.2;185;375;194;870;All Wheel Drive;5;48,900;45,145;Hyundai
+Kia EV6 Standard Range 2WD;58;8.5;185;320;181;740;Rear Wheel Drive;5;44,990;40,985;Kia
+Kia EV6 Long Range 2WD;77.4;7.5;185;420;184;980;Rear Wheel Drive;5;54,990;48,000;Kia
+Kia EV6 Long Range AWD;77.4;5.4;185;410;189;950;All Wheel Drive;5;56,000;52,000;Kia
+Mercedes EQS 450+;107.8;6.2;210;640;168;840;Rear Wheel Drive;5;106,374;95,000;Mercedes
+Mercedes EQS 580 4MATIC;107.8;4.3;210;610;177;800;All Wheel Drive;5;135,529;115,000;Mercedes
+Tesla Model 3 Standard Range Plus;50;5.6;225;340;147;680;Rear Wheel Drive;5;43,560;40,990;Tesla
+Polestar 2 Standard Range Single Motor;61;7.4;160;350;174;450;Front Wheel Drive;5;46,500;39,900;Polestar
+Polestar 2 Long Range Single Motor;75;7.4;160;425;176;550;Front Wheel Drive;5;49,500;42,900;Polestar
+Polestar 2 Long Range Dual Motor;75;4.7;205;395;190;510;All Wheel Drive;5;52,500;45,900;Polestar
+Volkswagen ID.4 Pure;52;10.9;160;285;182;410;Rear Wheel Drive;5;36,950;32,150;Volkswagen
+Audi Q4 e-tron 40;76.6;8.5;160;405;189;500;Rear Wheel Drive;5;47,500;44,990;Audi
+Audi Q4 e-tron 50 quattro;76.6;6.2;180;385;199;470;All Wheel Drive;5;53,600;51,370;Audi
+Audi Q4 Sportback e-tron 50 quattro;76.6;6.2;180;400;192;490;All Wheel Drive;5;55,600;52,870;Audi
+Mercedes EQB 350 4MATIC;66.5;6.5;160;340;196;400;All Wheel Drive;7;60,000;50,000;Mercedes
+Volkswagen ID.4 GTX;77;6.2;180;400;193;490;All Wheel Drive;5;50,415;55,540;Volkswagen
+Mercedes EQA 300 4MATIC;66.5;7.7;160;350;190;420;All Wheel Drive;5;53,538;N/A;Mercedes
+Mercedes EQA 350 4MATIC;66.5;6;160;350;190;420;All Wheel Drive;5;56,216;N/A;Mercedes
+Toyota PROACE Verso M 50 kWh;45;12.1;130;185;243;250;Front Wheel Drive;7;58,530;N/A;Toyota
+Toyota PROACE Verso L 50 kWh;45;12.1;130;180;250;240;Front Wheel Drive;7;59,385;N/A;Toyota
+Toyota PROACE Verso M 75 kWh;68;13.1;130;270;252;290;Front Wheel Drive;7;64,530;N/A;Toyota
+Toyota PROACE Verso L 75 kWh;68;13.1;130;270;252;290;Front Wheel Drive;7;65,385;N/A;Toyota
+CUPRA Born 150 kW - 62 kWh;58;7.3;160;350;166;440;Rear Wheel Drive;5;36,770;30,500;CUPRA
+CUPRA Born 170 kW - 62 kWh;58;6.6;160;345;168;430;Rear Wheel Drive;5;39,000;31,500;CUPRA
+CUPRA Born 170 kW - 82 kWh;77;7;160;450;171;550;Rear Wheel Drive;5;43,000;42,000;CUPRA
+BMW i4 M50;80.7;3.9;225;450;179;630;All Wheel Drive;5;69,900;63,905;BMW
+Volvo XC40 Recharge Twin Pure Electric;75;4.9;180;340;221;440;All Wheel Drive;5;59,250;49,950;Volvo
+Renault Megane E-Tech Electric;60;8;160;335;179;480;Front Wheel Drive;5;38,000;32,500;Renault
+Peugeot e-Rifter Standard 50 kWh;45;11.7;135;200;225;270;Front Wheel Drive;7;37,590;30,375;Peugeot
+Peugeot e-Rifter Long 50 kWh;45;11.7;135;195;231;260;Front Wheel Drive;7;42,590;32,455;Peugeot
+MG Marvel R ;65;7.9;200;340;191;390;Rear Wheel Drive;5;40,000;N/A;MG
+Tesla Model 3 Long Range Dual Motor;76;4.4;233;490;155;820;All Wheel Drive;5;53,560;N/A;Tesla
+MG MG5 EV Long Range;57;7.7;185;340;168;340;Front Wheel Drive;5;N/A;26,495;MG
+Audi Q4 e-tron 45 quattro;76.6;6.9;180;385;199;470;All Wheel Drive;5;50,900;N/A;Audi
+Audi Q4 Sportback e-tron 40;76.6;8.5;160;425;180;520;Rear Wheel Drive;5;49,500;N/A;Audi

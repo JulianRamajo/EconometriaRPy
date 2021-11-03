@@ -1,0 +1,44 @@
+---
+title: "Título"
+subtitle: "Subtítulo"
+date: "`r Sys.Date()`"
+author: "Nombre y apellidos"
+output:
+pdf_document:
+  toc: true
+  number_sections: true
+  highlight: tango
+---
+
+# Preparación previa: instalación y lectura de librerías
+```{r, message=FALSE, warning=FALSE}
+#
+packages <- c("tidyverse")
+
+# Instalación de librerías no instaladas previamente
+lapply(packages[!(packages %in% installed.packages())], install.packages)
+
+# Lectura de librerías
+lapply(packages, library, character.only = TRUE)
+```
+
+# Lectura de datos
+```{r}
+# 
+```
+
+# Manejo de datos
+```{r}
+# 
+```
+
+# Visualización de datos
+```{r}
+# 
+```
+
+# Análisis de datos
+```{r}
+# 
+```
+

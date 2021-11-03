@@ -21,9 +21,8 @@ output:
 En esta aplicación se estimará ...:
 
 $$
-C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}
+Y_{t} = \beta_0 + \beta_1  X_{1,t} + e_{t}
 $$
-
 
 # Código R
 
@@ -40,4 +39,3 @@ import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 #
 ```
-
