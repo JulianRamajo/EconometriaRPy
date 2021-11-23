@@ -124,21 +124,8 @@ gapminder %>% select(-country) %>% ggpairs()
 #
 # Regresión
 #
-model_1 <- lm(lifeExp ~ gdpPercap, data=gapminder)
+model_1 <- lm(lifeExp ~ log(gdpPercap) + year, data=gapminder)
 summary(model_1)
-
-#
-model_2 <- lm(lifeExp ~ gdpPercap + year, data=gapminder)
-summary(model_2)
-#
-library(lindia)
-model_2 %>% 
-  gg_diagnose(plot.all=TRUE,boxcox=TRUE)
-#
-model_3 <- lm(lifeExp ~ log(gdpPercap) + year, data=gapminder)
-summary(model_3)
-model_3 %>% 
-  gg_diagnose(plot.all=TRUE,boxcox=TRUE)
 #
 ggplot(data = gapminder, aes(x = log(gdpPercap), y = lifeExp)) + 
     geom_smooth(method = "lm", col = "red") + 

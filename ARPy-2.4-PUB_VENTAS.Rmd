@@ -1,9 +1,9 @@
 ---
-title: 'TEMA 2: Efectos diferenciados de la publicidad sobre las ventas'
+title: 'TEMA 2: Modelo de regresión lineal con términos de interacción'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.4: Modelo de regresión con términos de interacción'
+subtitle: 'Aplicación 2.4: Efectos diferenciados de la publicidad sobre las ventas'
 output:
   html_document:
     theme: journal

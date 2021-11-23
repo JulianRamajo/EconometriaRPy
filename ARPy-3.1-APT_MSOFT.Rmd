@@ -24,7 +24,7 @@ Definamos la rentabilidad de un activo (en porcentaje) como  R=100×log⁡((p_1+
 
 En este ejercicio se va a estimar el modelo APT con datos de series temporales de carácter mensual para el período que va desde marzo de 1986 hasta marzo de 2018.
 
-Se utilizará como rentabilidad de referencia la correspondiente a las acciones de la empresa Microsoft, que denotaremos por R_MICROSOFT. Como rentabilidad sin riesgo, se usará el tipo de interés correspondiente a las letras del tesoro estadounidenses a tres meses, R_USTB3M, y como rentabilidad del mercado se tomará la asociada al índice S&P500, R_SP. Las variables que deben utilizarse en el modelo de regresión son, entonces, los ‘excesos de rentabilidad’, ER_MSOFT=(R_MICROSOFT-R_USTB3M) y ER_SP=(R_SP500-R_USTB3M).
+Se utilizará como rentabilidad de referencia la correspondiente a las acciones de la empresa Microsoft, que denotaremos por R_MICROSOFT. Como rentabilidad sin riesgo, se usará el tipo de interés correspondiente a las letras del tesoro estadounidenses a tres meses, R_USTB3M, y como rentabilidad del mercado se tomará la asociada al índice S&P500, R_SP500. Las variables básicas que deben utilizarse en el modelo de regresión son, entonces, los ‘excesos de rentabilidad’, ER_MSOFT=(R_MICROSOFT-R_USTB3M) y ER_SP=(R_SP500-R_USTB3M).
 
 La ecuación de valoración básica del modelo APT puede definirse del siguiente modo:
 
@@ -37,11 +37,13 @@ donde las variables _F_ representan distintos factores que pueden afectar a la r
 
 ```{r, message=FALSE}
 library(tidyverse)
-#
 library(readxl)
+#
 macro <- read_excel("APT_MICROSOFT.xls")
+dim(macro)
 head(macro)
 tail(macro)
+summary(macro)
 #
 macro$dspread = c(NA,diff(macro$BMINUSA))
 macro$dcredit = c(NA,diff(macro$CCREDIT))
@@ -59,11 +61,36 @@ macro$er_msoft = c(NA,100*diff(log(macro$MICROSOFT)))-macro$USTB3M/12
 #
 APT_msoft = lm(er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm, data = macro)
 summary(APT_msoft)
-# Contraste de hipótesis
+confint(APT_msoft, level=.95)
+# Contraste de hipótesis: modelo APT frente a modelo CAPM.
 library(car)
 linearHypothesis(APT_msoft,c("dprod=0","dcredit=0","dmoney=0","dspread=0"))
 #
 # DIAGNOSIS DEL MODELO
+#
+## VALIDACIÓN GLOBAL DE LAS HIPÓTESIS DEL MRL
+#
+library(gvlma)
+gvmodel <- gvlma(APT_msoft)
+summary(gvmodel)
+#
+# CHEQUEO GENERAL DEL MODELO
+#
+library(performance)
+model_performance(APT_msoft)
+check_model(APT_msoft)
+#
+#
+library(lindia)
+gg_diagnose(APT_msoft, plot.all=TRUE)
+#
+# CHEQUEO INDIVIDUAL DE CADA HIPÓTESIS
+#
+# Especificación funcional: test RESET de Ramsey
+#
+library(lmtest)
+resettest(APT_msoft, power=2, type="fitted")
+resettest(APT_msoft, power=2:3, type="fitted")
 #
 # Heteroscedasticidad
 #
@@ -76,14 +103,16 @@ bptest(formula(APT_msoft),data = macro,studentize = T)
 # Corrección de la matriz de covarianzas
 library(sandwich)
 coeftest(APT_msoft,vcov. = vcovHC(APT_msoft,type="HC1")) # White
-coeftest(APT_msoft,vcov. = NeweyWest(APT_msoft,lag = 6,adjust = T,prewhite = F)) # Newey-West
 #
 # Autocorrelación
 #
 # Test de Durbin-Watson
 dwtest(APT_msoft)
-# Test de Breuscgh-Godfrey
+# Test de Breusch-Godfrey
 bgtest(APT_msoft,order = 10)
+# Corrección de la matriz de covarianzas
+library(sandwich)
+coeftest(APT_msoft,vcov. = NeweyWest(APT_msoft,lag = 6,adjust = T,prewhite = F)) # Newey-West
 #
 # Heteroscedasticidad autorregresiva condicional (ARCH)
 #
@@ -129,11 +158,6 @@ cor(macro[-(1:2),c("er_sp","dprod","dcredit","dinflation","dmoney","dspread","rt
 corrplot(cor(macro[-(1:2),c("er_sp","dprod","dcredit","dinflation","dmoney","dspread","rterm")]))
 # FIVs
 vif(APT_msoft)
-#
-# Forma funcional
-#
-# Test de Ramsey
-resettest(APT_msoft,power = 2:3)
 #
 # Estabilidad de los parámetros
 #
@@ -227,13 +251,9 @@ name = ['Lagrange multiplier statistic', 'p-value',
         'f-value', 'f p-value']
 BP_test = sms.het_breuschpagan(results.resid, results.model.exog)
 lzip(name, BP_test)
-# Corrección de la matriz de covarianzas
-# White
+# Corrección de la matriz de covarianzas: estimador de White
 results1 = smf.ols(formula, data).fit(cov_type='HC1')
 print(results1.summary())
-# Newey-West (si maxlags=0 -> HAC=HC1)
-results2 = smf.ols(formula, data).fit(cov_type='HAC', cov_kwds={'maxlags':6,'use_correction':True})
-print(results2.summary())
 #
 # Autocorrelación
 #
@@ -245,10 +265,12 @@ name = ['Lagrange multiplier statistic', 'p-value',
         'f-value', 'f p-value']
 BG_test = sms.acorr_breusch_godfrey(results, 10)
 lzip(name, BG_test)
+# Corrección de la matriz de covarianzas: estimador de Newey-West (si maxlags=0 -> HAC=HC1)
+results2 = smf.ols(formula, data).fit(cov_type='HAC', cov_kwds={'maxlags':6,'use_correction':True})
+print(results2.summary())
 #
-# Heteroscedasticidad autorregresiva condicional (ARCH)
+# Heteroscedasticidad autorregresiva condicional (ARCH): test de Engle
 #
-# Test de Engle
 name = ['lm','lmpval','fval','fpval'] 
 E_test = het_arch(results.resid, nlags=1)
 lzip(name,E_test)
@@ -266,7 +288,6 @@ plt.show()
 name = ['Jarque-Bera', 'Chi^2 two-tail prob.', 'Skewness', 'Kurtosis']
 JB_test = sms.jarque_bera(residuals)
 lzip(name, JB_test)
-#
 # Contrastes de normalidad para una variable (var: ndarray)
 def normality_tests(var):
   Skewness_test = scs.skew(var)
@@ -307,16 +328,14 @@ print(results.summary())
 # Multicolinealidad
 #
 # Matriz de correlaciones
-# data = data.dropna()
+data = data.dropna()
 dataX = data[['er_sp','dprod','dcredit','dinflation','dmoney','dspread','rterm']]
 dataX.corr()
 plt.figure(4)
 sns.heatmap(dataX.corr(), vmin=-0.25, vmax=0.25, center=0, annot=True, fmt='.2f', mask=~np.tri(dataX.corr().shape[1], k=-1, dtype=bool), cbar=False)
 plt.show()
 #
-# Forma funcional
-#
-# Test de Ramsey
+# Forma funcional: test RESET de Ramsey
 reset_ramsey(results,degree=3)
 #
 # Estabilidad de los parámetros

@@ -1,9 +1,9 @@
 ---
-title: 'TEMA 2: Mercados financieros'
+title: 'TEMA 2: Modelo de regresión lineal simple (con sólo una variable explicativa)'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.1:  Modelo de egresión lineal simple (con sólo una variable explicativa)'
+subtitle: 'Aplicación 2.1:  Mercados financieros - Estimación de una ratio de cobertura óptima'
 output:
   html_document:
     theme: journal

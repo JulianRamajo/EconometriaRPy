@@ -5,15 +5,15 @@ author:
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
 subtitle: 'Aplicación 1.1: Consumo privado en Estados Unidos'
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
   html_document:
     theme: journal
     highlight: haddock
     toc: yes
     toc_depth: 2
     toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
 # Introducción

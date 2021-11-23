@@ -1,9 +1,9 @@
 ---
-title: 'TEMA 2: Diferencia salarial entre hombres y mujeres en Estados Unidos'
+title: 'TEMA 2: Modelo de regresión lineal con varios tipos de variables explicativas'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.4: Regresión múltiple'
+subtitle: 'Aplicación 2.5: Diferencia salarial entre hombres y mujeres en Estados Unidos'
 output:
   html_document:
     theme: journal

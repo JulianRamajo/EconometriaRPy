@@ -1,0 +1,62 @@
+library(reticulate)
+conda_python()
+repl_python()
+?conda_python()
+conda_python()
+python_version()
+setwd("~/Dropbox/Mi Mac (Mac Pro de Julián)/Documents/GitHub/EconMetricsRPy")
+conda_list()
+conda_version()
+py_config()
+repl_python()
+py_install("pandas")
+py_install("matplotlib")
+py_install("seaborn")
+py_install("plotly")
+py_install("plotnine")
+py_install("pandas-bokeh", pip = TRUE)
+py_install("scipy")
+py_install("scikit-learn")
+py_install("sktime")
+py_install("linearmodels")
+py_install("statsmodels")
+py_install("semopy", pip = TRUE)
+py_install("lifelines")
+py_install("arch", pip=TRUE)
+py_install("pyhdfe", pip=TRUE)
+py_install("arch", pip=TRUE)
+py_install("datetime", pip =  TRUE)
+py_install("stargazer", pip = TRUE)
+py_install("mizani")
+py_install("xlrd")
+py_install("category_encoders")
+py_install("libpysal")
+py_install("esda")
+py_install("giddy")
+py_install("inequality")
+py_install("pointpats")
+py_install("segregation")
+py_install("spaghetti")
+py_install("mgwr")
+py_install("spglm")
+py_install("spreg")
+py_install("spint")
+py_install("spvcm")
+py_install("tobler")
+py_install("access")
+py_install("spopt")
+py_install("legendgram")
+py_install("mapclassify")
+py_install("splot")
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import statsmodels.stats.api as sms
+from statsmodels.stats.diagnostic import het_arch
+from statsmodels.stats.outliers_influence import reset_ramsey
+from statsmodels.compat import lzip
+import scipy.stats as scs
+import matplotlib.pyplot as plt
+import seaborn as sns
+repl_python()

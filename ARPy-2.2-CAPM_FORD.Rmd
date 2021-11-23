@@ -1,9 +1,9 @@
 ---
-title: 'TEMA 2: El modelo CAPM (Capital Asset Pricing Model)'
+title: 'TEMA 2: Modelo de regresión lineal múltiple: Estimación y contrastes de hipótesis'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.2: Modelo de regresión lineal múltiple'
+subtitle: 'Aplicación 2.2: El modelo CAPM (Capital Asset Pricing Model)'
 output:
   html_document:
     theme: journal

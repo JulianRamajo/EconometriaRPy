@@ -170,7 +170,7 @@ py_install("lifelines")
 py_install("arch", pip=TRUE)
 # Si la instalación de 'arch' da un mensaje final de error
 py_install("pyhdfe", pip=TRUE)
-py_install("appelpy", pip = TRUE)
+# py_install("appelpy", pip = TRUE)
 py_install("datetime", pip =  TRUE)
 py_install("stargazer", pip = TRUE)
 py_install("mizani")

@@ -1,9 +1,9 @@
 ---
-title: 'TEMA 2: Curva de costes en el sector textil'
+title: 'TEMA 2: Modelo de regresión lineal con forma funcional polinómica'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.3: Forma funcional polinómica'
+subtitle: 'Aplicación 2.3: Curva de costes en el sector textil'
 output:
   html_document:
     theme: journal
