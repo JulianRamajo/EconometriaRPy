@@ -1,3 +1,4 @@
+#
 library(tidyverse)
 library(dynlm)
 library(car)
@@ -9,27 +10,21 @@ TIPOS_ESP <- read_csv("TIPOS_ESP.csv")
 TIPOS_ESP_ts <- ts(TIPOS_ESP, start=c(1982,1), end = c(1990,3), frequency = 4)
 plot(TIPOS_ESP_ts)
 #
-RL <- TIPOS_ESP_ts[,"RL"]
-R3M <- TIPOS_ESP_ts[,"R3M"] 
-RD <- TIPOS_ESP_ts[,"RD"]
+# Modelo de Klein-Monti - modelo est谩tico- 
 #
-# Modelo de Klein-Monti
+summary(lm_KM <- lm(RL ~ R3M + RD, data=TIPOS_ESP_ts))
 #
-S(lm_KM <- lm(RL ~ R3M + RD))
+summary(dynlm_KM_0 <- dynlm(RL ~ R3M + RD, data=TIPOS_ESP_ts)) # Especificaci贸nn ARDL(0,0,0) 
 #
-# Especificaci髇 ARDL(0,0,0) - modelo est醫ico- 
+# Contrastes de correlaci贸n en los errores (autocorrelaci贸n)
 #
-S(dynlm_KM_0 <- dynlm(RL ~ R3M + RD))
-#
-# Contrastes de correlaci髇 en los errores (autocorrelaci髇)
-#
-r <-residuals(dynlm_KM_0)
-plot(r)
+resid <-residuals(dynlm_KM_0)
+plot(resid)
 abline(h=0, lty=2)
 #
 # Correlograma de los residuos
 #
-corr <- acf(r)
+corr <- acf(resid)
 corr$acf[2:10]
 #
 # Test de Durbin-Watson
@@ -41,17 +36,17 @@ dwtest(dynlm_KM_0, alternative = "greater")
 #
 bgtest(dynlm_KM_0, order=1, type="Chisq", fill=0)
 #
-# Correcci髇 de la autocorrelaci髇: MCO corregidos, MCG-AR, modelos din醡icos del tipo ARDL
+# Correcci贸n de la autocorrelaci贸n: MCO corregidos, MCG-AR, modelos din谩micos del tipo ARDL
 #
-# MCO corregidos: errores est醤dar robustos, HAC (Newey-West)
+# MCO corregidos: errores est谩ndar robustos, HAC (Newey-West)
 #
-S(dynlm_KM_0 <- dynlm(RL ~ R3M + RD), vcov.=vcovHAC(dynlm_KM_0))
+summary(dynlm_KM_0 <- dynlm(RL ~ R3M + RD, data=TIPOS_ESP_ts), vcov.=vcovHAC(dynlm_KM_0))
 #
-# M韓imos cuadrados generalizados (MCG): errores AR(1)
+# M铆nimos cuadrados generalizados (MCG): errores AR(1)
 #
 cochrane.orcutt(dynlm_KM_0)
 #
-# Modelo -din醡ico ARDL(1,1,1) 
+# Modelo din谩mico ARDL(1,1,1) 
 #
-S(dynlm_KM_1 <- dynlm(RL ~ L(RL, 1:1) + L(R3M, 0:1) + L(RD, 0:1)))
+summary(dynlm_KM_1 <- dynlm(RL ~ L(RL, 1:1) + L(R3M, 0:1) + L(RD, 0:1), data=TIPOS_ESP_ts))
 #

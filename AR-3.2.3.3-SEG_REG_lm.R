@@ -4,7 +4,7 @@
 # Las regresiones segmentadas permiten modelizar los cambios en la pendiente de una serie o, de forma más general,
 # pueden usarse para capturar el cambio estructural en una regresión.
 
-library(readr)
+library(tidyverse)
 library(plotly)
 library(dplyr)
 

@@ -3,18 +3,13 @@ library(tidyverse)
 GASOL_CRUDO <- read_csv("GASOL_CRUDO.csv")
 #
 library(zoo)
-zoo_GASOL_CRUDO <- read.zoo(GASOL_CRUDO)
-plot(zoo_GASOL_CRUDO)
-#
-PCRUDO <- zoo_GASOL_CRUDO[,"PCRUDO"]
-PGASOL <- zoo_GASOL_CRUDO[,"PGASOL"]
-D2008JD <- zoo_GASOL_CRUDO[,"D2008JD"]
-time <- zoo_GASOL_CRUDO[,"time"]
+GASOL_CRUDO_ts <- read.zoo(GASOL_CRUDO)
+plot(GASOL_CRUDO_ts)
 #
 # Modelo dinámico para el precio de la gasolina (precio minorista)
 #
 library(dynlm)
-DYN_model <- dynlm (log(PGASOL) ~ D2008JD + time + L(log(PGASOL), 1:2) + L(log(PCRUDO),0:2))
+DYN_model <- dynlm (log(PGASOL) ~ D2008JD + time + L(log(PGASOL), 1:2) + L(log(PCRUDO),0:2), data=GASOL_CRUDO_ts)
 summary(DYN_model)
 #
 # Efectos a corto y largo plazo
@@ -52,4 +47,3 @@ hhat_2 <- as.zoo(resid_GARCH_fit@fit$sigma^2)
 plot.ts(hhat_2) # ts.plot(Resid_GARCH_fit@fit$sigma^2)
 plot(resid_GARCH_fit)
 #
-   

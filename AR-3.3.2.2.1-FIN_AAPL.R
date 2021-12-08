@@ -1,6 +1,6 @@
 library(zoo);library(quantmod);library(dynlm); library(rugarch)
 
-# Obtener los datos usando la libreríaquantmod:
+# Obtener los datos usando la librería quantmod:
 getSymbols("AAPL", auto.assign = TRUE)
 
 # Cálculo del rendimiento mediante log-idrerencias:

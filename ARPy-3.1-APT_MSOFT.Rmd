@@ -56,19 +56,26 @@ macro$r_msoft = c(NA,100*diff(log(macro$MICROSOFT)))
 macro$r_sp = c(NA,100*diff(log(macro$SANDP)))
 macro$er_sp = c(NA,100*diff(log(macro$SANDP)))-macro$USTB3M/12
 macro$er_msoft = c(NA,100*diff(log(macro$MICROSOFT)))-macro$USTB3M/12
+# Dar formato a la fechas
+macro$Date = as.Date(macro$Date)
 #
 # ESTIMACIÓN MCO DEL MODELO
 #
-APT_msoft = lm(er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm, data = macro)
+APT_msoft  <-  lm(er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm, data = macro)
 summary(APT_msoft)
 confint(APT_msoft, level=.95)
-# Contraste de hipótesis: modelo APT frente a modelo CAPM.
-library(car)
-linearHypothesis(APT_msoft,c("dprod=0","dcredit=0","dmoney=0","dspread=0"))
 #
-# DIAGNOSIS DEL MODELO
+# ts_macro <- ts(macro, start=c(1986,3), end=c(2018,3), frequency = 12)
+# APT_msoft_ts  <-  lm(er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm, data = ts_macro)
+# summary(APT_msoft_ts)
 #
-## VALIDACIÓN GLOBAL DE LAS HIPÓTESIS DEL MRL
+# Contraste de hipótesis
+# library(car)
+# linearHypothesis(APT_msoft_0,c("dprod=0","dcredit=0","dmoney=0","dspread=0"))
+#
+# DIAGNOSIS DEL MODELO DE REGRESIÓN LIENAL
+#
+# VALIDACIÓN GLOBAL DE LAS HIPÓTESIS
 #
 library(gvlma)
 gvmodel <- gvlma(APT_msoft)
@@ -79,90 +86,23 @@ summary(gvmodel)
 library(performance)
 model_performance(APT_msoft)
 check_model(APT_msoft)
-#
-#
-library(lindia)
-gg_diagnose(APT_msoft, plot.all=TRUE)
+# library(lindia)
+# gg_diagnose(APT_msoft, plot.all=TRUE)
 #
 # CHEQUEO INDIVIDUAL DE CADA HIPÓTESIS
 #
-# Especificación funcional: test RESET de Ramsey
+# ESPECIFICACIÓN DEL MODELO
+#
+# Forma funcional: test RESET de Ramsey
 #
 library(lmtest)
 resettest(APT_msoft, power=2, type="fitted")
 resettest(APT_msoft, power=2:3, type="fitted")
 #
-# Heteroscedasticidad
-#
-# Gráfico de errores estimados (residuos)
-plot(macro$Date[-(1:2)],APT_msoft$residuals,type = "l",xlab="",ylab="")
-# Test de Breusch-Pagan de heteroscedasticidad aditiva
-library(lmtest)
-bptest(formula(APT_msoft),data = macro,studentize = F)
-bptest(formula(APT_msoft),data = macro,studentize = T)
-# Corrección de la matriz de covarianzas
-library(sandwich)
-coeftest(APT_msoft,vcov. = vcovHC(APT_msoft,type="HC1")) # White
-#
-# Autocorrelación
-#
-# Test de Durbin-Watson
-dwtest(APT_msoft)
-# Test de Breusch-Godfrey
-bgtest(APT_msoft,order = 10)
-# Corrección de la matriz de covarianzas
-library(sandwich)
-coeftest(APT_msoft,vcov. = NeweyWest(APT_msoft,lag = 6,adjust = T,prewhite = F)) # Newey-West
-#
-# Heteroscedasticidad autorregresiva condicional (ARCH)
-#
-library(FinTS)
-# Test de Engle
-ArchTest(APT_msoft$residuals , lags = 1)
-#
-# Normalidad  de los errores
-#
-# Histograma de los residuos
-hist(APT_msoft$residuals,main = "")
-box()
-# Estadísticos de normalidad
-library(moments)
-skewness(APT_msoft$residuals)
-kurtosis(APT_msoft$residuals)
-jarque.test(APT_msoft$residuals)
-agostino.test(APT_msoft$residuals)
-anscombe.test(APT_msoft$residuals)
-# Sucesos especiales (uso de variables ficticias para modelizar la presencia de outliers aislados)
-plot(macro$Date[-(1:2)],APT_msoft$residuals,type = "l", col="red",xlab="",ylab="")
-lines(macro$Date[-(1:2)],APT_msoft$fitted.values)
-legend("bottomright",c("Residuals","Fitted"), col = c("red","black"),lty=1)
-#
-macro$Date = as.Date(macro$Date)
-macro$APR2000DUM = as.integer(macro$Date == as.Date("2000-04-01"))
-macro$DEC2000DUM = as.integer(macro$Date == as.Date("2000-12-01"))
-APT_msft_dummy = lm(er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney+ dspread + rterm + 
-                      APR2000DUM + DEC2000DUM, data = macro)
-summary(APT_msft_dummy)
-# Períodos especiales (conocidos a priori)
-require(lubridate)
-macro$JANDUM = as.integer(month(macro$Date) == 1)
-summary(lm(er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm + 
-             APR2000DUM + DEC2000DUM + JANDUM, data = macro))
-#
-# Multicolinealidad
-#
-library(car)
-library(corrplot)
-# Matriz de correlaciones
-cor(macro[-(1:2),c("er_sp","dprod","dcredit","dinflation","dmoney","dspread","rterm")])
-corrplot(cor(macro[-(1:2),c("er_sp","dprod","dcredit","dinflation","dmoney","dspread","rterm")]))
-# FIVs
-vif(APT_msoft)
-#
-# Estabilidad de los parámetros
+# Estabilidad de los parámetros estructurales
 #
 library(strucchange)
-sbtest = Fstats(formula(APT_msoft),data = macro) # Recorte del 15% en ambos lados de la muestra (15% de 383 obs. -> 57)
+sbtest = Fstats(APT_msoft,data = macro) # Recorte del 15% en ambos lados de la muestra (15% de 383 obs. -> 57)
 # Test de Chow con punto de ruptura conocido
 JAN1996 = match(as.Date("1996-01-01"),macro$Date)
 chow = sbtest$Fstats[JAN1996-2-57] # Punto ruptura (breakpoint): 2 NAs + 57 -> 59
@@ -185,7 +125,81 @@ lines(x_axis,beta[,1]+2*beta[,2],lty="dashed")
 lines(x_axis,beta[,1]-2*beta[,2],lty="dashed")
 # Test CUSUM
 plot(efp(APT_msoft,data=macro))
+# Cambio estructural y datos atípicos
+# Sucesos especiales (uso de variables ficticias para modelizar la presencia de outliers aislados)
+plot(macro$Date[-(1:2)],APT_msoft$residuals,type = "l", col="red",xlab="",ylab="")
+lines(macro$Date[-(1:2)],APT_msoft$fitted.values)
+legend("bottomright",c("Residuals","Fitted"), col = c("red","black"),lty=1)
 #
+macro$APR2000DUM = as.integer(macro$Date == as.Date("2000-04-01"))
+macro$DEC2000DUM = as.integer(macro$Date == as.Date("2000-12-01"))
+APT_msft_dummy = lm(er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm + APR2000DUM + DEC2000DUM, data = macro)
+summary(APT_msft_dummy)
+# Períodos especiales (conocidos a priori)
+require(lubridate)
+macro$JANDUM = as.integer(month(macro$Date) == 1)
+summary(lm(er_msoft ~  er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm + APR2000DUM + DEC2000DUM + JANDUM, data = macro))
+#
+# TÉRMINO DE ERROR DEL MODELO
+#
+# Normalidad  de los errores
+#
+# Histograma de los residuos
+hist(APT_msoft$residuals,main = "")
+box()
+# Estadísticos de normalidad
+library(moments)
+skewness(APT_msoft$residuals)
+kurtosis(APT_msoft$residuals)
+jarque.test(APT_msoft$residuals)
+agostino.test(APT_msoft$residuals)
+anscombe.test(APT_msoft$residuals)
+#
+# Heteroscedasticidad
+#
+# Gráfico de errores estimados (residuos)
+plot(macro$Date[-(1:2)],APT_msoft$residuals,type = "l",xlab="",ylab="")
+# Test de White
+library(skedastic)
+white_lm(APT_msoft)
+white_lm(APT_msoft, interactions = TRUE)
+# Test de Breusch-Pagan de heteroscedasticidad aditiva
+library(skedastic)
+glejser(APT_msoft)
+breusch_pagan(APT_msoft)
+library(lmtest)
+bptest(formula(APT_msoft),data = macro,studentize = F)
+bptest(formula(APT_msoft),data = macro,studentize = T)
+#
+# Heteroscedasticidad autorregresiva condicional (ARCH)
+#
+library(FinTS)
+# Test de Engle
+ArchTest(APT_msoft$residuals , lags = 1)
+# Corrección de la matriz de covarianzas (MCO corregidos)
+library(sandwich)
+coeftest(APT_msoft,vcov. = vcovHC(APT_msoft,type="HC1")) # Corrección de White
+#
+# Autocorrelación
+#
+# Test de Durbin-Watson
+dwtest(APT_msoft)
+# Test de Breusch-Godfrey
+bgtest(APT_msoft,order = 1)
+bgtest(APT_msoft,order = 6)
+# Corrección de la matriz de covarianzas
+library(sandwich)
+coeftest(APT_msoft,vcov. = NeweyWest(APT_msoft,lag = 6,adjust = T,prewhite = F)) # Corrección de Newey-West
+#
+# Multicolinealidad
+#
+library(car)
+library(corrplot)
+# Matriz de correlaciones
+cor(macro[-(1:2),c("er_sp","dprod","dcredit","dinflation","dmoney","dspread","rterm")])
+corrplot(cor(macro[-(1:2),c("er_sp","dprod","dcredit","dinflation","dmoney","dspread","rterm")]))
+# FIVs
+vif(APT_msoft)
 ```
 
 # Código Python
@@ -231,111 +245,16 @@ formula = 'er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + 
 results = smf.ols(formula, data).fit()
 print(results.summary())
 # Contraste de hipótesis
-hypotheses = 'dprod = dcredit = dmoney = dspread = 0'
-F_test = results.f_test(hypotheses)
-print(F_test)
+# hypotheses = 'dprod = dcredit = dmoney = dspread = 0'
+# F_test = results.f_test(hypotheses)
+# print(F_test)
 #
 # DIGANOSIS DEL MODELO
 #
-# Heteroscedasticidad
-#
-# Gráfico de errores estimados (residuos)
-plt.figure(1)
-plt.plot(results.resid)
-plt.xlabel('Date')
-plt.ylabel('Residuos')
-plt.grid(True)
-plt.show()
-# Test de Breusch-Pagan (heter. aditiva)
-name = ['Lagrange multiplier statistic', 'p-value', 
-        'f-value', 'f p-value']
-BP_test = sms.het_breuschpagan(results.resid, results.model.exog)
-lzip(name, BP_test)
-# Corrección de la matriz de covarianzas: estimador de White
-results1 = smf.ols(formula, data).fit(cov_type='HC1')
-print(results1.summary())
-#
-# Autocorrelación
-#
-# Test de Durbin-Watson
-residuals = results.resid
-sms.durbin_watson(residuals)
-# Test de Breuscgh-Godfrey
-name = ['Lagrange multiplier statistic', 'p-value', 
-        'f-value', 'f p-value']
-BG_test = sms.acorr_breusch_godfrey(results, 10)
-lzip(name, BG_test)
-# Corrección de la matriz de covarianzas: estimador de Newey-West (si maxlags=0 -> HAC=HC1)
-results2 = smf.ols(formula, data).fit(cov_type='HAC', cov_kwds={'maxlags':6,'use_correction':True})
-print(results2.summary())
-#
-# Heteroscedasticidad autorregresiva condicional (ARCH): test de Engle
-#
-name = ['lm','lmpval','fval','fpval'] 
-E_test = het_arch(results.resid, nlags=1)
-lzip(name,E_test)
-#
-# Normalidad de los errores
-#
-residuals = results.resid
-# Histograma de los residuos
-plt.figure(2)
-plt.hist(residuals,20,edgecolor='black',linewidth=1.2)
-plt.xlabel('Residuos')
-plt.ylabel('Densidad estimada')
-plt.show()
-# Test de Jarque-Bera
-name = ['Jarque-Bera', 'Chi^2 two-tail prob.', 'Skewness', 'Kurtosis']
-JB_test = sms.jarque_bera(residuals)
-lzip(name, JB_test)
-# Contrastes de normalidad para una variable (var: ndarray)
-def normality_tests(var):
-  Skewness_test = scs.skew(var)
-  Skewness_pvalue = scs.skewtest(var)[1]
-  Kurtosis_test = scs.kurtosis(var)
-  Kurtosis_pvalue = scs.kurtosistest(var)[1]
-  Normality_test = scs.normaltest(var)
-  return Skewness_test, Skewness_pvalue, Kurtosis_test, Kurtosis_pvalue, Normality_test
-#
-print(normality_tests(residuals))
-#
-name = ['Skewness_test', 'Skewness_pvalue', 'Kurtosis_test', 'Kurtosis_pvalue', 'Normality_test']
-ntests = normality_tests(residuals)
-lzip(name, ntests)
-#
-# Modelización de sucesos especiales (uso de variables ficticias para tratar la presencia de outliers aislados)
-y_fitted = results.fittedvalues
-residuals = results.resid
-#
-plt.figure(3)
-plt.plot(residuals, label='Residuos')
-plt.plot(y_fitted, label='Valores ajustados')
-plt.xlabel('Date')
-plt.ylabel('Desviaciones')
-plt.grid(True)
-plt.legend()
-plt.show()
-# Identificación de valores menores
-residuals.nsmallest(2)
-#
-data['APR2000DUM'] = np.where(data.index == '2000-4-1', 1, 0)
-data['DEC2000DUM'] = np.where(data.index == '2000-12-1', 1, 0)
-#
-formula = 'er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm + APR2000DUM + DEC2000DUM'
-results = smf.ols(formula, data).fit()
-print(results.summary())
-#
-# Multicolinealidad
-#
-# Matriz de correlaciones
-data = data.dropna()
-dataX = data[['er_sp','dprod','dcredit','dinflation','dmoney','dspread','rterm']]
-dataX.corr()
-plt.figure(4)
-sns.heatmap(dataX.corr(), vmin=-0.25, vmax=0.25, center=0, annot=True, fmt='.2f', mask=~np.tri(dataX.corr().shape[1], k=-1, dtype=bool), cbar=False)
-plt.show()
+# ESPECIFICACIÓN DEL MODELO
 #
 # Forma funcional: test RESET de Ramsey
+reset_ramsey(results,degree=2)
 reset_ramsey(results,degree=3)
 #
 # Estabilidad de los parámetros
@@ -399,13 +318,11 @@ parameters = []
 for i in range(373):
     coeff, se = recursive_reg('er_sp', i, 11)
     parameters.append((coeff,se))
-    
 parameters = pd.DataFrame(parameters, columns=['coeff','se'], index = data[:-10].index)
-
 parameters['er_sp + 2*se'] = parameters['coeff'] + 2*parameters['se']
 parameters['er_sp - 2*se'] = parameters['coeff'] - 2*parameters['se']
 #
-plt.figure(5)
+plt.figure(1)
 plt.plot(parameters['coeff'], label=r'$\beta_{er_sp}$')
 plt.plot(parameters['er_sp + 2*se'], label=r'$\beta_{er_sp} + 2*se$', linestyle='dashed')
 plt.plot(parameters['er_sp - 2*se'], label=r'$\beta_{er_sp} - 2*se$', linestyle='dashed')
@@ -413,6 +330,112 @@ plt.xlabel('Date')
 plt.grid(True)
 plt.legend()
 plt.show()
+# Modelización de sucesos especiales (uso de variables ficticias para tratar la presencia de outliers aislados)
+y_fitted = results.fittedvalues
+residuals = results.resid
 #
+plt.figure(2)
+plt.plot(residuals, label='Residuos')
+plt.plot(y_fitted, label='Valores ajustados')
+plt.xlabel('Date')
+plt.ylabel('Desviaciones')
+plt.grid(True)
+plt.legend()
+plt.show()
+# Identificación de valores menores
+residuals.nsmallest(2)
+#
+data['APR2000DUM'] = np.where(data.index == '2000-4-1', 1, 0)
+data['DEC2000DUM'] = np.where(data.index == '2000-12-1', 1, 0)
+#
+formula = 'er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm + APR2000DUM + DEC2000DUM'
+results = smf.ols(formula, data).fit()
+print(results.summary())
+#
+# TÉRMINO DE ERROR DEL MODELO
+#
+# Normalidad de los errores
+#
+residuals = results.resid
+# Histograma de los residuos
+plt.figure(3)
+plt.hist(residuals,20,edgecolor='black',linewidth=1.2)
+plt.xlabel('Residuos')
+plt.ylabel('Densidad estimada')
+plt.show()
+# Test de Jarque-Bera
+name = ['Jarque-Bera', 'Chi^2 two-tail prob.', 'Skewness', 'Kurtosis']
+JB_test = sms.jarque_bera(residuals)
+lzip(name, JB_test)
+# Contrastes de normalidad para una variable (var: ndarray)
+def normality_tests(var):
+  Skewness_test = scs.skew(var)
+  Skewness_pvalue = scs.skewtest(var)[1]
+  Kurtosis_test = scs.kurtosis(var)
+  Kurtosis_pvalue = scs.kurtosistest(var)[1]
+  Normality_test = scs.normaltest(var)
+  return Skewness_test, Skewness_pvalue, Kurtosis_test, Kurtosis_pvalue, Normality_test
+#
+print(normality_tests(residuals))
+#
+name = ['Skewness_test', 'Skewness_pvalue', 'Kurtosis_test', 'Kurtosis_pvalue', 'Normality_test']
+ntests = normality_tests(residuals)
+lzip(name, ntests)
+#
+# Heteroscedasticidad
+#
+# Gráfico de errores estimados (residuos)
+plt.figure(4)
+plt.plot(results.resid)
+plt.xlabel('Date')
+plt.ylabel('Residuos')
+plt.grid(True)
+plt.show()
+# Test de White
+name = ['Lagrange multiplier statistic', 'p-value', 
+        'f-value', 'f p-value']
+W_test = sms.het_white(results.resid, results.model.exog)
+lzip(name, W_test)
+# Test de Breusch-Pagan (heter. aditiva)
+name = ['Lagrange multiplier statistic', 'p-value', 
+        'f-value', 'f p-value']
+BP_test = sms.het_breuschpagan(results.resid, results.model.exog)
+lzip(name, BP_test)
+# Heteroscedasticidad autorregresiva condicional (ARCH): test de Engle
+name = ['lm','lmpval','fval','fpval'] 
+E_test = het_arch(results.resid, nlags=1)
+lzip(name,E_test)
+# Corrección de la matriz de covarianzas: estimador de White
+results1 = smf.ols(formula, data).fit(cov_type='HC1')
+print(results1.summary())
+#
+# Autocorrelación
+#
+# Test de Durbin-Watson
+residuals = results.resid
+sms.durbin_watson(residuals)
+# Test de Breusch-Godfrey
+name = ['Lagrange multiplier statistic', 'p-value', 
+        'f-value', 'f p-value']
+BG_test = sms.acorr_breusch_godfrey(results,1)
+lzip(name, BG_test)
+#
+name = ['Lagrange multiplier statistic', 'p-value', 
+        'f-value', 'f p-value']
+BG_test = sms.acorr_breusch_godfrey(results,6)
+lzip(name, BG_test)
+# Corrección de la matriz de covarianzas: estimador de Newey-West (si maxlags=0 -> HAC=HC1)
+results2 = smf.ols(formula, data).fit(cov_type='HAC', cov_kwds={'maxlags':6,'use_correction':True})
+print(results2.summary())
+#
+# Multicolinealidad
+#
+# Matriz de correlaciones
+data = data.dropna()
+dataX = data[['er_sp','dprod','dcredit','dinflation','dmoney','dspread','rterm']]
+dataX.corr()
+plt.figure(5)
+sns.heatmap(dataX.corr(), vmin=-0.25, vmax=0.25, center=0, annot=True, fmt='.2f', mask=~np.tri(dataX.corr().shape[1], k=-1, dtype=bool), cbar=False)
+plt.show()
 ```
 

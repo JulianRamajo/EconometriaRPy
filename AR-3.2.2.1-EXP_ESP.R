@@ -1,76 +1,108 @@
-library(readr)
+# Lectura de librerías
+library(tidyverse)
 library(car)
-library(strucchange)
-#
+# Lectura de datos
 EXP_ESP <- read_csv("EXP_ESP.csv")
-EXP_ESP_ts <- ts(EXP_ESP, start=c(1970), end = c(1997), frequency = 1)
-plot(EXP_ESP_ts[,2:5])
+# Dvisión de la muestra preUE (1970-1985) y postUE (1986-1997)
+Y1986=match(1986,EXP_ESP$obs)
+Y1986
 #
-XGS <- EXP_ESP_ts[,"XGS"]
-WGDP <- EXP_ESP_ts[,"WGDP"]
-REER <- EXP_ESP_ts[,"REER"]
-DUE <- EXP_ESP_ts[,"DUE"]
+UE <- factor(c(rep(0, 16), rep(1, 12)), labels=c("preUE", "postUE"))
+UE
+class(UE)
 #
-scatterplot(XGS ~ WGDP| DUE, data=EXP_ESP, smooth=FALSE, boxplots=FALSE, ylab="Relación parcial Exportaciones/PIB mundial")
-scatterplot(XGS ~ REER| DUE, data=EXP_ESP, smooth=FALSE, boxplots=FALSE, ylab="Relación parcial Exportaciones/Tipo de cambio")
+EXP_ESP$D1986 <- as.numeric(UE)-1
+EXP_ESP$D1986
+class(EXP_ESP$D1986)
 #
+EXP_ESP_ts <- ts(EXP_ESP[,2:5], start=c(1970), end = c(1997), frequency = 1)
+plot(EXP_ESP_ts)
 #
 # Ecuación de exportaciones (1970-1997)
 #
-lm_X_ESP <- lm(log(XGS) ~ log(WGDP) + log(REER))
-S(lm_X_ESP)
+lm_X_ESP <- lm(log(XGS) ~ log(WGDP) + log(REER), data = EXP_ESP_ts)
+summary(lm_X_ESP)
+#
+scatterplot(log(XGS) ~ log(WGDP)| D1986, data=EXP_ESP_ts, smooth=FALSE, boxplots=FALSE, 
+            ylab="Relación parcial Exportaciones/PIB mundial (logs)")
+scatterplot(log(XGS) ~ log(REER)| D1986, data=EXP_ESP_ts, smooth=FALSE, boxplots=FALSE, 
+            ylab="Relación parcial Exportaciones/Tipo de cambio (logs)")
+#
+# ¿Existe diferenciación por períodos?
 #
 # Test de Chow de cambio estructural
 #
+#  Cálculo manual
+#
+summary(lm_X_ESP)
 SRCT <- sum(residuals(lm_X_ESP)^2)
 SRCT
 T <- nobs(lm_X_ESP)
 T
 K <- T -df.residual(lm_X_ESP)
 K
-# Pre UE
-nUE_dat <- window(EXP_ESP_ts, start=1970, end = 1985)
-lm_X_ESP_nUE <- lm(log(XGS) ~ log(WGDP) + log(REER) , data = nUE_dat)
-S(lm_X_ESP_nUE)
-SRC1 <- sum(residuals(lm_X_ESP_nUE)^2)
+# PreUE
+preUE <- window(EXP_ESP_ts, start=1970, end = 1985)
+lm_X_ESP_preUE <- lm(log(XGS) ~ log(WGDP) + log(REER) , data = preUE)
+summary(lm_X_ESP_preUE)
+SRC1 <- sum(residuals(lm_X_ESP_preUE)^2)
 SRC1
-T1 <- nobs(lm_X_ESP_nUE)
+T1 <- nobs(lm_X_ESP_preUE)
 T1
-# Post UE
-UE_dat <- window(EXP_ESP_ts, start=1986, end = 1997)
-lm_X_ESP_UE <- lm(log(XGS) ~ log(WGDP) + log(REER) , data = UE_dat)
-S(lm_X_ESP_UE)
-SRC2 <- sum(residuals(lm_X_ESP_UE)^2)
+# PostUE
+postUE <- window(EXP_ESP_ts, start=1986, end = 1997)
+lm_X_ESP_postUE <- lm(log(XGS) ~ log(WGDP) + log(REER) , data = postUE)
+summary(lm_X_ESP_postUE)
+SRC2 <- sum(residuals(lm_X_ESP_postUE)^2)
 SRC2
-T2 <- nobs(lm_X_ESP_UE)
+T2 <- nobs(lm_X_ESP_postUE)
 T2
-# Comparación de parámetros
-compareCoefs(lm_X_ESP_nUE,lm_X_ESP_UE)
-# Cálculo manual del test de Chow
+#
 CHOW=((SRCT-(SRC1+SRC2))/K)/((SRC1+SRC2)/(T-2*K))
 CHOW
-pval <-  1-pf(CHOW,3,(28-2*3))
+pval <-  1-pf(CHOW,K,(T-2*K))
+pval
+# Comparación de parámetros
+compareCoefs(lm_X_ESP_preUE,lm_X_ESP_postUE)
+#
+# Cálculo automático
+#
+# Método 1 (ANOVA)
+summary(lm_X_EXP_int <- lm(log(XGS) ~ log(WGDP) + log(REER) + D1986/(log(WGDP) + log(REER)), data = EXP_ESP_ts))
+anova(lm_X_ESP, lm_X_EXP_int)
+# Método 2 (librería structchange)
+library(strucchange)
+sctest(log(XGS) ~ log(WGDP) + log(REER), data=EXP_ESP_ts, type = "Chow", point = Y1986-1)
+#
+# Contrastes tipo Chow basados en estimaciones recursivas
+# 
+sbtest <- Fstats(log(XGS) ~ log(WGDP) + log(REER), data = EXP_ESP_ts, from = 0.15, to = 0.85)
+sbtest[["Fstats"]]
+# Gráfica de los estadísticos F 
+plot(sbtest, alpha = 0.05)
+# Gráfica de los correspondientes P-valores
+plot(sbtest, pval = TRUE, alpha = 0.05)
+# Test de Chow (1960) [versión Chi2]
+Chow_F <- sbtest$Fstats[Y1986-4] # Punto de ruptura: 17 - 4 (15% suprimidos a la izquierda)
+Chow_F # Se puede comprobar que Chow_F/K=CHOW
+# Chow_F tiene una distribución asintótica Chi^2 mientras Chow_F/K tiene una distribución exacta F_K,T-2*K
+pval <-  1-pchisq(Chow_F,sbtest$nreg) 
 pval
 #
-# Cálculo automático del test de Chow
+# Contrastes de Andrews (1993) y Andrews y Ploberger (1994) [punto de ruptura desconocido]
 #
-sctest(log(XGS) ~ log(WGDP) + log(REER), data=EXP_ESP_ts, type = "Chow", point = T1)
+sctest(sbtest, type = "supF")
+sctest(sbtest, type = "aveF")
+sctest(sbtest, type = "expF")
 #
-# Test de Chow recursivo
-# 
-fs <- Fstats(lm(log(XGS) ~ log(WGDP) + log(REER)), data=EXP_ESP_ts, from = 0.15, to = 0.85)
-# Gráfica de los estadísticos F 
-plot(fs, alpha = 0.05)
-# Gráfica de los correspondientes P-valores
-plot(fs, pval = TRUE, alpha = 0.05)
+# Test CUSUM (Brown, Durbin y Evans, 1975)
+plot(efp(log(XGS) ~ log(WGDP) + log(REER), data = EXP_ESP_ts))
 #
 # Regresión diferenciada por tramos
 #
-lm_X_ESP_2 <- lm(log(XGS) ~ (log(WGDP) + log(REER))*DUE)
-S(lm_X_ESP_2)
+summary(lm(log(XGS) ~ (log(WGDP) + log(REER))*D1986, data=EXP_ESP_ts))
 # Versión alternativa
-UE <- factor(DUE, labels=c("nUE", "UE"))
-lm_X_ESP_3 <- lm(log(XGS) ~ (log(WGDP) + log(REER))*UE)
-S(lm_X_ESP_3)
+summary(lm(log(XGS) ~ (log(WGDP) + log(REER))*UE, data=EXP_ESP_ts))
 #
-compareCoefs(lm_X_ESP, lm_X_ESP_2)
+compareCoefs(lm_X_ESP_preUE,lm_X_ESP_postUE)
+#
