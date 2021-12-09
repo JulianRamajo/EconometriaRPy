@@ -1,4 +1,5 @@
 #
+library(tidyverse)
 library(car)
 library(vars)
 library(tseries)
@@ -62,7 +63,7 @@ Multi_spec_2  <-  multispec ( replicate (3 , VAR_GARCH_spec_2) )
 Copula_GARCH_spec_2  <-  cgarchspec (Multi_spec_2, VAR = TRUE, lag = 2)
 VAR_GARCH_fit_2 <-  cgarchfit ( Copula_GARCH_spec_2 , data = VAR_data )
 show(VAR_GARCH_fit_2)
-VAR_GARCH_fit_2@mfit$Rt   # Correlaciones condicionales entre los residuos estandarizados
+VAR_GARCH_fit_2@mfit$Rt              # Correlaciones condicionales entre los residuos estandarizados
 VAR_GARCH_fit_2@model[["varcoef"]]   # Coeficientes estimados del modelo VAR para la media condicional
 VAR_GARCH_fit_2@mfit[["coef"]]       # Coeficientes estimados del modelo GARCH multivariante para la varianza condicional
 #

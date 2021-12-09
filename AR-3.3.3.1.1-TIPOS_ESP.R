@@ -10,7 +10,7 @@ TIPOS_ESP <- read_csv("TIPOS_ESP.csv")
 TIPOS_ESP_ts <- ts(TIPOS_ESP, start=c(1982,1), end = c(1990,3), frequency = 4)
 plot(TIPOS_ESP_ts)
 #
-# Modelo de Klein-Monti - modelo estático- 
+# Modelo de Klein-Monti (estático)
 #
 summary(lm_KM <- lm(RL ~ R3M + RD, data=TIPOS_ESP_ts))
 #
@@ -49,4 +49,28 @@ cochrane.orcutt(dynlm_KM_0)
 # Modelo dinámico ARDL(1,1,1) 
 #
 summary(dynlm_KM_1 <- dynlm(RL ~ L(RL, 1:1) + L(R3M, 0:1) + L(RD, 0:1), data=TIPOS_ESP_ts))
+#
+# Comparación de modelos
+#
+compareCoefs(dynlm_KM_0,dynlm_KM_1)
+#
+# Efectos estimados
+#
+
+# Efectos a corto y largo plazo
+#
+library(nlWaldTest)
+# Modelo estático (c.p=l.p)
+nlConfint(dynlm_KM_0, c("b[2]","b[3]"))
+nlWaldtest(dynlm_KM_0, "b[2]")
+nlWaldtest(dynlm_KM_0, "b[3]")
+# Modelo dinámico
+# Corto plazo
+nlConfint(dynlm_KM_1, c("b[3]","b[5]"))
+nlWaldtest(dynlm_KM_1, "b[3]")
+nlWaldtest(dynlm_KM_1, "b[5]")
+# Largo plazo
+nlConfint(dynlm_KM_1, c("(b[3]+b[4])/(1-b[2])","(b[5]+b[6])/(1-b[2])"))
+nlWaldtest(dynlm_KM_1, "(b[3]+b[4])/(1-b[2])")
+nlWaldtest(dynlm_KM_1, "(b[5]+b[6])/(1-b[2])")
 #

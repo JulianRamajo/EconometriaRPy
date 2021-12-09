@@ -2,7 +2,7 @@
 library(tidyverse)
 library(car)
 # Lectura de datos
-EXP_ESP <- read_csv("EXP_ESP.csv")
+EXP_ESP <- read_csv("EXP_ESP_Y.csv")
 # Dvisión de la muestra preUE (1970-1985) y postUE (1986-1997)
 Y1986=match(1986,EXP_ESP$obs)
 Y1986

@@ -1,8 +1,7 @@
-#
+# Lectura de librerías
 library(tidyverse)
 library(car)
-library(lmtest)
-#
+# Lectura de datos
 DEM_HET <- read_csv("DEM_HET.csv")
 dim(DEM_HET)
 summary(DEM_HET)
@@ -10,37 +9,52 @@ summary(DEM_HET)
 # Función de demdanda estándar
 #
 summary(lm_dem <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), data = DEM_HET))
-summary(lm_dem, vcov.=hccm(lm_dem, type = "hc1")) # Corrección de White: errores estándar robustos ante heteroscedasticidad
+summary(lm_dem, vcov.=hccm(lm_dem, type = "hc1")) # Corrección de White (errores estándar robustos ante heteroscedasticidad)
+library(sandwich)
+summary(lm_dem, vcov.=vcovHC(lm_dem, type = "HC1")) # Corrección de White
 #
-# Chequeo de varianza no constante: heteroscedasticidad
+# Chequeo de la hipótesis de homoscedasticidad
 #
+library(skedastic)
+white_lm(lm_dem)
+white_lm(lm_dem, interactions=TRUE)
+# Test de Glejser
+glejser(lm_dem)
+# Test de Breusch-Pagan (het. aditiva)
+breusch_pagan(lm_dem)
+# Análisis gráfico
 resid2 <- resid(lm_dem)^2
 l_Y <- log(DEM_HET$Y)
-plot(l_Y,resid2, xlab="Renta (en logaritmos)", ylab="resid^2")
+plot(l_Y,resid2, xlab="Renta (en logaritmos)", ylab="Residuos al cuadrado")
 #
-# Test de Breusch-Pagan (versión clasíca)
+# Breusch-Pagan estándar (escalado)
+#
+# Manual
+# Regresión auxiliar
+summary(lm_resid2 <- lm(resid2 ~ log(Y), data=DEM_HET))
+N <- nobs(lm_resid2)
+p <- 1 # Número de regresores de la regresión auxiliar (sin incluir la constante)
+slm_resid2 <- summary(lm_resid2)
+R2_lm_resid2 <- slm_resid2$r.squared
+BP <- N*R2_lm_resid2
+# Contraste Chi-cuadrado
 alpha <- 0.05
-# Regresión auxiliar:
-summary(lm_r2 <- lm(resid2~ log(Y), data=DEM_HET))
-N <- nobs(lm_r2)
-p <- 1 
-slm_r2 <- summary(lm_r2)
-R2_lm_r2 <- slm_r2$r.squared
-BP <- N*R2_lm_r2
-# Contraste Chi-cuadrado 
 chisqcr <- qchisq(1-alpha, p)
-pval <- 1-pchisq(BP,p)
+pval <- 1-pchisq(BP, p)
 BP ; chisqcr ; pval 
-#
-bptest(lm_dem, varformula = ~ log(Y), data=DEM_HET) # Breusch-Pagan robusto (variante de Koenker)
-bptest(lm_dem, varformula = ~ log(Y), data=DEM_HET, studentize = FALSE) # Breusch-Pagan estándar (escalado)
-ncvTest(lm_dem, ~ log(Y))  # Test de Breusch-Pagan (Score test)
+# Automático
+library(lmtest)
+bptest(lm_dem, varformula = ~ log(Y), data=DEM_HET) 
+# Test de Breusch-Pagan robusto (variante de Koenker)
+bptest(lm_dem, varformula = ~ log(Y), data=DEM_HET, studentize = FALSE) 
+ncvTest(lm_dem, ~ log(Y))
 #
 # Mínimos cuadrados ponderados (MCP)
-# Regresión auxiliar para la varianza estimada:
-summary(lm_lr2 <- lm(log(resid2)~ log(Y), data=DEM_HET))
-s2 <- exp(fitted(lm_lr2))
+# Regresión auxiliar para la varianza estimada
+summary(lm_l_resid2 <- lm(log(resid2)~ log(Y), data=DEM_HET))
+sigma2 <- exp(fitted(lm_l_resid2))
 # MCO con ponderaciones
-summary(lm_dem_het <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), weights = 1/s2, data = DEM_HET))
-
-
+summary(lm_dem_het <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), weights = 1/sigma2, data = DEM_HET))
+# Comparación de resultaodos MCO-MCP
+compareCoefs(lm_dem, lm_dem_het)
+#
