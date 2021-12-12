@@ -1,46 +1,46 @@
+#
 library(tidyverse)
 library(tidyquant)
 library(timetk)
-#
-tq_index_options()
-tq_index("SP500")
-# Trabajar con los 5 primeras compañías del SP500
-SP500_top5 <- tq_index("SP500") %>%
-  slice(1:5) %>%
-  tq_get(get = "stock.prices")
-SP500_top5
-SP500_top5 %>%  group_by(symbol) %>%
-  plot_time_series(date, adjusted, .interactive = FALSE)
-SP500_top5_prices <- SP500_top5 %>%  select(symbol, date, adjusted)
-SP500_top5_spread <- SP500_top5_prices %>% 
-  pivot_wider(names_from = symbol, values_from = adjusted)
-#
 library(TSstudio)
-ts_plot(SP500_top5_spread, title = "Top 5 Stock Prices in SP500", Ytitle = "Index")
 #
-tq_exchange_options()
-tq_exchange("NASDAQ")
-tq_get_options()
-# Acciones de Apple
-AAPL_price  <- tq_get("AAPL", get = "stock.prices", from = " 1990-01-01")
-AAPL_price
-# librería timetk
-AAPL_price %>%
+# En este apartado vamos a trabajar con los 4 primeras compañías del SP500
+# 
+tq_index_options()
+SP500 <- tq_index("SP500")
+SP500_top4 <- tq_index("SP500") %>%
+  slice(1:4) %>%
+  tq_get(get = "stock.prices")
+SP500_top4
+SP500_top4 %>%  group_by(symbol) %>%
   plot_time_series(date, adjusted, .interactive = FALSE)
+SP500_top4_prices <- SP500_top4 %>% select(symbol, date, adjusted)
+# Agrupación de series temporales de precios
+SP500_top4_ts <- SP500_top4_prices %>% pivot_wider(names_from = symbol, values_from = adjusted)
+#
+ts_plot(SP500_top4_ts, title = "Top 4 Stock Prices in SP500", Ytitle = "Index") # librería TSstudio
+#
+# Ahora vamos a trabajar con una compañía del NASDAQ, Tesla (TSLA), o con el Índice de Producción
+# Industrial (IPI) de España
+tq_exchange_options()
+NASDAQ <-  tq_exchange("NASDAQ")
+tq_get_options()
+# Acciones de Tesla
+TSLA_price  <- tq_get("TSLA", get = "stock.prices")
+TSLA_price
+TSLA_price %>% plot_time_series(date, adjusted, .interactive = FALSE) # librería timetk
 # Índice de producción industrial (IPI) de España (desestacionalizado)
 IPI_ESP <- tq_get("ESPPROINDMISMEI", get = "economic.data", from = " 1965-01-01")
 IPI_ESP
 # Tendencia
-IPI_ESP %>%
-  plot_time_series(date, price, .interactive = FALSE)
+IPI_ESP %>% plot_time_series(date, price, .interactive = FALSE) 
 # Valores atípicos
-IPI_ESP %>%
-  plot_anomaly_diagnostics(date, price, .facet_ncol = 3, .interactive = FALSE)
+IPI_ESP %>% plot_anomaly_diagnostics(date, price, .facet_ncol = 3, .interactive = FALSE)
 # Estacionalidad
-IPI_ESP %>%
-  plot_seasonal_diagnostics(date, price, .interactive = FALSE)
+IPI_ESP %>% plot_seasonal_diagnostics(date, price, .interactive = FALSE)
+#
 # Acciones de Facebook, Amazon, Netflix y Google (FANG) 
-# Si se añade Apple (AAPL) quedaría el grupo FANGA
+#
 FANG_prices <- tq_get(c("FB" , "AMZN", "NFLX", "GOOG"), get = "stock.prices", from = "2015-01-01")
 FANG_prices
 #

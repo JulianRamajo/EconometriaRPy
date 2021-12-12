@@ -15,7 +15,7 @@ dVENTAS_dTV <- b[2] + b[4]*PUB_VENTAS$RADIO
 dVENTAS_dRADIO <- b[3] + b[4]*PUB_VENTAS$TV
 scatterplot(dVENTAS_dTV ~ PUB_VENTAS$RADIO)
 scatterplot(dVENTAS_dRADIO ~ PUB_VENTAS$TV)
-#
+# Especificación funcional
 library(lmtest)
 resettest(mod_VENTAS, power = 2)
 # Normalidad de los errores
@@ -38,7 +38,7 @@ summary(mod_VENTAS, vcov. = vcovHC(mod_VENTAS, type="HC1"))
 # MCP
 summary(mod_l_resid2 <- lm( log(mod_VENTAS$residuals^2) ~ TV*RADIO, data=PUB_VENTAS) )  # Regresión auxiliar 
 sigma2 <-exp(mod_sigma2$fitted.values)
-summary(mod_VENTAS_het <- lm(VENTAS ~ TV*RADIO, weights = 1/sigma2, data=PUB_VENTAS)) # Mínimnos cuadrados con ponderaciones
-# Comparación de resultaodos MCO-MCP
+summary(mod_VENTAS_het <- lm(VENTAS ~ TV*RADIO, weights = 1/sigma2, data=PUB_VENTAS)) # Mínimos cuadrados con ponderaciones
+# Comparación de resultados MCO-MCP
 compareCoefs(mod_VENTAS, mod_VENTAS_het)
 #
