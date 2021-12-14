@@ -1,9 +1,9 @@
 ---
-title: 'TEMA X: XX'
+title: 'TEMA 3: Estabilidad de los parámetros estructurales'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación X.X: X'
+subtitle: 'Aplicación 3.2: X'
 output:
   html_document:
     theme: journal
@@ -16,13 +16,9 @@ output:
     toc_depth: '2'
 ---
 
-# Introducción
+# Objetivo
 
-En esta aplicación se estimará ...:
-
-$$
-Y_{t} = \beta_0 + \beta_1  X_{1,t} + + \beta_2  X_{2,t} +...++ \beta_K  X_{K,t} + e_{t}
-$$
+En esta aplicación se estimarán dos regresiones que permiten parámetros no constantes.
 
 # Código R
 
