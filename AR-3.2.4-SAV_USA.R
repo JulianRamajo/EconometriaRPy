@@ -27,12 +27,13 @@ jtest(dynlm_A, dynlm_B)
 #
 # Modelo anidado
 #
-summary(dynlm_B <- dynlm(AH ~ L(AH, 1:2) + L(Y,0:0), data = AHORRO_RENTA_ts, start = c(1972,1), end = c(2005,1)))
+summary(dynlm_AB <- dynlm(AH ~ L(AH, 1:2) + L(Y,0:0), data = AHORRO_RENTA_ts, start = c(1972,1), end = c(2005,1)))
 #
 # Comparación de modelos (librería performance)
 #
 model_performance(dynlm_A)
 model_performance(dynlm_B)
-compare_performance(dynlm_A, dynlm_B, rank = TRUE)
-plot(compare_performance(dynlm_A, dynlm_B, rank = TRUE))
+#
+# compare_performance(dynlm_A, dynlm_B, rank = TRUE)
+# plot(compare_performance(dynlm_A, dynlm_B, rank = TRUE))
 #

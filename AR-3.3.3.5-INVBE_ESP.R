@@ -1,5 +1,7 @@
 #
-AIREF.ESP.data <- readr::read_csv("AIREF_ESP.csv")
+library(tidyverse)
+#
+AIREF.ESP.data <- read_csv("AIREF_ESP.csv")
 # Método tidyverse (tsibble)
 library(fpp3)
 macro.Spain <- AIREF.ESP.data %>%

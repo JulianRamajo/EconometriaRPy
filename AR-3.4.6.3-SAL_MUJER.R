@@ -1,6 +1,8 @@
+#
 library(tidyverse)
 library(car)
 library(sampleSelection)
+#
 SAL_MUJ <- read_csv("SAL_MUJ.csv")
 summary(SAL_MUJ)
 #

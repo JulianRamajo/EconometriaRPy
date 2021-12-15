@@ -1,4 +1,7 @@
-library(readr)
+#
+library(tidyverse)
+library(dynlm)
+#
 INF_R_USA <- read_csv("INF_R_USA.csv")
 INF_R_USA.ts <- ts(INF_R_USA[,2:4], start=c(1954,8), end=c(2016,4),frequency=12)
 #
@@ -11,7 +14,6 @@ ts.plot(INF_R_USA.ts[,"br"] , xlab="Tipo de interés de los Bonos del Tesoro a t
 #
 # Primera etapa: ecuación de largo plazo
 #
-library(dynlm)
 summary(reg.lp <- dynlm(br~ffr, data=INF_R_USA.ts))
 u.lp <- resid(reg.lp)
 plot(u.lp)

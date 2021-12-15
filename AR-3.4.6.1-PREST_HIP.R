@@ -1,7 +1,9 @@
+#
 library(tidyverse)
 library(AER)
 library(alr4)
 library(margins)
+#
 PREST_HIP <- read_csv("PREST_HIP.csv")
 # Modelo logit
 ti.logit <- glm(Y ~ FI + MARG + YLD + PTS + MAT + BA + BS + FTB + CB + MC + SE + MOB + NW + LA + STL, data=PREST_HIP, family=binomial(link="logit"))

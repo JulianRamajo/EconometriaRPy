@@ -1,3 +1,5 @@
+#
+library(tidyverse)
 library(alr4)
 library(AER)
 #
@@ -18,3 +20,4 @@ plot(Effect(c("type", "sex"), Po_PHDs), multiline=TRUE, ci.style="bars", main=""
 # Contraste de sobredispersión
 dispersiontest(Po_PHDs)
 dispersiontest(Po_PHDs, trafo = 2)
+#

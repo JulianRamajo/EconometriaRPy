@@ -1,6 +1,8 @@
+#
 library(tidyverse)
 library(AER)
 library(censReg)
+#
 GASTO_AUTOS <- read_csv("AUTOS.csv")
 summary(AUTOS)
 #

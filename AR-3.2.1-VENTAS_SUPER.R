@@ -50,9 +50,9 @@ ceresPlots(modelo.ventas.1) # CERES (Combining conditional Expectations and RESi
 #
 # Heteroscedasticidad (varianza no constante)
 #
-spreadLevelPlot(modelo.ventas, smooth=list(span=1))
-ncvTest(modelo.ventas)
-ncvTest(modelo.ventas, var.formula= ~ P + A)
+spreadLevelPlot(modelo.ventas.1, smooth=list(span=1))
+ncvTest(modelo.ventas.1)
+ncvTest(modelo.ventas.1, var.formula= ~ P + A)
 #
 # Normalidad y datos atípicos
 #
@@ -76,8 +76,10 @@ plot(Effect("A", modelo.ventas.2))
 #
 compareCoefs(modelo.ventas.1, modelo.ventas.2)
 anova(modelo.ventas.1, modelo.ventas.2)
-ccompare_performance(modelo.ventas.1, modelo.ventas.2, rank = TRUE)
+#
+compare_performance(modelo.ventas.1, modelo.ventas.2, rank = TRUE)
 plot(compare_performance(modelo.ventas.1, modelo.ventas.2, rank = TRUE))
+#
 test_performance(modelo.ventas.1, modelo.ventas.2)
 test_wald(modelo.ventas.1, modelo.ventas.2)
 test_bf(modelo.ventas.1, modelo.ventas.2)

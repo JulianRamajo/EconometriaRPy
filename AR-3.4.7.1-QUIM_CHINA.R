@@ -1,15 +1,16 @@
 #
-library(readr)
+library(tidyverse)
+library(AER)
+library(alr4)
+library(stargazer)
+library(plm)
+#
 QUIM_CHINA <- read_csv("QUIM_CHINA.csv")
 # Estructura de panel de datos 
 QUIM_CHINA.pdata  <-  pdata.frame(QUIM_CHINA,index=c("firm", "year"))
 pdim(QUIM_CHINA.pdata)
 #
-library(AER)
-library(alr4)
-library(stargazer)
 # Modelos estáticos
-library(plm)
 # Modelo plano
 CD_panel_pool_mod <- plm(log(Y) ~ log(K)+log(L)+log(M), data = QUIM_CHINA.pdata, model = "pooling")
 stargazer(CD_panel_pool_mod, type="text")

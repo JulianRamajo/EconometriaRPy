@@ -1,6 +1,10 @@
+#
+library(tidyverse)
 library(plm)
+#
 data( "EmplUK", package="plm" )
 help( "EmplUK", package="plm" )
+#
 EmplUK.pdata <-  pdata.frame(EmplUK,index=c( "firm", "year"))
 pdim(EmplUK.pdata)
 #

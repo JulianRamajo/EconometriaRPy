@@ -1,55 +1,47 @@
-library(readr)
-library(car)
-library(MASS)
-library(effects)
+#
 library(tidyverse)
-library(RcmdrMisc)
-library(sfsmisc)
-library(quantreg)
+library(car)
 library(lmtest)
-library(sandwich)
-library(dynlm)
+library(quantreg)
+library(MASS)
 library(moments)
 library(tseries)
 #
 ATIP <- read_csv("ATIP.csv")
-View(ATIP)
 summary(ATIP)
 #
 # Diagrama de puntos
 #
-scatterplotMatrix(~ Y + X, id=list(n=3), smooth=list(span=0.7), data=ATIP)
 ggplot(ATIP, aes(x=X, y=Y)) + geom_point() + labs(title="Diagrama de puntos", x="X", y="Y")
 #
 # Modelo de regresión lineal
 #
-S(lm_YX <- lm(Y ~ X, data = ATIP))
+summary(lm_YX <- lm(Y ~ X, data = ATIP))
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
-#
+# Gráficas de diagnóstico estándar de la regresión MCO
 par(mfrow=c(2,2))
 plot(lm_YX)
+# ¿Qué pasa si se eliminan las tres observaciones atípicas?
+summary(M1 <- lm(Y ~ X, data = ATIP))
+summary(M2 <- lm(Y ~ X, data = ATIP[1:19,]))
+compareCoefs(M1,M2)
 #
-S(lm_YX_1 <- lm(Y ~ X, data = ATIP))
-S(lm_YX_2 <- lm(Y ~ X, data = ATIP[1:19,]))
-compareCoefs(lm_YX_1,lm_YX_2)
 plot(Y ~ X , data=ATIP)
-abline(lm_YX_1)
-abline(lm_YX_2, lty=2)
-legend("topleft", c("MCO muestra completa", "MCO muestra recortada"), lty = c(1, 2), bty = "n")
+abline(M1)
+abline(M2, lty=2)
+legend("topleft", c("Datos completos (M1)", "Datos recortados (M2)"), lty = c(1, 2), bty = "n")
 #
 # Distribución de los errores del modelo
-#
-plot(lm_YX$residuals)
 #
 hist(lm_YX$residuals, main = "")
 box()
 #
 densityPlot(residuals(lm_YX))
+densityPlot(rstudent(lm_YX))
 #
 qqnorm(residuals(lm_YX))
 qqline(residuals(lm_YX))
-#
 qqPlot(lm_YX, distribution="norm")
 #
 # Contrastes de normalidad
@@ -57,16 +49,16 @@ qqPlot(lm_YX, distribution="norm")
 r <- resid(lm_YX)
 rbar <- mean(r)
 sdr <- sd(r)
-hist(lm_YX$residuals, col="grey", freq=FALSE, main="Distribución de los residuos", ylab="Density", xlab="residuos")
+hist(lm_YX$residuals, col="grey", freq=FALSE, main="Distribución de los residuos", ylab="Densidad estimada", xlab="residuos")
 curve(dnorm(x, rbar, sdr), col=2, add=TRUE, ylab="Density", xlab="r")
 #
-# Librer?a moments
+# Librería moments
 skewness(lm_YX$residuals)
 kurtosis(lm_YX$residuals)
 agostino.test(lm_YX$residuals)
 anscombe.test(lm_YX$residuals)
 jarque.test(lm_YX$residuals)
-# librer?a tseries
+# librería tseries
 jarque.bera.test(lm_YX$residuals)
 shapiro.test(lm_YX$residuals)
 ks.test(lm_YX$residuals, pnorm)
@@ -76,7 +68,7 @@ ks.test(lm_YX$residuals, pnorm)
 # Observaciones atípicas en las variables explicativas (leverages <-> apalancamiento)
 #
 hat <- hatvalues(lm_YX)
-hat
+summary(hat)
 which(hat > 2 * mean(hat))
 plot(hat)
 abline(h = mean(hat), col = 4)
@@ -89,7 +81,7 @@ text(id, hat[id], rownames(ATIP)[id], pos = 1, xpd = TRUE)
 slm_YX <- summary(lm_YX)
 # Residuos estandarizados
 r <- lm_YX$residuals/slm_YX$sigma
-r
+summary(r)
 densityPlot(r)
 which(abs(r) > 2.5)
 plot(r)
@@ -98,7 +90,7 @@ id <- which(abs(r) > 2.5)
 text(id, r[id], rownames(ATIP)[id], pos = 1, xpd = TRUE)
 # Residuos estudentizados (internamente)
 rs <- rstandard(lm_YX)
-rs
+summary(rs)
 densityPlot(rs)
 which(abs(rs) > 2)
 plot(rs)
@@ -112,9 +104,10 @@ densityPlot(rt)
 qqPlot(lm_YX)
 outlierTest(lm_YX)
 #
-# Diagnósticos
+# Medidas de diagnóstico específicas
 #
-# Observaciones influyentes (cálculo de DFBETAS_i, DFFITS_i, COVRATIO_i, DCOOK_i y h_i ; inf -> señala obs. inusuales para al menos una medida)
+# Observaciones influyentes: cálculo de DFBETAS_i, DFFITS_i, COVRATIO_i, DCOOK_i y h_i
+# La columna inf señala observaciones inusuales para al menos una medida
 #
 influence.measures(lm_YX)
 S(influence.measures(lm_YX))
@@ -136,22 +129,34 @@ which.max(abs(dffits(lm_YX)))
 max(cooks.distance(lm_YX))
 which.max(cooks.distance(lm_YX))
 #
-# Gráficos de variable añadida, buscando casos influyentes
-avPlots(lm_YX, id=list(cex=0.60, method="mahal"))
+avPlots(lm_YX, id=list(cex=0.60, method="mahal")) # Gráficos de variable añadida, buscando casos influyentes
+#
+# Estimaciones robustas
 #
 # Regresión cuartilítica
 #
-S(lm_YX <- lm(Y ~ X, data = ATIP))
-S(qr_YX <- rq(Y ~ X, data = ATIP)) # tau=0.5
+summary(lm_YX <- lm(Y ~ X, data = ATIP))
+summary(qr_YX <- rq(Y ~ X, data = ATIP)) # tau=0.5
+#
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
 abline(qr_YX, lty=2)
-legend("topleft", c("Regresi?n MCO", "Regresi?n MDA"), lty = c(1, 2), bty = "n")
+legend("topleft", c("Regresión MCO", "Regresión DAM"), lty = c(1, 2), bty = "n")
 #
-# rq secuencial
+# tau secuencial
 S(qr_YX <- rq(Y ~ X, data = ATIP, tau=seq(0.1,0.9,0.1)))
 plot(summary(qr_YX), level=0.95)
-# rq discreto
+# tau discreto
 S(qr_YX <- rq(Y ~ X, tau = c(0.25, 0.50, 0.75), data = ATIP))
 plot(qr_YX)
+#
+# Estimadores M y MM
+#
+summary(lm_YX <- lm(Y ~ X, data = ATIP))
+summary(rlm_YX <- rlm(Y ~ X, data = ATIP, method="MM"))
+#
+plot(Y ~ X , data=ATIP)
+abline(lm_YX)
+abline(rlm_YX, lty=2)
+legend("topleft", c("Regresión MCO", "Regresión MM"), lty = c(1, 2), bty = "n")
 #

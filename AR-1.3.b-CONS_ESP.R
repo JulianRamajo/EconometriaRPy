@@ -13,6 +13,4 @@ ts.plot(Y, C)
 #
 KEYNES_model <- lm (C ~ Y)
 summary(KEYNES_model)
-plot(KEYNES_model)
-#
 #

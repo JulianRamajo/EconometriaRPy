@@ -1,6 +1,9 @@
+#
 library(spData)
+help(house, package="spData")
 data(house, package="spData")
 class(house)
+str(house)
 summary(house@data)
 #
 library(sf) 
@@ -12,27 +15,26 @@ library(classInt)
 library(rgdal)
 library(viridis)
 #
-# Representaci髇 de datos espaciales
+# Representaci贸n de datos espaciales
 #
 spplot(house, "price", col.regions = rev(magma(10)))
 #
-# Convirtiendo objeto sp a sf
-house_sf <- st_as_sf(house)
+house_sf <- st_as_sf(house) # Convirtiendo objeto sp a sf
 class(house_sf)
 plot(house_sf[1])
 ggplot(house_sf) + geom_sf(aes(fill=price))+ theme_bw()
-
-# Indicadores de asociaci髇 espacial (global y local)
+#
+# Indicadores de asociaci贸n espacial (global y local)
 #
 library(spdep) 
 library(dplyr)
-# Informaci髇 sobre las coordenadas (longitud y latitud) de los datos
+# Informaci贸n sobre las coordenadas (longitud y latitud) de los datos
 coords <- coordinates(house)
 # Matrices de pesos espaciales
-# Vecinos m醩 pr髕imos (k=6 mediana de vecinos en la base de datos)
+# Vecinos m谩s pr贸ximos (k=6 mediana de vecinos en la base de datos)
 house.6nn <- knearneigh(coords, k=6) 
 house.6nn.nb <- knn2nb(house.6nn)
-# Distancia Euclidiana m醲ima entre los centroides
+# Distancia Euclidiana m谩xima entre los centroides
 # rn <- row.names(house_sf)
 # house.1nn.nb <- knn2nb(knearneigh(coords, k=1))
 # max.dist <- max(unlist(nbdists(house.1nn.nb, coords)))
@@ -41,20 +43,20 @@ house.6nn.nb <- knn2nb(house.6nn)
 # dlist <- nbdists(house.dist.nb,coords) 
 # id2list <- lapply(dlist,function(x) 1/x^2)
 #
-# Gr醘icos de vecinos
+# Gr谩ficos de vecinos
 #
 plot(st_geometry(house_sf)) 
 plot(house.6nn.nb, coords, add=TRUE, col="red")
 #
-#plot(st_geometry(house_sf)) 
+# plot(st_geometry(house_sf)) 
 # plot(house.dist.nb, coords, add=TRUE, col="red")
 #
-# C醠culo de las matrices de pesos W (estandarizadas por filas)
+# C谩lculo de las matrices de pesos W (estandarizadas por filas)
 house.6nn.w <- nb2listw(neighbours=house.6nn.nb, style="W")
 # house.id2.w <- nb2listw(neighbours=house.dist.nb,glist=id2list,style="W")
 # house.d.w <- nb2listw(neighbours=house.dist.nb, style="W")
 #
-# Estad韘ticos de autocorrelaci髇 espacial
+# Estad铆sticos de autocorrelaci贸n espacial
 #
 # Global
 moran.test(house_sf$price, listw=house.6nn.w)
@@ -67,41 +69,41 @@ moran.plot(house_sf$price, listw=house.6nn.w)
 house_LocalI_sf <- bind_cols(house_sf,LocalI) #
 plot(house_LocalI_sf["Z.Ii"])
 #
-# Modelos econom閠ricos espaciales
+# Modelos econom茅tricos espaciales
 #
 library(spatialreg)
 form <- formula(log(price) ~ age + log(lotsize) + rooms)
+#
 # Modelo lineal (LM) estimado por MCO
+#
 model.LS <- lm(formula=form, data=house_sf)
 summary(model.LS)
 #
 # Modelo con retardo espacial (SLM)
 #
-# Estimaci髇 S2SLS
+# Estimaci贸n S2SLS
 model.SLM.STSLS <- stsls(formula=form, data=house_sf, listw=house.6nn.w)
 summary(model.SLM.STSLS)
-# Estimaci髇 ML
+# Estimaci贸n ML
 # model.SLM.ML <- lagsarlm (formula=form, data=house_sf, listw=house.6nn.w, method="eigen")
 # summary(model.SLM.ML)
 #
-# Especificaci髇 MESS (matrix exponential spatial specification)
+# Especificaci贸n MESS (Matrix Exponential Spatial Specification)
 # model.SLM.MESS <- lagmess(formula=form, data=house_sf, listw=house.6nn.w) 
 # summary(model.SLM.MESS)
 #
 # Modelo con errores espaciales (SEM)
 #
-# Estimaci髇 GMM
-#
+# Estimaci贸n GMM
 model.SEM.GMM <- GMerrorsar(formula=form, data=house_sf, listw=house.6nn.w)
 summary(model.SEM.GMM)
-#
-# Estimaci髇 ML
+# Estimaci贸n ML
 # model.SEM.ML <- errorsarlm (formula=form, data=house_sf, listw=house.6nn.w, method="eigen")
 # summary(model.SEM.ML)
 #
 # Modelo combinado (SAC -> SLM + SEM)
 #
-# Estimaci髇 GS2SLS
+# Estimaci贸n GS2SLS
 model.SAC.GSTSLS <- gstsls(formula=form, data=house_sf, listw=house.6nn.w)
 summary(model.SAC.GSTSLS)
 #
