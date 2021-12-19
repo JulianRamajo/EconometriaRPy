@@ -3,7 +3,7 @@ title: 'TEMA 3: Estabilidad de los parámetros estructurales'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 3.2: Exportaciones españolas. Salarios diferenciados por sexos'
+subtitle: 'Aplicaciones 3.2: Exportaciones españolas. Diferenciación salarial por sexo. Gasto en construcción. Consumo de electricidad'
 output:
   html_document:
     theme: journal
@@ -18,9 +18,9 @@ output:
 
 # Objetivo
 
-En esta aplicación se estimarán dos regresiones que permiten parámetros no constantes. En la primera de ellas se trabajará con datos de series temporales, mientras que en la segunda se usarán datos de corte transversal.
+En esta aplicación se estimarán varias regresiones que permiten parámetros no constantes.
 
-# Exportaciones españolas 1970-1997
+# Exportaciones españolas
 
 ```{r, message=FALSE}
 # Lectura de librerías
@@ -133,7 +133,7 @@ compareCoefs(lm_X_ESP_preUE,lm_X_ESP_postUE)
 #
 ```
 
-# Diferenciación salarial por sexo
+# Diferencias salariales por sexo
 
 ```{r, message=FALSE}
 # Lectura de librerías
@@ -175,5 +175,96 @@ anova(lm_SAL, lm_SAL_int)
 summary(lm_SAL_int <- lm(log(SALARIO) ~ (EDUC + EXPER)*MUJER, data = SAL_SEX))
 #
 compareCoefs(lm_SAL_h, lm_SAL_m)
+#
+```
+
+# Inversión en construcción en Estados Unidos
+
+```{r, message=FALSE}
+# Lectura de librerías
+library(tidyverse)
+library(plotly)
+# Lectura de datos: y = Total Construction Spending (TTLCON) [ https://fred.stlouisfed.org/series/TTLCON) ]
+TCS <- read_csv("TTLCON_USA.csv") %>% setNames(c("date","y"))
+head(TCS)
+tail(TCS)
+class(TCS)
+str(TCS)
+# Gráfica de los datos
+plot_ly(data = TCS) %>% add_lines(x = ~ date, y = ~ y)
+# Construcción de tendencias
+TCS <- TCS %>%
+  mutate(seg1 = 1:nrow(TCS),
+         seg2 = pmax(0, seg1 - min(seg1[seg1[which(date > as.Date("2007-08-01"))]])),
+         seg3 = pmax(0, seg1 - min(seg1[seg1[which(date > as.Date("2011-01-01"))]])))
+# Modelo con tendencia simple
+mod1 <- lm(y ~ seg1, data = TCS)
+summary(mod1)
+# Modelo con tendencias sementadas (con pivote conocido)
+mod2 <- lm(y ~ seg1 + seg2 + seg3, data = TCS)
+summary(mod2)
+TCS$yhat1 <- predict(mod1)
+TCS$yhat2 <- predict(mod2)
+# Gráfica de los datos con las tendencias ajustadas por los dos modelos
+plot_ly(data = TCS) %>%
+  add_markers(x = ~ date,
+              y = ~ y,
+              marker = list(
+                opacity = 0.6,
+                color = "#90e0ef",
+                size = 8),
+              name = "Gasto en construcción") %>%
+add_lines(x = ~ date,
+          y = ~ yhat1,
+          line = list(color = "red",
+                      dash = "dash",
+                      width = 4),
+          name = "Tendencia simple") %>%
+  add_lines(x = ~ date,
+            y = ~ yhat2,
+            line = list(color = "#fca311",
+                        dash = "dot",
+                        width = 6),
+            name = "Tendencia segmentada") %>%
+  layout(title = "Gasto total en construcción en USA",
+         font = list(color = "black"),
+         yaxis = list(title = "Millones de dólares"),
+         xaxis = list(title = "Fuente: U.S. Census Bureau, Total Construction Spending, extraído de FRED (fred.stlouisfed.org)"),
+         margin = list(t = 50, b = 80),
+         legend = list(x = 0.05, y = 0.95))
+#
+```
+
+# Consumo de electricidad
+
+```{r, message=FALSE}
+# Lectura de librerías
+library(alr4)
+# Datos
+help(segreg)
+head(segreg)
+tail(segreg)
+#
+plot(C ~ Temp, segreg, xlab="Temperatura media del mes (ºF)", ylab="Consumo de electricidad (KWH/día)")
+#
+# Modelo lineal con tendencia simple
+lin.reg <- lm(C ~ Temp, data=segreg)
+summary(lin.reg)
+#
+plot(C ~ Temp, segreg, xlab="Temperatura media (ºF)", ylab="Consumo de electricidad (KWH/día)")
+x <- (0:90)
+lines(x, predict(lin.reg, data.frame(Temp=x)))
+# Modelo no lineal con tendencia segmentada
+segm.reg <- nls(C ~ th0 + th1 * (pmax(0, Temp - gamma)), data=segreg, start=list(th0=70, th1=.5, gamma=40))
+summary(segm.reg)
+#
+plot(C ~ Temp, segreg, xlab="Temperatura media (ºF)", ylab="Consumo de electricidad (KWH/día)")
+x <- (0:90)
+lines(x, predict(segm.reg, data.frame(Temp=x)))
+# Bootstrapping del modelo
+segm.reg.boot <- Boot(segm.reg, R=999)
+summary(segm.reg.boot)
+confint(segm.reg.boot)
+hist(segm.reg.boot, layout=c(1, 3))
 #
 ```

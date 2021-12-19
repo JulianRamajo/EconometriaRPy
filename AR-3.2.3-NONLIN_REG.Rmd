@@ -1,0 +1,83 @@
+---
+title: 'TEMA 3: Estabilidad de los parámetros estructurales'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.3: Demanda familiar de carne. Consumo de electricidad'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+# Objetivo
+
+En esta aplicación se estimarán dos modelos de regresión no lineal.
+
+# Demanda familiar de carne
+
+```{r, message=FALSE}
+#
+library(tidyverse)
+library(alr4)
+#
+DEM_CARNE <- read_csv("DEM_CARNE.csv")
+#
+# Gráficas
+#
+plot(Q ~ P, data=DEM_CARNE, xlab="P", ylab="Q")
+plot(Q ~ Y, data=DEM_CARNE, xlab="Y", ylab="Q")
+#
+library(scatterplot3d)
+scatterplot3d(DEM_CARNE$P, DEM_CARNE$Y, DEM_CARNE$Q, main="Scatterplot 3D DEMANDA-PRECIO-RENTA")
+#
+# Regresión lineal
+#
+lin_mod <- lm(Q ~  P + Y, data=DEM_CARNE)
+summary(lin_mod)
+#
+# Regresión no lineal
+#
+nonlin_mod <- nls(Q ~  c1 + c2*P + c3*(Y^c4), start = list(c1=5, c2=-0.5, c3=0.001, c4=3), data=DEM_CARNE)
+summary(nonlin_mod)
+#
+# Bootstrapping del modelo no lineal
+#
+reg_nl.boot <- Boot(nonlin_mod, R=999)
+summary(reg_nl.boot)
+confint(reg_nl.boot)
+hist(reg_nl.boot, layout=c(2, 2))
+#
+```
+
+# Consumo de electricidad
+
+```{r, message=FALSE}
+#
+library(alr4)
+#
+help(segreg)
+head(segreg)
+tail(segreg)
+#
+plot(C ~ Temp, segreg, xlab="Temperatura media del mes (ºF)", ylab="Consumo de electricidad (KWH/día)")
+#
+segm.reg <- nls(C ~ th0 + th1 * (pmax(0, Temp - gamma)), data=segreg, start=list(th0=70, th1=.5, gamma=40))
+summary(segm.reg)
+#
+plot(C ~ Temp, segreg, xlab="Temperatura media (ºF)", ylab="Consumo de electricidad (KWH/día)")
+x <- (0:90)
+lines(x, predict(segm.reg, data.frame(Temp=x)))
+# Bootstrapping del modelo
+segm.reg.boot <- Boot(segm.reg, R=999)
+summary(segm.reg.boot)
+confint(segm.reg.boot)
+hist(segm.reg.boot, layout=c(1, 3))
+#
+```

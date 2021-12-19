@@ -1,9 +1,9 @@
 ---
-title: 'TEMA 3: Estabilidad de los parámetros estructurales'
+title: 'TEMA X: X'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 3.2: X'
+subtitle: 'Aplicación X.X: X'
 output:
   html_document:
     theme: journal
@@ -18,7 +18,7 @@ output:
 
 # Objetivo
 
-En esta aplicación se estimarán dos regresiones que permiten parámetros no constantes.
+...
 
 # Código R
 
@@ -30,6 +30,7 @@ library(tidyverse)
 # Código Python
 
 ```{python, message=FALSE}
+import numpy as np
 import pandas as pd
 import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
