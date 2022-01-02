@@ -195,4 +195,8 @@ py_install("spopt")
 py_install("legendgram")
 py_install("mapclassify")
 py_install("splot")
+py_install("pmdarima")
+py_install("pyflux", pip = TRUE)
+py_install("glmnet")
+py_install("pymc3")
 ```

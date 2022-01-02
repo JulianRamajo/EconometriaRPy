@@ -24,6 +24,8 @@ output:
 
 ```{r, message=FALSE}
 library(tidyverse)
+library(car)
+library(lmtest)
 #
 ```
 
@@ -32,7 +34,10 @@ library(tidyverse)
 ```{python, message=FALSE}
 import numpy as np
 import pandas as pd
+import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
+import scipy as sp
 import matplotlib.pyplot as plt
+import seaborn as sns
 #
 ```

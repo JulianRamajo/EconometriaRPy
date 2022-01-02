@@ -21,15 +21,22 @@ output:
 ## Lectura de datos y EDA
 
 ```{r}
+# Lectura de librerías
 library(tidyverse)
 library(GGally)
 library(skimr)
 library(coefplot)
-
+library(report)
+# Lectura de datos y EDA
 DEM_CARNE <- read_csv("DEM_CARNE.csv")
-head(DEM_CARNE)
+dim(DEM_CARNE)
 str(DEM_CARNE)
+#
+head(DEM_CARNE)
+tail(DEM_CARNE)
+#
 summary(DEM_CARNE)
+report(DEM_CARNE)
 skim(DEM_CARNE)
 ```
 
@@ -64,6 +71,7 @@ $$Q = \beta_0 + \beta_1P + \beta_2Y + e$$
 ```{r}
 lin_model <- lm(formula = Q ~ P + Y, data = DEM_CARNE)
 summary(lin_model)
+report(lin_model)
 coefplot(lin_model)
 ```
 
@@ -73,7 +81,7 @@ coefplot(lin_model)
   library(plotly)
   library(magrittr)
   
-model <- lm(data = DEM_CARNE, formula = Q ~ P + Y)  
+model <- lm(Q ~ P + Y, data = DEM_CARNE)  
 plot_ly(data = DEM_CARNE) %>%
     add_trace(x = ~P, y = ~Y, z = ~Q, mode = "markers", type = "scatter3d",
               marker = list(size = 5, color = "blue", symbol = 104), name = "Observaciones") %>% 
@@ -82,6 +90,17 @@ plot_ly(data = DEM_CARNE) %>%
     layout(scene = list(xaxis = list(title = 'P'), yaxis = list(title = 'Y'),
                         camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
                         zaxis = list(title = 'Q'), aspectmode='cube')) 
+```
+
+## Regresión MCO del modelo logarítmico-lineal (log-log):
+
+$$log(Q) = \beta_0 + \beta_1log(P) + \beta_2log(Y) + e$$
+
+```{r}
+log_model <- lm(log(Q) ~ log(P) + log(Y), data = DEM_CARNE)
+summary(log_model)
+report(log_model)
+coefplot(log_model)
 ```
 
 # Código Python
@@ -116,15 +135,32 @@ log_model = model.fit()
 print(log_model.summary())
 ```
 
-# Anexo: Regresiones logarítmica (lineal) y potencial (no lineal) con R
+# Anexo 1: Regresión no lineal (potencial en la variable renta) con R
 
 ```{r}
+nonlin1_model <- nls(Q ~ c1 + c2*P + c3*(Y^c4), start = list(c1=5, c2=-0.5, c3=0.01, c4=3), data = DEM_CARNE)
+summary(nonlin1_model)
 #
-log_model <- lm(formula = log(Q) ~ log(P) + log(Y), data = DEM_CARNE)
-summary(log_model)
-coefplot(log_model)
-#
-nonlin_model <- nls(Q ~ c1 + c2*P + c3*(Y^c4), start = list(c1=5, c2=-0.5, c3=0.01, c4=3), data = DEM_CARNE)
-summary(nonlin_model)
+library(gslnls)
+nonlin2_model <- gsl_nls(Q ~ c1 + c2*P + c3*(Y^c4), start = c(c1=5, c2=-0.5, c3=0.01, c4=3), data = DEM_CARNE)
+summary(nonlin2_model)
 ```
 
+# Anexo 2: Regresión lineal Bayesiana con R
+
+```{r}
+library(rstanarm)
+#
+linBayes1_model <- stan_glm(Q ~ P + Y, data = DEM_CARNE)
+summary(linBayes1_model)
+report(linBayes1_model)
+#
+library(INLA)
+library(brinla)
+#
+linBayes2_model <- inla(Q ~ P + Y, family = "gaussian", data = DEM_CARNE)
+summary(linBayes2_model)
+bri.hyperpar.summary(linBayes2_model)
+bri.fixed.plot(linBayes2_model)
+bri.hyperpar.plot(linBayes2_model)
+```
