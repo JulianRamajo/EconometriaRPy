@@ -66,7 +66,7 @@ AUTOS = pd.read_csv("AUTOS.csv")
 AUTOS.describe()
 #
 y, X = pt.dmatrices('GAUT ~ Y + HIJOSM18 + EDAD', data=AUTOS, return_type='dataframe')
-# solución incial
+# solución inicial
 reg_ols = smf.ols(formula='GAUT ~ Y + HIJOSM18 + EDAD', data=AUTOS)
 results_ols = reg_ols.fit()
 sigma_start = np.log(sum(results_ols.resid ** 2) / len(results_ols.resid))
