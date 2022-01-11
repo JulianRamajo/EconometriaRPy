@@ -1,0 +1,113 @@
+---
+title: 'Variable dependiente limitada: modelos Tobit y Heckit'
+author: "Julián Ramajo"
+date: "1/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R script
+
+```{r Tobit}
+# Lectura de librerías
+library(tidyverse)
+library(censReg) # http://www.sampleselection.org/
+# Lectura de datos
+AUTOS <- read_csv("AUTOS.csv")
+summary(AUTOS)
+#
+# Datos censurados: modelo Tobit (https://cran.r-project.org/web/packages/censReg/vignettes/censReg.pdf)
+#
+modelo_tobit_1 <- censReg(GAUT ~ Y + HIJOSM18 + EDAD, data=AUTOS)
+summary(modelo_tobit_1)
+#
+# Efectos marginales 
+#
+# Evaluados en un valor concreto de las var. explicativas (media de las variables en este caso)
+margEff(modelo_tobit_1,xValues = c(1,mean(AUTOS$Y),mean(AUTOS$HIJOSM18),mean(AUTOS$EDAD)))
+# Efectos marginales promedio
+margEff(modelo_tobit_1)
+#
+library(VGAM) # https://www.stat.auckland.ac.nz/~yee/VGAM/
+modelo_tobit_2 <- vglm(GAUT ~ Y + HIJOSM18 + EDAD, tobit, data=AUTOS)
+summary(modelo_tobit_2)
+#
+```
+
+```{r Heckit}
+# Lectura de librerías
+library(tidyverse)
+# library(car)
+library(sampleSelection) # http://www.sampleselection.org/
+# Lectura de datos
+SAL_MUJ <- read_csv("SAL_MUJ.csv")
+summary(SAL_MUJ)
+# Truncamiento selectivo: modelo Heckit (https://cran.r-project.org/web/packages/sampleSelection/vignettes/selection.pdf)
+modelo_heckit <- selection(PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP, log(SALARIO) ~ EDUC + EXPER, data=SAL_MUJ, method="ml")
+summary(modelo_heckit)
+#
+```
+
+## Python script
+
+```{python}
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import patsy as pt
+import scipy.stats as stats
+import statsmodels.formula.api as smf
+import statsmodels.base.model as smclass
+# Lectura de datos
+AUTOS = pd.read_csv("AUTOS.csv")
+AUTOS.describe()
+#
+y, X = pt.dmatrices('GAUT ~ Y + HIJOSM18 + EDAD', data=AUTOS, return_type='dataframe')
+# solución incial
+reg_ols = smf.ols(formula='GAUT ~ Y + HIJOSM18 + EDAD', data=AUTOS)
+results_ols = reg_ols.fit()
+sigma_start = np.log(sum(results_ols.resid ** 2) / len(results_ols.resid))
+params_start = np.concatenate((np.array(results_ols.params), sigma_start), axis=None)
+# Extendiendo statsmodels:
+class Tobit(smclass.GenericLikelihoodModel):
+    def __init__(self, endog, exog):
+        super(smclass.GenericLikelihoodModel, self).__init__(endog, exog, missing='none')
+    def nloglikeobs(self, params):
+        X = self.exog
+        y = self.endog
+        p = X.shape[1]
+        beta = params[0:p]
+        sigma = np.exp(params[p])
+        y_hat = np.dot(X, beta)
+        y_eq = (y == 0)
+        y_g = (y > 0)
+        ll = np.empty(len(y))
+        ll[y_eq] = np.log(stats.norm.cdf(-y_hat[y_eq] / sigma))
+        ll[y_g] = np.log(stats.norm.pdf((y - y_hat)[y_g] / sigma)) - np.log(sigma)
+        return -ll
+# Estimación ML del modelo Tobit
+modelo_tobit = Tobit(endog=y, exog=X)
+results_tobit = modelo_tobit.fit(start_params=params_start, maxiter=10000, disp=0)
+print(f'results_tobit.summary(): \n{results_tobit.summary()}\n')
+#
+# Modelo Heckit
+# Lectura de datos
+SAL_MUJ = pd.read_csv("SAL_MUJ.csv")
+SAL_MUJ.describe()
+# Estimación en dos pasos (menos eficiente que la estimación ML)
+# Paso 1 (modelo Probit para todas las observaciones)
+reg_probit = smf.probit(formula='PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP', data=SAL_MUJ)
+results_probit = reg_probit.fit(disp=0)
+print(results_probit.summary())
+pred_PMT = results_probit.fittedvalues
+SAL_MUJ['inv_mills'] = stats.norm.pdf(pred_PMT) / stats.norm.cdf(pred_PMT)
+# Paso 2 (regresión truncada con las observaciones seleccionadas y la inversa de la razón de Mills)
+reg_heckit = smf.ols(formula='np.log(SALARIO) ~ EDUC + EXPER + inv_mills',
+                     subset=(SAL_MUJ['PMT'] == 1), data=SAL_MUJ)
+results_heckit = reg_heckit.fit()
+# print results:
+print(f'results_heckit.summary(): \n{results_heckit.summary()}\n')
+```

@@ -61,5 +61,3 @@ model = RandomEffects.from_formula('ret ~ 1 + beta',data)
 res = model.fit()
 print(res)
 ```
-
-

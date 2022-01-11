@@ -1,0 +1,84 @@
+---
+title: "Paneles de datos"
+author: "Julián Ramajo"
+date: "1/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R script
+
+```{r}
+# Lectura de librerías
+library(tidyverse)
+library(stargazer)
+library(plm)
+# Lectura de datos
+QUIM_CHINA <- read_csv("QUIM_CHINA.csv")
+# Estructura de panel de datos 
+QUIM_CHINA_pdata  <-  pdata.frame(QUIM_CHINA,index=c("firm", "year"))
+pdim(QUIM_CHINA_pdata)
+summary(QUIM_CHINA_pdata[c("Y","K","L","M")])
+#
+# Modelos estáticos para datos de panel
+#
+# Modelo plano (pool MCO)
+modelo_plano <- plm(log(Y) ~ log(K) + log(L) + log(M), data = QUIM_CHINA_pdata, model = "pooling")
+summary(modelo_plano)
+# Modelo de efectos fijos (individuales)
+modelo_ef <- plm(log(Y) ~ log(K) + log(L) + log(M), data = QUIM_CHINA_pdata, model = "within")
+summary(modelo_ef)
+# Comparación del mdelo plano frente al modelo de efectos fijos
+pFtest(modelo_ef, modelo_plano)
+# Modelo de efectos fijos (individuales y temporales)
+modelo_ef_it <- plm(log(Y) ~ log(K) + log(L) + log(M), data = QUIM_CHINA_pdata, model = "within", effect = "twoways")
+summary(modelo_ef_it)
+pFtest(modelo_ef_it, modelo_plano)
+# Significación de efectos individuales
+plmtest(modelo_plano, effect="individual")
+plmtest(modelo_plano, effect = "time" )
+plmtest(modelo_plano, effect = "twoways" )
+# Modelo de efectos aleatorios (individuales)
+modelo_ea <- plm(log(Y) ~ log(K) + log(L) + log(M), data = QUIM_CHINA_pdata, model = "random")
+summary(modelo_ea)
+# Comparación del modelo de efectos aleatorios frente al modelo de efectos fijos: test de Hausman
+phtest(modelo_ef, modelo_ea)
+# Comparaciòn de resultados de los tres modelos
+stargazer(modelo_plano, modelo_ef, modelo_ea, type="text")
+#
+```
+
+## Python script
+
+```{python}
+# Lectura de librerías 
+import numpy as np
+import pandas as pd
+from linearmodels import PooledOLS, PanelOLS, RandomEffects
+# Lectura de datos
+QUIM_CHINA = pd.read_csv("QUIM_CHINA.csv")
+# Estructura de panel de datos
+QUIM_CHINA_pdata = QUIM_CHINA.set_index(['firm','year'])
+QUIM_CHINA["Y"].describe()
+QUIM_CHINA["K"].describe()
+QUIM_CHINA["L"].describe()
+QUIM_CHINA["M"].describe()
+#
+# Modelos estáticos para datos de panel
+#
+# Pool MCO
+modelo_plano = PooledOLS.from_formula('np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M)', QUIM_CHINA_pdata)
+res = modelo_plano.fit()
+print(res)
+# Modelo de efectos fijos
+modelo_ef = PanelOLS.from_formula('np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M) + EntityEffects', QUIM_CHINA_pdata)
+res = modelo_ef.fit()
+print(res)
+# Modelo de efectos aleatorios
+modelo_ea = RandomEffects.from_formula('np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M)', QUIM_CHINA_pdata)
+res = modelo_ea.fit()
+print(res)
+```

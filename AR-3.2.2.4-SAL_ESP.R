@@ -37,7 +37,7 @@ sbtest[["formula"]][["index"]]
 sbtest[["Fstats"]]
 Fs_CHOW <- ts(sbtest$Fstats, start = c(1999,1), frequency=4)
 Fs_CHOW
-# Test de Chow de cambio estructura en 2010 Q1
+# Test de Chow de cambio estructural en 2010 Q1
 Fs_CHOW[56-11] # 15% de 75 = 11
 1-pchisq(Fs_CHOW[56-11],sbtest$nreg)
 #

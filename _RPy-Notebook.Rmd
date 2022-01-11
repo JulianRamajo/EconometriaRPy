@@ -37,6 +37,7 @@ import pandas as pd
 import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
 import scipy as sp
+import scipy.stats as scs
 import matplotlib.pyplot as plt
 import seaborn as sns
 #
