@@ -1,17 +1,20 @@
-#
+# Lectura de librerías
 library(tidyverse)
 library(plm)
+# Lectura de datos
+EMP_SAL_UK <- read_csv("EMP_SAL_UK.csv")
+summary(EMP_SAL_UK)
+# Estructura de datos de panel
+EMP_SAL_UK_pdata <-  pdata.frame(EMP_SAL_UK, index=c( "firm", "year"))
+pdim(EMP_SAL_UK_pdata)
 #
-data( "EmplUK", package="plm" )
-help( "EmplUK", package="plm" )
+dem_emp_GMM_1 <-pgmm(log(L) ~ lag(log(L), 1:2) + lag(log(W), 0:1) + log(K) + lag(log(Y), 0:1) | 
+                        lag(log(L), 2:99),
+                      data=EMP_SAL_UK_pdata, effect="twoways", model="twosteps")
+summary(dem_emp_GMM_1, robust = FALSE )
 #
-EmplUK.pdata <-  pdata.frame(EmplUK,index=c( "firm", "year"))
-pdim(EmplUK.pdata)
-#
-dem_empl.GMM.1 <-pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99),data=EmplUK.pdata, effect="twoways", model="twosteps")
-summary(dem_empl.GMM.1, robust = FALSE )
-#
-#
-dem_empl.GMM.2 <-pgmm(log(emp) ~ lag(log(emp), 1:2) + lag(log(wage), 0:1) + log(capital) + lag(log(output), 0:1) | lag(log(emp), 2:99) + lag(log(wage), 2:99) + lag(log(capital), 1:99) + lag(log(output), 2:99),data=EmplUK.pdata, effect="twoways", model="onestep", transformation="ld")
-summary(dem_empl.GMM.2, robust = FALSE )
+dem_emp_GMM_2 <-pgmm(log(L) ~ lag(log(L), 1:2) + lag(log(W), 0:1) + log(K) + lag(log(Y), 0:1) | 
+                        lag(log(L), 2:99) + lag(log(W), 2:99) + lag(log(K), 1:99) + lag(log(Y), 2:99),
+                      data=EMP_SAL_UK_pdata, effect="twoways", model="onestep", transformation="ld")
+summary(dem_emp_GMM_2, robust = FALSE )
 #

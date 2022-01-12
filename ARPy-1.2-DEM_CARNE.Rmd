@@ -44,7 +44,7 @@ skim(DEM_CARNE)
 
 ```{r}
 GGally::ggpairs(DEM_CARNE)
-
+#
 ggplot(DEM_CARNE, aes(x = P, y = Q)) +
   geom_point(color = "blue") +
   geom_jitter(color = "blue") +
@@ -53,7 +53,6 @@ ggplot(DEM_CARNE, aes(x = P, y = Q)) +
   xlab("P (precio)") +
   ylab("Q (cantidad)") +
   theme_minimal()
-
 ggplot(DEM_CARNE, aes(x = Y, y = Q)) +
   geom_point(color = "blue") +
   geom_jitter(color = "blue") +
@@ -78,9 +77,9 @@ coefplot(lin_model)
 ## Visualización 3D de los datos y del plano ajustado del modelo
 
 ```{r}
-  library(plotly)
-  library(magrittr)
-  
+library(plotly)
+library(magrittr)
+#  
 model <- lm(Q ~ P + Y, data = DEM_CARNE)  
 plot_ly(data = DEM_CARNE) %>%
     add_trace(x = ~P, y = ~Y, z = ~Q, mode = "markers", type = "scatter3d",
@@ -112,13 +111,12 @@ $$Q = \beta_0 + \beta_1P + \beta_2Y + e$$
 ```{python}
 import pandas as pd
 import statsmodels.formula.api as smf
-
+#
 DEM_CARNE = pd.read_csv("DEM_CARNE.csv")
 model = smf.ols(formula = "Q ~ P + Y", data = DEM_CARNE)
 lin_model = model.fit()
 print(lin_model.summary())
 ```
-
 
 ## Regresión MCO del modelo logarítmico-lineal:
 
