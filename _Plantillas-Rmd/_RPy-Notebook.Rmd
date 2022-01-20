@@ -34,10 +34,12 @@ library(lmtest)
 ```{python, message=FALSE}
 import numpy as np
 import pandas as pd
-import statsmodels.stats.api as sms
+import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import scipy as sp
+from scipy import stats
 import scipy.stats as scs
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 #

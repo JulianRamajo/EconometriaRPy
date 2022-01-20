@@ -11,6 +11,7 @@ pdf_document:
 ---
 
 # Preparación previa: instalación y lectura de librerías
+
 ```{r, message=FALSE, warning=FALSE}
 #
 packages <- c("tidyverse")
@@ -23,21 +24,25 @@ lapply(packages, library, character.only = TRUE)
 ```
 
 # Lectura de datos
+
 ```{r}
 # 
 ```
 
 # Manejo de datos
+
 ```{r}
 # 
 ```
 
 # Visualización de datos
+
 ```{r}
 # 
 ```
 
 # Análisis de datos
+
 ```{r}
 # 
 ```
