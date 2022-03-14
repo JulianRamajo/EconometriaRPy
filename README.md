@@ -1,2 +1,2 @@
 # EconMetrics-RPyJl
-Code and data of the course 'Econometrics - With examples in R, Python and Julia using RStudio' taught in the Bachelor's Degree in Statistics of the University of Extremadura (Spain).
+Code and data of the course 'Econometría - Con ejemplos en R, Python y Julia usando RStudio' taught in the Bachelor's Degree in Statistics of the University of Extremadura (Spain).
