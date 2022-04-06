@@ -101,22 +101,53 @@ install_miniconda()
 conda_list()
 conda_version()
 py_config()
-# Para comprobar que el entorno Python ha sido creado adecuadamente 
-# se puede hacer algún pequeño cálculo para ver si la instalación ha sido correcta
-repl_python()
-x = 42 * 2
-print(x)
-quit
-# Si no aparece ninguna instalación de Python volver a intentar la instalación de miniconda:
-# install_miniconda() 
 ```
 
-## Creación de un entorno conda propio (Opcional, para aislar entornos de trabajo)
+Si no aparece ninguna instalación de Python volver a intentar la instalación de miniconda: _install_miniconda()_.
+
+Para comprobar que el entorno Python ha sido creado adecuadamente se puede entrar en la consola de Python
+y hacer algún pequeño cálculo para ver si la instalación ha sido correcta:
+
++++++++++++++++
+repl_python()
+import numpy as np
+a = np.sqrt(2)
+print(a)
+#
+x = 42 * 2
+print(x)
+exit
++++++++++++++++
+
+O desde R se pueden ejecutar algunos comandos Python importando la librería correspondiente:
+
+```{r}
+library(reticulate)
+np <- import("numpy")
+np$sqrt(2)
+```
+
+O se puede ejecutar un script de `Python` y mostrar los resultados en `R`:
+
+```{python}
+from matplotlib import pyplot as plt
+import numpy as np
+#
+x = list(range(1, 11))
+y = np.random.randn(10)
+plt.figure(0)
+plt.plot(x, y,  linestyle = "--", color = "blue", marker = "s", label = "Línea 1")
+plt.title("Ejemplo de gráfico de líneas")
+plt.legend(loc = "upper left")
+plt.show()
+```
+
+## Creación de un entorno particular (Opcional, para aislar entornos de trabajo)
 
 Crear un _entorno conda_ propio es tan sencillo como generar un nuevo nombre del mismo, tal y como se muestra a continuación:
 
 ```{r conda_mi_entorno_setup, eval=FALSE}
-mi_entorno <- "econometria"
+mi_entorno <- "Econometria"
 conda_create(mi_entorno)
 ```
 
@@ -149,8 +180,6 @@ py_install("statsmodels")
 py_install("semopy", pip = TRUE)
 py_install("lifelines")
 py_install("arch", pip=TRUE)
-# Si la instalación de 'arch' da un mensaje final de error
-# py_install("pyhdfe", pip=TRUE)
 py_install("appelpy", pip = TRUE)
 py_install("datetime", pip =  TRUE)
 py_install("stargazer", pip = TRUE)
@@ -184,20 +213,91 @@ py_install("pymc3")
 
 # Configuración de Julia en RStudio
 
-Para poder usar Julia en RStudio en primer lugar hay que instalar la librería **JuliaCall**  y luego utilizar el comando _install_julia()_ para instalar Julia. 
+Para poder usar Julia en RStudio, en primer lugar hay que instalar la librería **JuliaCall**,  y luego utilizar instalar Julia e inicializarlo:
 
 ```{r}
-# Esta parte sólo hay ejecutarla la primera vez que se instale Julia en RStudio
 install.packages("JuliaCall")
-library(JuliaCall)
-install_julia()
-# Antes de usar Julia se debe hacer un setup inicial mediante la función julia_setup()
-julia <- julia_setup()
 ```
 
-A continuación se instalan las librerías necesarias para estadística y econometría.
+Estos comandos hay que ejecutarlos cada vez que se use Julia en RStudio:
+
+```{r}
+library(JuliaCall)
+julia_setup(installJulia = TRUE)
+```
+
+Para comprobar que el entorno Julia ha sido creado adecuadamente se puede entrar en la consola de Julia
+y hacer algún pequeño cálculo para ver si la instalación ha sido correcta:
+
++++++++++++++++
+julia_console()
+a=sqrt(2)
+x=42*2
+exit
++++++++++++++++
+
+O desde R se pueden ejecutar algunos comandos Julia para hacer los mismos cálculos:
+
+```{r}
+julia_command("a = sqrt(2);"); julia_eval("a")
+julia_eval("42*2")
+```
+
+También se pueden ejecutar comandos y realizar gráficas en `Julia` y mostrarlos en `R`:
+
+```{julia}
+a = sqrt(2)
+# Si no está instalada la librería concreta se puede instalar previamente
+# import Pkg; Pkg.add("Plots")
+using Plots
+gr() # GR backend sistema de gráficas; se puede usar Plotly -> plotlyjs() , 
+plot(Plots.fakedata(50,5),w=3)
+#
+x = 1:10; y1 = rand(10); # Datos
+plot(x, y, title = "Ejemplo de gráfico de líneas", label = ["Línea 1"], lw = 3)
+#
+gr()
+plot(x, y, seriestype = :scatter, title = "Ejemplo de diagrama de puntos")
+# 
+y = rand(10, 4); # Datos
+p1 = plot(x, y)  
+p2 = scatter(x, y)
+p3 = plot(x, y, xlabel = "Atributo de x", lw = 3, title = "Título") # Con atributos
+p4 = histogram(x, y1)
+plot(p1, p2, p3, p4, layout = (2, 2), legend = false)
+```
+
+También podría ejecutarse la gráfica en el script de Julia en R, sin error, pero no se verá la gráfica ni en la pantalla ni en el R Markdown.
+
+```{r}
+julia_library("Plots")
+julia_command("gr()")
+julia_command("display(Plots.plot(Plots.fakedata(50,5),w=3))")
+```
+
+Un ejemplo de econometría:
+```{julia}
+# import Pkg; Pkg.add("CSV"); Pkg.add("RDatasets"); Pkg.add("Econometrics")
+using CSV, RDatasets, Econometrics
+data = RDatasets.dataset("Ecdat", "PSID")
+data = data[data.Earnings .> 0 .& data.Kids .< 10,:] # Salarios positivos y un número de hijos menos que 10
+modelolineal = fit(EconometricModel, @formula(log(Earnings) ~ Educatn + Age + Age^2), data)
+# Pkg.add("GLM")
+using GLM
+ols = lm(@formula(log(Earnings) ~ Educatn + Age + Age^2), data)
+```
+
+## Creación de un entorno Julia particular (Opcional, para aislar entornos de trabajo)
+
+Si se quiere usar `Julia` en una localización específica, debería usarse el siguiente comando de inicialización:
+
+julia_setup(JULIA_HOME = "directorio que contiene los ficheros binarios de Julia")
+
+También se puede asignar el directorio de JULIA_HOME en la consola de comandos o usando `options(...)`.
 
 ## Instalación de librerías Julia
+
+A continuación se procede a instalar las librerías necesarias para estadística y econometría.
 
 ```{r}
 library(JuliaCall)
@@ -205,6 +305,8 @@ julia_install_package("DataFrames")
 julia_install_package("CSV")
 julia_install_package("StatsBase")
 julia_install_package("StatsModels")
+julia_install_package("StatsPlots")
+julia_install_package("Plots")
 julia_install_package("Distances")
 julia_install_package("Distributions")
 julia_install_package("MultivariateStats")
