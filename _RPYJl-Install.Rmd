@@ -1,9 +1,9 @@
 ---
-title: 'R, Python y Julia usando RStudio'
+title: 'R, Python y Julia en RStudio'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 0: Instalación y configuración del software'
+subtitle: 'Instalación y configuración del software'
 output:
   html_document:
     theme: journal
@@ -82,7 +82,7 @@ ctv::install.views("OfficialStatistics")
 
 NOTA: Mi recomendación es instalar sólo los paquetes necesarios para el análisis econométrico básico (<https://cran.r-project.org/web/views/Econometrics.html>). Siempre se pueden instalar paquetes adicionales más adelante; de hecho, RStudio nos avisará cuándo un _script_ contiene alguna librería no instalada y nos dará la opción de instalarla antes de ejecutar el código.
 
-# Configuración de Python en RStudio
+# Instalación y configuración de Python en RStudio
 
 Hay varias formas de configurar Python en un ordenador. Los tres métodos más frecuentes son los siguientes:
 
@@ -119,7 +119,7 @@ print(x)
 exit
 +++++++++++++++
 
-O desde R se pueden ejecutar algunos comandos Python importando la librería correspondiente:
+También desde R se pueden ejecutar algunos comandos Python importando la librería correspondiente:
 
 ```{r}
 library(reticulate)
@@ -186,6 +186,10 @@ py_install("stargazer", pip = TRUE)
 py_install("mizani")
 py_install("xlrd")
 py_install("category_encoders")
+py_install("pmdarima")
+py_install("pyflux", pip = TRUE)
+py_install("glmnet")
+py_install("pymc3")
 # py_install("pysal")
 py_install("libpysal")
 py_install("esda")
@@ -205,13 +209,9 @@ py_install("spopt")
 py_install("legendgram")
 py_install("mapclassify")
 py_install("splot")
-py_install("pmdarima")
-py_install("pyflux", pip = TRUE)
-py_install("glmnet")
-py_install("pymc3")
 ```
 
-# Configuración de Julia en RStudio
+# Instalación y onfiguración de Julia en RStudio
 
 Para poder usar Julia en RStudio, en primer lugar hay que instalar la librería **JuliaCall**,  y luego utilizar instalar Julia e inicializarlo:
 
@@ -219,7 +219,7 @@ Para poder usar Julia en RStudio, en primer lugar hay que instalar la librería 
 install.packages("JuliaCall")
 ```
 
-Estos comandos hay que ejecutarlos cada vez que se use Julia en RStudio:
+Los comandos siguiente hay que ejecutarlos cada vez que se use Julia en RStudio:
 
 ```{r}
 library(JuliaCall)
@@ -236,18 +236,18 @@ x=42*2
 exit
 +++++++++++++++
 
-O desde R se pueden ejecutar algunos comandos Julia para hacer los mismos cálculos:
+También desde R se pueden ejecutar algunos comandos Julia para hacer los mismos cálculos:
 
 ```{r}
 julia_command("a = sqrt(2);"); julia_eval("a")
 julia_eval("42*2")
 ```
 
-También se pueden ejecutar comandos y realizar gráficas en `Julia` y mostrarlos en `R`:
+O se pueden ejecutar comandos y realizar gráficas en `Julia` y mostrarlos en `R`:
 
 ```{julia}
 a = sqrt(2)
-# Si no está instalada la librería concreta se puede instalar previamente
+# Si no está instalada la librería concreta se debe instalar previamente
 # import Pkg; Pkg.add("Plots")
 using Plots
 gr() # GR backend sistema de gráficas; se puede usar Plotly -> plotlyjs() , 
@@ -275,8 +275,10 @@ julia_command("gr()")
 julia_command("display(Plots.plot(Plots.fakedata(50,5),w=3))")
 ```
 
-Un ejemplo de econometría:
+Un ejemplo de econometría usando Julia en RStudio:
+
 ```{julia}
+# Si no están instaladas las librerías necesarias se deben instalar previamente
 # import Pkg; Pkg.add("CSV"); Pkg.add("RDatasets"); Pkg.add("Econometrics")
 using CSV, RDatasets, Econometrics
 data = RDatasets.dataset("Ecdat", "PSID")
@@ -287,7 +289,7 @@ using GLM
 ols = lm(@formula(log(Earnings) ~ Educatn + Age + Age^2), data)
 ```
 
-## Creación de un entorno Julia particular (Opcional, para aislar entornos de trabajo)
+## Creación de un entorno particular (Opcional, para aislar entornos de trabajo)
 
 Si se quiere usar `Julia` en una localización específica, debería usarse el siguiente comando de inicialización:
 
@@ -301,12 +303,17 @@ A continuación se procede a instalar las librerías necesarias para estadístic
 
 ```{r}
 library(JuliaCall)
+julia_install_package("Queryverse")
+julia_install_package("RDatasets")
 julia_install_package("DataFrames")
+julia_install_package("Downloads")
 julia_install_package("CSV")
 julia_install_package("StatsBase")
 julia_install_package("StatsModels")
-julia_install_package("StatsPlots")
+julia_install_package("Statistics")
 julia_install_package("Plots")
+julia_install_package("StatsPlots")
+julia_install_package("Gadfly")
 julia_install_package("Distances")
 julia_install_package("Distributions")
 julia_install_package("MultivariateStats")
@@ -320,12 +327,41 @@ julia_install_package("GARCH")
 julia_install_package("Missings")
 julia_install_package("ShiftedArrays")
 julia_install_package("CategoricalArrays")
+julia_install_package("Chain")
 julia_install_package("MixedModels")
 julia_install_package("QuantileRegressions")
 julia_install_package("KernelDensity")
-julia_install_package("RegERMs")
 julia_install_package("Clustering")
 julia_install_package("MLBase")
 julia_install_package("Lasso")
 julia_install_package("Bootstrap")
+julia_install_package("Random")
 ```
+
+# Instalación separada del software y configuración de Jupyter 
+
+1. Instalar R y RStudio
+   Instalar Python y Julia
+    
+2. Instalar Jupyter: Ir a Terminal de MacOS/Windows —>
+
+	python3 --version (py —version)
+	python3 -m pip --version (py -m pip --version)
+	python3 -m pip install jupyterlab (py -m pip install jupyterlab)
+
+	Opcional: python3 -m pip install notebook (py -m pip install notebook)
+	
+3. Instalación de kernels de Julia y R:
+
+3a. Ir al Terminal de Julia ->
+	Pulsar ]
+	add IJulia
+	Pulsar Control+c
+
+3b. Entrar en RStudio o en R para instalar IRkernel ->
+	Install.packages("IRkernel")
+	En el Terminal de MacOS entrar en R (en Windows entrar en R directamente)
+	IRkernel: installspec()
+
+4. Para comprobar que todo ha ido bien, ir a la Terminal de MacOS o Windows ->
+	python3 -m jupyter lab (py -m jupyter lab)
