@@ -365,3 +365,8 @@ julia_install_package("Random")
 
 4. Para comprobar que todo ha ido bien, ir a la Terminal de MacOS o Windows ->
 	python3 -m jupyter lab (py -m jupyter lab)
+	
+5. Instalar las librerías correspondientes en R, Python y Julia ->
+  R -> install.packages("*")
+  Python -> En el terminal de macOS/Windows -> python3 -m pip install *
+  Julia -> En el terminal de julia -> pulsar ] -> add * -> pulsar Control+c
