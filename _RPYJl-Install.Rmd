@@ -59,7 +59,7 @@ install.packages("ctv")
 y posteriormente instalando conjuntos de librerías homogéneos:
 
 ```{r}
-ctv::install.views("Econometrics")**
+ctv::install.views("Econometrics")
 ctv::install.views("Finance")
 ctv::install.views("TimeSeries")
 ctv::install.views("MissingData")
