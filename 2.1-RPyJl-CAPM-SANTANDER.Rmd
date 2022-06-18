@@ -20,9 +20,9 @@ output:
 
 En esta aplicación se estimará una versión simple del modelo CAPM (https://es.wikipedia.org/wiki/Modelo_de_valoraci%C3%B3n_de_activos_financieros) para el Banco Santander:
 
-$$erSAN_t = \beta_1 + \beta_2 {erIBEX_t} + e_t$$
+$$er\_SAN_{t} = \beta_{1} + \beta_{2}\, er\_IBEX_{t} + e_{t}$$
 
-donde _erSAN_ representa el 'exceso de rendimiento' de las acciones del Banco Santander (rentabilidad de las acciones del banco menos rentabilidad de un activo libre de riesgo, las letras del tesoro) y _erIBEX_ es el exceso de rendimiento del mercado (representando por el índice IBEX35 de la bolsa española).
+donde $er\_SAN$ representa el 'exceso de rendimiento' de las acciones del Banco Santander (rentabilidad de las acciones del banco menos rentabilidad de un activo libre de riesgo, las letras del tesoro) y $er\_IBEX$ es el exceso de rendimiento del mercado (representando por el índice IBEX35 de la bolsa española).
 
 # Código R
 
