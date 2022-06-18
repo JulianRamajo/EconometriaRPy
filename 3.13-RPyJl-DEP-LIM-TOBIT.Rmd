@@ -1,0 +1,63 @@
+---
+title: 'Variable dependiente limitada: modelos Tobit y Heckit'
+author: "Julián Ramajo"
+date: "1/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R script
+
+```{r}
+# Lectura de librerías
+library(tidyverse)
+library(censReg) # http://www.sampleselection.org/
+# Lectura de datos
+AUTOS <- read_csv("AUTOS.csv")
+summary(AUTOS)
+#
+# Datos censurados: modelo Tobit (https://cran.r-project.org/web/packages/censReg/vignettes/censReg.pdf)
+#
+modelo_tobit_1 <- censReg(GAUT ~ EDAD + HIJOSM18 + Y, data = AUTOS)
+summary(modelo_tobit_1)
+#
+# Efectos marginales 
+#
+# Evaluados en un valor concreto de las var. explicativas (media de las variables en este caso)
+margEff(modelo_tobit_1,xValues = c(1,mean(AUTOS$EDAD),mean(AUTOS$HIJOSM18),mean(AUTOS$Y)))
+# Efectos marginales promedio
+margEff(modelo_tobit_1)
+# Estimación con la librería VGAM (https://www.stat.auckland.ac.nz/~yee/VGAM/)
+library(VGAM)
+modelo_tobit_2 <- vglm(GAUT ~ EDAD + HIJOSM18 + Y, family = tobit, data = AUTOS)
+summary(modelo_tobit_2)
+#
+```
+
+## Python script
+
+```{r}
+library(reticulate)
+py_run_file("tobit.py")
+```
+
+```{python}
+# Lectura de datos
+AUTOS = pd.read_csv("AUTOS.csv")
+AUTOS.describe()
+# Estimación del modelo Tobit con los datos de la aplicación
+y = AUTOS.GAUT
+x = AUTOS.drop(['GAUT'], axis=1)
+cens = pd.Series(np.zeros((len(y),)))
+cens[y==0] = -1
+cens.value_counts()
+#
+modelo_tobit = TobitModel()
+res = modelo_tobit.fit(x, y, cens, verbose=False)
+res.coef_
+res.sigma_
+#
+```

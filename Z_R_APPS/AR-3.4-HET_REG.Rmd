@@ -1,0 +1,92 @@
+---
+title: 'TEMA 3: Regresiones heteroscedásticas'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.4: Función de demanda con heteroscedasticidad'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+# Objetivo
+
+En esta aplicación se estimará una función de demanda con errores heteroscedásticos.
+
+# Código R
+
+```{r, message=FALSE}
+# Lectura de librerías
+library(tidyverse)
+library(car)
+library(skedastic)
+library(lmtest)
+library(sandwich)
+# Lectura de datos
+DEM_HET <- read_csv("DEM_HET.csv")
+dim(DEM_HET)
+summary(DEM_HET)
+#
+# Función de demdanda estándar
+#
+summary(lm_dem <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), data = DEM_HET))
+#
+# Chequeo de la hipótesis de homoscedasticidad
+#
+white_lm(lm_dem)
+white_lm(lm_dem, interactions=TRUE)
+# Test de Glejser
+glejser(lm_dem)
+# Test de Breusch-Pagan (het. aditiva)
+breusch_pagan(lm_dem)
+# Análisis gráfico
+resid2 <- resid(lm_dem)^2
+l_Y <- log(DEM_HET$Y)
+plot(l_Y,resid2, xlab="Renta (en logaritmos)", ylab="Residuos al cuadrado")
+#
+# Breusch-Pagan estándar (escalado)
+#
+# Manual
+# Regresión auxiliar
+summary(lm_resid2 <- lm(resid2 ~ log(Y), data=DEM_HET))
+N <- nobs(lm_resid2)
+p <- 1 # Número de regresores de la regresión auxiliar (sin incluir la constante)
+slm_resid2 <- summary(lm_resid2)
+R2_lm_resid2 <- slm_resid2$r.squared
+BP <- N*R2_lm_resid2
+# Contraste Chi-cuadrado
+alpha <- 0.05
+chisqcr <- qchisq(1-alpha, p)
+pval <- 1-pchisq(BP, p)
+BP ; chisqcr ; pval 
+# Automático
+bptest(lm_dem, varformula = ~ log(Y), data=DEM_HET) 
+# Test de Breusch-Pagan robusto (variante de Koenker)
+bptest(lm_dem, varformula = ~ log(Y), data=DEM_HET, studentize = FALSE) 
+ncvTest(lm_dem, ~ log(Y))
+#
+# Corrección básica de la heteroscedasticidad
+#
+summary(lm_dem, vcov.=vcovHC(lm_dem, type = "HC1")) # Corrección de White
+# summary(lm_dem, vcov.=hccm(lm_dem, type = "hc1")) # Método alternativo
+
+#
+# Corrección avanzada: mínimos cuadrados ponderados (MCP)
+#
+# Regresión auxiliar para la varianza estimada
+summary(lm_l_resid2 <- lm(log(resid2)~ log(Y), data=DEM_HET))
+# Estimación de la varianza residual (no constante)
+sigma2 <- exp(fitted(lm_l_resid2))
+# MCO con ponderaciones
+summary(lm_dem_het <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), weights = 1/sigma2, data = DEM_HET))
+# Comparación de resultaodos MCO-MCP
+compareCoefs(lm_dem, lm_dem_het)
+#
+```

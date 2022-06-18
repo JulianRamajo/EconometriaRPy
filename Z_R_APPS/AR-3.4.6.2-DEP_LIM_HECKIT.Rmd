@@ -1,0 +1,51 @@
+---
+title: 'Variable dependiente limitada: modelo Heckit'
+author: "Julián Ramajo"
+date: "1/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R script
+
+```{r}
+# Lectura de librerías
+library(tidyverse)
+library(sampleSelection) # http://www.sampleselection.org/
+# Lectura de datos
+SAL_MUJ <- read_csv("SAL_MUJ.csv")
+summary(SAL_MUJ)
+# Truncamiento selectivo: modelo Heckit (https://cran.r-project.org/web/packages/sampleSelection/vignettes/selection.pdf)
+modelo_heckit <- selection(PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP, log(SALARIO) ~ EDUC + EXPER, data=SAL_MUJ, method="ml")
+summary(modelo_heckit)
+#
+```
+
+## Python script
+
+```{python}
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+# import patsy as pt
+import scipy.stats as stats
+import statsmodels.formula.api as smf
+# import statsmodels.base.model as smclass
+# Lectura de datos
+SAL_MUJ = pd.read_csv("SAL_MUJ.csv")
+SAL_MUJ.describe()
+# Estimación en dos pasos (menos eficiente que la estimación ML)
+# Paso 1 (modelo Probit para todas las observaciones)
+reg_probit = smf.probit(formula='PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP', data=SAL_MUJ)
+res_probit = reg_probit.fit(disp=0)
+print(res_probit.summary())
+#
+pred_PMT = res_probit.fittedvalues
+SAL_MUJ['inv_mills'] = stats.norm.pdf(pred_PMT) / stats.norm.cdf(pred_PMT)
+# Paso 2 (regresión truncada con las observaciones seleccionadas y la inversa de la razón de Mills como variable adicional)
+reg_heckit = smf.ols(formula='np.log(SALARIO) ~ EDUC + EXPER + inv_mills', subset=(SAL_MUJ['PMT'] == 1), data=SAL_MUJ).fit(cov_type='HAC', cov_kwds={'maxlags':6,'use_correction':True})
+print(reg_heckit.summary())
+```

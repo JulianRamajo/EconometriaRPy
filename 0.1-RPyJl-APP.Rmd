@@ -1,0 +1,83 @@
+---
+title: 'PLANTILLA APLICACIÓN'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación X.X (tópico): tema aplicación'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introducción
+
+En esta aplicación se estimará ...:
+
+$$Y = \beta_1 + \beta_2 {X_2} + \beta_3 {X_3} + e$$
+
+# Código R
+
+```{r, message = FALSE, warning = FALSE, eval=FALSE}
+# Lectura de librerías
+library(tidyverse)
+library(GGally)
+library(skimr)
+library(coefplot)
+library(report)
+# Lectura de datos 
+DAT <- read_csv("X.csv")
+# Análisis exploratorio (EDA)
+summary(DAT)
+# Gráficas parciales
+GGally::ggpairs(DAT)
+# Regresión MCO
+X_model <- lm(formula = Y ~ X1 + X2 + X3, data = DAT)
+summary(X_model)
+report(X_model)
+```
+
+# Código Python
+
+```{python, message = FALSE, warning = FALSE, eval=FALSE}
+import pandas as pd
+import statsmodels.formula.api as smf
+# Lectura de datos
+DAT = pd.read_csv("X.csv")
+# Análisis exploratorio (EDA)
+DAT.describe()
+# Regresión MCO
+model = smf.ols(formula = "Y ~ X1 + X2 + X3", data = DAT)
+X_model = model.fit()
+print(X_model.summary())
+```
+
+# Código Julia
+
+```{r, echo = FALSE, eval=FALSE}
+# Ejecutar siempre que se vaya a usar Julia en RStudio
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE, eval=FALSE}
+using DataFrames, CSV;
+# Lectura de datos
+DAT = CSV.read("X.csv", DataFrame);
+# Análisis exploratorio (EDA)
+show(describe(DAT))
+# Regresión MCO (librería Econometrics)
+using Econometrics;
+X_model = fit(EconometricModel, @formula(Y ~ X1 + X2 + X3), DAT)
+```
+

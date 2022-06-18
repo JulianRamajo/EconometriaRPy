@@ -1,0 +1,102 @@
+---
+title: 'TEMA 1: INTRODUCCIÓN A LA ECONOMETRÍA'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 1.2 (Datos de series temporales): Consumo privado en Estados
+  Unidos'
+output:
+  word_document:
+    toc: yes
+    toc_depth: '2'
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+---
+
+# Introducción
+
+En esta aplicación se estimará la siguiente función de consumo Keynesiana con datos de Estados Unidos para el período 1959-2015:
+
+$$
+C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}
+$$
+
+# Código R
+
+```{r, message=FALSE}
+# Lectura de librerías
+library(tidyverse)
+# Lectura de datos
+CONS_USA <- read_csv("CONS_USA.csv")
+# Formato de series temporales
+ts_CONS_USA <- ts(CONS_USA[,2:3], start=c(1959), end = c(2015))
+head(ts_CONS_USA)
+# Gráfica Consumo-Renta
+CONS_USA %>%
+  ggplot(aes(x = Y, y = C)) +
+  geom_point() +
+  ylab("C") + xlab("Y")
+# Regresión MCO
+KEYNES_model <- lm (C ~ Y, data = ts_CONS_USA)
+summary(KEYNES_model)
+```
+
+# Código Python
+
+```{python, message=FALSE}
+# Lectura de librerías
+import pandas as pd
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+# Lectura de datos y asignación del índice temporal
+CONS_USA = pd.read_csv("CONS_USA.csv", index_col=0)
+CONS_USA.head()
+# Gráfica Consumo-Renta
+plt.style.use('seaborn')
+CONS_USA.plot(x='Y', y='C', kind='scatter')
+plt.show()
+# Regresión MCO
+model = smf.ols(formula = "C ~ Y", data = CONS_USA)
+KEYNES_model = model.fit()
+print(KEYNES_model.summary())
+```
+
+# Código Julia
+
+```{r, echo = FALSE}
+# Ejecutar siempre que se vaya a usar Julia en RStudio
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE}
+using DataFrames, CSV;
+# lectura de datos
+CONS_USA = CSV.read("CONS_USA.csv", DataFrame);
+# Gráfica Consumo-Renta
+# using Plots
+# C = CONS_USA[:,2]
+# Y = CONS_USA[:,3]
+# scatter(Y, C)
+# xlabel!("Y")
+# ylabel!("C")
+# Regresión MCO (librería GLM)
+using GLM;
+KEYNES_model = lm(@formula(C ~ Y), CONS_USA)
+# R^2
+print("R^2 estándar ->   ",r2(KEYNES_model))
+# Regresión MCO (librería Econometrics)
+using Econometrics;
+KEYNES_model_2 = fit(EconometricModel, @formula(C ~ Y), CONS_USA)
+# Gráfica Consumo-Renta
+# using Plots
+# gr()
+# scatter(CONS_USA.Y,CONS_USA.C, title = "Scatter Plot C vs Y", ylabel = "C", xlabel = "Y",legend = false)
+```

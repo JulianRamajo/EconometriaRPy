@@ -1,0 +1,83 @@
+---
+title: "Datos de recuento"
+author: "Julián Ramajo"
+date: "1/11/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R script
+
+```{r}
+# Lectura de librerías
+library(tidyverse)
+library(alr4)
+library(AER)
+library(MASS)
+# Datos: American Math Society (AMS) Survey 
+# Description
+# Counts of new PhDs in the mathematical sciences for 2008-09 and 2011-12 categorized by 
+# type of institution, gender, and US citizenship status.
+# Variables
+# type: a factor with levels I(Pu) for group I public universities, I(Pr) for group I private universities, 
+# II and III for groups II and III, IV for statistics and biostatistics programs, and Va for applied mathemeatics programs.
+# sex: a factor with levels Female, Male of the recipient
+# citizen: a factor with levels Non-US, US giving citizenship status
+# count: The number of individuals of each type in 2008-09
+# count11: The number of individuals of each type in 2011-12
+# Lectura de datos
+AMS_PhDsMATH <- read_csv("AMS_PhDsMATH.csv")
+summary(AMS_PhDsMATH)
+# Modelo de Poisson
+modelo_Poisson <- glm(count ~ type*sex + type*citizen, family = poisson, AMS_PhDsMATH)
+S(modelo_Poisson)
+Anova(modelo_Poisson)
+# Gráficas parciales
+plot(Effect(c("type", "citizen"), modelo_Poisson), multiline=TRUE, ci.style="bars", main="", 
+     xlab="Tipo de programa de doctorado", 
+     ylab="Número de nuevos Doctores", 
+     rescale.axis=FALSE, grid=TRUE)
+plot(Effect(c("type", "sex"), modelo_Poisson), multiline=TRUE, ci.style="bars", main="", 
+     xlab="Tipo de programa de doctorado", 
+     ylab="Número de nuevos Doctores", 
+     rescale.axis=FALSE, grid=TRUE)
+# Contrastes de sobredispersión
+dispersiontest(modelo_Poisson)
+dispersiontest(modelo_Poisson, trafo = 2)
+# Modelos alternativos cuando se rechaza la hipótesis nula de equidispersión (varianza=media)
+# Modelo Quasi-Poisson (errores estándar QMLE robustos) [binomial negativa con función de varianza lineal, NB1]
+modelo_qPoisson <- glm(count ~ type*sex + type*citizen, family = quasipoisson, data = AMS_PhDsMATH)
+S(modelo_qPoisson)
+Anova(modelo_qPoisson)
+# Modelo Binomial Negativo [binomial negativa con función de varianza cuadrática, NB2]
+modelo_BinNeg <- glm.nb(count ~ type*sex + type*citizen, data = AMS_PhDsMATH)
+S(modelo_BinNeg)
+Anova(modelo_BinNeg)
+```
+
+## Python script
+
+```{python}
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+# Lectura de datos
+AMS_PhDsMATH = pd.read_csv("AMS_PhDsMATH.csv")
+AMS_PhDsMATH.describe()
+# Modelo de Poisson
+modelo_poisson = smf.poisson(formula='count ~ type*sex + type*citizen', data=AMS_PhDsMATH)
+print(modelo_poisson.fit().summary())
+# Modelo Quasi-Poisson
+modelo_qPoisson = smf.glm(formula='count ~ type*sex + type*citizen', family = sm.families.Poisson(), data=AMS_PhDsMATH)
+print(modelo_qPoisson.fit().summary())
+# Modelo Binomial Negativo
+modelo_BinNeg = smf.glm(formula='count ~ type*sex + type*citizen', family = sm.families.NegativeBinomial(), data=AMS_PhDsMATH)
+print(modelo_BinNeg.fit().summary())
+```
+

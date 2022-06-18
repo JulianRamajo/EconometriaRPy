@@ -1,0 +1,158 @@
+---
+title: "Programación conjunta en R y Python con reticulate (usando un fichero R Markdown)"
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 0.2.a: Ejemplos en interoperabilidad entre R y Python usando RStudio'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# 0. Justificación
+
+En este documento se demuestra cómo los ficheros **R Markdown** (con extensión _Rmd_) son un buen entorno para codificar un proyecto simultáneamente en los dos lenguajes de programación más usados en _Data Science_, **R** y **Python**, permitiendo programar algunos elementos del proyecto en cada lenguaje y manipular objetos creados en un lenguaje usando el otro, y viceversa.
+
+Esto puede ser útil por varias razones:
+
+1.  Permite codificar en la _lengua nativa en estadística_ (**R**) pero añadiendo características que podrían existir sólo en la _segunda lengua_ (**Python**); o al contrario. Obviamente cuando uso la palabra _lengua_ me refiero a _lenguaje de programación_.
+2.  Permite colaborar directamente con otro colega que sea un experto programador en el otro lenguaje (**equipos multi-lenguaje**).
+3.  Da la oportunidad de trabajar en ambos lenguajes de programación y de adquirir fluidez en ellos, intentando alcanzar a largo plazo el _bilingüismo_.
+
+# 1. ¿Qué se necesita?
+
+Para que la interacción R-Python funcione correctametne se necesita lo siguiente:
+
+1.  **R** y **Python (miniconda)** instalados en el ordenador.
+2.  El entorno de ejecución (IDE) **RStudio** también instalado.
+3.  Las **librerías** `rmarkdown` y `reticulate` instaladas en R.
+
+Trabajaremos en el IDE de RStudio escribiendo en un documento R Markdown, moviéndonos entre trozos de código que están escritos en R o en Python. Haré una demostración con un par de ejemplos sencillos.
+
+# 2. Primer ejemplo
+
+Se puede configurar un documento **R Markdown** y codificar en los dos idiomas diferentes. Primero hay que cargar la librería `reticulate` en el primer trozo de código.
+
+```{r}
+library(reticulate)
+```
+
+Ahora, cuando se quiera escribir código en Python, se debe envolver con los habituales signos de puntuación, pero etiquetarlo como un trozo de código python usando `{python}`; y cuando se quieras escribir en R debe usarse `{r}`.
+
+En nuestro primer ejemplo, vamos a suponer que se va a estimar con Python un modelo con un conjunto de datos sobre los resultados finales de las pruebas de los estudiantes en función de sus resultados pasados. 
+
+Debajo se ejecuta Python dentro de este código para estimar el modelo:
+
+```{python}
+import pandas as pd
+import statsmodels.formula.api as smf
+
+# Datos
+url = "http://peopleanalytics-regression-book.org/data/ugtests.csv"
+ugtests = pd.read_csv(url)
+
+# Modelo
+model = smf.ols(formula = "Final ~ Yr3 + Yr2 + Yr1", data = ugtests)
+
+# Estimación del modelo y resultados
+fitted_model = model.fit()
+model_summary = fitted_model.summary()
+print(model_summary)
+
+```
+
+En este momento has tenido que dejar este trabajo debido a algo más urgente y se lo has pasado a otro colega que sólo programa en R para hacer algunos diagnósticos del modelo.
+
+Pues bien, el nuevo programador puede acceder a todos los objetos python que has creado anteriormente dentro de una lista general llamada `py` en el entorno R.  
+
+Así, si escribe un cógigo R como el que sigue puede acceder a los parámetros de tu modelo: 
+
+```{r}
+py$fitted_model$params
+```
+
+o a los primeros _residuos_ (errores estimados) del mismo, junto con unas estadístias básicas y un histograma:
+
+```{r}
+head(py$fitted_model$resid)
+summary(py$fitted_model$resid)
+hist(py$fitted_model$resid)
+```
+
+Además, se pueden hacer fácilmente algunos **diagnósticos del modelo estimado**:
+
+```{r}
+library(car)
+densityPlot(py$fitted_model$resid)
+qqnorm(py$fitted_model$resid)
+qqPlot(py$fitted_model$resid)
+```
+
+# 3. Segundo ejemplo
+
+Supongamos ahora que se han estado analizando algunos datos en Python y se ha creado un `dataframe` de **pandas** con todos ellos.  Vamos a descargar los datos y echarles un vistazo:
+
+```{python}
+import pandas as pd
+
+url = "http://peopleanalytics-regression-book.org/data/speed_dating.csv"
+speed_dating = pd.read_csv(url)
+print(speed_dating.head())
+```
+
+Supongamos que has ejecutado un _modelo de regresión logística simple_ en Python para intentar relacionar la decisión `dec` con algunas de las otras variables.  
+
+```{python}
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+# Datos
+url = "http://peopleanalytics-regression-book.org/data/speed_dating.csv"
+speed_dating = pd.read_csv(url)
+
+# Modelo
+model = smf.glm(formula = "dec ~ agediff + samerace + attr + intel + prob", 
+                data = speed_dating, 
+                family = sm.families.Binomial())
+                
+# Estimación del modelo
+promotion_model = model.fit()
+
+# Resultados
+print(promotion_model.summary())
+```
+
+Sin embargo, te das cuenta de que estos datos son en realidad jerárquicos ya que el mismo `iid` individual puede tener múltiples fechas, así que es necesario estimar un _modelo de regresión logística de efectos mixtos_, ¡pero no puedes encontrar ningún programa en Python que lo haga! Sin problema, se lo mandas a un colega para que lo estime en R:
+
+```{r}
+library(lme4)
+
+speed_dating <- py$speed_dating
+
+iid_intercept_model <- lme4:::glmer(dec ~ agediff + samerace + attr + intel + prob + (1 | iid), data = speed_dating, family = "binomial")
+summary(iid_intercept_model)
+
+coefficients <- coef(iid_intercept_model)$iid
+```
+
+
+Ahora se pueden recuperar los resultados en Python y echar un vistazo a las estimaciones de los coeficientes, por ejemplo. Para acceder a los objetos de R en Python se utiliza el objeto de lista general `r`.
+
+```{python}
+coefs = r.coefficients
+print(coefs.head())
+```
+
