@@ -54,3 +54,23 @@ print(model1.fit().summary())
 model2 = sms.ols('COST ~ Q + np.power(Q, 2)', data=COST_TEXT)
 print(model2.fit().summary())
 ```
+
+# Código Julia
+
+```{r, echo = FALSE}
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE}
+using DataFrames, CSV;
+# Lectura de datos
+COST_TEXT = CSV.read("COST_TEXT.csv", DataFrame);
+# Gráficas
+using Plots
+gr()
+scatter(COST_TEXT.Q,COST_TEXT.COST, title = "Scatter Plot COST vs Q", ylabel = "COST", xlabel = "Q",legend = false)
+# Regresión MCO (librería Econometrics)
+using Econometrics;
+model1 = fit(EconometricModel, @formula(COST ~ Q + Q^2), COST_TEXT)
+```

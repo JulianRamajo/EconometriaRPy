@@ -125,3 +125,21 @@ plt.show()
 dem_elec = smf.ols('np.log(Demanda) ~ Temperatura + np.power(Temperatura,2) + Dia_sem + Dia_lab + Frio + Calor', data=dem_elec_vict).fit()
 print(dem_elec.summary())
 ```
+
+# Código Julia
+
+```{r, echo = FALSE}
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE}
+using DataFrames, CSV;
+# Lectura de datos
+dem_elec_vict = CSV.read("DEM_ELEC.csv", DataFrame);
+# Regresión MCO (librería GLM)
+using GLM;
+dem_elec = lm(@formula(log(Demanda) ~ Temperatura + Temperatura^2 + Dia_sem + Dia_lab + Frio + Calor), dem_elec_vict);
+using RegressionTables;
+regtable(dem_elec)
+```

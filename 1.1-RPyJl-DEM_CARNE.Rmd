@@ -20,9 +20,11 @@ output:
 
 En esta aplicación se estimará una función de demanda estándar con datos micro sobre 30 familias americanas:
 
-$$Q = \beta_0 + \beta_1P + \beta_2Y + e$$
+$$Q = f(P, Y) + e$$
 
 # Código R
+
+## Lectura de librerías y datos, y análisis exploratorio (EDA) de la muestra
 
 ```{r}
 # Lectura de librerías
@@ -38,7 +40,7 @@ dim(DEM_CARNE)
 str(DEM_CARNE)
 head(DEM_CARNE)
 tail(DEM_CARNE)
-# Análisis exploratorio (EDA)
+# Estadística descriptiva
 summary(DEM_CARNE)
 report(DEM_CARNE)
 skim(DEM_CARNE)
@@ -61,10 +63,17 @@ ggplot(DEM_CARNE, aes(x = Y, y = Q)) +
   xlab("Y (renta)") +
   ylab("Q (cantidad)") +
   theme_minimal()
-# Regresión MCO
-DEM_model <- lm(formula = Q ~ P + Y, data = DEM_CARNE)
-summary(DEM_model)
-report(DEM_model)
+```
+
+## Regresión MCO del modelo lineal:
+
+$$Q = \beta_0 + \beta_1P + \beta_2Y + e$$
+
+```{r}
+lin_model <- lm(formula = Q ~ P + Y, data = DEM_CARNE)
+summary(lin_model)
+report(lin_model)
+coefplot(lin_model)
 ```
 
 ## Visualización 3D de los datos y del plano ajustado del modelo
@@ -84,28 +93,56 @@ plot_ly(data = DEM_CARNE) %>%
                         zaxis = list(title = 'Q'), aspectmode='cube')) 
 ```
 
+## Regresión MCO del modelo logarítmico-lineal (log-log):
+
+$$log(Q) = \beta_0 + \beta_1log(P) + \beta_2log(Y) + e$$
+
+```{r}
+log_model <- lm(log(Q) ~ log(P) + log(Y), data = DEM_CARNE)
+summary(log_model)
+report(log_model)
+coefplot(log_model)
+```
+
 # Código Python
+
+## Regresión MCO del modelo lineal:
+
+$$Q = \beta_0 + \beta_1P + \beta_2Y + e$$
 
 ```{python}
 import pandas as pd
 import statsmodels.formula.api as smf
-# Lectura de datos
+#
 DEM_CARNE = pd.read_csv("DEM_CARNE.csv")
-# Análisis exploratorio (EDA)
-DEM_CARNE.describe()
-# Regresión MCO
 model = smf.ols(formula = "Q ~ P + Y", data = DEM_CARNE)
-DEM_model = model.fit()
-print(DEM_model.summary())
+lin_model = model.fit()
+print(lin_model.summary())
+```
+
+## Regresión MCO del modelo logarítmico-lineal:
+
+$$log(Q) = \beta_0 + \beta_1log(P) + \beta_2log(Y) + e$$
+
+```{python}
+import numpy as np
+# import pandas as pd
+import statsmodels.formula.api as smf
+# DEM_CARNE = pd.read_csv("DEM_CARNE.csv")
+model = smf.ols(formula = "np.log(Q) ~ np.log(P) + np.log(Y)", data = DEM_CARNE)
+log_model = model.fit()
+print(log_model.summary())
 ```
 
 # Código Julia
 
 ```{r, echo = FALSE}
-# Ejecutar siempre que se vaya a usar Julia en RStudio
+#
 library(JuliaCall)
 julia <- julia_setup()
 ```
+
+## Librerías, EDA y regresión MCO de los modelos lineal y logarítmico
 
 ```{julia, message = FALSE, warning = FALSE}
 using DataFrames, CSV, GLM;
@@ -116,14 +153,52 @@ size(DEM_CARNE)
 names(DEM_CARNE)
 show(first(DEM_CARNE,6))
 show(last(DEM_CARNE,6))
-# Análisis exploratorio (EDA)
+# Estadística descriptiva
 show(describe(DEM_CARNE))
-# Regresión MCO (librería GLM)
-DEM_model = lm(@formula(Q ~ P + Y), DEM_CARNE)
+# Regresión MCO del modelo lineal
+# Librería GLM
+lin_model = lm(@formula(Q ~ P + Y), DEM_CARNE)
 # R^2
-print("R^2 estándar ->   ",r2(DEM_model))
-# Regresión MCO (librería Econometrics)
+print("R^2 estándar ->   ",r2(lin_model))
+#
+using RegressionTables;
+regtable(lin_model)
+# Librería Econometrics
 using Econometrics;
-DEM_model_2 = fit(EconometricModel, @formula(Q ~ P + Y), DEM_CARNE)
+lin_model = fit(EconometricModel, @formula(Q ~ P + Y), DEM_CARNE)
+# Regresión MCO del modelo logarítmico
+log_model = lm(@formula(log(Q) ~ log(P) + log(Y)), DEM_CARNE)
+#
+using RegressionTables;
+regtable(log_model)
 ```
 
+# Anexo 1: Regresión no lineal (potencial en la variable renta) con R
+
+```{r}
+nonlin1_model <- nls(Q ~ c1 + c2*P + c3*(Y^c4), start = list(c1=5, c2=-0.5, c3=0.01, c4=3), data = DEM_CARNE)
+summary(nonlin1_model)
+#
+library(gslnls)
+nonlin2_model <- gsl_nls(Q ~ c1 + c2*P + c3*(Y^c4), start = c(c1=5, c2=-0.5, c3=0.01, c4=3), data = DEM_CARNE)
+summary(nonlin2_model)
+```
+
+# Anexo 2: Regresión lineal Bayesiana con R
+
+```{r}
+library(rstanarm)
+#
+linBayes1_model <- stan_glm(Q ~ P + Y, data = DEM_CARNE)
+summary(linBayes1_model)
+report(linBayes1_model)
+#
+library(INLA)
+library(brinla)
+#
+linBayes2_model <- inla(Q ~ P + Y, family = "gaussian", data = DEM_CARNE)
+summary(linBayes2_model)
+bri.hyperpar.summary(linBayes2_model)
+bri.fixed.plot(linBayes2_model)
+bri.hyperpar.plot(linBayes2_model)
+```

@@ -68,3 +68,29 @@ print(model1.fit().summary())
 model2 = smf.ols('VENTAS ~ TV * RADIO', data=PUB_VENTAS)
 print(model2.fit().summary())
 ```
+
+# Código Julia
+
+```{r, echo = FALSE}
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE}
+using DataFrames, CSV;
+# Lectura de datos
+PUB_VENTAS = CSV.read("PUB_VENTAS.csv", DataFrame);
+# Regresión MCO 
+# Librería Econometrics
+using Econometrics;
+model1 = fit(EconometricModel, @formula(VENTAS ~ TV + RADIO), PUB_VENTAS)
+model1 = fit(EconometricModel, @formula(VENTAS ~ TV * RADIO), PUB_VENTAS)
+# Librería GLM
+using GLM;
+model1 = lm(@formula(VENTAS ~ TV + RADIO), PUB_VENTAS);
+model2 = lm(@formula(VENTAS ~ TV * RADIO), PUB_VENTAS);
+using RegressionTables;
+regtable(model1, model2)
+# Comparación de modelos
+ftest(model1.model, model2.model)
+```
