@@ -1,17 +1,43 @@
 ---
-title: "Variable dependiente discreta: modelos Logit y Probit"
-author: "Julián Ramajo"
-date: "1/9/2022"
-output: html_document
+title: 'TEMA 3: DIAGNOSIS, CORRECCIONES Y/O EXTENSIONES DEL MRL'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.12 (Variable dependiente discreta -> modelos Logit y Probit): Elección entre tipo de interés fijo o variable'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# Introducción
 
-## R script
+En un artículo del año 1987, Dhillon y otros autores estudiaron el conjunto de características personales y financieras que determinan la elección por parte de los individuos de un tipo de interés fijo frente a uno variable a la hora de contratar un préstamo hipotecario. El interés de su trabajo radicaba en contrastar las dos posturas que dominan los planteamientos teóricos sobre el tema: la primera de ellas opina que, de acuerdo con la **hipótesis de mercados eficientes**, las características personales del prestatario no contienen información que no haya sido ya tenida en cuenta por el mercado a la hora de fijar el tipo de interés y, por tanto, sólo las variables de precios y los términos del contrato serían relevantes cuando un individuo elige el tipo de interés que se le aplicará; la segunda escuela de pensamiento supone que existe **información asimétrica**, es decir, dadas las condiciones del mercado, los prestatarios pueden favorecerse no revelando algunas de sus características personales a la hora de firmar el contrato.
 
-```{r}
+El modelo propuesto relaciona la probabilidad de que un individuo elija, dadas sus características personales y las condiciones del mercado, un tipo de interés variable frente a uno fijo para un préstamo hipotecario. Se dispone de una muestra de 78 clientes de un banco hipotecario norteamericano. Del total de observaciones, 46 eligieron un tipo de interés fijo (con vencimiento de 30 años) y 32 un tipo de interés variable (no acotado).
+
+Las variables disponibles para estimar el modelo son las siguientes:
+
+- Variable dependiente: _Y_ toma el valor 1 si el individuo elige un tipo de interés variable y 0 si firma el préstamo a un tipo fijo.
+
+-	Variables explicativas del mercado: _FI_ es el tipo de interés fijo que ofertó el banco, _MARG_ el margen del tipo fijo sobre el tipo de interés variable, _YLD_ la diferencia entre el tipo de interés de las letras del tesoro a 10 años y el tipo de las letras a 1 año (esta variable intenta anticipar el cambio futuro en los tipos de interés a corto plazo), _PTS_ la ratio entre el tipo de interés fijo y el variable, y _MAT_ la ratio entre los vencimientos de los préstamos hipotecarios con tipo fijo y variable.
+
+-	Variables explicativas personales: _BA_ es la edad del prestatario, _BS_ los años de escolarización, _FTB_ una variable ficticia que toma el valor 1 si el prestatario compra vivienda por primera vez y 0 en otro caso, _CB_ una ficticia que toma el valor 1 si existe un co-prestatario y 0 en otro caso, _MC_ una ficticia que toma el valor 1 si el prestatario está casado y 0 si no lo está, _SE_ una ficticia que toma el valor 1 si trabaja por cuenta propia y 0 en otro caso, _MOB_ el número de años que el prestatario lleva residiendo en la dirección actual, _NW_ la riqueza neta, _LA_ los activos líquidos y _STL_ los compromisos económicos del prestatario a corto plazo.
+
+El modelo econométrico general que se estimará tiene la siguiente expresión:
+
+$$Y_{i} = \beta_1 + \beta_2 FI_{i} + \beta_3 MARG_{i} + \beta_4 YLD_{i} + \beta_5 PTS_{i} + \beta_6 MAT_{i} + \beta_7 BA_{i} + \beta_8 BS_{i} + \beta_9 FTB_{i} + \beta_{10} CB_{i} +$$
+$$+ \beta_{11} MC_{i} + \beta_{12} MC_{i} + \beta_{13} SE_{i} + \beta_{14} MOB_{i} + \beta_{15} NW_{i} + \beta_{16} LA_{i} + \beta_{17} ST_{i} + e_{i}$$
+
+# Código R
+
+```{r, message=FALSE}
 # Lectura de librerías
 library(tidyverse)
 library(AER)
@@ -103,9 +129,9 @@ print(EMP_logit[[1]])
 margins(modelo_logit_2)
 ```
 
-## Python script
+# Código Python
 
-```{python}
+```{python, message=FALSE}
 # Lectura de librerías
 import numpy as np
 import pandas as pd
@@ -169,4 +195,26 @@ print(EMM_logit.summary())
 # Efecto marginal promedio
 EMP_logit = modelo_logit.get_margeff(at = "overall")
 print(EMP_logit.summary())
+```
+
+# Código Julia
+
+```{r, echo = FALSE}
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE}
+# Lectura de librerías
+using DataFrames, CSV, GLM;
+using RegressionTables;
+# Lectura de datos
+PREST_HIP = CSV.read("PREST_HIP.csv", DataFrame);
+describe(PREST_HIP)
+# Eodelo logit
+modelo_logit = glm(@formula(Y ~ FI + MARG + YLD), PREST_HIP, Binomial(), LogitLink())
+regtable(modelo_logit)
+# Modelo probit
+modelo_probit = glm(@formula(Y ~ FI + MARG + YLD), PREST_HIP, Binomial(), ProbitLink())
+regtable(modelo_probit)
 ```

@@ -1,20 +1,42 @@
 ---
-title: "Regresores endógenos: errores de medida y/o simulteneidad en las variables del modelo de regresión"
-author: "Julián Ramajo"
-date: "1/7/2022"
-output: html_document
+title: 'TEMA 3: DIAGNOSIS, CORRECCIONES Y/O EXTENSIONES DEL MRL'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.11 (Regresores endógenos): Determinantes de la inflación al nivel internacional'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# Introducción
 
-```{r}
+Para explicar las variaciones que se producen en la inflación observada al nivel internacional (muestra de 76 países) se propone el siguiente modelo econométrico, el cual se obtiene de la teoría cuantitativa del dinero:
+
+$$INF_{i} = \beta_1 + \beta_2 RM_{i} + \beta_3 RY_{i} + e_{i}$$
+
+siendo _INF_ la inflación (tasa de variación del índice general de precios), _RM_ la tasa de crecimiento de la oferta monetaria, y _RY_ la tasa de crecimiento del PIB.
+
+Se asumirá que la variable _RM_ es exógena (política monetaria independiente), mientras que se supondrá que la variable _RY_ podría ser endógena y, por tanto, puede estar correlacionada con el término de error del modelo, $$Cov(RY,e)≠0$$
+
+Como instrumentos para _RY_ se tomarán el nivel inicial de PIB per cápita ( _YPC0_ ), el nivel de educación relativo de la población ( _EDUC_ ), el nivel de inversión ( _INV_ ) y la tasa de crecimiento de la población ( _RPOB_ ), 
+
+# Código R
+
+```{r, message=FALSE}
 # Lectura de librerías
 library(tidyverse)
 library(ivreg)
 library(momentfit)
-# Para más detalles sobre el método de variables instrumentales (IV o 2SLS en inglés) ver las páginas web: 
+# Para más detalles sobre el método de variables instrumentales (IV o 2SLS en inglés) 
+# ver las páginas web: 
 # https://cran.r-project.org/web/packages/ivreg/vignettes/ivreg.html 
 # https://cran.r-project.org/web/packages/ivreg/vignettes/Diagnostics-for-2SLS-Regression.html
 #
@@ -47,19 +69,15 @@ summary(res_modelo_GMM)
 DWH(res_modelo_GMM)
 ```
 
-```{python}
+# Código Python
+
+```{python, message=FALSE}
 # Lectura de librerías
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 from linearmodels.iv import IV2SLS
 from linearmodels.iv import IVGMM
-# import statsmodels.stats.api as sms
-# import statsmodels.formula.api as smf
-# import scipy as sp
-# import scipy.stats as scs
-# import matplotlib.pyplot as plt
-# import seaborn as sns
 #
 # Lectura de datos
 INF_INT = pd.read_csv('INF_INTERN.csv')
@@ -73,7 +91,7 @@ modelo_MCO = IV2SLS(dependent = INF_INT.INF,
                instruments = None)
 res_modelo_MCO = modelo_MCO.fit(cov_type='unadjusted')
 print(res_modelo_MCO)
-# Estimación IV(2SLS)
+# Estimación IV (2SLS)
 modelo_IV = IV2SLS(dependent = INF_INT.INF,
                exog = INF_INT[['const','RM']],
                endog = INF_INT.RY,
@@ -98,3 +116,21 @@ res_modelos["GMM"] = res_modelo_GMM
 print(compare(res_modelos))
 ```
 
+# Código Julia
+
+```{r, echo = FALSE}
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE}
+# Lectura de librerías
+using DataFrames, CSV, Econometrics;
+# Lectura de datos
+INF_INT  = CSV.read("INF_INTERN.csv", DataFrame);
+describe(INF_INT)
+# Estimación MCO
+modelo_MCO = fit(EconometricModel, @formula(INF ~ RM + RY), INF_INT)
+# Estimación VI
+modelo_VI = fit(EconometricModel, @formula(INF ~ RM + (RY ~ EDUC + INV + RPOB + YPC0)), INF_INT)
+```
