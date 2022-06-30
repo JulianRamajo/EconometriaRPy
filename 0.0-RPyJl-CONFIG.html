@@ -1603,19 +1603,20 @@ GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)<br>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;shiny&quot;</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;rmarkdown&quot;</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;flexdashboard&quot;</span>)</span></code></pre></div>
-<ol start="4" style="list-style-type: decimal">
-<li>Instalar la librería <code>Rcpp</code> y el software
-<strong>Rtools</strong> ( <a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a> )</li>
-</ol>
-<p>NOTA: Rcpp y Rtools se necesitan con frecuencia para acelerar algunas
-partes del código, así como para compilar paquetes más nuevos en
-instalaciones antiguas de R.</p>
+<div id="instalación-de-la-librería-rcpp-y-rtools" class="section level2">
+<h2>Instalación de la librería Rcpp y Rtools</h2>
+<p>Se deben instalar la librería <code>Rcpp</code> y el software
+<strong>Rtools</strong> ( <a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a> ). Ambos
+se necesitan con frecuencia para acelerar algunas partes del código, así
+como para compilar paquetes más nuevos en instalaciones antiguas de
+R.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;Rcpp&quot;</span>)</span></code></pre></div>
-<ol start="5" style="list-style-type: decimal">
-<li>Una vez instalados R y RStudio, el siguiente paso consiste en
+</div>
+<div id="instalación-de-librerías-r" class="section level2">
+<h2>Instalación de librerías R</h2>
+<p>Una vez instalados R y RStudio, el siguiente paso consiste en
 <strong>instalar las librerías específicas</strong> para realizar
-análisis estadísticos y econométricos.</li>
-</ol>
+análisis estadísticos y econométricos.</p>
 <p>Hay una gama increíblemente grande de paquetes disponibles en R: <a href="https://cran.r-project.org/web/packages/available_packages_by_name.html" class="uri">https://cran.r-project.org/web/packages/available_packages_by_name.html</a></p>
 <p>Afortunadamente, la mayoría de los paquetes más populares, o muy
 especializados, están agrupados en diferentes categorías en CRAN TASK
@@ -1650,14 +1651,15 @@ RStudio nos avisará cuándo un <em>script</em> contiene alguna librería
 no instalada y nos dará la opción de instalarla antes de ejecutar el
 código.</p>
 </div>
+</div>
 <div id="instalación-y-configuración-de-python-en-rstudio" class="section level1">
 <h1>Instalación y configuración de Python en RStudio</h1>
 <p>Hay varias formas de configurar Python en un ordenador. Los tres
 métodos más frecuentes son los siguientes:</p>
 <ol style="list-style-type: lower-alpha">
-<li>Distribución estándar de <strong>Python</strong>: <a href="https://www.python.org/downloads/" class="uri">https://www.python.org/downloads/</a></li>
-<li>Distribución <strong>Miniconda</strong> de Python: <a href="https://docs.conda.io/en/latest/miniconda.html" class="uri">https://docs.conda.io/en/latest/miniconda.html</a></li>
-<li>Distribución <strong>Anaconda</strong> de Python: <a href="https://www.anaconda.com/" class="uri">https://www.anaconda.com/</a></li>
+<li><p>Distribución estándar de <strong>Python</strong>: <a href="https://www.python.org/downloads/" class="uri">https://www.python.org/downloads/</a></p></li>
+<li><p>Distribución <strong>Miniconda</strong> de Python: <a href="https://docs.conda.io/en/latest/miniconda.html" class="uri">https://docs.conda.io/en/latest/miniconda.html</a></p></li>
+<li><p>Distribución <strong>Anaconda</strong> de Python: <a href="https://www.anaconda.com/" class="uri">https://www.anaconda.com/</a></p></li>
 </ol>
 <p>Tanto la distribución Miniconda como Anaconda utilizan la librería
 <code>conda</code> en sus instalaciones de Python, la cual permite
@@ -1684,8 +1686,12 @@ puede entrar en la consola de Python y hacer algún pequeño cálculo para
 ver si la instalación ha sido correcta:</p>
 <p>En R usar el comando <em>repl_python()</em> y luego, en la consola de
 Python, teclear los comandos:</p>
-<p>import numpy as np , a = np.sqrt(2) , print(a) , x = 42*2 , print(x)
-, exit</p>
+<p>import numpy as np</p>
+<p>a = np.sqrt(2)</p>
+<p>print(a)</p>
+<p>x = 42*2</p>
+<p>print(x)</p>
+<p>exit</p>
 <p>También desde R se pueden ejecutar algunos comandos Python importando
 la librería correspondiente:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
@@ -1784,11 +1790,16 @@ puede entrar en la consola de Julia y hacer algún pequeño cálculo para
 ver si la instalación ha sido correcta.</p>
 <p>En R usar el comando <em>julia_console()</em> y luego, en la consola
 de Julia, teclear los comandos:</p>
-<p>a=sqrt(2) , x=42*2 , exit</p>
+<p>println(&quot;Hello World!&quot;)</p>
+<p>a=sqrt(2)</p>
+<p>x=42*2</p>
+<p>exit</p>
 <p>También desde R se pueden ejecutar algunos comandos Julia en R (
 <em>chunck r</em>) para hacer los mismos cálculos:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_command</span>(<span class="st">&quot;a = sqrt(2);&quot;</span>); <span class="fu">julia_eval</span>(<span class="st">&quot;a&quot;</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_eval</span>(<span class="st">&quot;42*2&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_command</span>( <span class="st">&quot;println(</span><span class="sc">\&quot;</span><span class="st">Hello World!</span><span class="sc">\&quot;</span><span class="st">)&quot;</span>  )</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_command</span>(<span class="st">&quot;a = sqrt(2);&quot;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_eval</span>(<span class="st">&quot;a&quot;</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_eval</span>(<span class="st">&quot;42*2&quot;</span>)</span></code></pre></div>
 <p>O se pueden ejecutar comandos y realizar gráficas en Julia (
 <em>chunck julia</em>) y mostrarlos en RStudio:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fu">sqrt</span>(<span class="fl">2</span>)</span>
@@ -1817,7 +1828,7 @@ R Markdown.</p>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_command</span>(<span class="st">&quot;gr()&quot;</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_command</span>(<span class="st">&quot;display(Plots.plot(Plots.fakedata(50,5),w=3))&quot;</span>)</span></code></pre></div>
 <p>Un ejemplo de econometría usando Julia en RStudio ( <em>chunck
-julia</em>):</p>
+julia</em> ):</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Si no están instaladas las librerías necesarias se deben instalar previamente</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># import Pkg; Pkg.add(&quot;CSV&quot;); Pkg.add(&quot;RDatasets&quot;); Pkg.add(&quot;Econometrics&quot;)</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">RDatasets</span>, <span class="bu">Econometrics</span></span>
@@ -1834,8 +1845,18 @@ trabajo)</h2>
 debería usarse el siguiente comando de inicialización:</p>
 <p>julia_setup(JULIA_HOME = “directorio que contiene los ficheros
 binarios de Julia”)</p>
+<p>Por ejemplo, en un Mac, si se tiene instalado Julia 1.7 en el
+ordenador y quiere utilizarse esa versión, debe utilizarse:</p>
+<p>julia_setup(JULIA_HOME =
+“/Applications/Julia-1.7.app/Contents/Resources/julia/bin/”)</p>
+<p>o el correspondiente localizador en Windows buscando el directorio
+donde está el ejecutable del programa Julia.</p>
 <p>También se puede asignar el directorio de JULIA_HOME en la consola de
 comandos o usando <code>options(...)</code>.</p>
+<p>Por otra parte, para usar un determinado directorio de trabajo debe
+usarse el comando:</p>
+<p>getwd()</p>
+<p>setwd(“/Users/julian_ramajo/Documentos/JULIA”)</p>
 </div>
 <div id="instalación-de-librerías-julia" class="section level2">
 <h2>Instalación de librerías Julia</h2>
@@ -1843,38 +1864,41 @@ comandos o usando <code>options(...)</code>.</p>
 estadística y econometría.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JuliaCall)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Queryverse&quot;</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;RDatasets&quot;</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;DataFrames&quot;</span>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Downloads&quot;</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;CSV&quot;</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;StatsBase&quot;</span>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;StatsModels&quot;</span>)</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Statistics&quot;</span>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Plots&quot;</span>)</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;StatsPlots&quot;</span>)</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Gadfly&quot;</span>)</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Distances&quot;</span>)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Distributions&quot;</span>)</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;MultivariateStats&quot;</span>)</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Econometrics&quot;</span>)</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;GLM&quot;</span>)</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;CovarianceMatrices&quot;</span>)</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;HypothesisTests&quot;</span>)</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;TimeSeries&quot;</span>)</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;ARCHModels&quot;</span>)</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;GARCH&quot;</span>)</span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Missings&quot;</span>)</span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;ShiftedArrays&quot;</span>)</span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;CategoricalArrays&quot;</span>)</span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Chain&quot;</span>)</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;MixedModels&quot;</span>)</span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;QuantileRegressions&quot;</span>)</span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;KernelDensity&quot;</span>)</span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Clustering&quot;</span>)</span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;MLBase&quot;</span>)</span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Lasso&quot;</span>)</span>
-<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Bootstrap&quot;</span>)</span>
-<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Random&quot;</span>)</span></code></pre></div>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;FileIO&quot;</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;RDatasets&quot;</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;DataFrames&quot;</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Downloads&quot;</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;CSV&quot;</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;StatsBase&quot;</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;StatsModels&quot;</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Statistics&quot;</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Plots&quot;</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;StatsPlots&quot;</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Gadfly&quot;</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Distances&quot;</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Distributions&quot;</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;MultivariateStats&quot;</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Econometrics&quot;</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;GLM&quot;</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;CovarianceMatrices&quot;</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;HypothesisTests&quot;</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Dates&quot;</span>)</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;TimeSeries&quot;</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Temporal&quot;</span>)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;ARCHModels&quot;</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;GARCH&quot;</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Missings&quot;</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;ShiftedArrays&quot;</span>)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;CategoricalArrays&quot;</span>)</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Chain&quot;</span>)</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;MixedModels&quot;</span>)</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;QuantileRegressions&quot;</span>)</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;KernelDensity&quot;</span>)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Clustering&quot;</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;MLBase&quot;</span>)</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Lasso&quot;</span>)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Bootstrap&quot;</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_install_package</span>(<span class="st">&quot;Random&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="instalación-separada-de-r-python-y-julia-y-configuración-de-jupyter" class="section level1">
@@ -1886,27 +1910,39 @@ Jupyter</h1>
 <strong>Julia</strong> (<a href="https://julialang.org/downloads/" class="uri">https://julialang.org/downloads/</a>)</p></li>
 <li><p>Instalar <strong>Jupyter</strong>: ir al Terminal de
 MacOS/Windows —&gt;</p>
-<p>python3 –version (py —version) python3 -m pip –version (py -m pip
-–version) python3 -m pip install jupyterlab (py -m pip install
-jupyterlab)</p>
+<p>python3 –version (py —version)</p>
+<p>python3 -m pip –version (py -m pip –version)</p>
+<p>python3 -m pip install jupyterlab (py -m pip install jupyterlab)</p>
 <p>Opcional (instalación del Notebook en lugar del Lab): python3 -m pip
 install notebook (py -m pip install notebook)</p></li>
 <li><p>Instalación de <strong>kernels de Julia y R</strong>:</p></li>
 </ol>
-<p>3a. Ir al Terminal de Julia -&gt; Pulsar ] add
-<strong>IJulia</strong> Pulsar Control+c</p>
-<p>3b. Entrar en RStudio o en R para instalar <strong>IRkernel</strong>
--&gt; Install.packages(“IRkernel”) En el Terminal de MacOS entrar en R
-(en Windows entrar en R directamente) IRkernel: installspec()</p>
-<ol start="4" style="list-style-type: decimal">
-<li><p>Para comprobar que todo ha ido bien, ir al Terminal de MacOS o
-Windows -&gt; python3 -m jupyter lab (py -m jupyter lab)</p></li>
-<li><p>Instalar las librerías correspondientes en R, Python y Julia
--&gt; R -&gt; install.packages(” <em>librería</em>”) Python -&gt; En el
-Terminal de macOS/Windows -&gt; python3 -m pip install <em>librería</em>
-Julia -&gt; En el terminal de Julia -&gt; pulsar ] -&gt; add
-<em>librería</em> -&gt; pulsar Control+c</p></li>
+<ol style="list-style-type: lower-alpha">
+<li><p>Ir al Terminal de Julia -&gt;</p>
+<p>Pulsar ]</p>
+<p>add <strong>IJulia</strong></p>
+<p>Pulsar Control+c</p></li>
+<li><p>Entrar en RStudio o en R para instalar <strong>IRkernel</strong>
+-&gt;</p>
+<p>install.packages(“IRkernel”)</p>
+<p>En el Terminal de MacOS entrar en R (en Windows entrar en R
+directamente)</p>
+<p>IRkernel: installspec()</p></li>
 </ol>
+<ol start="4" style="list-style-type: decimal">
+<li>Para comprobar que todo ha ido bien, ir al Terminal de MacOS/Windows
+-&gt;</li>
+</ol>
+<p>python3 -m jupyter lab (py -m jupyter lab)</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Instalar las librerías correspondientes en R, Python y Julia
+-&gt;</li>
+</ol>
+<p>R -&gt; install.packages(” <em>librería</em>”)</p>
+<p>Python -&gt; En el Terminal de MacOS/Windows -&gt; python3 -m pip
+install <em>librería</em></p>
+<p>Julia -&gt; En el terminal de Julia -&gt; pulsar ] -&gt; add
+<em>librería</em> -&gt; pulsar Control+c</p>
 </div>
 
 

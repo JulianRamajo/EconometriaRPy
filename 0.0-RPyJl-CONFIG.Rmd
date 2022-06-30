@@ -35,15 +35,17 @@ install.packages("rmarkdown")
 install.packages("flexdashboard")
 ```
 
-4. Instalar la librería `Rcpp` y el software **Rtools** ( <https://cran.r-project.org/bin/windows/Rtools/> )
+## Instalación de la librería Rcpp y Rtools
 
-NOTA: Rcpp y Rtools se necesitan con frecuencia para acelerar algunas partes del código, así como para compilar paquetes más nuevos en instalaciones antiguas de R.
+Se deben instalar la librería `Rcpp` y el software **Rtools** ( <https://cran.r-project.org/bin/windows/Rtools/> ). Ambos se necesitan con frecuencia para acelerar algunas partes del código, así como para compilar paquetes más nuevos en instalaciones antiguas de R.
 
 ```{r, eval=FALSE}
 install.packages("Rcpp")
 ```
 
-5. Una vez instalados R y RStudio, el siguiente paso consiste en **instalar las librerías específicas** para realizar análisis estadísticos y econométricos.
+## Instalación de librerías R
+
+Una vez instalados R y RStudio, el siguiente paso consiste en **instalar las librerías específicas** para realizar análisis estadísticos y econométricos.
 
 Hay una gama increíblemente grande de paquetes disponibles en R: <https://cran.r-project.org/web/packages/available_packages_by_name.html>
 
@@ -86,7 +88,9 @@ NOTA: Mi recomendación es instalar sólo los paquetes necesarios para el análi
 Hay varias formas de configurar Python en un ordenador. Los tres métodos más frecuentes son los siguientes:
 
 a) Distribución estándar de **Python**: <https://www.python.org/downloads/>
+
 b) Distribución **Miniconda** de Python: <https://docs.conda.io/en/latest/miniconda.html>
+
 c) Distribución **Anaconda** de Python: <https://www.anaconda.com/>
 
 Tanto la distribución Miniconda como Anaconda utilizan la librería `conda` en sus instalaciones de Python, la cual permite descargar e instalar paquetes adicionales de Python. La instalación estándar de Python utiliza el paquete `pip` para descargar e instalar librerías adicionales de Python.
@@ -110,11 +114,16 @@ y hacer algún pequeño cálculo para ver si la instalación ha sido correcta:
 
 En R usar el comando _repl_python()_ y luego, en la consola de Python, teclear los comandos:
 
-import numpy as np  ,
-a = np.sqrt(2)  , 
-print(a)  ,
-x = 42*2  ,
-print(x)  ,
+import numpy as np
+
+a = np.sqrt(2)
+
+print(a)
+
+x = 42*2
+
+print(x)
+
 exit  
 
 También desde R se pueden ejecutar algunos comandos Python importando la librería correspondiente:
@@ -228,9 +237,12 @@ Para comprobar que el entorno Julia ha sido creado adecuadamente se puede entrar
 
 En R usar el comando _julia_console()_ y luego, en la consola de Julia, teclear los comandos:
 
-println(\"Hello World!\")    ,
-a=sqrt(2)  ,
-x=42*2  ,
+println(\"Hello World!\")
+
+a=sqrt(2)
+
+x=42*2
+
 exit  
 
 También desde R se pueden ejecutar algunos comandos Julia en R ( _chunck r_) para hacer los mismos cálculos:
@@ -274,7 +286,7 @@ julia_command("gr()")
 julia_command("display(Plots.plot(Plots.fakedata(50,5),w=3))")
 ```
 
-Un ejemplo de econometría usando Julia en RStudio ( _chunck julia_):
+Un ejemplo de econometría usando Julia en RStudio ( _chunck julia_ ):
 
 ```{julia, eval=FALSE}
 # Si no están instaladas las librerías necesarias se deben instalar previamente
@@ -305,6 +317,7 @@ También se puede asignar el directorio de JULIA_HOME en la consola de comandos 
 Por otra parte, para usar un determinado directorio de trabajo debe usarse el comando:
 
 getwd()
+
 setwd("/Users/julian_ramajo/Documentos/JULIA")
 
 ## Instalación de librerías Julia
@@ -358,28 +371,39 @@ julia_install_package("Random")
 2. Instalar **Jupyter**: ir al Terminal de MacOS/Windows —>
 
 	python3 --version (py —version)
+	
 	python3 -m pip --version (py -m pip --version)
+	
 	python3 -m pip install jupyterlab (py -m pip install jupyterlab)
 
 	Opcional (instalación del Notebook en lugar del Lab): python3 -m pip install notebook (py -m pip install notebook)
 	
 3. Instalación de **kernels de Julia y R**:
 
-3a. Ir al Terminal de Julia ->
-	Pulsar ]
-	add **IJulia**
-	Pulsar Control+c
+  a. Ir al Terminal de Julia ->
 
-3b. Entrar en RStudio o en R para instalar **IRkernel** ->
-	Install.packages("IRkernel")
-	En el Terminal de MacOS entrar en R (en Windows entrar en R directamente)
-	IRkernel: installspec()
+	  Pulsar ]
+	
+	  add **IJulia**
+	
+	  Pulsar Control+c
 
-4. Para comprobar que todo ha ido bien, ir al Terminal de MacOS o Windows ->
-	python3 -m jupyter lab (py -m jupyter lab)
+  b. Entrar en RStudio o en R para instalar **IRkernel** ->
+
+	  install.packages("IRkernel")
+	  
+	  En el Terminal de MacOS entrar en R (en Windows entrar en R directamente)
+	  
+	  IRkernel: installspec()
+
+4. Para comprobar que todo ha ido bien, ir al Terminal de MacOS/Windows ->
+
+  python3 -m jupyter lab (py -m jupyter lab)
 	
 5. Instalar las librerías correspondientes en R, Python y Julia ->
-  R -> install.packages(" _librería_")
-  Python -> En el Terminal de macOS/Windows -> python3 -m pip install _librería_
-  Julia -> En el terminal de Julia -> pulsar ] -> add _librería_ -> pulsar Control+c
 
+  R -> install.packages(" _librería_")
+  
+  Python -> En el Terminal de MacOS/Windows -> python3 -m pip install _librería_
+  
+  Julia -> En el terminal de Julia -> pulsar ] -> add _librería_ -> pulsar Control+c
