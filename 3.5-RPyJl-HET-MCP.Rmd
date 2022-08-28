@@ -184,14 +184,14 @@ data.resid = resid;
 data.Y = Y;
 data = data |> @mutate(resid2 = (_.resid)^2 , l_Y = log(_.Y)) |> DataFrame
 #
-# using Plots
-# gr()
-# scatter(data.l_Y,data.resid2, ylabel = "resid2", xlabel = "l_Y",legend = false)
+using Plots
+gr()
+scatter(data.l_Y,data.resid2, ylabel = "resid2", xlabel = "l_Y",legend = false)
 #
 reg_aux = fit(EconometricModel, @formula(log(resid^2) ~ log(Y)), data)
 l_sigma2=(predict(reg_aux));
 DEM_HET.l_sigma2 = l_sigma2;
-DEM_HET = DEM_HET |> @mutate(w = sqrt(1/exp(_.l_sigma2))) |> DataFrame
+DEM_HET = DEM_HET |> @mutate(w = 1/exp(_.l_sigma2)) |> DataFrame
 # 
 modelo_MCP = fit(EconometricModel, @formula(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y)), wts = :w , DEM_HET)
 ```

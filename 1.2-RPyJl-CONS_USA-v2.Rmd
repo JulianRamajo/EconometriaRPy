@@ -1,0 +1,229 @@
+---
+title: "TEMA 1: INTRODUCCIÓN A LA ECONOMETRÍA"
+subtitle: 'Aplicación 1.2 (Datos de series temporales): Consumo privado en Estados Unidos'
+author:
+  name: Julián Ramajo
+  affiliation: Universidad de Extremadura
+  email: ramajo@unex.es
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    theme: flatly
+    highlight: haddock 
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+```
+
+# Introducción
+
+En esta aplicación se estimará una función de consumo agregada de tipo Keynesiano con datos de series temporales para Estados Unidos durante el período 1959-2015 ( _t_ = 1, 2,..., 57):
+
+$$
+C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}
+$$
+
+# Código R
+
+## Lectura de librerías
+
+```{r, message = FALSE, warning = FALSE, eval=T}
+library(tidyverse)
+library(report)
+```
+
+## Lectura de datos
+
+```{r, message = FALSE, warning = FALSE, eval=T}
+# Lectura de datos
+CONS_USA <- read_delim("CONS_USA_ts.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+head(CONS_USA)
+tail(CONS_USA)
+#
+# Asignación del formato de series temporales (https://cran.r-project.org/web/views/TimeSeries.html)
+# Aquí se usará la clase básica "ts", válidas para series temporales regulares
+# Pueden usarse otras clases más generales, siendo las más usadas:
+# "zoo": https://cran.r-project.org/web/packages/zoo/index.html 
+# "xts": https://github.com/joshuaulrich/xts
+# "tsibble" (Ver anexo para una sencilla demostración)
+#
+ts_CONS_USA <- ts(CONS_USA, start=c(1959), end = c(2015))
+```
+
+## Análisis exploratorio (EDA)
+
+```{r, message = FALSE, warning = FALSE, eval=T}
+# Estadística descriptiva
+summary(ts_CONS_USA)
+# Gráficas
+#ts.plot(ts_CONS_USA[,"C"])
+g1 <- ggplot(data = CONS_USA, aes(x = date)) +
+  geom_line(aes(y = C), size = 0.5) +
+  labs(y = "Consumo privado en Estados Unidos (millones US $)", x = "Año")
+g1
+#ts.plot(ts_CONS_USA[,"Y"])
+g2 <- ggplot(data = CONS_USA, aes(x = date)) +
+  geom_line(aes(y = Y), size = 0.5) +
+  labs(y = "Renta disponible en Estados Unidos (millones US $)", x = "Año")
+g2
+#CONS_USA %>% ggplot(aes(x = Y, y = C)) + geom_point() + ylab("C") + xlab("Y")
+g3 <- ggplot(CONS_USA, aes(x = Y, y = C)) + 
+               geom_point() +  
+               stat_smooth(method = lm) +  
+               labs(x = "Renta disponible",y = "Consumo privado")
+g3
+```
+
+## Regresión MCO
+
+```{r, message = FALSE, warning = FALSE, eval=T}
+KEYNES_model <- lm (C ~ Y, data = ts_CONS_USA)
+summary(KEYNES_model)
+report(KEYNES_model)
+```
+
+## ANEXO: Clase `tsibble` y librería `fpp3` (específicas para el análisis de series temporales)
+
+La clase `tsibble` proporciona una infraestructura de datos para 'ordenar' las series temporales y además dispone de herramientas de 'manipulación'. Se pueden encontrar los detalles en la página web https://tsibble.tidyverts.org/index.html.
+
+La 'macro-librería' `fpp3` contiene varias librerías específicas (https://tidyverts.org/) y otras generales, como `tidyverse` (https://www.tidyverse.org/) y  `lubridate` (https://lubridate.tidyverse.org/). Toda la información se encuentra en: https://github.com/robjhyndman/fpp3package. El libro de texto que acompaña a esta librería es el siguiente: https://otexts.com/fpp3/.
+
+Existen otras librerías específicas para series temporales, entre las que cabe destacar `TSstudio` (https://ramikrispin.github.io/TSstudio/) , `timetk` (https://business-science.github.io/timetk/) y `tsbox` (https://www.tsbox.help/).
+
+```{r}
+library(fpp3) 
+# Creación del objeto tsibble
+tsbl_CONS_USA <-  CONS_USA[,2:3] %>%
+  mutate(Year = 1959:2015) %>%
+  as_tsibble(index = Year)
+# Gráficas individuales
+tsbl_CONS_USA %>% autoplot(C) +
+  ggtitle("Consumo privado en Estados Unidos") +
+  ylab("$ millones") + xlab("Año")
+tsbl_CONS_USA %>% autoplot(Y) +
+  ggtitle("Renta disponible en Estados Unidos") +
+  ylab("$ millones") + xlab("Año")
+# Estimación de la función Keynesiana de consumo para Estados Unidos (1959-2015)
+tsbl_CONS_USA %>%
+  model(tslm = TSLM(C ~ Y)) %>%
+  report()
+```
+
+# Código Python
+
+## Lectura de librerías
+
+```{python, message = FALSE, warning = FALSE, eval=T}
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+```
+
+## Lectura de datos
+
+```{python, message = FALSE, warning = FALSE, eval=T}
+# Lectura de datos 
+CONS_USA = pd.read_csv("CONS_USA_ts.csv", delimiter=';')
+#
+# Asignación del formato temporal (https://pandas.pydata.org/docs/user_guide/timeseries.html#).
+# Un análisis detallado puede encontrarse en la siguiente página:
+# https://jakevdp.github.io/PythonDataScienceHandbook/03.11-working-with-time-series.html
+#
+ts_CONS_USA = pd.read_csv("CONS_USA_ts.csv", delimiter=';', index_col=0)
+ts_CONS_USA.head()
+ts_CONS_USA.tail()
+```
+
+## Análisis exploratorio (EDA)
+
+```{python, message = FALSE, warning = FALSE, eval=T}
+# Estadística descriptiva
+ts_CONS_USA.describe()
+# Gráficas
+ts_CONS_USA["C"].plot()
+#plt.plot(ts_CONS_USA["C"])
+plt.xlabel("Año")
+plt.ylabel("Consumo privado en Estados Unidos (mill. US $)")
+plt.show()
+ts_CONS_USA["Y"].plot()
+#plt.plot(ts_CONS_USA["Y"])
+plt.xlabel("Año")
+plt.ylabel("Renta disponible en Estados Unidos (mill. US $)")
+plt.show()
+plt.scatter(ts_CONS_USA["Y"], ts_CONS_USA["C"])
+plt.xlabel("Renta disponible")
+plt.ylabel("Consumo privado")
+plt.show()
+```
+
+## Regresión MCO
+
+```{python, message = FALSE, warning = FALSE, eval=T}
+model = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
+KEYNES_model = model.fit()
+print(KEYNES_model.summary())
+```
+
+# Código Julia
+
+```{r, echo = FALSE, eval=T}
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+## Lectura de librerías
+
+```{julia, message = FALSE, warning = FALSE, eval=T}
+using DataFrames, CSV;
+using GLM, Econometrics, RegressionTables;
+using TimeSeries;
+```
+
+## Lectura de datos
+
+```{julia, message = FALSE, warning = FALSE, eval=T}
+CONS_USA = CSV.read("CONS_USA_ts.csv", DataFrame);
+show(first(CONS_USA,6))
+show(last(CONS_USA,6))
+#
+# Asignación del formato temporal
+# Librería básica para el análisis de series temporales: TimeSeries (https://juliapackages.com/p/timeseries), con formato TimeArray.
+# También puede usarse la librería Temporal (https://juliapackages.com/p/temporal), con formato TS.
+# La información más relevante sobre el análisis de series temporales con Julia se encuentra en:
+# https://discourse.julialang.org/t/time-series-in-julia-working-list/62539
+#
+ta_CONS_USA = TimeArray(CONS_USA, timestamp = :date)
+```
+
+## Análisis exploratorio (EDA)
+
+```{julia, message = FALSE, warning = FALSE, eval=T}
+# Estadística descriptiva
+show(describe(CONS_USA))
+# Gráfica parcial
+using Plots
+gr()
+plot(ta_CONS_USA[:C])
+plot(ta_CONS_USA[:Y])
+scatter(CONS_USA.Y, CONS_USA.C, title = "Scatter Plot C vs Y", ylabel = "C", xlabel = "Y",legend = false)
+```
+
+## Regresión MCO (librería Econometrics)
+
+```{julia, message = FALSE, warning = FALSE, eval=T}
+KEYNES_model = fit(EconometricModel, @formula(C ~ Y), ta_CONS_USA)
+```
+
+## Regresión MCO (librería GLM)
+
+```{julia, message = FALSE, warning = FALSE, eval=T}
+KEYNES_model = lm(@formula(C ~ Y), ta_CONS_USA)
+regtable(KEYNES_model)
+```
