@@ -1,5 +1,6 @@
 ---
 title: "TEMA 1: INTRODUCCIÓN A LA ECONOMETRÍA"
+subtitle: "Aplicación 1.1 (Datos de corte transversal): Demanda familiar de carne"
 author: Julián Ramajo
 excerpt: ""
 draft: false
@@ -33,7 +34,7 @@ use_python("/usr/local/bin/python3.10")
 
 ```{r}
 library(JuliaCall)
-julia_setup()
+julia_setup(JULIA_HOME = "/Applications/Julia-1.8.app/Contents/Resources/julia/bin")
 ```
 
 ## Lectura de librerías (*packages*)
@@ -165,12 +166,18 @@ print(lin_model.summary())
 
 ## Julia
 
-Comando `lm` de la librería `GLM`(<https://juliastats.org/GLM.jl/>) de JuliaStats (<https://juliastats.org/>), el *statsverse* de Julia.
+Comando `lm` de la librería `GLM` (<https://juliastats.org/GLM.jl/>) de JuliaStats (<https://juliastats.org/>), el *statsverse* de Julia.
 
 ```{julia}
 lin_model = lm(@formula(Q ~ P + Y), DEM_CARNE)
 print("R^2 estándar ->   ",r2(lin_model))
 regtable(lin_model)
+```
+
+Comando `fit` de la librería `Econometrics` (<https://juliapackages.com/p/econometrics>).
+
+```{julia}
+lin_model_2 = fit(EconometricModel, @formula(Q ~ P + Y), DEM_CARNE)
 ```
 :::
 
