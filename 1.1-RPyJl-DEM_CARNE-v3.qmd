@@ -17,15 +17,15 @@ format:
 
 ## Introducción
 
-En esta aplicación se estimará una función de demanda de carne con datos micro sobre 30 familias americanas:
+En esta aplicación se estimará una función de demanda de carne con datos micro sobre 30 familias americanas ( _i_ = 1, 2,..., 30):
 
-$$Q = f(P, Y) + e$$
+$$Q_{i} = f(P_{i}, Y_{i}) + e_{i}$$
 
 donde *Q* representa la cantidad demandada, *P* es el precio pagado por ella en el mercado, y finalmente *Y* es la renta familiar neta disponible.
 
 ## Configuración
 
-Inicialización de Python (`recitulate`) y Julia (`JuliaCall`) para poder ejecutar simulténeamente la aplicación en los tres lenguajes.
+Inicialización de Python (`reticulate`) y Julia (`JuliaCall`) para poder ejecutar simulténeamente la aplicación en los tres lenguajes.
 
 ```{r}
 library(reticulate)
@@ -47,9 +47,8 @@ Librerías necesarias para la ejecución de la aplicación.
 ```{r}
 library(tidyverse)
 library(GGally)
+library(modelsummary)
 library(skimr)
-library(coefplot)
-library(report)
 ```
 
 ## Python
@@ -86,10 +85,12 @@ head(DEM_CARNE)
 tail(DEM_CARNE)
 # Análisis exploratorio (EDA)
 # Estadística descriptiva
+# Resultados estándar (R 'base')
 summary(DEM_CARNE)
-report(DEM_CARNE)
+# Librerías skimr y modelsummary (https://vincentarelbundock.github.io/modelsummary/index.html)
 skim(DEM_CARNE)
-# Gráficas parciales
+datasummary_correlation(DEM_CARNE)
+# Gráficas parciales (librerías GGally y ggplot)
 GGally::ggpairs(DEM_CARNE)
 ggplot(DEM_CARNE, aes(x = P, y = Q)) +
   geom_point(color = "blue") +
@@ -151,7 +152,11 @@ Comando `lm` de *R stats* (<https://rdrr.io/r/stats/lm.html>).
 
 ```{r}
 lin_model <- lm(formula = Q ~ P + Y, data = DEM_CARNE)
+# Resultados estándar (R base)
 summary(lin_model)
+# Librería modelsummary
+modelsummary(lin_model)
+modelplot(lin_model)
 ```
 
 ## Python
@@ -186,10 +191,10 @@ lin_model_2 = fit(EconometricModel, @formula(Q ~ P + Y), DEM_CARNE)
 ### Anexo 1: Regresión no lineal con R
 
 ```{r}
-# R stats Nonlinear Least Squares
+# R stats - Nonlinear Least Squares
 nonlin1_model <- nls(Q ~ c1 + c2*P + c3*(Y^c4), start = list(c1=5, c2=-0.5, c3=0.01, c4=3), data = DEM_CARNE)
 summary(nonlin1_model)
-# GSL Nonlinear Least-Squares 
+# GSL - Nonlinear Least-Squares 
 library(gslnls)
 nonlin2_model <- gsl_nls(Q ~ c1 + c2*P + c3*(Y^c4), start = c(c1=5, c2=-0.5, c3=0.01, c4=3), data = DEM_CARNE)
 summary(nonlin2_model)
@@ -198,6 +203,7 @@ summary(nonlin2_model)
 ### Anexo 2: Regresión lineal Bayesiana con R
 
 ```{r}
+library(report)
 # R model-fitting using Stan (via the rstan package) 
 library(rstanarm)
 linBayes1_model <- stan_glm(Q ~ P + Y, data = DEM_CARNE)
