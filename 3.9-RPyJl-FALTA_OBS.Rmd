@@ -1,23 +1,35 @@
 ---
-title: "Falta de observaciones"
-author: "Julián Ramajo"
-date: "1/7/2022"
-output: html_document
+title: 'TEMA 3: Información muestral: Falta de observaciones (missing data)'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.9: Exclusión social en el comportamiento de las aseguradoras de Chicago'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# Objetivo
 
-```{r script}
-# Datos perdidos ("missing data")
+En esta aplicación se usarán los datos de un estudio de la década de 1970 sobre la relación entre la exclusión social de los seguros y la composición racial, los índices de incendio y robo, la antigüedad de las viviendas y los ingresos en 47 distritos postales de Chicago.
+
+# Resultados R
+
+```{r, message=FALSE}
+# Lectura de datos
 library(faraway)
 # help(chredlin, package="faraway")
 data(chmiss, package="faraway")
+chmiss
 summary(chmiss)
-#
 # Detección de datos perdidos
-#
 # Por filas
 rowSums(is.na(chmiss))
 image(is.na(chmiss),axes=FALSE)
@@ -29,31 +41,24 @@ library(mi)
 md <- missing_data.frame(chmiss)
 image(md)
 summary(md@patterns)
-#
 # Tratamiento de datos perdidos
-#
 # Omisión de los datos perdidos (opción por defecto en R): resultados con los datos completos
-#
 mod_1 <- lm(involact ~ race+fire+theft+age+log(income), chmiss)
 summary(mod_1)
-#
-# Imputación simple: usar la media para predecir los datos faltantes de las variables explicativas
-#
+# Imputación simple: uso de la media para predecir los datos faltantes de las variables explicativas
 (cmeans <- colMeans(chmiss,na.rm=TRUE))
 imput_1 <- chmiss
 for(i in c(1:4,6)) imput_1[is.na(chmiss[,i]),i] <- cmeans[i]    # Sólo se rellenan los valores perdidos de las var. expl.
 #
 mod_2 <- lm(involact ~ race+fire+theft+age+log(income), imput_1)
 summary(mod_2)
-#
 # Imputación más elaborada: usar regresiones para predecir los datos faltantes de las variables explicativas
-#
 mod_race <- lm(race ~ fire+theft+age+income,chmiss)
 chmiss[is.na(chmiss$race),]
 predict(mod_race,chmiss[is.na(chmiss$race),])
 # Como la predicción para la zona 60646 es negativa, se puede usar la tranformación logit ( log(y/(1-y)) )
-# para evitar que las predicciones se salgan del intervalo [0,1] y luego aplicar la transformación inversa a la predicción
-#
+# para evitar que las predicciones se salgan del intervalo [0,1] y luego aplicar la transformación inversa 
+# a la predicción
 mod_race_2 <- lm(logit(race/100) ~ fire+theft+age+income,chmiss)
 ilogit(predict(mod_race_2,chmiss[is.na(chmiss$race),]))*100
 #
@@ -72,9 +77,7 @@ predict(mod_age,chmiss[is.na(chmiss$age),])
 mod_income <- lm(income ~ race+fire+theft+age,chmiss)
 chmiss[is.na(chmiss$income),]
 predict(mod_income,chmiss[is.na(chmiss$income),])
-#
 # Generación de valores para los datos perdidos por variable
-#
 imput_2  <- chmiss
 imput_2$race[is.na(chmiss$race)] <- ilogit(predict(mod_race_2,chmiss[is.na(chmiss$race),]))*100
 imput_2$fire[is.na(chmiss$fire)] <- predict(mod_fire,chmiss[is.na(chmiss$fire),])
@@ -84,9 +87,7 @@ imput_2$income[is.na(chmiss$income)] <-  predict(mod_income,chmiss[is.na(chmiss$
 #
 mod_3 <- lm(involact ~ race+fire+theft+age+log(income), imput_2)
 summary(mod_3)
-#
 # Imputación múltiple (Enfoque AMELIA II)
-#
 require(Amelia)
 imput_3 <- amelia(chmiss, m=25)
 summary(imput_3)
@@ -102,9 +103,7 @@ for(i in 1:imput_3$m){
 betas; se_betas
 (cr <- mi.meld(q=betas,se=se_betas))
 (cr$q.mi/cr$se.mi)
-#
 # Imputación múltiple (Enfoque MICE)
-#
 library(mice)
 # Patrón de datos perdidos
 md.pattern(chmiss)
@@ -153,9 +152,7 @@ fit <- with(imp_4, lm(involact ~ race+fire+theft+age+log(income)))
 fit # Para ver el resultado de la regresión para cada conjunto de datos imputados (m=25 en el ejemplo)
 summary(fit$analyses[[1]]) # Para ver el resultado de una regresión concreta (la primera en el ejemplo)
 summary(pool(fit))
-#
 # Comparación de los resultados a posteriori, con la muestra completa
-#
 data(chredlin, package="faraway")
 mod_full <- lm(involact ~ race+fire+theft+age+log(income), chredlin)
 summary(mod_full)

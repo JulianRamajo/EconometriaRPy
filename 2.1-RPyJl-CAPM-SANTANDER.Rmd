@@ -3,7 +3,7 @@ title: 'Modelo de regresión lineal simple'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.1 (estimación y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander'
+subtitle: 'Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander'
 output:
   html_document:
     theme: journal

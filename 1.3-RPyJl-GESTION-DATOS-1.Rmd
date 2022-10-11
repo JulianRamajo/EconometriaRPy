@@ -1,5 +1,5 @@
 ---
-title: 'Lectura, ordenación (filtrado, selección, agrupación, transformación y reducción) y representación gráfica de datos en R, Python y Julia: la gramática TIDYVERSE para gestionar datos'
+title: 'TEMA1: Lectura, ordenación (filtrado, selección, agrupación, transformación y reducción) y representación gráfica de datos en R, Python y Julia: la gramática TIDYVERSE para gestionar datos'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)

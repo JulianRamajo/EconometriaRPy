@@ -3,7 +3,7 @@ title: 'TEMA 3: No normalidad de los errores y observaciones atípicas'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 3.3: No normalidad y observaciones atípicas'
+subtitle: 'Aplicación 3.4: Análisis de la hipótesis de  normalidad y de la presencia de atípicos con datos simulados'
 output:
   html_document:
     theme: journal
@@ -18,12 +18,12 @@ output:
 
 # Objetivo
 
-En esta aplicación se tratará el tema de la no normalidad de los erroes causada por la presencia de observaciones atípicas, y se propondrán estimadores que son 'robustos' ante la presencia de dichos datos.
+En esta aplicación se tratará el tema de la no normalidad de los erroes causada por la presencia de observaciones atípicas, y se propondrán estimadores que son 'robustos' ante la presencia de dichos datos en la base muestral.
 
-# Código R
+# Resultados R
 
 ```{r, message=FALSE}
-#
+# Librerías
 library(tidyverse)
 library(car)
 library(lmtest)
@@ -31,16 +31,13 @@ library(quantreg)
 library(MASS)
 library(moments)
 library(tseries)
-#
+# Datos
 ATIP <- read_csv("ATIP.csv")
 summary(ATIP)
-#
+# Gráficas
 # Diagrama de puntos
-#
 ggplot(ATIP, aes(x=X, y=Y)) + geom_point() + labs(title="Diagrama de puntos", x="X", y="Y")
-#
 # Modelo de regresión lineal
-#
 summary(lm_YX <- lm(Y ~ X, data = ATIP))
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
@@ -56,9 +53,7 @@ plot(Y ~ X , data=ATIP)
 abline(M1)
 abline(M2, lty=2)
 legend("topleft", c("Datos completos (M1)", "Datos recortados (M2)"), lty = c(1, 2), bty = "n")
-#
 # Distribución de los errores del modelo
-#
 par(mfrow=c(1,1))
 hist(lm_YX$residuals, main = "")
 box()
@@ -69,15 +64,12 @@ densityPlot(rstudent(lm_YX))
 qqnorm(residuals(lm_YX))
 qqline(residuals(lm_YX))
 qqPlot(lm_YX, distribution="norm")
-#
 # Contrastes de normalidad
-#
 r <- resid(lm_YX)
 rbar <- mean(r)
 sdr <- sd(r)
 hist(lm_YX$residuals, col="grey", freq=FALSE, main="Distribución de los residuos", ylab="Densidad estimada", xlab="residuos")
 curve(dnorm(x, rbar, sdr), col=2, add=TRUE, ylab="Density", xlab="r")
-#
 # Librería moments
 skewness(lm_YX$residuals)
 kurtosis(lm_YX$residuals)
@@ -88,11 +80,8 @@ jarque.test(lm_YX$residuals)
 jarque.bera.test(lm_YX$residuals)
 shapiro.test(lm_YX$residuals)
 ks.test(lm_YX$residuals, pnorm)
-#
 # Detección de observaciones atípicas
-#
 # Observaciones atípicas en las variables explicativas (leverages <-> apalancamiento)
-#
 hat <- hatvalues(lm_YX)
 summary(hat)
 which(hat > 2 * mean(hat))
@@ -101,9 +90,7 @@ abline(h = mean(hat), col = 4)
 abline(h = 2 * mean(hat), col = 2)
 id <- which(hat > 2 * mean(hat))
 text(id, hat[id], rownames(ATIP)[id], pos = 1, xpd = TRUE)
-#
 # Observaciones atípicas en la variable dependiente (outliers)
-#
 slm_YX <- summary(lm_YX)
 # Residuos estandarizados
 r <- lm_YX$residuals/slm_YX$sigma
@@ -129,9 +116,7 @@ rt
 densityPlot(rt)
 qqPlot(lm_YX)
 outlierTest(lm_YX)
-#
 # Medidas de diagnóstico específicas
-#
 # Observaciones influyentes: cálculo de DFBETAS_i, DFFITS_i, COVRATIO_i, DCOOK_i y h_i
 # La columna inf señala observaciones inusuales para al menos una medida
 #
@@ -156,11 +141,8 @@ max(cooks.distance(lm_YX))
 which.max(cooks.distance(lm_YX))
 #
 avPlots(lm_YX, id=list(cex=0.60, method="mahal")) # Gráficos de variable añadida, buscando casos influyentes
-#
 # Estimaciones robustas
-#
 # Regresión cuartilítica
-#
 summary(lm_YX <- lm(Y ~ X, data = ATIP))
 summary(qr_YX <- rq(Y ~ X, data = ATIP)) # tau=0.5
 #
@@ -168,16 +150,13 @@ plot(Y ~ X , data=ATIP)
 abline(lm_YX)
 abline(qr_YX, lty=2)
 legend("topleft", c("Regresión MCO", "Regresión DAM"), lty = c(1, 2), bty = "n")
-#
 # tau secuencial
 S(qr_YX <- rq(Y ~ X, data = ATIP, tau=seq(0.1,0.9,0.1)))
 plot(summary(qr_YX), level=0.95)
 # tau discreto
 S(qr_YX <- rq(Y ~ X, tau = c(0.25, 0.50, 0.75), data = ATIP))
 plot(qr_YX)
-#
 # Estimadores M y MM
-#
 summary(lm_YX <- lm(Y ~ X, data = ATIP))
 summary(rlm_YX <- rlm(Y ~ X, data = ATIP, method="MM")) # Para usar el estimador M usar method="M"
 #
@@ -185,5 +164,4 @@ plot(Y ~ X , data=ATIP)
 abline(lm_YX)
 abline(rlm_YX, lty=2)
 legend("topleft", c("Regresión MCO", "Regresión MM"), lty = c(1, 2), bty = "n")
-#
 ```

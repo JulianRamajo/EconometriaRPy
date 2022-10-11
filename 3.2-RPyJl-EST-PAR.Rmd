@@ -1,5 +1,5 @@
 ---
-title: 'TEMA 3: Estabilidad de los parámetros estructurales'
+title: 'TEMA 3: Estabilidad de los parámetros estructurales (código R)'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
