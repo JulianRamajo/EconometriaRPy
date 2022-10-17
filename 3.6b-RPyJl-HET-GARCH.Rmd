@@ -1,0 +1,70 @@
+---
+title: 'TEMA 3: Modelos de regresión con volatilidad variable en el tiempo (y II)'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.6b: Modelo GARCH(1,1) para el tipo de cambio marco/libra'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r}
+library(reticulate)
+use_python("/usr/local/bin/python3.10")
+```
+
+```{r}
+library(JuliaCall)
+julia_setup(JULIA_HOME = "/Applications/Julia-1.8.app/Contents/Resources/julia/bin")
+```
+
+# Introducción
+
+En esta aplicación utilizaremos los datos de Bollerslev y Ghysels (1986), que consisten en el tipo de cambio diario entre el marco alemán y la libra esterlina, con un total de 1974 observaciones.
+
+# Código R
+
+```{r}
+# Lectura de librerías
+library(tidyverse)
+library(zoo)
+library(dynlm)
+library(FinTS)
+suppressPackageStartupMessages(library("rugarch"))
+# Lectura de datos
+MP <- read_csv("MP_ER.csv")
+MP_ts <- as.zoo(MP)
+plot(MP_ts)
+plot(MP_ts^2)
+summary(dynlm(I(MP_ts^2) ~ L(I(MP_ts^2), 1:1)))
+ArchTest(MP_ts, lag = 1)
+# Modelo GARCH
+spec = ugarchspec(variance.model=list(model="sGARCH", garchOrder=c(1, 1)), mean.model=list(armaOrder=c(0, 0), include.mean=TRUE))
+ugarchfit(data=MP_ts, spec=spec)
+```
+
+# Código Python
+
+```{python}
+import pandas as pd
+from arch import arch_model
+MP = pd.read_csv("MP_ER.csv")
+model = arch_model(MP)
+res = model.fit()
+print(res)
+```
+
+# Código Julia
+
+```{julia, message = FALSE, warning = FALSE}
+using DataFrames, CSV, ARCHModels;
+fit(GARCH{1, 1}, BG96)
+```
