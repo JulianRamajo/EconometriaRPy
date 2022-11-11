@@ -58,7 +58,7 @@ head(segreg)
 tail(segreg)
 # Gráfica
 plot(C ~ Temp, segreg, xlab="Temperatura media del mes (ºF)", ylab="Consumo de electricidad (KWH/día)")
-# Regresión no lineal
+# Regresión no lineal (E[C|Temp] = th0 + th1 * Temp si Temp <= gamma, = th0 + th1 * Temp + alpha * (Temp - gamma) si Temp > gamma)
 segm.reg <- nls(C ~ th0 + th1 * (pmax(0, Temp - gamma)), data=segreg, start=list(th0=70, th1=.5, gamma=40))
 summary(segm.reg)
 # Gráfica del modelo estimado

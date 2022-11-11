@@ -24,41 +24,43 @@ En esta aplicación se usarán los datos de un estudio de la década de 1970 sob
 
 ```{r, message=FALSE}
 # Lectura de datos
-library(faraway)
+# library(faraway)
 # help(chredlin, package="faraway")
-data(chmiss, package="faraway")
+chmiss <- read.csv("SEGUROS_CHICAGO.csv", header=TRUE, row.names="zip") 
+# Versión tidyverse: read_csv("SEGUROS_CHICAGO.csv") %>% column_to_rownames(., var = "zip")
 chmiss
 summary(chmiss)
 # Detección de datos perdidos
-# Por filas
+# Por filas (casos)
 rowSums(is.na(chmiss))
 image(is.na(chmiss),axes=FALSE)
 axis(2, at=0:5/5, labels=colnames(chmiss),las=2)
 axis(1, at=0:46/46, labels=row.names(chmiss),las=2)
-# Por columnas
+# Por columnas (variables)
 colSums(is.na(chmiss))
 library(mi)
 md <- missing_data.frame(chmiss)
 image(md)
 summary(md@patterns)
 # Tratamiento de datos perdidos
-# Omisión de los datos perdidos (opción por defecto en R): resultados con los datos completos
+# Omisión de observaciones (opción por defecto en R): resultados con datos completos
 mod_1 <- lm(involact ~ race+fire+theft+age+log(income), chmiss)
 summary(mod_1)
-# Imputación simple: uso de la media para predecir los datos faltantes de las variables explicativas
+# Imputación simple
+# Uso de la media para predecir los datos faltantes de los regresores
 (cmeans <- colMeans(chmiss,na.rm=TRUE))
 imput_1 <- chmiss
-for(i in c(1:4,6)) imput_1[is.na(chmiss[,i]),i] <- cmeans[i]    # Sólo se rellenan los valores perdidos de las var. expl.
-#
+for(i in c(1:4,6)) imput_1[is.na(chmiss[,i]),i] <- cmeans[i]    # Sólo var. explicativas
 mod_2 <- lm(involact ~ race+fire+theft+age+log(income), imput_1)
 summary(mod_2)
-# Imputación más elaborada: usar regresiones para predecir los datos faltantes de las variables explicativas
+# Uso de regresiones para predecir los datos faltantes de las variables explicativas
 mod_race <- lm(race ~ fire+theft+age+income,chmiss)
 chmiss[is.na(chmiss$race),]
 predict(mod_race,chmiss[is.na(chmiss$race),])
-# Como la predicción para la zona 60646 es negativa, se puede usar la tranformación logit ( log(y/(1-y)) )
-# para evitar que las predicciones se salgan del intervalo [0,1] y luego aplicar la transformación inversa 
-# a la predicción
+# Como la predicción para la zona 60646 es negativa, se puede usar la transformación 
+# logit ( log(y/(1-y)) ) para evitar que las predicciones se salgan del intervalo [0,1] 
+# y luego aplicar la transformación inversa a la predicción
+library(faraway)
 mod_race_2 <- lm(logit(race/100) ~ fire+theft+age+income,chmiss)
 ilogit(predict(mod_race_2,chmiss[is.na(chmiss$race),]))*100
 #
@@ -87,11 +89,11 @@ imput_2$income[is.na(chmiss$income)] <-  predict(mod_income,chmiss[is.na(chmiss$
 #
 mod_3 <- lm(involact ~ race+fire+theft+age+log(income), imput_2)
 summary(mod_3)
-# Imputación múltiple (Enfoque AMELIA II)
+# Imputación múltiple 
+# Enfoque AMELIA (https://cran.r-project.org/web/packages/Amelia/index.html)
 require(Amelia)
 imput_3 <- amelia(chmiss, m=25)
 summary(imput_3)
-#
 betas <- NULL
 se_betas <- NULL
 for(i in 1:imput_3$m){
@@ -103,7 +105,7 @@ for(i in 1:imput_3$m){
 betas; se_betas
 (cr <- mi.meld(q=betas,se=se_betas))
 (cr$q.mi/cr$se.mi)
-# Imputación múltiple (Enfoque MICE)
+# Enfoque MICE (https://cran.r-project.org/web/packages/mice/)
 library(mice)
 # Patrón de datos perdidos
 md.pattern(chmiss)
@@ -120,8 +122,7 @@ imput_2_2 <- complete(imp_4_2) # Comparar con el fichero imput_2
 # Imputación por el método de regresión (3)
 imp_4_3 <- mice(chmiss, method = "norm.boot", m = 1, maxit = 1) # Predicción usando booostrap
 imput_2_3 <- complete(imp_4_3) # Comparar con el fichero imput_2
-# 
-# Imputación múltipe con mice 
+# MICE: Multiple Imputation Chained Equation
 imp_4 <- mice(chmiss, m = 25, print=F)
 summary(imp_4)
 class(imp_4) # mids: multiply imputed data set
@@ -157,3 +158,51 @@ data(chredlin, package="faraway")
 mod_full <- lm(involact ~ race+fire+theft+age+log(income), chredlin)
 summary(mod_full)
 ```
+
+# Resultados Python
+
+```{python}
+# Lectura de librerías
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+# Lectura de datos
+chmiss = pd.read_csv("SEGUROS_CHICAGO.csv", index_col=0)
+chmiss.describe().round(2)
+# Detección de datos perdidos
+# Por filas (casos)
+chmiss.isna().sum(axis=1)
+plt.imshow(~chmiss.isna(), aspect='auto')
+plt.xlabel("variables")
+plt.ylabel("cases")
+plt.gray()
+plt.show()
+# Por columnas (variables)
+chmiss.isna().sum(axis=0)
+# Tratamiento de datos perdidos
+# Omisión de los datos perdidos: resultados con datos completos
+mod_1 = smf.ols(formula='involact ~ race + fire + theft + age + np.log(income)', data=chmiss).fit()
+print(mod_1.summary())
+# Imputación simple: uso de la media para predecir los datos faltantes de los regresores
+cmeans = chmiss.mean(axis=0)
+cmeans
+imput_1 = chmiss.copy()
+imput_1.race.fillna(cmeans['race'],inplace=True)
+imput_1.fire.fillna(cmeans['fire'],inplace=True)
+imput_1.theft.fillna(cmeans['theft'],inplace=True)
+imput_1.age.fillna(cmeans['age'],inplace=True)
+imput_1.income.fillna(cmeans['income'],inplace=True)
+mod_2 = smf.ols(formula='involact ~ race + fire + theft + age + np.log(income)', data=imput_1).fit()
+print(mod_2.summary())
+# Imputación múltiple: enfoque MICE (https://www.statsmodels.org/stable/imputation.html)
+# NOTA: la librería statsmodels incluye el método MICE, pero no es exactamente el mismo que el usado en R
+import statsmodels.imputation.mice as smimice
+imp = smimice.MICEData(chmiss)
+formula = 'involact ~ race + fire + theft + age + np.log(income)'
+mod_3 = smimice.MICE(formula, sm.OLS, imp)
+results = mod_3.fit(10, 25)
+print(results.summary())
+```
+
