@@ -36,39 +36,34 @@ summary(RENTAB_EMP)
 # Regresión MCO para explicar las variaciones en la rentabilidad de las empresas
 lm_1 <- lm(RENTAB ~ log(VT) + R1 + R2 + R3 + R4 + R5 + R6 + R7 + R8 + R9 + R10, data=RENTAB_EMP)
 S(lm_1)
-#
 # Detección de la multicolinealidad
-#
 # Análisis global
 mctest::omcdiag(lm_1)
 # Matríz de correlaciones de las variables explicativas (sin incluir la constante)
 attach(RENTAB_EMP)
 X <- data.frame(log(VT), R1, R2, R3, R4, R5, R6, R7, R8, R9, R10)
 cor(X)
+# Mapa de calor asociado
 corrplot(cor(X))
 # Factores de inflación de la varianza (VIF)
 vif(lm_1)
-vif(lm_1) > 10 # problema de colinealidad (se coresponde con un VIF=10, es decir, Rj^2=0.90)
+vif(lm_1) > 10 # multicolinealidad alta: se coresponde con un VIF>10, es decir, Rj^2>0.90
 sqrt(vif(lm_1))
-sqrt(vif(lm_1)) > 2 # cota alternativa (se coresponde con un VIF=4, es decir, Rj^2=0.75)
-#
+sqrt(vif(lm_1)) > 2 # cota alternativa: se coresponde con un VIF>4, es decir, Rj^2>0.75
 mctest::imcdiag(lm_1, method = "VIF", vif=10)
 mctest::imcdiag(lm_1, method = "VIF", vif=4)
-#
-# Corrección del problema
-#
+# Corrección del problema de la multicolinealidad
 # Método de componentes principales (PCA)
-# Clásico
+# Estándar de R
 PCA_X <- prcomp(X, scale. = TRUE)
+summary(PCA_X)
 dim(PCA_X$rotation)
 PCA_X$rotation
 dim(PCA_X$x)
-summary(PCA_X)
 # plot(PCA_X)
 # Estilo tidyverse
 PCA_X %>% tidy(matrix = "eigenvalues")
 PCA_X %>% tidy(matrix = "rotation")
-#
 PCA_X %>%
   tidy(matrix = "eigenvalues") %>%
   ggplot(aes(PC, percent)) +
@@ -76,12 +71,10 @@ PCA_X %>%
   scale_x_continuous(breaks = 1:11) +
   scale_y_continuous(labels = scales::percent_format(), expand = expansion(mult = c(0, 0.01))) +
   theme_minimal_hgrid(12)
-#
 PCA_X %>%
   augment(RENTAB_EMP) %>% 
   ggplot(aes(.fittedPC1, .fittedPC2)) + geom_point(size = 1.5) +
   theme_half_open(12) + background_grid()
-#
 arrow_style <- arrow(angle = 20, ends = "first", type = "closed", length = grid::unit(8, "pt"))
 PCA_X %>%
   tidy(matrix = "rotation") %>%
@@ -92,14 +85,14 @@ PCA_X %>%
   xlim(-1.25, .5) + ylim(-.5, 1) +
   coord_fixed() + 
   theme_minimal_grid(12)
-# Regresión con los cuatros primeros factores (ortogonales entre sí, y con una explicatividad > 80%)
-lm_2 <- lm(RENTAB ~ PCA_X$x[,1:4])
-S(lm_2)
-# Significado de la variables explicativas
+# Significado de la variables explicativas (factores)
 round(PCA_X$rotation[,1],2)
 round(PCA_X$rotation[,2],2)
 round(PCA_X$rotation[,3],2)
 round(PCA_X$rotation[,4],2)
+# Regresión con los cuatros primeros factores (explicatividad > 80%)
+lm_2 <- lm(RENTAB ~ PCA_X$x[,1:4])
+S(lm_2)
 # Método de mínimos cuadrados parciales (PLS)
 require(pls)
 lm_3 <- plsr(RENTAB ~ log(VT) + R1 + R2 + R3 + R4 + R5 + R6 + R7 + R8 + R9 + R10, data=RENTAB_EMP, ncomp=11, validation="CV")
@@ -112,7 +105,7 @@ plot(lm_3, ncomp = 3, asp = 1, line = TRUE)
 plot(lm_3, plottype = "scores", comps = 1:3)
 plot(lm_3, plottype = "correlation")
 plot(lm_3, plottype = "coef", comps = 1:3, legendpos = "bottomright")
-# Método ridge
+# Método Ridge
 # Librería MASS
 require(MASS)
 lm_4_1 <- lm.ridge(RENTAB ~ log(VT) + R1 + R2 + R3 + R4 + R5 + R6 + R7 + R8 + R9 + R10, data=RENTAB_EMP) # lambda por defecto
@@ -128,7 +121,7 @@ data <- data.frame(cbind(log(RENTAB_EMP$VT),RENTAB_EMP$R1,RENTAB_EMP$R2,RENTAB_E
 names(data)=c("l_VT","R1","R2","R3","R4","R5","R6","R7","R8","R9","R10","RENTAB")
 x_vars <- data.matrix(data[, 1:11])
 y_var <- data[, "RENTAB"]
-# Ajuste del modelo
+# Ajuste del modelo estimado
 fit_ridge <- glmnet(x_vars,y_var,alpha=0)
 plot(fit_ridge, label=TRUE)
 plot(fit_ridge, label=TRUE, xvar="lambda")
@@ -146,8 +139,8 @@ require(lars)
 lm_5 <- lars(as.matrix(data[,-12]),data$RENTAB)
 plot(lm_5)
 cv_lars_mod <- cv.lars(as.matrix(data[,-12]),data$RENTAB)
-min <- cv_lars_mod$index[which.min(cv_lars_mod$cv)]  # El valor mínimo se utiliza en el paso siguiente
-predict(lm_5,s=min,type="coef",mode="fraction")$coef  # estimaciones LASSO
+min <- cv_lars_mod$index[which.min(cv_lars_mod$cv)]  # El valor min se utiliza en el paso siguiente
+predict(lm_5,s=min,type="coef",mode="fraction")$coef  # Estimaciones LASSO
 # Librería glmnet
 # Ajuste del modelo
 fit_lasso <- glmnet(x_vars,y_var,alpha=1)
@@ -161,12 +154,123 @@ cvfit_lasso = cv.glmnet(x_vars, y_var, alpha=1)
 plot(cvfit_lasso)
 cvfit_lasso$lambda.min
 coef(cvfit_lasso, s = "lambda.min")
-# NOTA FINAL: Posible estandarización de las variables del modelo antes de aplicar los modelos lm.ridge y lars 
+# NOTA FINAL: Estandarización de las variables antes de aplicar los modelos lm.ridge y lars 
 # (glmnet estandariza las variables X e y por defecto para la familia Gaussiana de modelos)
-# 
 library(caret)
 preProcValues <- preProcess(data[,-12], method = c("center", "scale"))
 dataTransformed <- predict(preProcValues, data)
 x_vars <- data.matrix(dataTransformed[, 1:11])
 y_var <- dataTransformed[, "RENTAB"]
 ```
+
+# Resultados Python
+
+```{python, message=FALSE}
+# Lectura de librerías
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import statsmodels.stats as smstats
+# Lectura de datos
+RENTAB_EMP = pd.read_csv("RENTAB_EMP.csv", sep=";")
+RENTAB_EMP.describe().round(2)
+# Regresión MCO para explicar las variaciones en la rentabilidad de las empresas
+formula = 'RENTAB ~ np.log(RENTAB_EMP.VT) + R1 + R2 + R3 + R4 + R5 + R6 + R7 + R8 + R9 + R10'
+results = smf.ols(formula, RENTAB_EMP).fit()
+print(results.summary())
+# Detección de la multicolinealidad
+RENTAB_EMP['l_VT'] = np.log(RENTAB_EMP['VT'])
+X = RENTAB_EMP.iloc[:,3:]
+X.head()
+X = X[['l_VT', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10']]
+X.head()
+# Matriz de correlaciones de las variables explicativas (sin incluir la constante)
+X.corr().round(2)
+# Mapa de calor asociado
+sns.heatmap(X.corr(), vmin=-0.25, vmax=0.25, center=0, annot=True, fmt='.2f', mask=~np.tri(X.corr().shape[1], k=-1, dtype=bool), cbar=False)
+plt.show()
+# Corrección del problema de la multicolinealidad
+#
+# Método de componentes principales (PCA)
+# Reescalamiento de la matriz de datos
+from sklearn.preprocessing import scale
+Xs = pd.DataFrame(scale(X))
+Xs.head().round(2)
+# Método PCA de la librería sklearn
+from sklearn.decomposition import PCA
+pca = PCA()
+pca.fit(Xs)
+# Importancia de componentes
+# Desviaciones estándar (SDs) de los componentes principales
+(np.sqrt(pca.explained_variance_)).round(2)
+# Proporción de varianza explicada
+((pca.explained_variance_ratio_)*100).round(2)
+# Proporción de varianza explicada acumulada
+np.cumsum(np.round(pca.explained_variance_ratio_, decimals=4)*100)
+# Matriz de rotación de los factores
+rotmat = pca.components_
+rotmat.shape
+# Regresión con los cuatros primeros factores (explicatividad > 80%)
+# NOTA: ¡ojo!, la dirección de los factores es diferente en Python y R
+# Interpretación de los factores en base al peso de las variables explicativas
+rotmat[:4,:].round(2)
+# Factores estimados 
+pcscores = pca.fit_transform(scale(X))
+pcscores.shape
+# Significado de la variables explicativas (factores)
+pcscores[:10,:4] # 10 primeras filas
+# Regresión con los factores estimados
+Xfact = sm.add_constant(pcscores[:,:4])
+lmod = sm.OLS(RENTAB_EMP.RENTAB, Xfact).fit()
+print(lmod.summary())
+# Método Ridge
+from sklearn import linear_model
+y = np.asarray(RENTAB_EMP.RENTAB)
+n_alphas = 50
+alphas = np.logspace(-4, 4, n_alphas)
+
+coefs = []
+for a in alphas:
+    ridge = linear_model.Ridge(alpha=a, fit_intercept=False)
+    ridge.fit(X, y)
+    coefs.append(ridge.coef_)
+
+ax = plt.gca()
+ax.plot(alphas, coefs)
+ax.set_xscale('log')
+ax.set_xlim(ax.get_xlim()[::-1])  # reverse axis
+plt.xlabel('alpha')
+plt.ylabel('weights')
+plt.title('Coeficientes ridge en función del parámetros de regularización')
+plt.axis('tight')
+plt.show()
+# Regresión LASSO
+from sklearn.linear_model import LassoCV
+from sklearn.linear_model import Lasso
+from sklearn.model_selection import KFold
+from sklearn.model_selection import GridSearchCV
+lasso = Lasso(random_state=0, max_iter=10000, tol=0.01)
+alphas = np.logspace(-4, 4, 50)
+tuned_parameters = [{'alpha': alphas}]
+n_folds = 3
+clf = GridSearchCV(lasso, tuned_parameters, cv=n_folds, refit=False)
+clf.fit(X, y)
+scores = clf.cv_results_['mean_test_score']
+scores_std = clf.cv_results_['std_test_score']
+plt.semilogx(alphas, scores)
+# plot error lines showing +/- std. errors of the scores
+std_error = scores_std / np.sqrt(n_folds)
+plt.semilogx(alphas, scores + std_error, 'b--')
+plt.semilogx(alphas, scores - std_error, 'b--')
+# alpha=0.2 controls the translucency of the fill color
+plt.fill_between(alphas, scores + std_error, scores - std_error, alpha=0.2)
+plt.ylabel('CV score +/- std error')
+plt.xlabel('alpha')
+plt.axhline(np.max(scores), linestyle='--', color='.5')
+plt.xlim([alphas[0], alphas[-1]])
+plt.show()
+```
+
