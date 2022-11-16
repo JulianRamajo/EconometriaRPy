@@ -1965,14 +1965,15 @@ mercado (representando por el índice IBEX35 de la bolsa española).</p>
 <div class="sourceCode" id="cb99"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>formula <span class="op">=</span> <span class="st">&#39;er_SAN ~ er_IBEX&#39;</span></span>
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>CAPM_SANTANDER <span class="op">=</span> smf.ols(formula, CAPM_ESP).fit()</span>
 <span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(CAPM_SANTANDER.summary())</span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ANOVA</span></span></code></pre></div>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalos de confianza para los parámetros estructurales del modelo</span></span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Automático</span></span></code></pre></div>
 <pre><code>##                             OLS Regression Results                            
 ## ==============================================================================
 ## Dep. Variable:                 er_SAN   R-squared:                       0.095
 ## Model:                            OLS   Adj. R-squared:                  0.090
 ## Method:                 Least Squares   F-statistic:                     20.77
 ## Date:                mar, 15 nov 2022   Prob (F-statistic):           9.03e-06
-## Time:                        18:25:06   Log-Likelihood:                -725.31
+## Time:                        19:51:35   Log-Likelihood:                -725.31
 ## No. Observations:                 200   AIC:                             1455.
 ## Df Residuals:                     198   BIC:                             1461.
 ## Df Model:                           1                                         
@@ -1991,35 +1992,46 @@ mercado (representando por el índice IBEX35 de la bolsa española).</p>
 ## 
 ## Notes:
 ## [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
-<div class="sourceCode" id="cb101"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>sm.stats.anova_lm(CAPM_SANTANDER)</span>
-<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrastes de hipótesis</span></span>
-<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a><span class="co"># beta1=0 versus beta1≠0</span></span>
-<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadístico t</span></span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>CAPM_SANTANDER.conf_int()</span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Manualmente</span></span></code></pre></div>
+<pre><code>##                   0         1
+## Intercept -1.420824  1.128537
+## er_IBEX    0.262809  0.663643</code></pre>
+<div class="sourceCode" id="cb103"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>t_c <span class="op">=</span> np.array(sp.stats.t.interval(<span class="fl">0.95</span>,CAPM_SANTANDER.df_resid))</span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>CAPM_SANTANDER.params[<span class="dv">0</span>]<span class="op">+</span>CAPM_SANTANDER.bse[<span class="dv">0</span>]<span class="op">*</span>t_c</span></code></pre></div>
+<pre><code>## array([-1.42082387,  1.12853695])</code></pre>
+<div class="sourceCode" id="cb105"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>CAPM_SANTANDER.params[<span class="dv">1</span>]<span class="op">+</span>CAPM_SANTANDER.bse[<span class="dv">1</span>]<span class="op">*</span>t_c</span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ANOVA</span></span></code></pre></div>
+<pre><code>## array([0.26280949, 0.66364269])</code></pre>
+<div class="sourceCode" id="cb107"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>sm.stats.anova_lm(CAPM_SANTANDER)</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrastes de hipótesis</span></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="co"># beta1=0 versus beta1≠0</span></span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadístico t</span></span></code></pre></div>
 <pre><code>##              df        sum_sq      mean_sq          F    PR(&gt;F)
 ## er_IBEX     1.0   1735.445734  1735.445734  20.774958  0.000009
 ## Residual  198.0  16540.021306    83.535461        NaN       NaN</code></pre>
-<div class="sourceCode" id="cb103"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>t_stat <span class="op">=</span> (CAPM_SANTANDER.params[<span class="st">&#39;Intercept&#39;</span>]<span class="op">-</span><span class="dv">0</span>)<span class="op">/</span>CAPM_SANTANDER.bse[<span class="st">&#39;Intercept&#39;</span>]</span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>t_stat, <span class="dv">2</span><span class="op">*</span>sp.stats.t.cdf(t_stat, CAPM_SANTANDER.df_resid)</span>
-<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadístico F</span></span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>t_stat <span class="op">=</span> (CAPM_SANTANDER.params[<span class="st">&#39;Intercept&#39;</span>]<span class="op">-</span><span class="dv">0</span>)<span class="op">/</span>CAPM_SANTANDER.bse[<span class="st">&#39;Intercept&#39;</span>]</span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>t_stat, <span class="dv">2</span><span class="op">*</span>sp.stats.t.cdf(t_stat, CAPM_SANTANDER.df_resid)</span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadístico F</span></span></code></pre></div>
 <pre><code>## (-0.22609389919232573, 0.8213616110920402)</code></pre>
-<div class="sourceCode" id="cb105"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>H_0 <span class="op">=</span> <span class="st">&#39;Intercept = 0&#39;</span></span>
-<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>F_test <span class="op">=</span> CAPM_SANTANDER.f_test(H_0)</span>
-<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(F_test)</span>
-<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a><span class="co"># beta2=1 versus beta2≠1</span></span>
-<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadístico t</span></span></code></pre></div>
-<pre><code>## &lt;F test: F=0.05111845125198955, p=0.8213616110920228, df_denom=198, df_num=1&gt;</code></pre>
-<div class="sourceCode" id="cb107"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>t_stat <span class="op">=</span> (CAPM_SANTANDER.params[<span class="st">&#39;er_IBEX&#39;</span>]<span class="op">-</span><span class="dv">1</span>)<span class="op">/</span>CAPM_SANTANDER.bse[<span class="st">&#39;er_IBEX&#39;</span>]</span>
-<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>t_stat, <span class="dv">2</span><span class="op">*</span>sp.stats.t.cdf(t_stat, CAPM_SANTANDER.df_resid)</span>
-<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadístico F</span></span></code></pre></div>
-<pre><code>## (-5.281635967748109, 3.357104388598472e-07)</code></pre>
-<div class="sourceCode" id="cb109"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>H_0 <span class="op">=</span> <span class="st">&#39;er_IBEX = 1&#39;</span></span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>F_test <span class="op">=</span> CAPM_SANTANDER.f_test(H_0)</span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(F_test)</span>
-<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Contraste conjunto de la hipótesis beta1=0, beta2=1</span></span></code></pre></div>
-<pre><code>## &lt;F test: F=27.895678495810504, p=3.357104388598483e-07, df_denom=198, df_num=1&gt;</code></pre>
-<div class="sourceCode" id="cb111"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>H_0 <span class="op">=</span> <span class="st">&#39;Intercept = 0 , er_IBEX = 1&#39;</span></span>
+<div class="sourceCode" id="cb111"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>H_0 <span class="op">=</span> <span class="st">&#39;Intercept = 0&#39;</span></span>
 <span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>F_test <span class="op">=</span> CAPM_SANTANDER.f_test(H_0)</span>
-<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(F_test)</span></code></pre></div>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(F_test)</span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a><span class="co"># beta2=1 versus beta2≠1</span></span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadístico t</span></span></code></pre></div>
+<pre><code>## &lt;F test: F=0.05111845125198955, p=0.8213616110920228, df_denom=198, df_num=1&gt;</code></pre>
+<div class="sourceCode" id="cb113"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>t_stat <span class="op">=</span> (CAPM_SANTANDER.params[<span class="st">&#39;er_IBEX&#39;</span>]<span class="op">-</span><span class="dv">1</span>)<span class="op">/</span>CAPM_SANTANDER.bse[<span class="st">&#39;er_IBEX&#39;</span>]</span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>t_stat, <span class="dv">2</span><span class="op">*</span>sp.stats.t.cdf(t_stat, CAPM_SANTANDER.df_resid)</span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadístico F</span></span></code></pre></div>
+<pre><code>## (-5.281635967748109, 3.357104388598472e-07)</code></pre>
+<div class="sourceCode" id="cb115"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>H_0 <span class="op">=</span> <span class="st">&#39;er_IBEX = 1&#39;</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>F_test <span class="op">=</span> CAPM_SANTANDER.f_test(H_0)</span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(F_test)</span>
+<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Contraste conjunto de la hipótesis beta1=0, beta2=1</span></span></code></pre></div>
+<pre><code>## &lt;F test: F=27.895678495810504, p=3.357104388598483e-07, df_denom=198, df_num=1&gt;</code></pre>
+<div class="sourceCode" id="cb117"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>H_0 <span class="op">=</span> <span class="st">&#39;Intercept = 0 , er_IBEX = 1&#39;</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>F_test <span class="op">=</span> CAPM_SANTANDER.f_test(H_0)</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(F_test)</span></code></pre></div>
 <pre><code>## &lt;F test: F=13.956448346309095, p=2.1364485558886642e-06, df_denom=198, df_num=2&gt;</code></pre>
 </div>
 

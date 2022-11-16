@@ -241,6 +241,13 @@ plt.show()
 formula = 'er_SAN ~ er_IBEX'
 CAPM_SANTANDER = smf.ols(formula, CAPM_ESP).fit()
 print(CAPM_SANTANDER.summary())
+# Intervalos de confianza para los parámetros estructurales del modelo
+# Automático
+CAPM_SANTANDER.conf_int()
+# Manualmente
+t_c = np.array(sp.stats.t.interval(0.95,CAPM_SANTANDER.df_resid))
+CAPM_SANTANDER.params[0]+CAPM_SANTANDER.bse[0]*t_c
+CAPM_SANTANDER.params[1]+CAPM_SANTANDER.bse[1]*t_c
 # ANOVA
 sm.stats.anova_lm(CAPM_SANTANDER)
 # Contrastes de hipótesis
