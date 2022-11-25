@@ -1,0 +1,220 @@
+---
+title: 'TEMA 3: DIAGNOSIS, CORRECCIONES Y/O EXTENSIONES DEL MRL'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.12 (Variable dependiente discreta -> modelos Logit y Probit): Elección entre tipo de interés fijo o variable'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+# Introducción
+
+En un artículo del año 1987, Dhillon y otros autores estudiaron el conjunto de características personales y financieras que determinan la elección por parte de los individuos de un tipo de interés fijo frente a uno variable a la hora de contratar un préstamo hipotecario. El interés de su trabajo radicaba en contrastar las dos posturas que dominan los planteamientos teóricos sobre el tema: la primera de ellas opina que, de acuerdo con la **hipótesis de mercados eficientes**, las características personales del prestatario no contienen información que no haya sido ya tenida en cuenta por el mercado a la hora de fijar el tipo de interés y, por tanto, sólo las variables de precios y los términos del contrato serían relevantes cuando un individuo elige el tipo de interés que se le aplicará; la segunda escuela de pensamiento supone que existe **información asimétrica**, es decir, dadas las condiciones del mercado, los prestatarios pueden favorecerse no revelando algunas de sus características personales a la hora de firmar el contrato.
+
+El modelo propuesto relaciona la probabilidad de que un individuo elija, dadas sus características personales y las condiciones del mercado, un tipo de interés variable frente a uno fijo para un préstamo hipotecario. Se dispone de una muestra de 78 clientes de un banco hipotecario norteamericano. Del total de observaciones, 46 eligieron un tipo de interés fijo (con vencimiento de 30 años) y 32 un tipo de interés variable (no acotado).
+
+Las variables disponibles para estimar el modelo son las siguientes:
+
+- Variable dependiente: _Y_ toma el valor 1 si el individuo elige un tipo de interés variable y 0 si firma el préstamo a un tipo fijo.
+
+-	Variables explicativas del mercado: _FI_ es el tipo de interés fijo que ofertó el banco, _MARG_ el margen del tipo fijo sobre el tipo de interés variable, _YLD_ la diferencia entre el tipo de interés de las letras del tesoro a 10 años y el tipo de las letras a 1 año (esta variable intenta anticipar el cambio futuro en los tipos de interés a corto plazo), _PTS_ la ratio entre el tipo de interés fijo y el variable, y _MAT_ la ratio entre los vencimientos de los préstamos hipotecarios con tipo fijo y variable.
+
+-	Variables explicativas personales: _BA_ es la edad del prestatario, _BS_ los años de escolarización, _FTB_ una variable ficticia que toma el valor 1 si el prestatario compra vivienda por primera vez y 0 en otro caso, _CB_ una ficticia que toma el valor 1 si existe un co-prestatario y 0 en otro caso, _MC_ una ficticia que toma el valor 1 si el prestatario está casado y 0 si no lo está, _SE_ una ficticia que toma el valor 1 si trabaja por cuenta propia y 0 en otro caso, _MOB_ el número de años que el prestatario lleva residiendo en la dirección actual, _NW_ la riqueza neta, _LA_ los activos líquidos y _STL_ los compromisos económicos del prestatario a corto plazo.
+
+El modelo econométrico general que se estimará tiene la siguiente expresión:
+
+$$Y_{i} = \beta_1 + \beta_2 FI_{i} + \beta_3 MARG_{i} + \beta_4 YLD_{i} + \beta_5 PTS_{i} + \beta_6 MAT_{i} + \beta_7 BA_{i} + \beta_8 BS_{i} + \beta_9 FTB_{i} + \beta_{10} CB_{i} +$$
+$$+ \beta_{11} MC_{i} + \beta_{12} MC_{i} + \beta_{13} SE_{i} + \beta_{14} MOB_{i} + \beta_{15} NW_{i} + \beta_{16} LA_{i} + \beta_{17} ST_{i} + e_{i}$$
+
+# Código R
+
+```{r, message=FALSE}
+# Lectura de librerías
+library(tidyverse)
+library(AER)
+library(alr4)
+library(margins)
+# Lectura de datos
+PREST_HIP <- read_csv("PREST_HIP.csv")
+summary(PREST_HIP)
+# Modelo logit
+modelo_logit <- glm(Y ~ FI + MARG + YLD + PTS + MAT + BA + BS + FTB + CB + MC + SE + MOB + NW + LA + STL, data=PREST_HIP, family=binomial(link="logit"))
+summary(modelo_logit)
+# Modelo probit
+modelo_probit <- glm(Y ~ FI + MARG + YLD + PTS + MAT + BA + BS + FTB + CB + MC + SE + MOB + NW + LA + STL, data=PREST_HIP, family=binomial(link="probit"))
+summary(modelo_probit)
+# Significación de las características personales
+linearHypothesis ( modelo_logit , c("BA = 0", "BS = 0","FTB = 0","CB = 0","MC = 0","SE = 0","MOB = 0","NW = 0","LA = 0","STL = 0"))
+# Modelos logit restringidos
+modelo_logit_1 <- glm(Y ~ FI + MARG + YLD + PTS + MAT, data=PREST_HIP, family=binomial(link="logit"))
+summary(modelo_logit_1)
+linearHypothesis ( modelo_logit_1, c("PTS = 0", "MAT = 0"))
+#
+modelo_logit_2 <- glm(Y ~ FI + MARG + YLD, data=PREST_HIP, family=binomial(link="logit"))
+summary(modelo_logit_2)
+coeftest(modelo_logit_2, vcov. = vcovHC, type = "HC1") # Matriz de convarianzas robusta
+#
+# Ajuste del modelo: pseudoR2
+#
+pseudoR2 <- 1 - (modelo_logit_2$deviance) / (modelo_logit_2$null.deviance)
+pseudoR2
+# Fórmula equivalente
+modelo_logit_0 <- glm(Y ~ 1, data=PREST_HIP, family=binomial(link="logit"))
+1 - logLik(modelo_logit_2)[1]/logLik(modelo_logit_0)[1]
+# ANOVA
+Anova(modelo_logit_2)
+# Tabla de éxito-fracaso (confusion matrix)
+table(true=PREST_HIP$Y, predicted=round(fitted(modelo_logit_2)))
+# Formulación alternativa
+predicted_probs_logit <- predict(modelo_logit_2, modelo_logit_2$data, type = "response")
+tmp_out <- InformationValue::confusionMatrix(modelo_logit_2$y,
+                                             predicted_probs_logit, threshold = 0.5)
+colnames(tmp_out) <- paste0("Observados ", colnames(tmp_out))
+rownames(tmp_out) <- paste0("Predichos ", rownames(tmp_out))
+print(tmp_out)
+# Precisión global del modelo en términos de predicción
+tmp_misclass <- InformationValue::misClassError(PREST_HIP$Y, predicted_probs_logit, 
+                                                threshold = 0.5)
+print(1 - tmp_misclass)
+# Curva ROC (Receiver Operating Characteristics): resume el rendimiento del modelo evaluando el trade-off entre la tasa de verdaderos positivos (sensibilidad) y la tasa de falsos positivos (1-especificidad).
+InformationValue::plotROC(PREST_HIP$Y, predicted_probs_logit, Show.labels = TRUE) # AUROC: índice de concordancia (entre 0 y 1)
+# Con la librería ROCR
+pred_logit  <- ROCR::prediction(predictions = predicted_probs_logit, labels = PREST_HIP$Y)
+roc_logit   <- ROCR::performance(pred_logit, measure = "tpr", x.measure = "fpr")
+auc_logit <- ROCR::performance(pred_logit, measure = "auc")
+auc_logit <- unlist(auc_logit@y.values)
+#
+ROCR::plot(roc_logit, colorize = TRUE, lwd = 2, main = "Curva ROC \n Modelo Logit")
+lines(x = c(0, 1), y = c(0, 1), col = "grey", lty = 2)
+text(x = 0.6,  y = 0.3, paste0("AUC = ", round(auc_logit, 4)), cex = 2)
+# Gráficas de efectos marginales
+# Gráfica conjunta
+effs <- Effect(c("FI", "MARG","YLD"), modelo_logit_2)
+plot(effs, multiline=TRUE, grid=TRUE, lines=c(1, 2, 3), 
+     xlab="FI",main="", rotx=45, roty = 45,
+     ylab="Prob[Y=1]", rescale.axis=FALSE, rug=FALSE)
+# Gráficas separadas
+# Función de probabilidad estimada para la variable FI
+# 
+plot( Y ~ FI, PREST_HIP, xlab="FI", ylab="Prob", ylim=c(0,1))
+FInew <- seq(10, 20, length=78)
+lines(FInew, predict(modelo_logit_2, newdata=data.frame(FI=FInew, MARG=rep(mean(PREST_HIP$MARG), 78), YLD=rep(mean(PREST_HIP$YLD), 78)), type="response"), lwd=1.5)
+grid(col="gray", lty="solid")
+# Función de probabilidad estimada para la variable MARG
+plot( Y ~ MARG, PREST_HIP, xlab="MARG", ylab="Prob", ylim=c(0,1))
+MARGnew <- seq(-1, 6, length=78)
+lines(MARGnew, predict(modelo_logit_2, newdata=data.frame(FI=rep(mean(PREST_HIP$FI), 78), MARG=MARGnew, YLD=rep(mean(PREST_HIP$YLD), 78)), type="response"), lwd=1.5)
+grid(col="gray", lty="solid")
+# Función de probabilidad estimada para la variable YLD
+plot( Y ~ YLD, PREST_HIP, xlab="YLD", ylab="Prob", ylim=c(0,1))
+YLDnew <- seq(1, 2.5, length=78)
+lines(YLDnew, predict(modelo_logit_2, newdata=data.frame(FI=rep(mean(PREST_HIP$FI), 78), MARG=rep(mean(PREST_HIP$MARG), 78), YLD=YLDnew), type="response"), lwd=1.5)
+grid(col="gray", lty="solid")
+# Efecto marginal en la media de las variables explicativas
+EMM_logit = mfx::logitmfx(formula = modelo_logit_2$formula, data = modelo_logit_2$data, atmean = TRUE)
+print(EMM_logit[[1]])
+# Efecto marginal promedio
+EMP_logit = mfx::logitmfx(formula = modelo_logit_2$formula, data = modelo_logit_2$data, atmean = FALSE)
+print(EMP_logit[[1]])
+# Forma alternativa del EMP
+margins(modelo_logit_2)
+```
+
+# Código Python
+
+```{python, message=FALSE}
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+# Lectura de datos
+PREST_HIP = pd.read_csv("PREST_HIP.csv")
+PREST_HIP.describe()
+# Modelo logit
+modelo_logit = smf.glm("Y ~ 1 + FI + MARG + YLD", data = PREST_HIP, 
+family = sm.families.Binomial(link = sm.genmod.families.links.logit())).fit()
+print(modelo_logit.summary())
+# Formulación alternativa del modelo logit
+modelo_logit = smf.logit("Y ~ 1 + FI + MARG + YLD", data = PREST_HIP).fit()
+print(modelo_logit.summary())
+# Modelo probit
+modelo_probit = smf.probit("Y ~ 1 + FI + MARG + YLD", data = PREST_HIP).fit()
+print(modelo_probit.summary())
+# Tabla de éxito-fracaso
+tmp_out_1 = modelo_logit.pred_table(threshold = 0.5)
+print(pd.DataFrame(tmp_out_1, columns = ["Predichos 0", "Predichos 1"], index = ["Observados 0", "Observados 1"]))
+# Formulación alternativa
+from sklearn import metrics
+predicted_probs_logit = modelo_logit.predict(exog = PREST_HIP)
+tmp_out_2 = metrics.confusion_matrix(modelo_logit.model.endog, 
+                                   np.where(predicted_probs_logit >= 0.5, 1, 0))
+print(pd.DataFrame(tmp_out_2, 
+                   columns = ["Predichos 0", "Predichos 1"],
+                   index = ["Observados 0", "Observados 1"]))
+# Precisión global del modelo en términos de predicción
+tmp_accuracy = metrics.accuracy_score(modelo_logit.model.endog,
+                       np.where(predicted_probs_logit >= 0.5, 1, 0))
+print(np.round(tmp_accuracy,4)) 
+# Curva ROC
+# Definición de la curva ROC
+def plotROC(fpr, tpr, thresholds): 
+  roc_auc = metrics.auc(fpr, tpr)
+  fig = plt.figure(figsize = (10, 8))
+  plt.plot(fpr, tpr, linestyle = "-", color = "cornflowerblue")
+  plt.fill_between(fpr, tpr, 0, color = "cornflowerblue")
+  plt.annotate(s = "AUROC: " + str(roc_auc.round(4)), xy = (0.3, 0.3), color = "white", fontsize = 25)
+  for i in range(1, len(fpr))[::10]:
+    _ = plt.annotate(s = thresholds[i].round(2), xy = (fpr[i], tpr[i]))
+  plt.xlabel("1-Specificity (FPR)", color = "cornflowerblue", fontsize = 25)
+  plt.ylabel("Sensitivity (TPR)", color = "cornflowerblue", fontsize = 25)
+  plt.title("ROC Curve", color = "cornflowerblue", fontsize = 25)
+  ax = fig.add_subplot(1, 1, 1) 
+  ax.set_facecolor("lightgray")
+  plt.grid(True, zorder = 0, color = "white")
+  plt.rcParams['axes.axisbelow'] = True
+  plt.tight_layout()
+  plt.show()
+# Gráfica
+fpr, tpr, thresholds = metrics.roc_curve(PREST_HIP[["Y"]], 
+                                         predicted_probs_logit, pos_label = 1)
+plotROC(fpr, tpr, thresholds)
+# Efecto marginal en la media de las variables explicativas
+EMM_logit = modelo_logit.get_margeff(at = "mean")
+print(EMM_logit.summary())
+# Efecto marginal promedio
+EMP_logit = modelo_logit.get_margeff(at = "overall")
+print(EMP_logit.summary())
+```
+
+# Código Julia
+
+```{r, echo = FALSE}
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE}
+# Lectura de librerías
+using DataFrames, CSV, GLM;
+using RegressionTables;
+# Lectura de datos
+PREST_HIP = CSV.read("PREST_HIP.csv", DataFrame);
+describe(PREST_HIP)
+# Eodelo logit
+modelo_logit = glm(@formula(Y ~ FI + MARG + YLD), PREST_HIP, Binomial(), LogitLink())
+regtable(modelo_logit)
+# Modelo probit
+modelo_probit = glm(@formula(Y ~ FI + MARG + YLD), PREST_HIP, Binomial(), ProbitLink())
+regtable(modelo_probit)
+```

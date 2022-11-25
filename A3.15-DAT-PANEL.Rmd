@@ -1,0 +1,144 @@
+---
+title: 'TEMA 3: Modelos econométricos para datos de panel'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.15: Productividad de la industria química en China'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+# Introducción
+
+En esta aplicación se estimará una función de producción del tipo Cobb-Douglas para una muestra de empresas del sector industrial químico de China. La versión econométrica de dicha función es la siguiente:
+
+$$log(Y_{it}) = \beta_1 + \beta_2 log(K_{it}) + \beta_3 log(L_{it}) + \beta_4 log(M_{it})  + e_{it}$$
+
+siendo _Y_  las ventas totales de cada empresa, _K_ el capital físico, _L_ el número de empleados, y _M_ la cantidad de material usado para fabricar los productos químicos.
+
+# Código R
+
+```{r, message=FALSE}
+# Lectura de librerías
+library(tidyverse)
+library(stargazer)
+library(plm)
+# Lectura de datos
+QUIM_CHINA <- read_csv("QUIM_CHINA.csv")
+# Asignar estructura de panel de datos 
+QUIM_CHINA_pdata  <-  pdata.frame(QUIM_CHINA,index=c("firm", "year"))
+pdim(QUIM_CHINA_pdata)
+summary(QUIM_CHINA_pdata[c("Y","K","L","M")])
+# Modelos estáticos para datos de panel
+# Modelo plano ('pool MCO`)
+modelo_plano <- plm(log(Y) ~ log(K) + log(L) + log(M), data = QUIM_CHINA_pdata, model = "pooling")
+summary(modelo_plano)
+# Modelo de efectos individuales fijos (EF)
+modelo_ef <- plm(log(Y) ~ log(K) + log(L) + log(M), data = QUIM_CHINA_pdata, model = "within")
+summary(modelo_ef)
+# Comparación del mdelo plano frente al modelo de efectos fijos
+pFtest(modelo_ef, modelo_plano)
+# Modelo de efectos individuales y temporales fijos (EF)
+modelo_ef_it <- plm(log(Y) ~ log(K) + log(L) + log(M), data = QUIM_CHINA_pdata, model = "within", effect = "twoways")
+summary(modelo_ef_it)
+pFtest(modelo_ef_it, modelo_plano)
+# Significación de efectos individuales
+plmtest(modelo_plano, effect="individual")
+plmtest(modelo_plano, effect = "time" )
+plmtest(modelo_plano, effect = "twoways" )
+# Modelo de efectos individuales aleatorios (EA)
+modelo_ea <- plm(log(Y) ~ log(K) + log(L) + log(M), data = QUIM_CHINA_pdata, model = "random")
+summary(modelo_ea)
+# Comparación de los modelos de efectos aleatorios y de efectos fijos: test de Hausman
+phtest(modelo_ef, modelo_ea)
+# Comparaciòn de resultados de los tres modelos
+stargazer(modelo_plano, modelo_ef, modelo_ea, type="text")
+```
+
+# Código Python
+
+```{python, message=FALSE}
+# Lectura de librerías 
+import numpy as np
+import pandas as pd
+from linearmodels import PooledOLS, PanelOLS, RandomEffects
+# Lectura de datos
+QUIM_CHINA = pd.read_csv("QUIM_CHINA.csv")
+# Estructura de panel de datos
+QUIM_CHINA_pdata = QUIM_CHINA.set_index(['firm','year'])
+QUIM_CHINA["Y"].describe()
+QUIM_CHINA["K"].describe()
+QUIM_CHINA["L"].describe()
+QUIM_CHINA["M"].describe()
+# Modelos estáticos para datos de panel
+# Modelo plano
+modelo_plano = PooledOLS.from_formula('np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M)', QUIM_CHINA_pdata)
+res = modelo_plano.fit()
+print(res)
+# Modelo de efectos fijos
+modelo_ef = PanelOLS.from_formula('np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M) + EntityEffects', QUIM_CHINA_pdata)
+res = modelo_ef.fit()
+print(res)
+# Modelo de efectos aleatorios
+modelo_ea = RandomEffects.from_formula('np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M)', QUIM_CHINA_pdata)
+res = modelo_ea.fit()
+print(res)
+```
+
+# Código Julia
+
+```{r, echo = FALSE}
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+```{julia, message = FALSE, warning = FALSE}
+# Lectura de librerías
+using DataFrames, CSV, Econometrics;
+# Lectura de datos
+QUIM_CHINA = CSV.read("QUIM_CHINA.csv", DataFrame);
+# Modelos estáticos para datos de panel
+# Modelo plano
+modelo_plano = fit(EconometricModel, @formula(log(Y) ~ log(K) + log(L) + log(M)), QUIM_CHINA)
+# Modelo de efectos fijos (estimador within)
+modelo_ef = fit(EconometricModel, @formula(log(Y) ~ log(K) + log(L) + log(M) + absorb(firm)), QUIM_CHINA)
+# Modelo de efectos aleatorios (à la Swamy-Arora)
+modelo_ea = fit(RandomEffectsEstimator, @formula(log(Y) ~ log(K) + log(L) + log(M)), QUIM_CHINA, panel = :firm, time = :year)
+```
+
+# Anexo R: Paneles dinámicos -> Demanda de empleo en UK
+
+En esta segunda parte de la aplicación se estimará un modelo dinámico para datos de panel para estimar de la demanda de empleo ( _L_ ) de las empresas inglesas en función del salario ( _W_ ), del stock de capital ( _K_ ) y del nivel de producción ( _Y_ ).
+
+```{r, message=FALSE}
+# Lectura de librerías
+library(tidyverse)
+library(stargazer)
+library(plm)
+# Lectura de datos
+EMP_SAL_UK <- read_csv("EMP_SAL_UK.csv")
+summary(EMP_SAL_UK)
+# Estructura de datos de panel
+EMP_SAL_UK_pdata <-  pdata.frame(EMP_SAL_UK, index=c( "firm", "year"))
+pdim(EMP_SAL_UK_pdata)
+# Modelo dinámicos
+dem_emp_GMM_1 <-pgmm(log(L) ~ lag(log(L), 1:2) + lag(log(W), 0:1) + log(K) + lag(log(Y), 0:1) | 
+                        lag(log(L), 2:99),
+                      data=EMP_SAL_UK_pdata, effect="twoways", model="twosteps")
+summary(dem_emp_GMM_1, robust = FALSE )
+#
+dem_emp_GMM_2 <-pgmm(log(L) ~ lag(log(L), 1:2) + lag(log(W), 0:1) + log(K) + lag(log(Y), 0:1) | 
+                        lag(log(L), 2:99) + lag(log(W), 2:99) + lag(log(K), 1:99) + lag(log(Y), 2:99),
+                      data=EMP_SAL_UK_pdata, effect="twoways", model="onestep", transformation="ld")
+summary(dem_emp_GMM_2, robust = FALSE )
+# Comparación de resultados
+stargazer(dem_emp_GMM_1, dem_emp_GMM_2, type="text")
+```

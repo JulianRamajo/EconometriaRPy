@@ -1,0 +1,48 @@
+---
+title: 'Variable dependiente limitada. Valores censurados: el Modelo Tobit'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 3.13: Compra de automóviles'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+# Objetivo
+
+En un trabajo encargado por una asociación de fabricantes de automóviles, se estimó un modelo microeconométrico en el que se relacionaba el gasto en automóviles realizado por las familias que componían una muestra representativa con algunas características socioeconómicas de las mismas.
+La ecuación de comportamiento especificada fue la siguiente:
+$$GAUT_{i} = \beta_1 + \beta_2 Y_{i} + \beta_3 HIJOSM18_{i} + \beta_4 EDAD_{i} + e_{i}$$
+donde GAUT es el gasto familiar efectuado en la adquisición de automóviles en el último año, Y la renta familiar total del último ejercicio fiscal, HIJOSM18 el número de hijos con edades inferiores a dieciocho años y EDAD la edad del cabeza de familia.
+
+# Resultados R
+
+```{r, message=FALSE}
+# Lectura de librerías
+library(tidyverse)
+library(censReg) # http://www.sampleselection.org/
+# Lectura de datos
+AUTOS <- read_csv("AUTOS.csv")
+summary(AUTOS)
+# Datos censurados: modelo Tobit 
+# Librería censReg (https://cran.r-project.org/web/packages/censReg/vignettes/censReg.pdf)
+modelo_tobit_1 <- censReg(GAUT ~ EDAD + HIJOSM18 + Y, data = AUTOS)
+summary(modelo_tobit_1)
+# Efectos marginales
+# Evaluados en un valor concreto de las var. explicativas (media de las variables en este caso)
+margEff(modelo_tobit_1,xValues = c(1,mean(AUTOS$EDAD),mean(AUTOS$HIJOSM18),mean(AUTOS$Y)))
+# Efectos marginales promedio
+margEff(modelo_tobit_1)
+# Librería VGAM (https://www.stat.auckland.ac.nz/~yee/VGAM/)
+library(VGAM)
+modelo_tobit_2 <- vglm(GAUT ~ EDAD + HIJOSM18 + Y, family = tobit, data = AUTOS)
+summary(modelo_tobit_2)
+```

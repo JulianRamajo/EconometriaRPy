@@ -1,0 +1,204 @@
+---
+title: "Programación conjunta en R y Python con reticulate (usando un fichero R Markdown)"
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+subtitle: 'Aplicación 0.2b: Ejemplo avanzado en interoperabilidad entre R y Python usando RStudio'
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Importando librerías Python al estilo _reticulate_
+
+Para los usuarios de Python, esta parte les parecerá poco familiar, ya que estamos acostumbrados a declarar importaciones de esta manera _desde mi paquete importar submódulo_. `reticulate` en R necesita que las librerías o submódulos se almacenen como objetos R y que cada tipo se establezca como si fuese una variable:
+
+```{r importing_packages, include = TRUE, echo=TRUE, eval=TRUE}
+# Librerías R
+library(reticulate)
+library(tidyverse)
+library(tidymodels)
+library(caret)
+library(magrittr)
+library(plotly)
+library(data.table)
+# Librerías Python
+# Librerías pandas y numpy
+pandas <- import("pandas")
+numpy <- import("numpy")
+# Librerías de visualización
+sns <- import('seaborn')
+plt <- import('matplotlib.pyplot')
+# Librerías de scikit-learn
+skl_model_selection <- import("sklearn.model_selection")
+skl <- import("sklearn")
+skl_ensemble <- import("sklearn.ensemble")
+skl_pipeline <- import("sklearn.pipeline")
+skl_metrics <- import("sklearn.metrics")
+skl_externals <- import("sklearn.externals")
+skl_lm <- import("sklearn.linear_model")
+```
+
+# Funciones de Python en reticulate
+
+A continuación veremos algunos aspectos básicos, antes de pasar a ver cómo usar R y Python juntos pasando un conjunto de datos desde R a los paquetes ML de Python, hacer algunas visualizaciones en Python, pasar de nuevo a R, y finalmente de nuevo a un archivo externo de Python. 
+
+Las funciones en Python comienzan con def() y para utilizar una función de Python en R hay que seguir los siguientes pasos:
+
+```{r functions, include = TRUE, echo=TRUE, eval=TRUE}
+py_run_string("def square_root(x):
+                value = x ** 0.5
+                return(value)")
+```
+
+Al principio pensaréis que el anterior script no ha hecho absolutamente nada, pero está oculto por el momento. Para acceder a los objetos de Python es necesario utilizar la función, tal y como se muestra a continuación:
+
+```{r use_the_function, include = TRUE, echo=TRUE, eval=TRUE}
+py$square_root(10)
+```
+
+El comando `py` le mostrará la lista de objetos de Python que han sido puestos a disposición de R. Ahora puedo acceder a mi función personalizada de raíz cuadrada y pasarle un valor. 
+
+Otra forma en que se puede lograr esto es en una declaración de tipo eval:
+
+```{r use_the_function_eval, include = TRUE, echo=TRUE, eval=TRUE}
+py_eval("square_root(10)")
+```
+
+# Modelización con Python y R con la ayuda de reticulate
+
+El primer paso es hacer algo de `preparación y manipulación´ de los datos para ponerlos en el formato adecuado. Vamos a hacer primero una regresión y luego voy a intentar predecir la temperatura en función de otras variables recogidas en el estudio.
+
+## Configuración de los datos
+
+Ahora voy a configurar los datos, utilizando una función para recortar el tamaño de la base:
+
+```{r df_setup, include = TRUE, echo=TRUE, eval=TRUE}
+ttbs <- read_csv("TTBS.csv")
+ttbs %<>% 
+  slice_sample(prop = 0.2)
+```
+
+## Dividir los datos
+
+A continuación, divido los datos en predictores (características) y predichos:
+
+```{r data_splitting, include = TRUE, echo=TRUE, eval=TRUE}
+# X and Y (predictors and predicted)
+X <- ttbs[,1:3]
+Y <- data.frame(ttbs[,4])
+```
+
+## Conversión a un objeto de Python
+
+El comando importante a utilizar aquí es el comando `_r_to_py()` para convertir el marco de datos, o el objeto de R, en el marco de datos asociado de Python `panda`, o el array de `numpy`, etc. R maneja esta conversión por ti.
+
+Voy a lanzar el conjunto de datos y las divisiones X e Y a Python para utilizar la funcionalidad de división en Python:
+
+```{r py_casting, include = TRUE, echo=TRUE, eval=TRUE}
+py_ttbs <- r_to_py(ttbs)
+py_X <- r_to_py(X)
+py_Y <- r_to_py(Y)
+py_ttbs$head() 
+py_ttbs$dtypes
+py_ttbs$describe()
+py_len(py_ttbs)
+```
+
+## Usando la división de entrenamiento y prueba de Python
+
+Ahora usaré la función train_test_split de sklearn para dividir mis datos en dos splits de entrenamiento y de prueba, para utilizarlos con sklearn más adelante:
+
+```{r py_train_test, include = TRUE, echo=TRUE, eval=TRUE}
+split <- skl_model_selection$train_test_split(X, Y, test_size=0.75)
+```
+
+Esto devolverá una lista de elementos, ya que así es como se mantiene como una tupla en Python. Python es genial, ya que permite la asignación múltiple, pero R no tiene esa capacidad, así que tengo que indexar los marcos de datos relevantes almacenados en una lista:
+
+```{r py_convert_splits, include = TRUE, echo=TRUE, eval=TRUE}
+py_X_train <- r_to_py(split[[2]])
+py_X_test <- r_to_py(split[[1]])
+py_Y_train <- r_to_py(split[[4]])
+py_Y_test <- r_to_py(split[[3]])
+```
+
+## Ajuste de un modelo de regresión en Sci-kit learn (biblioteca ML de Python)
+
+Los siguientes pasos ajustan un modelo de regresión lineal en Sci-kit learn. A diferencia de R, Sci-kit learn requiere que se inicialice el objeto modelo antes de ajustarlo. El código siguiente muestra el proceso:
+
+```{r fit_ml_model, include = TRUE, echo=TRUE, eval=TRUE}
+sk_lm_model <- skl_lm$LinearRegression() 
+model <- sk_lm_model$fit(py_X_train, py_Y_train)
+r_squared <- model$score(py_X_test, py_Y_test)
+r_squared
+```
+
+Para acceder a los resultados del modelo utilizamos el siguiente código, que nos devolverá la ordenada en el origen (`intercept`) y los coeficientes estimados:
+
+```{r fit_access_metrics, include = TRUE, echo=TRUE, eval=TRUE}
+model_intercept <- model$intercept_
+model_coef <- model$coef_
+print(model_intercept)
+print(model_coef)
+```
+
+## Realización de predicciones con el modelo
+
+Para realizar predicciones con el modelo utilizaremos el conjunto de datos de prueba que creamos al utilizar la función de división de sci-kit learn. Esto nos permitirá validar el ajuste del modelo visualmente:
+
+```{r making predictions, include = TRUE, echo=TRUE, eval=TRUE}
+model_predict <- model$predict(py_X_test)
+model_results <- data.frame(Predicted_Temp=model_predict, 
+                            py_to_r(py_Y_test),
+                            py_to_r(py_Y_test) - model_predict)
+colnames(model_results) <- c("Predicted", "Actual", "Residual")
+```
+
+El modelo predicho se convierte en un objeto de R, sin embargo el py_Y_test está todavía en un formato nativo de Python, por lo que se necesita utilizar la función de casting inverso `py_to_r()` para convertirlo de nuevo en un objeto con el que R pueda trabajar. Si intentara pasarlo directamente sin la conversión, obtendría un error de excepción.
+
+El model_results crea un marco de datos y luego se usa la función R colnames() para cambiar los nombres de las columnas en el marco de datos.
+
+## Visualización del ajuste con Seaborn
+
+Ahora convertiré mi marco model_results a un formato de Python (un marco de datos `pandas`) para permitir que `seaborn` interactúe con las columnas y filas del data.frame de R. 
+
+```{r visualise_sns_conv, include = TRUE, echo=TRUE, eval=TRUE}
+# Convert model results back to Python to do stuff with
+py_mod_results <- r_to_py(model_results)
+py_mod_results$dtypes
+```
+
+Esto imprimirá los tipos de datos del objeto Python. En Python, este código se vería así py_mod_results.dtypes, es decir, la notación del dólar ($) se reemplazaría por un punto (.).
+
+Finalmente, pasaremos estos datos a Seaborn para hacer alguna gráfica:
+
+```{r visualise_sns_seab, include = TRUE, echo=TRUE, eval=TRUE}
+sns$lineplot(data=py_mod_results, x="Actual", y="Predicted")
+plt$show()
+```
+
+El gráfico devuelto es un gráfico de Python, es decir, se abre en Python y por tanto no se puede integrar en el libro de Markdown. 
+
+## Crear el mismo gráfico en R
+
+Ahora crearé un gráfico similar en R, en dos versión, una sencilla y otra dinámica:
+
+```{r visualise_ggplot, include = TRUE, echo=TRUE, eval=TRUE}
+plot <- model_results %>% 
+  ggplot(aes(x=Actual, 
+             y=Predicted)) + geom_point(color="blue") +
+  geom_smooth(method = 'lm', formula = "y ~ x") 
+plot
+plotly::ggplotly(plot)
+```
