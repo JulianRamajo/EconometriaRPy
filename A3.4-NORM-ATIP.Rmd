@@ -18,12 +18,12 @@ output:
 
 # Objetivo
 
-En esta aplicación se tratará el tema de la no normalidad de los erroes causada por la presencia de observaciones atípicas, y se propondrán estimadores que son 'robustos' ante la presencia de dichos datos en la base muestral.
+En esta aplicación se tratará el tema de la no normalidad de los errores causada por la presencia de observaciones atípicas, y se propondrán estimadores que son 'robustos' ante la presencia de dichos datos en la base muestral.
 
 # Resultados R
 
 ```{r, message=FALSE}
-# Librerías
+# Lectura de librerías
 library(tidyverse)
 library(car)
 library(lmtest)
@@ -31,7 +31,7 @@ library(quantreg)
 library(MASS)
 library(moments)
 library(tseries)
-# Datos
+# Lectura de datos
 ATIP <- read_csv("ATIP.csv")
 summary(ATIP)
 # Gráficas
@@ -48,19 +48,11 @@ plot(lm_YX)
 summary(M1 <- lm(Y ~ X, data = ATIP))
 summary(M2 <- lm(Y ~ X, data = ATIP[1:19,]))
 compareCoefs(M1,M2)
-#
-plot(Y ~ X , data=ATIP)
-abline(M1)
-abline(M2, lty=2)
-legend("topleft", c("Datos completos (M1)", "Datos recortados (M2)"), lty = c(1, 2), bty = "n")
 # Distribución de los errores del modelo
 par(mfrow=c(1,1))
 hist(lm_YX$residuals, main = "")
 box()
-#
 densityPlot(residuals(lm_YX))
-densityPlot(rstudent(lm_YX))
-#
 qqnorm(residuals(lm_YX))
 qqline(residuals(lm_YX))
 qqPlot(lm_YX, distribution="norm")
@@ -117,9 +109,8 @@ densityPlot(rt)
 qqPlot(lm_YX)
 outlierTest(lm_YX)
 # Medidas de diagnóstico específicas
-# Observaciones influyentes: cálculo de DFBETAS_i, DFFITS_i, COVRATIO_i, DCOOK_i y h_i
-# La columna inf señala observaciones inusuales para al menos una medida
-#
+# Obs. influyentes: cálculo de DFBETAS_i, DFFITS_i, COVRATIO_i, DCOOK_i y h_i
+# NOTA: la columna inf señala observaciones inusuales para al menos una medida
 influence.measures(lm_YX)
 S(influence.measures(lm_YX))
 influenceIndexPlot(lm_YX, vars=c("hat", "Studentized","Cook"))
@@ -130,22 +121,18 @@ dfbetas <-  dfbetas(lm_YX)
 dffits <-  dffits(lm_YX)
 dcook <-  cooks.distance(lm_YX)
 hat ; dfbetas ; dffits; dcook
-#
 max(hatvalues(lm_YX))
 which.max(hatvalues(lm_YX))
-#
 max(abs(dffits(lm_YX)))
 which.max(abs(dffits(lm_YX)))
-#
 max(cooks.distance(lm_YX))
 which.max(cooks.distance(lm_YX))
-#
-avPlots(lm_YX, id=list(cex=0.60, method="mahal")) # Gráficos de variable añadida, buscando casos influyentes
+# Gráficos de variable añadida, buscando casos influyentes
+avPlots(lm_YX, id=list(cex=0.60, method="mahal")) 
 # Estimaciones robustas
 # Regresión cuartilítica
 summary(lm_YX <- lm(Y ~ X, data = ATIP))
 summary(qr_YX <- rq(Y ~ X, data = ATIP)) # tau=0.5
-#
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
 abline(qr_YX, lty=2)
@@ -158,10 +145,107 @@ S(qr_YX <- rq(Y ~ X, tau = c(0.25, 0.50, 0.75), data = ATIP))
 plot(qr_YX)
 # Estimadores M y MM
 summary(lm_YX <- lm(Y ~ X, data = ATIP))
-summary(rlm_YX <- rlm(Y ~ X, data = ATIP, method="MM")) # Para usar el estimador M usar method="M"
-#
+summary(rlm_YX <- rlm(Y ~ X, data = ATIP, method="MM")) # Estim. M: method="M"
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
 abline(rlm_YX, lty=2)
 legend("topleft", c("Regresión MCO", "Regresión MM"), lty = c(1, 2), bty = "n")
 ```
+
+# Resultados Python
+
+```{python, message=FALSE}
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.stats.api as sms
+import statsmodels.formula.api as smf
+from statsmodels.compat import lmap
+from statsmodels.compat import lzip
+from scipy import stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+# Lectura de datos
+ATIP  = pd.read_csv("ATIP.csv")
+ATIP .describe().round(2)
+# Gráficas
+# Diagrama de puntos
+plt.figure(1)
+sns.scatterplot(x="X", y="Y", data=ATIP);
+plt.show()
+# Modelo de regresión lineal
+formula = 'Y ~ X'
+lm_YX = smf.ols(formula, ATIP).fit()
+print(lm_YX.summary())
+plt.figure(2)
+sns.lmplot(x="X", y="Y", data=ATIP);
+plt.show()
+# Contrastes de normalidad
+# Test de Jarque-Bera 
+name = ["Jarque-Bera", "Chi^2 two-tail prob.", "Skew", "Kurtosis"]
+test = sms.jarque_bera(lm_YX.resid)
+lzip(name, test)
+# Test Omni
+name = ["Chi^2", "Two-tail probability"]
+test = sms.omni_normtest(lm_YX.resid)
+lzip(name, test)
+# Gráficas de diagnóstico estándar de la regresión MCO
+exec(open("diagnos.py").read())
+plt.figure(3)
+cls = Linear_Reg_Diagnostic(lm_YX)
+fig, ax = cls()
+# Detección de observaciones atípicas
+plt.figure(4)
+fig = sm.graphics.influence_plot(lm_YX, criterion="cooks")
+fig.tight_layout(pad=1.0)
+plt.show()
+# Outliers
+infl = lm_YX.get_influence()
+student = infl.summary_frame()["student_resid"]
+print(student)
+print(student.loc[np.abs(student) > 2])
+# Leverages
+h_bar = 2 * (lm_YX.df_model + 1) / lm_YX.nobs
+hat_diag = infl.summary_frame()["hat_diag"]
+print(hat_diag)
+hat_diag.loc[hat_diag > h_bar]
+# Medidas de influencias de las observaciones atípicas
+print(infl.summary_frame().loc[ATIP.index[19]])
+print(infl.summary_frame().loc[ATIP.index[20]])
+print(infl.summary_frame().loc[ATIP.index[21]])
+# Estimaciones robustas
+# Regresión cuartilítica
+formula = 'Y ~ X'
+qr_YX  = smf.quantreg(formula, ATIP)
+DAM = qr_YX.fit(q=0.5)
+print(DAM.summary())
+# Comparación de resultados para diferentes cuartiles con MCO
+quantiles = np.arange(0.1, 1, 0.1)
+def fit_model(q): res = qr_YX.fit(q=q); return [q, res.params["Intercept"], res.params["X"]] + res.conf_int().loc["X"].tolist()
+models = [fit_model(x) for x in quantiles]
+models = pd.DataFrame(models, columns=["q", "a", "b", "lb", "ub"])
+from statsmodels.formula.api import ols
+ols = smf.ols("Y ~ X", ATIP).fit()
+ols_ci = ols.conf_int().loc["X"].tolist()
+ols = dict(a=ols.params["Intercept"], b=ols.params["X"], lb=ols_ci[0], ub=ols_ci[1])
+print(models)
+print(ols)
+# Gráfica asociada
+plt.figure(5)
+n = models.shape[0]
+p1 = plt.plot(models.q, models.b, color="black", label="Reg.cuart.")
+p2 = plt.plot(models.q, models.ub, linestyle="dotted", color="black")
+p3 = plt.plot(models.q, models.lb, linestyle="dotted", color="black")
+p4 = plt.plot(models.q, [ols["b"]] * n, color="red", label="MCO")
+p5 = plt.plot(models.q, [ols["lb"]] * n, linestyle="dotted", color="red")
+p6 = plt.plot(models.q, [ols["ub"]] * n, linestyle="dotted", color="red")
+plt.ylabel(r"$\beta_{X}$")
+plt.xlabel("Cuartiles de la distribución condicional")
+plt.legend()
+plt.show()
+# Estimadores M y MM
+from statsmodels.formula.api import rlm
+rlm_YX = rlm("Y ~ X", ATIP).fit()
+print(rlm_YX.summary())
+```
+
