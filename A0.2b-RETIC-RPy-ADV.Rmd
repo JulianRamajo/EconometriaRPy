@@ -1,5 +1,5 @@
 ---
-title: "Programación conjunta en R y Python con reticulate (usando un fichero R Markdown)"
+title: "Programación conjunta en R y Python con reticulate (II)"
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Para los usuarios de Python, esta parte les parecerá poco familiar, ya que estamos acostumbrados a declarar importaciones de esta manera _desde mi paquete importar submódulo_. `reticulate` en R necesita que las librerías o submódulos se almacenen como objetos R y que cada tipo se establezca como si fuese una variable:
 
-```{r importing_packages, include = TRUE, echo=TRUE, eval=TRUE}
+```{r importing_packages, message=FALSE, include = TRUE, echo=TRUE, eval=TRUE}
 # Librerías R
 library(reticulate)
 library(tidyverse)
