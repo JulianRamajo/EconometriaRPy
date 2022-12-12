@@ -1,3 +1,3 @@
 # EconMetrics-RPy
 
-![ ](EconMetrics-RPy.png)
+![ ](_EconMetrics-RPy.png)
