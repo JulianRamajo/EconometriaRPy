@@ -1,0 +1,301 @@
+---
+title: 'INSTALACIÓN Y CONFIGURACIÓN DE R Y PYTHON'
+author:
+  name: Julián Ramajo, ramajo@unex.es
+  affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+```
+
+# Nota introductoria
+
+Durante el curso se usarán los lenguajes de programación R
+(<https://www.r-project.org/>) y Python (<https://www.python.org>), utilizando RStudio
+(<https://posit.co/>) y JupyterLab (<https://jupyter.org/>) como
+entornos de ejecución (IDE) de dichos lenguajes.
+
+También se explorarán otras opciones alternativas como Visual Studio Code
+(<https://code.visualstudio.com/docs/languages/overview>), Google Colab
+(<https://colab.research.google.com/?hl=es>), DataCamp Workspace
+(<https://www.datacamp.com/workspace>) o Deepnote Workspace
+(<https://deepnote.com/workspace>).
+
+# Instalación y configuración de R en RStudio
+
+1.  Descargar e instalar **R**: <https://cloud.r-project.org/>
+
+2.  Descargar e instalar **RStudio**:
+    <https://posit.co/download/rstudio-desktop/>
+
+3.  Instalar el software **Rtools**
+    (<https://cran.r-project.org/bin/windows/Rtools/>) y la librería
+    **`Rcpp`**. Ambos se usan para acelerar algunas
+    partes del código, así como para compilar paquetes más nuevos en
+    instalaciones antiguas de R.
+
+```{r, eval=FALSE}
+install.packages("Rcpp")
+```
+
+4.  Instalar las **librerías básicas de RStudio**  (<https://posit.co/products/open-source/rpackages/>):
+`tidyverse`, `rmarkdown`, `quarto`, `shiny`, `flexdashboard`, `tidymodels`, `tensorflow` y `reticulate`.
+   
+```{r, eval=FALSE}
+# Analizar-explorar
+install.packages("tidyverse")
+# Comunicar-interactuar
+install.packages("rmarkdown")
+install.packages("quarto")
+install.packages("shiny")
+install.packages("flexdashboard")
+# Modelizar-predecir
+install.packages("tidymodels")
+install.packages("tensorflow")
+# Conexión con Python
+install.packages("reticulate")
+```
+
+5.  Una vez instalados R y RStudio, y el software y librerías básicas, el siguiente paso consiste en
+    instalar las **librerías específicas para el análisis estadístico y/o econométrico**. 
+    Hay un conjunto muy grande de librerías disponibles en R
+    (<https://cran.r-project.org/web/packages/available_packages_by_name.html>),
+    aunque afortunadamente la mayoría de los paquetes más populares, así como los
+    más especializados, están agrupados en diferentes categorías en
+    **CRAN TASK Views** (<https://cran.r-project.org/web/views/>). 
+    Se pueden instalar fácilmente estas *macro-librerías* usando a su
+    vez la librería `ctv`y, posteriormente, instalando conjuntos de
+    librerías homogéneos:
+
+```{r, eval=FALSE}
+install.packages("ctv")
+```
+
+```{r, eval=FALSE}
+# Básica
+ctv::install.views("Econometrics")
+# Complementarias
+ctv::install.views("Finance")
+ctv::install.views("TimeSeries")
+ctv::install.views("MissingData")
+ctv::install.views("Graphics")
+ctv::install.views("SocialSciences")
+ctv::install.views("Psychometrics")
+ctv::install.views("Environmetrics")
+ctv::install.views("MachineLearning")
+ctv::install.views("Cluster")
+ctv::install.views("Survival")
+ctv::install.views("CausalInference")
+ctv::install.views("Distributions")
+ctv::install.views("Multivariate")
+ctv::install.views("Optimization")
+ctv::install.views("NumericalMathematics")
+ctv::install.views("ExperimentalDesign")
+ctv::install.views("MixedModels")
+ctv::install.views("Robust")
+ctv::install.views("Spatial")
+ctv::install.views("SpatioTemporal")
+ctv::install.views("OfficialStatistics")
+```
+
+NOTA: Mi recomendación es instalar sólo los paquetes necesarios para el
+análisis econométrico básico,
+<https://cran.r-project.org/web/views/Econometrics.html>. Siempre se
+pueden instalar paquetes adicionales más adelante; de hecho, RStudio nos
+avisará cuándo un *script* contiene alguna librería no instalada y nos
+dará la opción de instalarla antes de ejecutar el código.
+
+# Instalación y configuración de Python en RStudio
+
+Hay varias formas de configurar Python en el ordenador. Los tres métodos
+más frecuentes son los siguientes:
+
+a)  Distribución **estándar**:
+    <https://www.python.org/downloads/>
+b)  Distribución **Miniconda**:
+    <https://docs.conda.io/en/latest/miniconda.html>
+c)  Distribución **Anaconda**: <https://www.anaconda.com/>
+
+Tanto la distribución Miniconda como Anaconda utilizan la librería
+`conda` en sus instalaciones de Python, la cual permite descargar e
+instalar paquetes adicionales de Python. La instalación estándar de
+Python utiliza `pip` para descargar e instalar librerías específicas de
+Python.
+
+Para las necesidades de este curso es suficiente la instalación de la 
+distribución `Miniconda`. Lo primero que hay que hacer es configurar
+el entorno de Python en RStudio con la librería `reticulate`. Cuando
+se ejecuta por primera vez dicha librería se crea una instalación
+`Miniconda` adaptada a R llamada **R-Miniconda**; también se puede
+instalar `Miniconda` manualmente utilizando el comando
+*install_miniconda()*.
+
+```{r, eval=FALSE}
+library(reticulate)
+# Comprobación
+conda_list()
+conda_version()
+py_config()
+py_list_packages()
+```
+
+Si al hacer la comprobación no aparece ninguna instalación de Python, hay que volver a instalar
+la distribución: 
+
+```{r, eval=FALSE}
+install_miniconda()
+```
+
+Para probar si el entorno Python se ha creado adecuadamente en RStudio se puede
+entrar en la consola de Python y hacer algún cálculo sencillo para ver si
+el software funciona correctamente. Así, desde la consola de R, hay que usar el 
+comando *repl_python()* y luego, ya en la consola de Python, se pueden teclear por 
+ejemplo los siguientes comandos:
+
+```{python, eval=FALSE}
+import numpy as np
+a = np.sqrt(2)
+print(a)
+x = 42*2
+print(x)
+```
+
+También desde la consola de R se pueden ejecutar algunos comandos Python
+importando la librería correspondiente:
+
+```{r, eval=FALSE}
+library(reticulate)
+np <- import("numpy")
+np$sqrt(2)
+```
+
+O se puede ejecutar un *script* de Python y mostrar los resultados en RStudio:
+
+```{python, eval=FALSE}
+from matplotlib import pyplot as plt
+import numpy as np
+x = list(range(1, 11))
+y = np.random.randn(10)
+plt.figure(0)
+plt.plot(x, y,  linestyle = "--", color = "blue", marker = "s", label = "Línea 1")
+plt.title("Ejemplo de gráfico de líneas")
+plt.legend(loc = "upper left")
+plt.show()
+```
+
+## Creación de un entorno de trabajo particular (opcional)
+
+Crear un **entorno conda específico** para aislar un determinado espacio de trabajo es
+tan sencillo como generar un nuevo nombre del mismo y luego crear dicho *entorno*, tal y como se
+muestra a continuación:
+
+```{r, eval=FALSE}
+mi_entorno <- "Econometria"
+conda_create(mi_entorno)
+```
+
+Para usar el nuevo entorno de Python en lugar del estándar
+(`r-reticulate`) debe usarse el siguiente script:
+
+```{r, eval=FALSE}
+use_condaenv(mi_entorno)
+conda_version()
+conda_list()
+```
+
+De forma análoga, si se tiene instalado por ejemplo Python 3.11 en un ordenador Mac y se
+quiere utilizar esa versión en lugar de la instalada por `reticulate`,
+debe utilizarse el siguiente comando indicando dónde está situado Python en el sistema macOS:
+
+```{r, eval=FALSE}
+library(reticulate)
+use_python("/usr/local/bin/python3.11")
+```
+
+o el correspondiente localizador en Windows, buscando el directorio con la 
+ubicación del ejecutable de Python en dicho sistema operativo.
+
+## Instalación de librerías Python
+
+El último paso consiste en instalar las librerías de Python
+pertinentes en el entorno de R-Miniconda. Para ello se usarán
+comandos propios de la librería `reticulate`:
+
+```{r, eval=FALSE}
+library(reticulate)
+# Básicas
+py_install("numpy")
+py_install("pandas")
+py_install("statsmodels")
+py_install("matplotlib")
+py_install("pingouin")
+py_install("siuba")
+# Complementarias
+py_install("seaborn")
+py_install("plotly")
+py_install("plotnine")
+py_install("bokeh")
+py_install("pandas-bokeh", pip = TRUE)
+py_install("scipy")
+py_install("scikit-learn")
+py_install("sktime")
+py_install("linearmodels")
+py_install("semopy", pip = TRUE)
+py_install("lifelines")
+py_install("arch", pip=TRUE)
+py_install("appelpy", pip = TRUE)
+py_install("datetime", pip =  TRUE)
+py_install("stargazer", pip = TRUE)
+py_install("mizani")
+py_install("xlrd")
+py_install("category_encoders")
+py_install("pmdarima")
+py_install("kats", pip = TRUE)
+py_install("pyflux", pip = TRUE)
+py_install("glmnet")
+py_install("pymc3")
+py_install("pysal")
+```
+
+# Instalación de R y Python de forma aislada, y configuración de JupyterLab
+
+Si se quiere utilizar el entorno de cuadernos (*notebooks*) de Jupyter en lugar del
+de RStudio, deben seguirse los siguientes pasos:
+
+1.  Instalar **R** (<https://cran.r-project.org/>) y **Python**
+    (<https://www.python.org/downloads/>) individualmente.
+
+2.  Instalar **JupyterLab**. Para ello, ir al **terminal** de MacOS (Windows) y desde
+    allí teclear:
+
+    -   python3 --version (py --version)
+    -   python3 -m pip --version (py -m pip --version)
+    -   python3 -m pip install jupyterlab (py -m pip install jupyterlab)
+
+3.  Instalación del **kernel de R**:
+
+    -   Desde RStudio teclear *install.packages("IRkernel")*
+    -   Desde el terminal de MacOS entrar en R (en Windows entrar en R directamente) y teclear
+        *IRkernel: installspec()*.
+
+4.  Para comprobar que la instalación e correcta, ir al terminal de MacOS o
+    Windows y teclear *python3 -m jupyterlab* o *py -m jupyterlab*,
+    respectivamente.
+
+5.  Instalación de las librerías correspondientes en R y Python:
+
+    -   R: en RStudio teclear *install.packages("nombre-librería")*.
+
+    -   Python: en el terminal de macOS/Windows teclear *python3 -m pip
+        install nombre-librería*.
