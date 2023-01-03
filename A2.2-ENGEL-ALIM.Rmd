@@ -3,7 +3,7 @@ title: 'TEMA 2: Predicción con el modelo de regresión lineal'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.5: Curva de Engel para el gasto en alimentos'
+subtitle: 'Aplicación 2.2: Curva de Engel para el gasto en alimentos'
 output:
   html_document:
     theme: journal
@@ -35,40 +35,23 @@ library(splines)
 library(skimr)
 # Lectura de datos
 ENGEL_ALIM <- read_delim("ENGEL_ALIM_USA.csv", ";", escape_double = FALSE, trim_ws = TRUE)
-#
-# Estadísticos descriptivos
-#
+# Estadística descriptiva
 dim(ENGEL_ALIM)
 head(ENGEL_ALIM)
 summary(ENGEL_ALIM)
 skim(ENGEL_ALIM)
-#
 # Diagrama de puntos (scatter plot) de las variables RENTA y GALIM
-#
 ggplot(ENGEL_ALIM, aes(x = RENTA, y = GALIM)) + geom_point() + scale_x_continuous(limits = c(350, 5000), expand = c(0, 0)) + theme_bw() + labs(x = "Renta", y = "Gasto en alimentos")
-#
 ggplot(ENGEL_ALIM, aes(x = RENTA, y = GALIM)) + geom_point() + geom_smooth(method = "lm", se = FALSE) + scale_x_continuous(limits = c(350, 5000), expand = c(0, 0)) + theme_bw() + labs(x = "Renta", y = "Gasto en alimentos")
-#
 # Estimación de una curva de Engel lineal por MCO
-#
 CURVA_ENGEL_LINEAL <- lm(GALIM ~ RENTA, data = ENGEL_ALIM)
 # Resultados estándar
 summary(CURVA_ENGEL_LINEAL)
 # Resultados formateados
 stargazer(CURVA_ENGEL_LINEAL, type = "text", title = "Resultados de la regresión lineal")
 anova(CURVA_ENGEL_LINEAL)
-#
-coef(CURVA_ENGEL_LINEAL)
 confint(CURVA_ENGEL_LINEAL)
-#
-# Gráficas de diagnóstico estándar de R
-#
-par(mfrow=c(2,2))
-plot(CURVA_ENGEL_LINEAL)
-par(mfrow=c(1,1))
-#
-# Predicción con el modelo de regresión simple
-#
+# Predicción
 # Generar un vector que contiene los nuevos valores de las variables explicativa
 new_RENTA <- data.frame(RENTA=c(400, 2000, 4500))
 new_RENTA
@@ -82,53 +65,24 @@ pred_GALIM_IC
 # Predicción del valor individual con intervalo de confianza
 pred_GALIM_IC <- predict(CURVA_ENGEL_LINEAL, new_RENTA, interval="prediction", level=0.95)
 pred_GALIM_IC
-#
-# POSIBLES GENERALIZACIONES DEL MODELO LINEAL
-#
-# Modelo cuadrático en la variable RENTA
-#
-waldtest(CURVA_ENGEL_LINEAL, . ~ . + I(RENTA^2))
-CURVA_ENGEL_CUADRATICA <- lm(GALIM ~ RENTA + I(RENTA^2), data = ENGEL_ALIM)
-summary(CURVA_ENGEL_CUADRATICA)
-stargazer(CURVA_ENGEL_CUADRATICA, type = "text", title = "Resultados de la regresión cuadrática")
-#
-# Modelo semiparamétrico
-#
-CURVA_ENGEL_SEMIPARAMETRICA <- lm(GALIM ~ bs(RENTA, df = 5) , data = ENGEL_ALIM)
-summary(CURVA_ENGEL_SEMIPARAMETRICA)
-stargazer(CURVA_ENGEL_SEMIPARAMETRICA, type = "text", title = "Resultados de la regresión spline")
-# Elección de df
-# bs <- lapply(3:10, function(i) lm(GALIM ~ bs(RENTA, df = i) , data = ENGEL_ALIM))
-# structure(sapply(bs, AIC, k = log(nrow(ENGEL_ALIM))), .Names = 3:10)
-#
-par(mar = c(5, 5, 2, 4))
-Engel_sim <- data.frame(RENTA = 350:5000)
-Engel_sim$GALIMhat1 <- predict(CURVA_ENGEL_CUADRATICA, newdata = Engel_sim)
-Engel_sim$GALIMhat2 <- predict(CURVA_ENGEL_SEMIPARAMETRICA, newdata = Engel_sim)
-#
-plot(GALIM ~ jitter(RENTA, factor = 3), pch = 19, cex = 1.5, col = rgb(0.5, 0.5, 0.5, alpha = 0.02), data = ENGEL_ALIM)
-lines(GALIMhat1 ~ RENTA, data = Engel_sim, lty = 2)
-lines(GALIMhat2 ~ RENTA, data = Engel_sim)
-legend("topleft", c("Regresión cuadrática", "Regresión spline"), lty = c(2, 1), bty = "n")
 ```
 
 # Código Python
 
 ```{python, message=FALSE}
 # Lectura de librerías
+import numpy as np
 import pandas as pd
-import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
 # Lectura de datos
-ENGEL_ALIM = pd.read_csv("ENGEL_ALIM_USA.csv", sep='\;')
+ENGEL_ALIM = pd.read_csv("ENGEL_ALIM_USA.csv", delimiter=';')
 ENGEL_ALIM.head()
 # Estimación del modelo
 CURVA_ENGEL_LINEAL = smf.ols('GALIM ~ RENTA', data=ENGEL_ALIM)
 results=CURVA_ENGEL_LINEAL.fit()
 print(results.summary())
-#
 # Predicción
-#
 # Generar un vector que contiene los nuevos valores de las variables explicativa
 new_RENTA = pd.DataFrame({'RENTA': [400, 2000, 4500]}, index=['newRENTA1', 'newRENTA2', 'newRENTA3'])
 print(f'new_RENTA: \n{new_RENTA}\n')

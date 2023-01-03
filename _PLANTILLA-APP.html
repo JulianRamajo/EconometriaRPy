@@ -1615,17 +1615,6 @@ GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)<br>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>X_model <span class="op">=</span> model.fit()</span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_model.summary())</span></code></pre></div>
 </div>
-<div id="código-julia" class="section level1">
-<h1>Código Julia</h1>
-<div class="sourceCode" id="cb3"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">CSV;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>DAT <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">&quot;X.csv&quot;</span>, DataFrame);</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Análisis exploratorio (EDA)</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(<span class="fu">describe</span>(DAT))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Regresión MCO (librería Econometrics)</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Econometrics;</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>X_model <span class="op">=</span> <span class="fu">fit</span>(EconometricModel, <span class="pp">@formula</span>(Y <span class="op">~</span> X1 <span class="op">+</span> X2 <span class="op">+</span> X3), DAT)</span></code></pre></div>
-</div>
 
 
 

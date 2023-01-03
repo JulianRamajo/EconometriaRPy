@@ -1,5 +1,5 @@
 ---
-title: 'TEMA1: Lectura, ordenación (filtrado, selección, agrupación, transformación y reducción) y representación gráfica de datos en R, Python y Julia: la gramática TIDYVERSE para gestionar datos'
+title: 'TEMA1: Lectura, gestión y representación gráfica de datos en R y Python: la gramática TIDYVERSE'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
@@ -18,15 +18,15 @@ output:
 
 # Introducción
 
-En esta aplicación se pondrán ejemplos básicos en R, Python y Julia de la filosofía _tidyverse_, la cual supone un 'dialecto' dentro de cada lenguaje con el objetivo de "preparar" los datos originales para un tratamiento estadístico posterior.
+En esta aplicación se pondrán ejemplos básicos en R y Python usando la filosofía _tidyverse_, la cual supone un 'dialecto' dentro de cada lenguaje con el objetivo de "preparar" los datos originales para un tratamiento estadístico posterior:
 
-_"At a high level, the tidyverse is a language for solving data science challenges with R code. Its primary goal is to facilitate a conversation between a human and a computer about data. Less abstractly, the tidyverse is a collection of R packages that share a high-level design philosophy and low-level grammar and data structures, so that learning one package makes it easier to learn the next."_ (Wickham et al., 2019)
+_"At a high level, the tidyverse is a language for solving data science challenges [...]. Its primary goal is to facilitate a conversation between a human and a computer about data. Less abstractly, the tidyverse is a collection of [...] packages that share a high-level design philosophy and low-level grammar and data structures, so that learning one package makes it easier to learn the next."_ (Wickham et al., 2019)
 
 # Código R
 
-Datos ordenados: Tidy Data (https://www.jstatsoft.org/article/view/v059i10)
+Datos ordenados: *Tidy Data* (https://www.jstatsoft.org/article/view/v059i10)
 
-Gestión de datos y gráficas en R: Tidyverse (https://www.tidyverse.org/)
+Gestión de datos y gráficas en R: *Tidyverse* (https://www.tidyverse.org/)  ->
 
 [https://tidyr.tidyverse.org/articles/tidy-data.html]
 
@@ -54,8 +54,9 @@ head(gapminder)
 ```
 
 ```{r, message = FALSE, warning = FALSE}
-# Gramática de datos con dplyr (https://dplyr.tidyverse.org/) y 'tuberías' (`%>%`) del tidyverse
+# Gramática de datos con dplyr (https://dplyr.tidyverse.org/) y 'tuberías' (`%>%`)
 # (https://es.r4ds.hadley.nz/transform.html#transformaciones-agrupadas-y-filtros)
+#
 # "Verbos" de dplyr 
 # select
 gapminder_selected <- select(gapminder, year, country, pop, gdpPercap)
@@ -70,7 +71,7 @@ gapminder_summarised <- summarise(gapminder_grouped, AVG_GDP = mean(GDP))
 # arrange
 gapminder_arranged_ascending <- arrange(gapminder_summarised, AVG_GDP)
 gapminder_arranged_descending <- arrange(gapminder_summarised, -AVG_GDP)
-# El operador tubería (pipe)
+# El operador tubería (pipe) del tidyverse: %>%
 AVG_GDP <- 
   gapminder %>% 
   select(year, country, pop, gdpPercap) %>% 
@@ -80,7 +81,7 @@ AVG_GDP <-
   summarise(AVG_GDP=mean(GDP)) %>% 
   arrange(-AVG_GDP)
 AVG_GDP
-# La nueve tubería nativa de R, |>
+# La tubería nativa de R: |>
 gapminder |> subset(year==2007) |> head()
 # Familia de operaciones join (https://es.r4ds.hadley.nz/datos-relacionales.html)
 # `inner_join(df1, df2)`
@@ -95,35 +96,31 @@ planes
 # Ejemplo de left_join
 left_join(flights, planes) %>%
   select(year, month, day, dep_time, arr_time, carrier, flight, tailnum, type, model)
-# para evitar errores o malas asignaciones automáticas (tailnum y year) debe usarse el argumento 'by = '
+# Para evitar errores o malas asignaciones automáticas (tailnum y year) 
+# debe usarse el argumento 'by = '
 left_join(flights, planes, by = "tailnum") %>%
   select(month, day, dep_time, arr_time, carrier, flight, tailnum, type, model)
-# Ejemplos de otras operación en: https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html
+# Ejemplos de otras operacionesn pueden encontrarse en:
+# https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html
 ```
 
 ```{r, message = FALSE, warning = FALSE}
 # Gramática de gráficas (ggplot2) [https://ggplot2.tidyverse.org/]
 ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + 
   geom_point()
-#
 ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +  
   geom_point(aes(size = pop, col = continent), alpha = 0.3)
-#
 p = ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp))
 p + 
   geom_point(alpha = 0.3)  +
   geom_smooth(method = "loess")
-#
 p + 
   geom_point(aes(size = pop, col = continent), alpha = 0.3)  +
   geom_smooth(method = "loess") 
-#
 ggplot(data = gapminder) + 
   geom_density(aes(x = gdpPercap), alpha=0.3)
-#
 ggplot(data = gapminder) + 
   geom_density(aes(x = gdpPercap, fill = continent), alpha=0.3)
-#
 p2 =
   p +
   geom_point(aes(size = pop, col = continent), alpha = 0.3) +
@@ -133,7 +130,6 @@ p2 =
   labs(x = "Log (GDP per capita)", y = "Life Expectancy") + # Títulos en los ejes
   theme_minimal() ## minimal (b&w) plot theme
 p2
-#
 library(gganimate)
 ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   geom_point(alpha = 0.7, show.legend = FALSE) +
@@ -154,18 +150,17 @@ skim(gapminder)
 ggplot(data = gapminder, aes(x = log(gdpPercap), y = lifeExp)) + 
     geom_smooth(method = "lm", col = "red") + 
     geom_point()
-#
 ggplot(data = gapminder, aes(x = year, y = lifeExp)) + 
     geom_smooth(method = "lm", col = "red") + 
     geom_point()
-#
+# Numéricamente:
 modelo <- lm(lifeExp ~ log(gdpPercap) + year, data=gapminder)
 summary(modelo)
 ```
 
 # Código Python
 
-Gestión de datos y gráficos en Python: siuba (https://siuba.readthedocs.io/en/latest/) y plotnine (https://plotnine.readthedocs.io/en/stable/)
+Gestión de datos y gráficos en Python: librerías `siuba` (https://siuba.readthedocs.io/en/latest/) y `plotnine` (https://plotnine.readthedocs.io/en/stable/)
 
 Datos para el ejemplo: mtcars (https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html)
 
@@ -182,9 +177,7 @@ mtcars = pd.read_csv('MTCARS.csv')
 mtcars.head()
 ```
 
-NOTA (eval = FALSE en el script inferior): Puesto que al parecer existe algún tipo de incompatibilidad técnica entre siuba y reticulate que impide mostrar los resultados, debajo se muestran los comandos siuba que deben ejecutarse en la consola de Python (de hecho puede ejecutarse el script individual). Esta discrepancia no existe si se ejecutan los comandos del script en JupyterLab.
-
-```{python, message = FALSE, warning = FALSE, eval = FALSE}
+```{python, message = FALSE, warning = FALSE}
 # Gramática de datos y tuberías (>>) con siuba
 # arrange, group_by
 mtcars_groups = mtcars >> arrange(_.hp) >> group_by(_.cyl)
@@ -201,14 +194,11 @@ mtcars_groups
 (mtcars >> count(_.cyl, many_gears = _.gear > 3))
 (mtcars >> group_by(_.cyl) >> summarize(n = _.cyl.median()))
 (mtcars >> group_by(_.cyl) >> filter(_.hp > _.hp.median()))
-# filter to …
-# arrange, group_by, filter (get the row number of each entry within a cyl group, and 
-# filter it to keep the two lowest hp cars per group)
+# arrange, group_by, filter
 from siuba.dply.vector import row_number
 (mtcars >> arrange(_.hp) >> group_by(_.cyl) >> filter(row_number(_) <= 2))
-# comparing shifts in hp across rows
-# sort the data by ascending horsepower (hp), then filter to keep rows where it increases by 50
-from siuba.dply.vector import lag # or led
+# lag, led
+from siuba.dply.vector import lag # o led
 (mtcars >> arrange(_.hp) >> filter(_.hp - lag(_.hp) > 50))
 # arrange, select, rename
 small_mtcars = mtcars >> select(_.cyl, _.mpg, _.hp)
@@ -218,10 +208,11 @@ small_mtcars
 (small_mtcars >> arrange(-_.hp)) # descendente
 # ordenar filas usando varias varialbes
 (small_mtcars >> arrange(_.cyl, _.mpg))
-# ordenar por hp/cyl (horsepower per cylindar)
+# ordenar por hp/cyl (horsepower per cylinder)
 (small_mtcars >> arrange(_.hp / _.cyl))
-# seleccionar variables
-(mtcars >> select(_.mpg, _.cyl)) # equivalente: mtcars >> select(1, 2) , mtcars >> select("mpg", "cyl")
+# seleccionar variables 
+# equivalente: mtcars >> select(1, 2) , mtcars >> select("mpg", "cyl")
+(mtcars >> select(_.mpg, _.cyl))
 # excluir columnas
 (mtcars >> select(-_.mpg, -_.cyl))
 (mtcars >> select(-_.model))
@@ -268,102 +259,40 @@ semi_join(df1, df2, on = "id")
 
 ```{python, message = FALSE, warning = FALSE}
 # Gramática de gráficas con plotnine
-#
 (
     ggplot(mtcars, aes(x='disp', y='hp'))
     + geom_point()
     + labs(x='Displacement', y='Gross horsepower')
 )
-#
 (
     ggplot(mtcars, aes(x='disp', y='hp'))
     + geom_point()
     + geom_smooth(method='lm')
     + labs(x='Displacement', y='Gross horsepower')
 )
-#
 (
     ggplot(mtcars, aes(x='disp', y='hp'))
     + geom_point()
     + geom_smooth()
     + labs(x='Displacement', y='Gross horsepower')
 )
-#
 (ggplot(mtcars, aes('disp', 'hp', color='factor(gear)'))
  + geom_point()
  + stat_smooth(method='lm')
  + facet_wrap('~gear'))
-#
 (
     ggplot(mtcars, aes(x='disp', y='hp', color='factor(gear)'))
     + geom_point()
     + geom_smooth(method='lm')
     +  labs(x='Displacement', y='Gross horsepower')
 )
-#
 (mtcars
  >> ggplot(aes(x = 'wt', y = 'mpg'))
   + geom_point(aes(color = 'factor(gear)', shape = 'factor(gear)'), size = 3, alpha = 0.8)
   + theme_minimal()
-  + labs(title = "mtcars dataset, 1974 Motor Trend US magazine",
-         subtitle = "Fuel consumption and 10 aspects for 32 automobiles (1973–74 models)",
-        x = "Weight (lb/1000)",
-        y = "Miles/(US) gallon",
+  + labs(title = "Datos mtcars, Motor Trend US magazine (1974)",
+        x = "Peso (libras/1000) [US]",
+        y = "Millas/galón [US]",
         color = "Number of forward gears",
         shape = "Number of forward gears"))
 ```
-
-# Código Julia
-
-Gestión de datos y gráficos en Julia: Queryverse (https://www.queryverse.org/) 
-
-Datos para el ejemplo: Palmerpenguins (https://allisonhorst.github.io/palmerpenguins/; https://github.creplom/mcnakhaee/palmerpenguins; https://juliahub.com/ui/Packages/PalmerPenguins/L7ZJc/0.1.4)
-
-```{r, echo = FALSE}
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-# Lectura de librerías
-using DataFrames, CSV, FileIO, Query;
-# Lectura de datos
-penguins = CSV.read("PENGUINS.csv", DataFrame);
-describe(penguins)
-# Gramática de datos y tuberías (|>) con Query
-q1 = penguins |> @filter(_.bill_length_mm >1.25*44.45) |> @map({_.species, _.island, _.body_mass_g,  _.sex}) |> DataFrame
-# @map
-q2 = penguins |> @map({bmg2=(_.body_mass_g)^2}) |> DataFrame
-# @filter
-q3 = penguins |> @filter(_.bill_length_mm > 43.9219 && _.bill_depth_mm > 17.1512 && _.flipper_length_mm > 200.915) |> DataFrame
-# @groupby 
-q4 = penguins |> @groupby(_.species) |> @map({Specie=key(_), Count=length(_)}) |> DataFrame
-# @orderby, @orderby_descending, @thenby, @thenby_descending
-q5 = penguins |> @orderby(_.body_mass_g) |> @thenby(_.bill_length_mm) |> @thenby(_.bill_depth_mm) |> @thenby(_.flipper_length_mm) |> DataFrame
-# @join
-df1 = DataFrame(a=[1,2,3], b=[1.,2.,3.])
-df2 = DataFrame(c=[2,4,2], d=["John", "Jim","Sally"])
-q6 = df1 |> @join(df2, _.a, _.c, {_.a, _.b, __.c, __.d}) |> DataFrame
-# @select
-q7 = penguins |> @select(1:2, 7, 6) |> DataFrame
-# @rename
-q8 = penguins |> @rename(:bill_length_mm => :bl, :bill_depth_mm => :bd, :flipper_length_mm => :fl, :body_mass_g => :bm) |> @select(1, 7, 3:6) |> DataFrame
-# @mutate
-q9 = penguins |> @rename(:bill_length_mm => :bl, :bill_depth_mm => :bd, :flipper_length_mm => :fl, :body_mass_g => :bm) |> @select(1, 7, 3:6) |> @mutate(isFEMALE = _.sex == "FEMALE") |> DataFrame
-# @dropna
-q10 = penguins |> @dropna() |> @rename(:bill_length_mm => :bl, :bill_depth_mm => :bd, :flipper_length_mm => :fl, :body_mass_g => :bm) |> @select(1, 7, 6) |> @mutate(isFEMALE = _.sex == "FEMALE") |> DataFrame  
-# usar @dropna(:X) para eliminar sólo las filas con datos perdidos de la variable X; se pueden especificar más variables para la selección, @dropna(:X1, :X2); si se quieren sustituir los valores faltantes por algún valor en lugar de eleiminarlos, se puede usar el comando @replacena()
-# Gramática de gráficas con Plots y Vegalite
-using Plots;
-gr()
-scatter(penguins.flipper_length_mm, penguins.body_mass_g, title = "Body mass Plot vs Flipper length", ylabel = "Body mass (g)", xlabel = "Flipper length (mm)",legend = false)
-# NOTA: Debe usarse VegaLite con JupyterLab pues existe algún tipo de incompatibilidad técnica entre VegaLite y RStudio. 
-# El script es el siguiente:
-#
-# using VegaLite;
-# penguins |> @vlplot(:point, x=:flipper_length_mm, y=:body_mass_g, color=:species)
-# Usar StatsPlots con JupyterLab
-# using StatsPlots;
-# @df penguins scatter(:flipper_length_mm, :body_mass_g, group = :species, title = "Body mass vs Flipper length", xlabel = "Flipper length (mm)", ylabel = "Body mass (g)")
-```
-

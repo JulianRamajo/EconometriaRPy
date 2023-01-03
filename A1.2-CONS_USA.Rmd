@@ -19,7 +19,7 @@ output:
 
 # Introducción
 
-En esta aplicación se estimará la siguiente función de consumo Keynesiana con datos de Estados Unidos para el período 1959-2015:
+En esta aplicación se estimará la función de consumo Keynesiana con datos de Estados Unidos para el período 1959-2015 que se ha expuesto en el epígrafe 4.4:
 
 $$
 C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}
@@ -27,81 +27,55 @@ $$
 
 # Código R
 
-```{r, message=FALSE}
+```{r, message = FALSE, warning = FALSE}
 # Lectura de librerías
 library(tidyverse)
 # Lectura de datos
 CONS_USA <- read_csv("CONS_USA.csv")
 # Formato de series temporales
-ts_CONS_USA <- ts(CONS_USA[,2:3], start=c(1959), end = c(2015))
-head(ts_CONS_USA)
+CONS_USA_ts <- ts(CONS_USA[,2:3], start=c(1959), end = c(2015))
+head(CONS_USA_ts)
 # Gráfica Consumo-Renta
 CONS_USA %>%
   ggplot(aes(x = Y, y = C)) +
   geom_point() +
   ylab("C") + xlab("Y")
 # Regresión MCO
-KEYNES_model <- lm (C ~ Y, data = ts_CONS_USA)
+KEYNES_model <- lm (C ~ Y, data = CONS_USA_ts)
 summary(KEYNES_model)
 ```
 
 # Código Python
 
-```{python, message=FALSE}
+```{python, message = FALSE, warning = FALSE}
 # Lectura de librerías
 import pandas as pd
 import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
-# Lectura de datos y asignación del índice temporal
+# Lectura de datos 
 CONS_USA = pd.read_csv("CONS_USA.csv", index_col=0)
 CONS_USA.head()
+# Formato de series temporales
+CONS_USA_ts = pd.read_csv("CONS_USA_ts.csv", sep=";", parse_dates=['date'], index_col='date')
+date = pd.date_range(start = '1959', periods = len(CONS_USA_ts.index), freq = 'Y')
+CONS_USA_ts.index = date
+CONS_USA_ts.info()
+CONS_USA_ts.head()
 # Gráfica Consumo-Renta
 plt.style.use('seaborn')
-CONS_USA.plot(x='Y', y='C', kind='scatter')
+CONS_USA_ts.plot(x='Y', y='C', kind='scatter')
 plt.show()
 # Regresión MCO
-model = smf.ols(formula = "C ~ Y", data = CONS_USA)
+model = smf.ols(formula = "C ~ Y", data = CONS_USA_ts)
 KEYNES_model = model.fit()
 print(KEYNES_model.summary())
 ```
 
-# Código Julia
-
-```{r, echo = FALSE}
-# Ejecutar siempre que se vaya a usar Julia en RStudio
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-using DataFrames, CSV;
-# lectura de datos
-CONS_USA = CSV.read("CONS_USA.csv", DataFrame);
-# Gráfica Consumo-Renta
-# Gráficas
-using Plots
-gr()
-scatter(CONS_USA.Y,CONS_USA.C, title = "Scatter Plot C vs Y", ylabel = "C", xlabel = "Y",legend = false)
-# using Plots
-# C = CONS_USA[:,2]
-# Y = CONS_USA[:,3]
-# scatter(Y, C)
-# xlabel!("Y")
-# ylabel!("C")
-# Regresión MCO (librería GLM)
-using GLM;
-KEYNES_model = lm(@formula(C ~ Y), CONS_USA)
-# R^2
-print("R^2 estándar ->   ",r2(KEYNES_model))
-# Regresión MCO (librería Econometrics)
-using Econometrics;
-KEYNES_model_2 = fit(EconometricModel, @formula(C ~ Y), CONS_USA)
-```
 
 # ANEXO: fpp3 -> librería R específica para el análisis de series temporales
 
-```{r}
-# Esta macro-librería contiene varias librerías específicas y otras generales
+```{r, message = FALSE, warning = FALSE}
+# Esta macro-librería contiene varias librerías específicas y otras generales de R
 # [https://github.com/robjhyndman/fpp3-package]
 # El libro de texto que acompaña a este package es el siguiente: https://otexts.com/fpp3/
 library(fpp3) 
@@ -113,55 +87,36 @@ CY_USA <-  CONS_USA[,2:3] %>%
 CY_USA %>% autoplot(C) +
   ggtitle("Consumo privado en Estados Unidos") +
   ylab("$ million") + xlab("Year")
-#
 CY_USA %>% autoplot(Y) +
   ggtitle("Renta disponible en Estados Unidos") +
   ylab("$ million") + xlab("Year")
-#
 CY_USA %>% autoplot(vars(C,Y)) +
   ggtitle("Consumo privado y renta disponible en Estados Unidos") +
   ylab("$ million") + xlab("Year")
-#
-# Estimación de una función Keynesiana de consumo para Estados Unidos (1959-2015)
-#
-# Gráfica de las dos series temporales conjuntamente
-#
+# ggplot2
 CY_USA %>%
   ggplot(aes(x = Year)) +
   geom_line(aes(y = C, colour = "Consumo")) +
   geom_line(aes(y = Y, colour = "Renta")) +
   ylab("$ million") + xlab("Year") +
   guides(colour=guide_legend(title="Variables"))
-#
+# Estimación de una función Keynesiana de consumo para Estados Unidos (1959-2015)
 # Para estudiar la relación entre las dos elaboramos el siguiente diagrama de puntos (scatterplot)
-#
 CY_USA %>%
   ggplot(aes(x = Y, y = C)) +
   geom_point() +
   ylab("Consumo privado ($ million)") + xlab("Renta disponible ($ million)")
-#
 # Diagrama de puntos junto con la recta de regresión estimada
-#
 CY_USA %>%
   ggplot(aes(x=Y, y=C)) +
   ylab("Consumo") +
   xlab("Renta") +
   geom_point() +
   geom_smooth(method="lm", se=FALSE)
-#
 # Regresión MCO
-#
-CY_USA %>%
-  model(tslm = TSLM(C ~ Y)) %>%
-  report()
-#
-# O también: 
-#
 KEYNES_model_2 <-  CY_USA %>% model(tslm = TSLM(C ~ Y))
 report(KEYNES_model_2)
-#
 # Ajuste del modelo
-#
 augment(KEYNES_model_2) %>%
   ggplot(aes(x = Year)) +
   geom_line(aes(y = C, colour = "Valores observados")) +
@@ -169,45 +124,30 @@ augment(KEYNES_model_2) %>%
   xlab("Year") + ylab(NULL) +
   ggtitle("Ajuste del modelo Keynesiano de consumo") +
   guides(colour=guide_legend(title=NULL))
-#
 # Estadísticos de ajuste
-#
 glance(KEYNES_model_2) %>% select(r_squared, adj_r_squared, CV, AIC, AICc, BIC)
-# 
 # Evaluación del modelo estimado
-#
 # Autocorrelación y normalidad de los errores (a través de los residuos estimados)
-#
 KEYNES_model_2 %>% gg_tsresiduals()
-#
 augment(KEYNES_model_2) %>% features(.resid, ljung_box, lag = 10, dof = 2)
-#
 # Residuos frente a predictores (no linealidad o mala especificación funcional)
-#
 tmp <- left_join(CY_USA, residuals(KEYNES_model_2), by = "Year")
 ggplot(tmp, aes(x=Y, y=.resid)) +
   geom_point() + ylab("Residuals")
-#
 # Residuos frente a valores estimados (heteroscedasticidad)
-#
 augment(KEYNES_model_2) %>%
   ggplot(aes(x=.fitted, y=.resid)) +
   geom_point() +
   labs(x = "Fitted", y = "Residuals")
-#
 # No estacionariedad de las variables (raíces unitarias) -> Modelo con tendencia determinística
-#
  CY_USA %>%
   model( TSLM(C ~ trend() + Y) ) %>%
   report()
 # Modelo logarítmico
-#
  CY_USA %>%
   model(tslm = TSLM(log(C) ~ log(Y))) %>%
   report()
-#
 # Predicciones
-#
 KEYNES_model_2 <- CY_USA %>%
   model(lm = TSLM(C ~ Y))
 #
@@ -219,10 +159,8 @@ new_C <- new_data(CY_USA, n = 4) %>%
   mutate(Y = c(12000,11900,11800,11700), Scenario = "Disminución")
 fcast_down <- forecast(KEYNES_model_2, new_C) %>%
   as_fable(response = "C", key = "Scenario")
-#
 CY_USA %>%
   autoplot(C) +
   autolayer(bind_rows(fcast_up, fcast_down)) +
   ylab("Consumo privado ($ million)")
-#
 ```

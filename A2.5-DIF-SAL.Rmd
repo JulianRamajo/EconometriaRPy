@@ -3,7 +3,7 @@ title: 'TEMA 2: Modelo de regresión lineal con varios tipos de variables explic
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.4: Diferencia salarial entre hombres y mujeres en Estados Unidos'
+subtitle: 'Aplicación 2.5: Diferencia salarial entre hombres y mujeres en Estados Unidos'
 output:
   html_document:
     theme: journal
@@ -29,7 +29,7 @@ $$
 # Código R
 
 ```{r, message=FALSE}
-# Librerías básicas
+# Lectura de librerías
 library(tidyverse)
 library(huxtable)
 library(car)
@@ -37,6 +37,8 @@ library(lmtest)
 library(sandwich)
 library(moments)
 library(corrplot)
+# Lectura de datos
+cps <- read_csv("MORG14_USA.csv")
 #
 #  USA 2014 CENSUS DATA: morg2014.csv
 # - Cross-sectional data: year 2014
@@ -54,28 +56,19 @@ library(corrplot)
 # - Labels of the variables are downlodable from here: <http://data.nber.org/morg/docs/cpsx.pdf>
 # - Occupational classification (census 2010) codes: <https://www.bls.gov/cps/cenocc2010.htm>
 #
-cps <- read_csv("MORG14_USA.csv")
-#
-## FILTRADO DE OBSERVACIONES: 
+# FILTRADO DE OBSERVACIONES: 
 #
 # Edad entre 24 to 64 años; 
 # Individuals who reported 20 hours more as their usual weekly time worked; 
 # Ingresos semanales posittivos; 
 # Empleados con al menos estudios primarios ("High school graduate, diploma or GED")
-
 cps <- cps %>% filter(age>=24 & age<=64 & uhours>=20 & earnwke>0 & grade92>=39)
 glimpse(cps)
-#
 # TRASNSFORMACIÓN DE VARIABLES
-#
 cps <- cps %>% mutate(female=sex==2, w=earnwke/uhours) %>% filter(w>=1)
-#           
 # DISTRIBUCIÓN DE LOS SALARIOS
-#
 cps %>% dplyr::select(earnwke,uhours,w) %>% summary()
-#
 # Histograma
-#
 earnings_hist<- ggplot(data = cps, aes (x = w, y = 2*(..count..)/sum(..count..))) +
   geom_histogram(binwidth = 4,  size = 0.25, alpha = 0.8,  
                  boundary=0, closed='left',  show.legend=F, na.rm =TRUE) +
@@ -94,49 +87,28 @@ earnings_density<- ggplot(data = cps, aes(x=w, y = stat(density), color = female
     geom_text(aes(x = 31, y = 0.03, label = "Male"), size=2) +
     geom_text(aes(x = 30, y = 0.02, label = "Female"), size=2)
 earnings_density
-#
-#
-# PARTE 1: REGRESIONES PARCIALES
-#
 # SALARIOS Y GÉNERO
-#
 reg0 <- lm(log(w) ~ female, data=cps)
-#
 # SALARIOS, SEXO Y EDAD
-#
 reg1 <- lm(log(w) ~ female + age, data=cps)
-#
 reg2 <- lm(log(w) ~ female*age, data=cps) # Interacción entre género y edad
 reg21 <- lm(log(w) ~ age, data=cps %>% filter(female==1)) # Mujeres
 reg22 <- lm(log(w) ~ age, data=cps %>% filter(female==0)) # Hombres
-#
 huxreg(reg0, reg1, reg2, reg21, reg22, statistics = c(N = "nobs", R2 = "r.squared"))
-#
 # No linealidad en la edad
-#
 cps <- cps %>% mutate(age2=age**2, age3=age**3, age4=age**4)
-#
 reg3 <- lm(log(w) ~ female + age + age2 + age3 + age4, data=cps)
-#
 huxreg(reg1, reg3, statistics = c(N = "nobs", R2 = "r.squared"))
 # Interacción con términos no lineales
 reg31 <- lm(log(w) ~ age + age2 + age3 + age4 + female + female*age + female*age2 + female*age3 + female*age4, data=cps)
-#
 huxreg(reg3, reg31, statistics = c(N = "nobs", R2 = "r.squared"))
-#
 # SALARIOS, SEXO, EDAD Y EDUCACIÓN
-#
 cps <- cps %>% mutate(ed_HSGGED=as.numeric(grade92==39), ed_CND=as.numeric(grade92==40), ed_ADOV=as.numeric(grade92==41), ed_ADAP=as.numeric(grade92==42), ed_BA=as.numeric(grade92==43), ed_MA=as.numeric(grade92==44), ed_PSD = as.numeric(grade92==45), ed_DD = as.numeric(grade92==46))
-#
 reg4 <- lm(log(w) ~ female + age + age2 + age3 + age4 + ed_CND + ed_ADOV + ed_ADAP + ed_BA + ed_MA + ed_PSD + ed_DD, data=cps)
-#
 huxreg(reg1, reg4, statistics = c(N = "nobs", R2 = "r.squared"))
-#
-#
 # SALARIOS, SEXO, EDAD, EDUCACIÓN Y OTROS FACTORES ADICIONALES (CUALITATIVOS)
-#
+# Construcción de factores condicionantes
 # Factores demográficos (predeterminados)
-#
 cps <- cps %>% mutate(white=as.numeric(race==1),
                       afram = as.numeric(race==2),
                       asian = as.numeric(race==4),
@@ -144,9 +116,7 @@ cps <- cps %>% mutate(white=as.numeric(race==1),
                       othernonw = as.numeric(white==0 & afram==0 & asian==0 & hisp==0),
                       nonUSborn = as.numeric(prcitshp=="Foreign Born, US Cit By Naturalization" | prcitshp=="Foreign Born, Not a US Citizen") 
 )
-#
 # Factores demográficos (potencialmente endógenos)
-#
 cps <- cps %>% mutate(married = as.numeric(marital==1 | marital==2),
                       divorced = as.numeric(marital==3 | marital==5 | marital==6),
                       wirowed = as.numeric(marital==4),
@@ -164,23 +134,19 @@ cps <- cps %>% mutate(fedgov = as.numeric(class=="Government - Federal"),
                       ind2dig = as.integer(as.numeric(as.factor(ind02))/100),
                       occ2dig = as.integer(occ2012/100),
                       union = as.numeric(unionmme=="Yes" | unioncov=="Yes"))
-#
+# Regresión con factores
 reg5 <- lm(log(w) ~ female + age + age2 + age3 + age4 + ed_CND + ed_ADOV + ed_ADAP + ed_BA + ed_MA + ed_PSD + ed_DD + afram + hisp + asian + othernonw + nonUSborn + married + divorced + wirowed + child1 + child2 + child3 +child4pl + uhours + fedgov + stagov + locgov + nonprof + union + as.factor(stfips) + as.factor(ind2dig) + as.factor(occ2dig), data=cps)
-#
 # COMPARACIÓN FINAL
-#
 huxreg(reg0, reg5, statistics = c(N = "nobs", R2 = "r.squared"))
-#
 ```
 
 # Código Python
 
 ```{python, message=FALSE}
-#
+# Lectura de librerías
 import os
 import sys
 import warnings
-#
 import numpy as np
 import pandas as pd
 from mizani.formatters import percent_format
@@ -191,21 +157,17 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from mizani import transforms
 from stargazer.stargazer import Stargazer
-#
-#
+# Lectura de datos
 cps = pd.read_csv("MORG14_USA.csv")
+# Filtrado
 cps = cps.query("age>=24 & age<=64 & uhours>=20 & earnwke>0 & grade92>=39")
-#
+# Operaciones con variables
 cps["female"] = (cps.sex == 2).astype(int)
 cps["w"] = cps["earnwke"] / cps["uhours"]
 cps = cps.query("w>=1")
-#
-# DISTRIBUTION OF EARNINGS
-#
+# DISTRIBUCIÓN DE LOS SALARIOS
 cps.loc[:,["earnwke","uhours","w"]].describe()
-#
-# EARNINGS, GENDER AND AGE REGRESSION
-#
+# SALARIOS, SEXO Y EDAD
 reg1 = smf.ols(formula="np.log(w) ~ female", data=cps).fit()
 print(reg1.summary())
 # Histograma
@@ -238,44 +200,36 @@ ggplot(cps, aes(x="w", y="2*stat(count)/sum(stat(count))")) + geom_histogram(
 #    aes(x=55, y=0.020, label="'Female'"), size=12
 #) + theme_bw()
 #
-# PARTE 1: REGRESIONES PARCIALES
-#
 # SALARIOS, SEXO Y EDAD
-#
 reg0 = smf.ols(formula="np.log(w) ~ female", data=cps).fit()
 reg1 = smf.ols(formula="np.log(w) ~ female + age", data=cps).fit()
 reg2 = smf.ols(formula="np.log(w) ~ female*age", data=cps).fit()
 reg21 = smf.ols(formula="np.log(w) ~ age", data=cps.query("female==1")).fit()
 reg22 = smf.ols(formula="np.log(w) ~ age", data=cps.query("female==0")).fit()
-#
 stargazer = Stargazer([reg0, reg1, reg2])
 stargazer.custom_columns(["log(w)", "log(w)", "log(w)"], [1, 1, 1])
 stargazer.covariate_order(["female", "age", "female:age", "Intercept"])
 stargazer.rename_covariates({"Intercept": "Constant"})
 stargazer
+# Regresiones diferenciadas por sexo
 print(reg21.summary())
 print(reg22.summary())
-#
 # No linealidad en la edad
-#
 cps["age2"] = np.power(cps["age"], 2)
 cps["age3"] = np.power(cps["age"], 3)
 cps["age4"] = np.power(cps["age"], 4)
-#
 reg3 = smf.ols(formula="np.log(w) ~ female + age + age2 + age3 + age4", data=cps).fit()
 reg31 = smf.ols(
     formula="np.log(w) ~ age + age2 + age3 + age4 + female + female*age + female*age2 + female*age3 + female*age4", data=cps).fit()
-#
 stargazer = Stargazer([reg1,reg3])
 stargazer.covariate_order(
     ["female", "age", "age2","age3","age4","Intercept"]
 )
 stargazer.rename_covariates({"Intercept": "Constant"})
 stargazer
+# Regresión con interacciones edad-sexo
 print(reg31.summary())
-#
 # SALARIOS, SEXO, EDAD Y EDUCACIÓN
-#
 cps["ed_HSGGED"] = (cps["grade92"] == 39).astype(int)
 cps["ed_CND"] = (cps["grade92"] == 40).astype(int)
 cps["ed_ADOV"] = (cps["grade92"] == 41).astype(int)
@@ -284,18 +238,15 @@ cps["ed_BA"] = (cps["grade92"] == 43).astype(int)
 cps["ed_MA"] = (cps["grade92"] == 44).astype(int)
 cps["ed_PSD"] = (cps["grade92"] == 45).astype(int)
 cps["ed_DD"] = (cps["grade92"] == 46).astype(int)
-#
 reg4 = smf.ols(formula="np.log(w) ~ female + age + age2 + age3 + age4 + ed_CND + ed_ADOV + ed_ADAP + ed_BA + ed_MA + ed_PSD + ed_DD", data=cps).fit()
-#
 stargazer = Stargazer([reg1,reg4])
 stargazer.covariate_order(
     ["female", "age", "age2", "age3", "age4", "ed_CND", "ed_ADOV", "ed_ADAP", "ed_BA", "ed_MA", "ed_PSD", "ed_DD", "Intercept"]
 )
 stargazer.rename_covariates({"Intercept": "Constant"})
 stargazer
-# 
 # SALARIOS, SEXO, EDAD, EDUCACIÓN Y OTROS FACTORES ADICIONALES (CUALITATIVOS)
-#
+# Construcción de factores condicionantes
 cps["white"] = (cps["race"] == 1).astype(int)
 cps["afram"] = (cps["race"] == 2).astype(int)
 cps["asian"] = (cps["race"] == 4).astype(int)
@@ -307,7 +258,6 @@ cps["nonUSborn"] = (
     (cps["prcitshp"] == "Foreign Born, US Cit By Naturalization")
     | (cps["prcitshp"] == "Foreign Born, Not a US Citizen")
 ).astype(int)
-# 
 cps['married']=((cps['marital']==1)|(cps['marital']==2)).astype(int)
 cps['divorced']=((cps['marital']==3)&(cps['marital']==5)).astype(int)
 cps['wirowed']=(cps['marital']==4).astype(int)
@@ -317,7 +267,6 @@ cps['child1']=(cps['chldpres']==1).astype(int)
 cps['child2']=(cps['chldpres']==2).astype(int)
 cps['child3']=(cps['chldpres']==3).astype(int)
 cps['child4pl']=(cps['chldpres']>=4).astype(int)
-#
 cps['fedgov']=(cps['class']=="Government - Federal").astype(int)
 cps['stagov']=(cps['class']=="Government - State").astype(int)
 cps['locgov']=(cps['class']=="Government - Local").astype(int)
@@ -325,13 +274,10 @@ cps['nonprof']=(cps['class']=="Private, Nonprofit").astype(int)
 cps['ind2dig']=((pd.Categorical(cps["ind02"]).codes+1)/100).astype(int)
 cps['occ2dig']=(cps["occ2012"]/100).astype(int)
 cps['union']=((cps['unionmme']=="Yes")|(cps['unioncov']=="Yes")).astype(int)
-#
+# Regresión con factores
 reg5 = smf.ols(formula="np.log(w) ~ female + age + age2 + age3 + age4 + ed_CND + ed_ADOV + ed_ADAP + ed_BA + ed_MA + ed_PSD + ed_DD + afram + hisp + asian + othernonw + nonUSborn +  married + divorced+ wirowed + child1 + child2 + child3 + child4pl + uhours + fedgov + stagov + locgov + nonprof + union + C(stfips) + C(ind2dig) + C(occ2dig)", data=cps).fit()
-#
 print(reg5.summary())
-#
 # COMPARACIÓN FINAL
-# 
 stargazer = Stargazer([reg0, reg5])
 stargazer.covariate_order(["female"])
 stargazer.add_line("Edad y educación", ["", "Yes"])
@@ -339,6 +285,4 @@ stargazer.add_line("Características familliares", ["", "Yes"])
 stargazer.add_line("Características demográficas", ["", "Yes"])
 stargazer.add_line("Características laborales", ["", "Yes"])
 stargazer
-#
 ```
-

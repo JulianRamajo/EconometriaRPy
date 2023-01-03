@@ -18,7 +18,7 @@ output:
 
 # Objetivo
 
-En esta aplicación se estimará una función de demanda de electricidad en el estado de Victoria, en Australia. Se explicará el consumo de electricidad en función de la temperatura y de otras variables de control, usando datos semi-horarios (cada media hora) para el período 2012-2014.
+En esta aplicación se estimará una función de demanda de electricidad para el estado de Victoria, en Australia. Se explicará el consumo de electricidad en función de la temperatura y de otras variables de control, usando datos semi-horarios (cada media hora) para el período 2012-2014.
 
 # Código R
 
@@ -87,17 +87,6 @@ Xs_1d <- new_data(dem_elec_vict, 1) %>%
 pred_dem_IC <- predict(dem_elec, Xs_1d[,2:6], interval = "confidence", level = 0.95)
 pred_dem_IC
 exp(pred_dem_IC)
-#
-# Anexo: Modelización de la estacionalidad múltiple -> términos de regresión armónicos
-#
-dem_elec_s <- dem_elec_vict %>% model(ARIMA((log(Demanda) ~ Temperatura + I(Temperatura^2) + Dia_sem + Dia_lab + Frio + Calor + PDQ(0, 0, 0) + pdq(d = 0) + fourier(period = "day", K = 10) + fourier(period = "week", K = 5) + fourier(period = "year", K = 3))))
-report(dem_elec_s)
-# Los residuos demuestran que aún queda mucha información por modelizar ...
-dem_elec_s %>% gg_tsresiduals()
-# Se puede consultar el siguiente artículo para ver una ampliación del modelo:
-# Fan, S., y Hyndman, R.J. (2012): "Short-term load forecasting based on a semi-parametric additive model", IEEE Transactions on Power Systems, 27(1), 134–141. [https://doi.org/10.1109/TPWRS.2011.2162082]
-# Entre otras cosas, podrían introducirse los valores de demanda recientes (intra-día y entre-días) para captar el comportamiento dinámico de la demanda:
-dem_elec_d <- dem_elec_vict %>% model(TSLM(log(Demanda) ~ lag(log(Demanda), 1) + lag(log(Demanda), 2) + lag(log(Demanda), 3) + lag(log(Demanda), 4) + lag(log(Demanda), 48) + lag(log(Demanda), 2*48) + Temperatura + I(Temperatura^2) + Dia_sem + Dia_lab + Frio + Calor)) %>% report()
 ```
 
 # Código Python
@@ -113,7 +102,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 # Lectura de datos
 dem_elec_vict = pd.read_csv('DEM_ELEC.csv', index_col=0)
-# ´Gráfica consumo versus temperatura
+# Gráfica consumo versus temperatura
 plt.figure(3)
 plt.scatter(dem_elec_vict['Temperatura'], dem_elec_vict['Demanda'])
 plt.xlabel('Temperatura')
@@ -121,25 +110,7 @@ plt.ylabel('Demanda')
 plt.title('Consumo electricidad versus temperatura')
 plt.grid(True)
 plt.show()
-# Modelo básico de demanda de electricidad
+# Modelo de demanda de electricidad
 dem_elec = smf.ols('np.log(Demanda) ~ Temperatura + np.power(Temperatura,2) + Dia_sem + Dia_lab + Frio + Calor', data=dem_elec_vict).fit()
 print(dem_elec.summary())
-```
-
-# Código Julia
-
-```{r, echo = FALSE}
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-using DataFrames, CSV;
-# Lectura de datos
-dem_elec_vict = CSV.read("DEM_ELEC.csv", DataFrame);
-# Regresión MCO (librería GLM)
-using GLM;
-dem_elec = lm(@formula(log(Demanda) ~ Temperatura + Temperatura^2 + Dia_sem + Dia_lab + Frio + Calor), dem_elec_vict);
-using RegressionTables;
-regtable(dem_elec)
 ```

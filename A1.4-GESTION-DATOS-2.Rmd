@@ -1,5 +1,5 @@
 ---
-title: 'TEMA1: Lectura, filtrado, selección, transformación y representación gráfica de datos en R, Python y Julia'
+title: 'TEMA1: Lectura, gestión y representación gráfica de series temporales en R y Python'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
@@ -42,7 +42,7 @@ MSFT <- stock_data %>% filter(ticker == "MSFT")
 p_MSFT <- MSFT %>% select(ref.date,price.close) %>% rename(date = ref.date)
 head(p_MSFT)
 tail(p_MSFT)
-# 
+# Lectura de datos
 SP500 <- read_csv("sp500_index.csv")
 # select
 p_SP500 <- SP500 %>% select(ref.date,price.close) %>% rename(date = ref.date)
@@ -62,7 +62,6 @@ p1 <- ggplot(data = data_daily, aes(x = date)) +
                minor_breaks = "1 year") +
   labs(y = "Precio diario de las acciones de Microsoft (US $)", x = "Fecha")
 p1
-#
 p2 <- ggplot(data = data_daily,aes(x = date)) +
   geom_line(aes(y = pSP500), size = 0.5) +
   scale_y_continuous(limits = c(500,3000), breaks = seq(500,3000,500)) +  
@@ -71,7 +70,6 @@ p2 <- ggplot(data = data_daily,aes(x = date)) +
                minor_breaks = "1 year") +
   labs(y = "Índice diario S&P 500 del mercado bursátil", x = "Fecha")
 p2
-#
 p3 <- ggplot(data_daily, aes(x = l_pSP500,y = l_pMSFT)) + 
                geom_point() +  
                stat_smooth(method = lm) +  
@@ -105,7 +103,7 @@ p_MSFT = MSFT[['ref.date','price.close']]. \
 p_MSFT['date']=pd.to_datetime(p_MSFT['date'])
 p_MSFT.head()
 p_MSFT.tail()
-# 
+# Lectura de datos
 sp500_index = pd.read_csv("sp500_index.csv")
 p_SP500 = sp500_index[['ref.date','price.close']]. \
     rename(columns={'ref.date':'date'}). \
@@ -129,35 +127,8 @@ plt.show()
 (ggplot(data_daily) + geom_line(aes('date','pSP500'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
 + labs(y = "Índice S&P 500 del mercado bursátil",x= "Date (day)") + theme_bw())
 plt.show()
-# 
 (ggplot(data_daily,aes('l_pSP500','l_pMSFT')) + geom_point() + geom_smooth(method='lm',se=False) + labs(x="Índice S&P 500 (log)",y="Precio diario acciones de Microsoft (log)") + theme_bw())
 # Regresión lineal simple
 reg = smf.ols('l_pMSFT ~ l_pSP500', data=data_daily).fit()
 print(reg.summary())
 ```
-
-# Código Julia
-
-```{r, echo = FALSE}
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-using DataFrames, CSV, Query
-# Lectura de datos
-stock_data = CSV.read("sp500_45.csv", DataFrame);
-# Filter
-MSFT = stock_data[stock_data.ticker .== "MSFT", :];
-#
-SP500 = CSV.read("sp500_index.csv", DataFrame);
-# 
-p_MSFT = MSFT |> @select(2,4) |> @rename(:ref.date => :date, :price.close => :p_MSFT) |> DataFrame
-p_SP500 = SP500 |> @select(2,4) |> @rename(:ref.date => :date, :price.close => :p_SP500) |> DataFrame
-data_daily = p_SP500 |> @join(p_MSFT, _.date, _.date, {_.date, _.p_SP500, __.p_MSFT}) |> DataFrame
-data_daily = data_daily |> @mutate(l_pSP500 = log(_.p_SP500) , l_pMSFT = log(_.p_MSFT)) |> DataFrame
-# Regresión MCO (librería Econometrics)
-using Econometrics
-reg = fit(EconometricModel, @formula(l_pMSFT ~ l_pSP500), data_daily )
-```
-

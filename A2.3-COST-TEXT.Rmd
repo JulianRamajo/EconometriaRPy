@@ -3,7 +3,7 @@ title: 'TEMA 2: Modelo de regresión lineal con forma funcional polinómica'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.2: Curva de costes en el sector textil'
+subtitle: 'Aplicación 2.3: Curva de costes en el sector textil'
 output:
   html_document:
     theme: journal
@@ -25,10 +25,9 @@ library(tidyverse)
 COST_TEXT <- read_csv("COST_TEXT.csv")
 # Gráficas
 ggplot(COST_TEXT, aes(x = Q, y = COST)) + geom_point()
-# EStimación de modelos
+# Estimación de modelos
 model1 <- lm(COST ~ Q + I(Q^2), data = COST_TEXT)
 summary(model1)
-# 
 model2 <- lm(COST ~ poly(Q, 2, raw = TRUE), data = COST_TEXT)
 summary(model2)
 ```
@@ -37,40 +36,19 @@ summary(model2)
 
 ```{python, message=FALSE}
 # Lectura de librerías
-import pandas as pd
 import numpy as np
-import statsmodels.formula.api as sms
+import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use('seaborn-whitegrid')
+import statsmodels.formula.api as sms
 # Lectura de datos
 COST_TEXT = pd.read_csv('COST_TEXT.csv')
 # Gráficas
 plt.scatter(COST_TEXT['Q'], COST_TEXT['COST'], marker='o', color='black')
 plt.show()
-#
+# Estimación de modelos
 model1 = sms.ols('COST ~ Q + I(Q**2)', data=COST_TEXT)
 print(model1.fit().summary())
-#
 model2 = sms.ols('COST ~ Q + np.power(Q, 2)', data=COST_TEXT)
 print(model2.fit().summary())
-```
-
-# Código Julia
-
-```{r, echo = FALSE}
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-using DataFrames, CSV;
-# Lectura de datos
-COST_TEXT = CSV.read("COST_TEXT.csv", DataFrame);
-# Gráficas
-using Plots
-gr()
-scatter(COST_TEXT.Q,COST_TEXT.COST, title = "Scatter Plot COST vs Q", ylabel = "COST", xlabel = "Q",legend = false)
-# Regresión MCO (librería Econometrics)
-using Econometrics;
-model1 = fit(EconometricModel, @formula(COST ~ Q + Q^2), COST_TEXT)
 ```

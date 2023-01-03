@@ -3,7 +3,7 @@ title: 'TEMA 2: Modelo de regresión lineal con términos de interacción'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 2.3: Efectos diferenciados de la publicidad sobre las ventas'
+subtitle: 'Aplicación 2.4: Efectos diferenciados de la publicidad sobre las ventas'
 output:
   html_document:
     theme: journal
@@ -25,10 +25,10 @@ library(plotly)
 library(magrittr)
 # Lectura de datos
 PUB_VENTAS <- read_csv("PUB_VENTAS.csv")
-# Estimación del modelo y gráficas
+# Estimación del modelo lineal
 model1 <- lm(data = PUB_VENTAS, formula = VENTAS ~ TV + RADIO)
 summary(model1)
-#
+# Gráfica del ajuste
 plot_ly(data = PUB_VENTAS) %>%
     add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, mode = "markers", type = "scatter3d",
               marker = list(size = 5, color = "blue", symbol = 104), name = "Observaciones") %>% 
@@ -37,10 +37,10 @@ plot_ly(data = PUB_VENTAS) %>%
     layout(scene = list(xaxis = list(title = 'TV'), yaxis = list(title = 'RADIO'),
                         camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
                         zaxis = list(title = 'VENTAS'), aspectmode='cube'))
-#
+# Estimación del modelo con interacción
 model2 <- lm(data = PUB_VENTAS, formula = VENTAS ~ TV * RADIO)
 summary(model2)
-#
+# Gráfica del ajuste
 plot_ly(data = PUB_VENTAS) %>%
     add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, mode = "markers", type = "scatter3d",
               marker = list(size = 5, color = "blue", symbol = 104), name = "Observaciones") %>% 
@@ -61,36 +61,10 @@ import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 # # Lectura de datos
 PUB_VENTAS = pd.read_csv('PUB_VENTAS.csv')
-# Estimación de modelos y gráficas
+# Estimación del modelo lineal
 model1 = smf.ols('VENTAS ~ TV + RADIO', data=PUB_VENTAS)
 print(model1.fit().summary())
-#
+# Estimación del modelo con interacción
 model2 = smf.ols('VENTAS ~ TV * RADIO', data=PUB_VENTAS)
 print(model2.fit().summary())
-```
-
-# Código Julia
-
-```{r, echo = FALSE}
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-using DataFrames, CSV;
-# Lectura de datos
-PUB_VENTAS = CSV.read("PUB_VENTAS.csv", DataFrame);
-# Regresión MCO 
-# Librería Econometrics
-using Econometrics;
-model1 = fit(EconometricModel, @formula(VENTAS ~ TV + RADIO), PUB_VENTAS)
-model1 = fit(EconometricModel, @formula(VENTAS ~ TV * RADIO), PUB_VENTAS)
-# Librería GLM
-using GLM;
-model1 = lm(@formula(VENTAS ~ TV + RADIO), PUB_VENTAS);
-model2 = lm(@formula(VENTAS ~ TV * RADIO), PUB_VENTAS);
-using RegressionTables;
-regtable(model1, model2)
-# Comparación de modelos
-ftest(model1.model, model2.model)
 ```
