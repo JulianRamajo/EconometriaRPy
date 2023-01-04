@@ -1,5 +1,5 @@
 ---
-title: 'Modelo de regresión lineal simple: Estimación MCO y contrastes de hipótesis'
+title: 'Regresión lineal: Estimación MCO y contrastes de hipótesis'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
@@ -22,7 +22,9 @@ En esta aplicación se estimará una versión simple del modelo CAPM (https://es
 
 $$er\_SAN_{t} = \beta_{1} + \beta_{2}\, er\_IBEX_{t} + e_{t}$$
 
-donde $er\_SAN$ representa el 'exceso de rendimiento' de las acciones del Banco Santander (rentabilidad de las acciones del banco menos rentabilidad de un activo libre de riesgo, las letras del tesoro) y $er\_IBEX$ es el exceso de rendimiento del mercado (representando por el índice IBEX35 de la bolsa española).
+donde $er\_SAN$ representa el *exceso de rendimiento* de las acciones del Banco Santander, definido como la diferencia entre la rentabilidad de las acciones del banco y la rentabilidad de un activo libre de riesgo, en nuestro caso las letras del tesoro, y $er\_IBEX$ es el exceso de rendimiento del mercado, representado por el índice IBEX35 de la bolsa española.
+
+Como ejercicio, se pueden repetir todos los cálculos de la aplicación para las empresas Telefónica e Inditex.
 
 # Código R
 
@@ -30,31 +32,30 @@ donde $er\_SAN$ representa el 'exceso de rendimiento' de las acciones del Banco 
 # Lectura de librerías
 library(tidyverse)
 # Lectura de datos
-CAPM_ESP <- read_delim("CAPM_ESP.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
-head(CAPM_ESP )
-tail(CAPM_ESP )
+CAPM_ESP <- read_delim("CAPM_ESP.csv", delim = ";")
+head(CAPM_ESP)
+tail(CAPM_ESP)
 # Transformación de variables
 CAPM_ESP$r_SAN = c(NA,100*diff(log(CAPM_ESP$P_SANTANDER)))
 CAPM_ESP$r_IBEX = c(NA,100*diff(log(CAPM_ESP$P_IBEX35)))
 CAPM_ESP$r_LT1Y = CAPM_ESP$R_LT1Y/12
 CAPM_ESP$er_SAN = CAPM_ESP$r_SAN - CAPM_ESP$r_LT1Y
 CAPM_ESP$er_IBEX = CAPM_ESP$r_IBEX - CAPM_ESP$r_LT1Y
-# Datos en formato de series temporales
+# Formato de series temporales
 ts_CAPM_ESP <- ts(CAPM_ESP, start = c(2001,5), end = c(2018,1), frequency = 12)
-# Gráficas
+# Algunas gráficas de las variables básicas del modelo
 ts.plot(ts_CAPM_ESP[,"P_IBEX35"])
 ts.plot(ts_CAPM_ESP[,"P_SANTANDER"])
 ts.plot(ts_CAPM_ESP[,"r_SAN"],ts_CAPM_ESP[,"r_IBEX"])
 ts.plot(ts_CAPM_ESP[,"r_LT1Y"])
 ts.plot(ts_CAPM_ESP[,"er_SAN"],ts_CAPM_ESP[,"er_IBEX"])
 # Modelo CAPM para las acciones del Banco Santander 
-# (Como ejercicio, repetir los cálculos para Telefónica e Inditex)
 CAPM_SANTANDER  <-  lm(er_SAN ~ er_IBEX, data = ts_CAPM_ESP)
 summary(CAPM_SANTANDER)
 # Intervalos de confianza para los parámetros estructurales del modelo
-# Automáticos
+# Cálculo automático
 confint(CAPM_SANTANDER)
-# Manualmente
+# Cálculo de forma 'manual'
 alpha <- 0.05
 df <- df.residual(CAPM_SANTANDER) # grados de libertad
 t_c <- qt(1-alpha/2, df)
@@ -92,12 +93,13 @@ F_0
 res <- s_CAPM_SANTANDER$residuals
 res <- ts(res, start=c(2001,5), end = c(2018,1), frequency = 12)
 plot(res)
+# Histograma de los residuos y comparación con la distribución normal
 ehat <- resid(CAPM_SANTANDER)
 ebar <- mean(ehat)
 sdehat <- sd(ehat)
-hist(ehat, col="grey", freq=FALSE, main="", ylab="density", xlab="ehat")
+hist(ehat, col="grey", breaks = 20, freq=FALSE, main="", ylab="density", xlab="ehat")
 curve(dnorm(x, ebar, sdehat), col=2, add=TRUE, ylab="density", xlab="ehat")
-# Contrastes de hipótesis
+# Contrastes de hipótesis bilaterales
 # beta1=0 versus beta1≠0
 # Estadístico t
 alpha <- 0.05 # nivel de significación
@@ -112,14 +114,15 @@ t_0
 # Método del valor crítico
 t_c <- qt(1-alpha/2, df) # valor crítico
 t_c
-# Gráfico de la función de densidad de la distribución t de Student, del valor crítico y del estadístico t:
+# Gráfico de la función de densidad de la distribución t de Student, del valor crítico 
+# y del estadístico t_0
 curve(dt(x, df), -5, 5, ylab=" ", xlab="t")
 abline(v=c(-t_c, t_c, t_0), col=c("red", "red", "blue"), lty=c(2,2,3))
 legend("topleft", legend=c("-t_c", "t_c", "t_0"), col=c("red", "red", "blue"), lty=c(2, 2, 3))
 # Método del P-valor
 p <- 2*(1-pt(abs(t_0), df))
 p
-# Gráfico de la función de densidad de la distribución t de Student y del estadístico t_0:
+# Gráfico de la función de densidad de la distribución t y del estadístico t_0
 curve(dt(x, df), -5, 5, ylab=" ", xlab="t")
 abline(v=c(t_0), col=c("blue"), lty=c(3))
 legend("topleft", legend=c("t_0"), col=c("blue"), lty=c(3))
@@ -127,7 +130,8 @@ legend("topleft", legend=c("t_0"), col=c("blue"), lty=c(3))
 library(car)
 H_0 <- "(Intercept) = 0"
 linearHypothesis(CAPM_SANTANDER, H_0, test="F")
-# Gráfico de la función de densidad de la distribución F de Fisher-Snedecor y del estadístico F_0:
+# Gráfico de la función de densidad de la distribución F de Fisher-Snedecor, del valor crítico 
+# y del estadístico F_0
 F_0 <- linearHypothesis(CAPM_SANTANDER, H_0, test="F")[2,5] # estadístico F
 F_0
 F_c <- qf(1-alpha, 1, df) # valor crítico
@@ -149,14 +153,15 @@ t_0
 # Método del valor crítico
 t_c <- qt(1-alpha/2, df) # valor crítico
 t_c
-# Gráfico de la función de densidad de la distribución t de Student, del valor crítico y del estadístico t:
+# Gráfico de la función de densidad de la distribución t, del valor crítico 
+# y del estadístico t_0
 curve(dt(x, df), -6, 6, ylab=" ", xlab="t")
 abline(v=c(-t_c, t_c, t_0), col=c("red", "red", "blue"), lty=c(2,2,3))
 legend("topleft", legend=c("-t_c", "t_c", "t_0"), col=c("red", "red", "blue"), lty=c(2, 2, 3))
 # Método del P-valor
 p <- 2*(1-pt(abs(t_0), df))
 p
-# Gráfico de la función de densidad de la distribución t de Student y del estadístico t:
+# Gráfico de la función de densidad de la distribución t y del estadístico t_0
 curve(dt(x, df), -6, 6, ylab=" ", xlab="t")
 abline(v=c(t_0), col=c("blue"), lty=c(3))
 legend("topleft", legend=c("t_0"), col=c("blue"), lty=c(3))
@@ -208,7 +213,7 @@ import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 import scipy as sp
 # Lectura de datos
-CAPM_ESP = pd.read_csv('CAPM_ESP.csv', delimiter=';', index_col=0)
+CAPM_ESP = pd.read_csv('CAPM_ESP.csv', delimiter=';', parse_dates=['date'], index_col='date')
 CAPM_ESP.head()
 CAPM_ESP.tail()
 # Transformación de variables
@@ -220,16 +225,16 @@ CAPM_ESP['r_SAN'] = LogDiff(CAPM_ESP['P_SANTANDER'])
 CAPM_ESP['r_LT1Y'] = CAPM_ESP['R_LT1Y']/12
 CAPM_ESP['er_IBEX'] = LogDiff(CAPM_ESP['P_IBEX35']) - CAPM_ESP['R_LT1Y']/12
 CAPM_ESP['er_SAN'] = LogDiff(CAPM_ESP['P_SANTANDER']) - CAPM_ESP['R_LT1Y']/12
-# Gráficas
+# Gráficas de las variables del modelo
 plt.figure(1)
 plt.plot(CAPM_ESP['er_IBEX'], label='Exceso de rendimiento del IBEX35')
 plt.plot(CAPM_ESP['er_SAN'], label='Exceso de rendimiento del Banco Santander')
 plt.xlabel('Date')
 plt.ylabel('%')
 plt.title('Variables del modelo CAPM para el Banco Santander')
-plt.grid(True)
 plt.legend()
 plt.show()
+# Diagrama de puntos asociado a la regresión
 plt.figure(2)
 plt.scatter(CAPM_ESP['er_IBEX'], CAPM_ESP['er_SAN'])
 plt.xlabel('er_IBEX')
@@ -250,25 +255,67 @@ CAPM_SANTANDER.params[0]+CAPM_SANTANDER.bse[0]*t_c
 CAPM_SANTANDER.params[1]+CAPM_SANTANDER.bse[1]*t_c
 # ANOVA
 sm.stats.anova_lm(CAPM_SANTANDER)
-# Contrastes de hipótesis
+# Ajuste del modelo (R^2)
+CAPM_SANTANDER.rsquared
+# Estadístico F de significación global
+CAPM_SANTANDER.fvalue, CAPM_SANTANDER.f_pvalue
+# Estadístico F y R^2
+F_0 = (CAPM_SANTANDER.rsquared/(CAPM_SANTANDER.df_model))/((1-CAPM_SANTANDER.rsquared)/(CAPM_SANTANDER.df_resid))
+F_0, 1-sp.stats.f.cdf(F_0, CAPM_SANTANDER.df_model, CAPM_SANTANDER.df_resid)
+# Número de obsevaciones
+CAPM_SANTANDER.nobs
+# Número de parámetros
+1+CAPM_SANTANDER.df_model
+# Errores estimados (residuos) del modelo
+plt.figure(3)
+plt.plot(CAPM_SANTANDER.resid, label='res')
+plt.xlabel('Date')
+plt.title('Residuos del modelo CAPM para el Banco Santander')
+plt.legend()
+plt.show()
+# Histograma de los residuos y comparación con la distribución normal
+ebar = np.mean(CAPM_SANTANDER.resid)
+sdehat = np.std(CAPM_SANTANDER.resid)
+plt.figure(4)
+fig, ax = plt.subplots()
+ax.hist(CAPM_SANTANDER.resid, bins=20, density=True, edgecolor='white', linewidth=1.2)
+x = np.linspace(min(CAPM_SANTANDER.resid), max(CAPM_SANTANDER.resid), 100)
+ax.plot(x, sp.stats.norm.pdf(x, ebar, sdehat), color='black', label = 'Distribución normal')
+plt.title('Residuos del modelo CAPM para el Banco Santander')
+plt.xlabel('Residuos')
+plt.ylabel('Densidad')
+plt.legend(loc='best')
+plt.tight_layout()
+plt.show()
+# Contrastes de hipótesis bilaterales
 # beta1=0 versus beta1≠0
 # Estadístico t
 t_stat = (CAPM_SANTANDER.params['Intercept']-0)/CAPM_SANTANDER.bse['Intercept']
 t_stat, 2*sp.stats.t.cdf(t_stat, CAPM_SANTANDER.df_resid)
-# Estadístico F
+# Estadístico F y P-valor
 H_0 = 'Intercept = 0'
-F_test = CAPM_SANTANDER.f_test(H_0)
-print(F_test)
+F_0 = CAPM_SANTANDER.f_test(H_0)
+print(F_0)
 # beta2=1 versus beta2≠1
-# Estadístico t
-t_stat = (CAPM_SANTANDER.params['er_IBEX']-1)/CAPM_SANTANDER.bse['er_IBEX']
-t_stat, 2*sp.stats.t.cdf(t_stat, CAPM_SANTANDER.df_resid)
-# Estadístico F
+# Estadístico t y P-valor
+t_0 = (CAPM_SANTANDER.params['er_IBEX']-1)/CAPM_SANTANDER.bse['er_IBEX']
+t_0, 2*sp.stats.t.cdf(t_0, CAPM_SANTANDER.df_resid)
+# Estadístico F y P-valor
 H_0 = 'er_IBEX = 1'
-F_test = CAPM_SANTANDER.f_test(H_0)
-print(F_test)
+F_0 = CAPM_SANTANDER.f_test(H_0)
+print(F_0)
 # Contraste conjunto de la hipótesis beta1=0, beta2=1
+# Estadístico F y P-valor
 H_0 = 'Intercept = 0 , er_IBEX = 1'
-F_test = CAPM_SANTANDER.f_test(H_0)
-print(F_test)
+F_0 = CAPM_SANTANDER.f_test(H_0)
+print(F_0)
+# Contrastes unilaterales
+# beta2≤1 versus beta2>1
+# Estadístico t y P-valor
+t_0 = (CAPM_SANTANDER.params['er_IBEX']-1)/CAPM_SANTANDER.bse['er_IBEX']
+t_0, 1-sp.stats.t.cdf(t_0, CAPM_SANTANDER.df_resid)
+# beta2≥2 versus beta2<2
+# Estadístico t y P-valor
+t_0 = (CAPM_SANTANDER.params['er_IBEX']-2)/CAPM_SANTANDER.bse['er_IBEX']
+t_0, sp.stats.t.cdf(t_0, CAPM_SANTANDER.df_resid)
 ```
