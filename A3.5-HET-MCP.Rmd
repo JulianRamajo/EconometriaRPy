@@ -54,18 +54,18 @@ summary(DEM_HET)
 # Estimación MCO
 modelo_MCO <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), data = DEM_HET)
 summary(modelo_MCO)
-DEM_HET$resid2 = resid(modelo_MCO)^2
 # Chequeo de la hipótesis de homoscedasticidad
-# Contrastes estándar (automáticos): incluyen como Z's a todas las variables explicativas del modelo
+# Contrastes estándar (automáticos): Z's -> variables explicativas del modelo
 # Test de White
-white_lm(modelo_MCO)
-white_lm(modelo_MCO, interactions=TRUE)
+white(modelo_MCO)
+white(modelo_MCO, interactions=TRUE)
 # Test de Glejser
 glejser(modelo_MCO)
 # Test de Breusch-Pagan
 breusch_pagan(modelo_MCO)
 # Contrastes específicos: Z's seleccionadas
 # Test de Breusch-Pagan (manual)
+DEM_HET$resid2 = resid(modelo_MCO)^2
 # Análisis gráfico
 ggplot(DEM_HET, aes(x = log(Y), y = resid2)) +
     geom_point(color = "blue") +
@@ -76,23 +76,22 @@ ggplot(DEM_HET, aes(x = log(Y), y = resid2)) +
 # Regresión auxiliar
 summary(modelo_resid2 <- lm(resid2 ~ log(Y), data=DEM_HET))
 N <- nobs(modelo_resid2)
-p <- 1 # Número de regresores (Z's) de la regresión auxiliar, sin incluir la constante
+p <- 1 # Número Z's de la regresión auxiliar, sin incluir la constante
 sm_resid2 <- summary(modelo_resid2)
 R2_m_resid2 <- sm_resid2$r.squared
 BP <- N*R2_m_resid2
 # Contraste Chi-cuadrado
-alpha <- 0.05
-chisqcr <- qchisq(1-alpha, p)
 pval <- 1-pchisq(BP, p)
-BP ; chisqcr ; pval 
+BP ; pval 
 # Test de Breusch-Pagan (automático)
 bptest(modelo_MCO, varformula = ~ log(Y), data=DEM_HET) 
 # Test de Breusch-Pagan robusto (variante de Koenker)
-bptest(modelo_MCO, varformula = ~ log(Y), data=DEM_HET, studentize = FALSE) 
-# ncvTest(modelo_MCO, ~ log(Y)) # Otra versión, con idéntico resultado
-# Corrección básica de la heteroscedasticidad: matriz de covarianzas robusta: MCO-HC
-coeftest(modelo_MCO, vcov. = vcovHC(modelo_MCO,type="HC1")) # Corrección de White (librería sandwich)
-coeftest(modelo_MCO, vcov.=hccm(modelo_MCO, type = "hc1")) # Otra versión, con idéntico resultado (librería car)
+bptest(modelo_MCO, varformula = ~ log(Y), data=DEM_HET, studentize = FALSE)
+# Corrección básica de la heteroscedasticidad: MCO con matriz de covarianzas robusta (MCO-HC)
+# Corrección de White (librería sandwich)
+coeftest(modelo_MCO, vcov. = vcovHC(modelo_MCO,type="HC1"))
+# Otra versión, con idéntico resultado (librería car)
+coeftest(modelo_MCO, vcov.=hccm(modelo_MCO, type = "hc1")) 
 # Corrección avanzada: mínimos cuadrados ponderados (MCP)
 # Regresión auxiliar para el logaritmo de la varianza estimada
 summary(modelo_l_resid2 <- lm(log(resid2) ~ log(Y), data=DEM_HET))
@@ -122,7 +121,6 @@ DEM_HET.describe()
 modelo1 = smf.ols(formula = "np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", data = DEM_HET)
 modelo_MCO = modelo1.fit()
 print(modelo_MCO.summary())
-DEM_HET['resid2'] = (modelo_MCO.resid)**2
 # Contrastes de heteroscedasticidad
 name = ['LM statistic', 'Chi^2 p-val', 'F statistic', 'F p-val']
 # Test de White
@@ -133,53 +131,26 @@ BP_test = smsdiag.het_breuschpagan(modelo_MCO.resid, modelo_MCO.model.exog)
 print(pd.DataFrame([np.round(BP_test, 8)], columns=name))
 # Estimación MCO-HC
 modelo1 = smf.ols(formula = "np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", data = DEM_HET)
-modelo_MCO_HC = modelo1.fit(cov_type='HC1') # HC1 -> corrige la fórmula de White por grados de libertad
-# modelo_MCO_HC = modelo1.fit(cov_type='HC2') # HC2 -> corrige la fórmula de White por grados de libertad y tamaño muestral pequeño
-print(modelo_MCO_HC.summary())
+# HC1 -> corrige la fórmula de White por grados de libertad
+modelo_MCO_HC1 = modelo1.fit(cov_type='HC1')
+print(modelo_MCO_HC1.summary())
+# HC2 -> corrige la fórmula de White por grados de libertad y tamaño muestral pequeño
+modelo_MCO_HC2 = modelo1.fit(cov_type='HC2') 
+print(modelo_MCO_HC2.summary())
 # Estimación MCP (FGLS)
+# Análisis gráfico
+DEM_HET['resid2'] = (modelo_MCO.resid)**2
 sns.regplot(x=np.log(DEM_HET['Y']), y = DEM_HET['resid2'])
 plt.show()
+# Regresión auxiliar para el logaritmo de la varianza estimada
 reg_aux_resid2 = smf.ols(formula = "np.log(resid2) ~ np.log(Y)", data = DEM_HET)
 modelo_l_resid2 = reg_aux_resid2.fit()
 print(modelo_l_resid2.summary())
+# Estimación de la varianza residual (no constante)
 sigma2 = np.exp(modelo_l_resid2.fittedvalues)
 w=list(1/sigma2)
+# MCO con ponderaciones (FGLS)
 modelo2 = smf.wls(formula = "np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", weights = w , data = DEM_HET)
 modelo_MCP = modelo2.fit()
 print(modelo_MCP.summary())
-```
-
-# Código Julia
-
-```{r, echo = FALSE}
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-# Lectura de librerías
-using DataFrames, CSV, Econometrics;
-using Query;
-# Lectura de datos
-DEM_HET  = CSV.read("DEM_HET.csv", DataFrame);
-describe(DEM_HET)
-# Estimación MCO
-modelo_MCO = fit(EconometricModel, @formula(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y)), DEM_HET)
-# Estimación MCO-HC
-modelo_MCO_HC = fit(EconometricModel, @formula(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y)), DEM_HET, vce = HC1)
-# Estimación MCP (FGLS)
-resid=residuals(modelo_MCO);
-Y=(DEM_HET.Y);
-data = DataFrame()
-data.resid = resid;
-data.Y = Y;
-data = data |> @mutate(resid2 = (_.resid)^2 , l_Y = log(_.Y)) |> DataFrame
-using Plots
-gr()
-scatter(data.l_Y,data.resid2, ylabel = "resid2", xlabel = "l_Y",legend = false)
-reg_aux = fit(EconometricModel, @formula(log(resid^2) ~ log(Y)), data)
-l_sigma2=(predict(reg_aux));
-DEM_HET.l_sigma2 = l_sigma2;
-DEM_HET = DEM_HET |> @mutate(w = 1/exp(_.l_sigma2)) |> DataFrame
-modelo_MCP = fit(EconometricModel, @formula(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y)), wts = :w , DEM_HET)
 ```
