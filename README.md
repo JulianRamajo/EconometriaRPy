@@ -1,3 +1,3 @@
-# EconMetricsRPy
+# Econometría - Con ejemplos en R y Python (EconMetricsRPy)
 
-![ ](_EconMetrics-RPy.png)
+![ ](_R_Py.png)
