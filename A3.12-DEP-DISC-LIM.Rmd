@@ -1,9 +1,9 @@
 ---
-title: 'TEMA 3: DIAGNOSIS, CORRECCIONES Y/O EXTENSIONES DEL MRL'
+title: 'TEMA 3: Variable dependiente discreta o limitada'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 3.12: Variable dependiente discreta o limitada'
+subtitle: 'Aplicación 3.12: Préstamos hipotecarios. Compra de automóviles. Salario de las mujeres casadas'
 output:
   html_document:
     theme: journal
@@ -37,7 +37,7 @@ El modelo econométrico general que se estimará tiene la siguiente expresión:
 $$Y_{i} = \beta_1 + \beta_2 FI_{i} + \beta_3 MARG_{i} + \beta_4 YLD_{i} + \beta_5 PTS_{i} + \beta_6 MAT_{i} + \beta_7 BA_{i} + \beta_8 BS_{i} + \beta_9 FTB_{i} + \beta_{10} CB_{i} +$$
 $$+ \beta_{11} MC_{i} + \beta_{12} MC_{i} + \beta_{13} SE_{i} + \beta_{14} MOB_{i} + \beta_{15} NW_{i} + \beta_{16} LA_{i} + \beta_{17} ST_{i} + e_{i}$$
 
-## Resultados R
+## Código R
 
 ```{r, message=FALSE}
 # Lectura de librerías
@@ -105,7 +105,7 @@ print(EMP_logit[[1]])
 margins(modelo_logit_2)
 ```
 
-## Resultados Python
+## Código Python
 
 ```{python, message=FALSE}
 # Lectura de librerías
@@ -159,7 +159,7 @@ La ecuación de comportamiento especificada fue la siguiente:
 $$GAUT_{i} = \beta_1 + \beta_2 Y_{i} + \beta_3 HIJOSM18_{i} + \beta_4 EDAD_{i} + e_{i}$$
 donde GAUT es el gasto familiar efectuado en la adquisición de automóviles en el último año, Y la renta familiar total del último ejercicio fiscal, HIJOSM18 el número de hijos con edades inferiores a dieciocho años y EDAD la edad del cabeza de familia.
 
-## Resultados R
+## Código R
 
 ```{r, message=FALSE}
 # Lectura de librerías
@@ -183,7 +183,7 @@ modelo_tobit_2 <- vglm(GAUT ~ EDAD + HIJOSM18 + Y, family = tobit, data = AUTOS)
 summary(modelo_tobit_2)
 ```
 
-## Resultados Python
+## Código Python
 
 ```{r}
 library(reticulate)
@@ -215,7 +215,7 @@ $$log(SALARIO_{i}) = \beta_1 + \beta_2 EDUC_{i} + \beta_3 EXPER_{i} + e_{i}$$
 donde SALARIO representa el salario por hora trabajada observado, EDUC el nivel de educación y EXPER el nivel de experiencia.
 Al realizar una encuesta a una muestra de N = 753 mujeres casadas, representativa de la población femenina con ese estado civil en UK, preguntándoles entre otras cosas por su salario, muchas de ellas (325 mujeres) respondieron que esa cuestión no era relevante en su caso, ya que eran “amas de casa” (población no activa) y no recibían remuneración alguna por ese trabajo. Solo se observaron datos sobre salarios de mercado para aquellas mujeres (n = 428) que participaban en la fuerza de trabajo.
 
-## Resultados R
+## Código R
 
 ```{r, message=FALSE}
 # Lectura de librerías
@@ -229,7 +229,7 @@ modelo_heckit <- selection(PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP, log(SALARIO) ~ 
 summary(modelo_heckit)
 ```
 
-## Resultados Python
+## Código Python
 
 ```{python, message=FALSE}
 # Lectura de librerías

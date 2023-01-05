@@ -67,7 +67,6 @@ from linearmodels.iv import IV2SLS
 # Lectura de datos
 INF_INT = pd.read_csv('INF_INTERN.csv')
 INF_INT.describe()
-#
 # Estimación MCO
 INF_INT = sm.add_constant(INF_INT)
 modelo_MCO = IV2SLS(dependent = INF_INT.INF,
@@ -91,23 +90,4 @@ res_modelos = OrderedDict()
 res_modelos["MCO"] = res_modelo_MCO
 res_modelos["IV"] = res_modelo_IV
 print(compare(res_modelos))
-```
-
-# Código Julia
-
-```{r, echo = FALSE}
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-# Lectura de librerías
-using DataFrames, CSV, Econometrics;
-# Lectura de datos
-INF_INT  = CSV.read("INF_INTERN.csv", DataFrame);
-describe(INF_INT)
-# Estimación MCO
-modelo_MCO = fit(EconometricModel, @formula(INF ~ RM + RY), INF_INT)
-# Estimación VI
-modelo_VI = fit(EconometricModel, @formula(INF ~ RM + (RY ~ EDUC + INV + RPOB + YPC0)), INF_INT)
 ```

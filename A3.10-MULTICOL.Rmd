@@ -18,9 +18,9 @@ output:
 
 # Objetivo
 
-En este ejercicio se intentará explicar la rentabilidad anual (RENTAB) de 80 empresas británicas, utilizando para ello diferente información contable interna en forma de ratios económico-financieros (R1, R2,…, R10), así como datos sobre el volumen de ventas totales (VT) y el tamaño de las empresas, medido este último por el valor total de los activos (AT).
+En este ejercicio se intentará explicar la rentabilidad anual (RENTAB) obtenida por 80 empresas inglesas, utilizando para ello diferente información contable interna en forma de ratios económico-financieros (R1, R2,…, R10), así como datos sobre el volumen de ventas totales (VT) y el tamaño de las empresas, medido este último por el valor total de los activos (AT).
 
-# Resultados R
+# Código R
 
 ```{r, message = FALSE, warning = FALSE}
 # Lectura de librerías
@@ -163,7 +163,7 @@ x_vars <- data.matrix(dataTransformed[, 1:11])
 y_var <- dataTransformed[, "RENTAB"]
 ```
 
-# Resultados Python
+# Código Python
 
 ```{python, message = FALSE, warning = FALSE}
 # Lectura de librerías

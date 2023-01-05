@@ -20,7 +20,7 @@ output:
 
 En esta aplicación se estimará un modelo dinámico para el precio de la gasolina en el que los errores muestran clústeres de volatilidad (heteroscedasticidad autorregresiva condicional, ARCH).
 
-# Resultados R
+# Código R
 
 ```{r, message=FALSE}
 # Lectura de librerías
@@ -72,7 +72,7 @@ plot(resid_GARCH_fit, which=1)
 plot(resid_GARCH_fit, which=3)
 ```
 
-# Resultados Python
+# Código Python
 
 ```{python}
 # Lectura de librerías

@@ -11,7 +11,7 @@
 
 
 
-<title>TEMA 3: DIAGNOSIS, CORRECCIONES Y/O EXTENSIONES DEL MRL</title>
+<title>TEMA 3: Variable dependiente discreta o limitada</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1562,10 +1562,10 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">TEMA 3: DIAGNOSIS, CORRECCIONES Y/O
-EXTENSIONES DEL MRL</h1>
-<h3 class="subtitle">Aplicación 3.12: Variable dependiente discreta o
-limitada</h3>
+<h1 class="title toc-ignore">TEMA 3: Variable dependiente discreta o
+limitada</h1>
+<h3 class="subtitle">Aplicación 3.12: Préstamos hipotecarios. Compra de
+automóviles. Salario de las mujeres casadas</h3>
 <h4 class="author">Julián Ramajo, <a href="mailto:ramajo@unex.es" class="email">ramajo@unex.es</a></h4>
 <address class="author_afil">
 GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)<br>
@@ -1636,8 +1636,8 @@ expresión:</p>
 MC_{i} + \beta_{13} SE_{i} + \beta_{14} MOB_{i} + \beta_{15} NW_{i} +
 \beta_{16} LA_{i} + \beta_{17} ST_{i} + e_{i}\]</span></p>
 </div>
-<div id="resultados-r" class="section level2">
-<h2>Resultados R</h2>
+<div id="código-r" class="section level2">
+<h2>Código R</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
@@ -1930,8 +1930,8 @@ MC_{i} + \beta_{13} SE_{i} + \beta_{14} MOB_{i} + \beta_{15} NW_{i} +
 <pre><code>##      FI    MARG     YLD
 ##  0.2138 -0.1192 -0.7272</code></pre>
 </div>
-<div id="resultados-python" class="section level2">
-<h2>Resultados Python</h2>
+<div id="código-python" class="section level2">
+<h2>Código Python</h2>
 <div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -1964,8 +1964,8 @@ MC_{i} + \beta_{13} SE_{i} + \beta_{14} MOB_{i} + \beta_{15} NW_{i} +
 ## Model Family:                Binomial   Df Model:                            3
 ## Link Function:                  logit   Scale:                          1.0000
 ## Method:                          IRLS   Log-Likelihood:                -41.980
-## Date:                jue, 01 dic 2022   Deviance:                       83.959
-## Time:                        18:07:15   Pearson chi2:                     91.9
+## Date:                Thu, 05 Jan 2023   Deviance:                       83.959
+## Time:                        09:41:19   Pearson chi2:                     91.9
 ## No. Iterations:                     4   Pseudo R-squ. (CS):             0.2423
 ## Covariance Type:            nonrobust                                         
 ## ==============================================================================
@@ -1987,8 +1987,8 @@ MC_{i} + \beta_{13} SE_{i} + \beta_{14} MOB_{i} + \beta_{15} NW_{i} +
 ## Dep. Variable:                      Y   No. Observations:                   78
 ## Model:                          Logit   Df Residuals:                       74
 ## Method:                           MLE   Df Model:                            3
-## Date:                jue, 01 dic 2022   Pseudo R-squ.:                  0.2050
-## Time:                        18:07:15   Log-Likelihood:                -41.980
+## Date:                Thu, 05 Jan 2023   Pseudo R-squ.:                  0.2050
+## Time:                        09:41:19   Log-Likelihood:                -41.980
 ## converged:                       True   LL-Null:                       -52.802
 ## Covariance Type:            nonrobust   LLR p-value:                 7.731e-05
 ## ==============================================================================
@@ -2010,8 +2010,8 @@ MC_{i} + \beta_{13} SE_{i} + \beta_{14} MOB_{i} + \beta_{15} NW_{i} +
 ## Dep. Variable:                      Y   No. Observations:                   78
 ## Model:                         Probit   Df Residuals:                       74
 ## Method:                           MLE   Df Model:                            3
-## Date:                jue, 01 dic 2022   Pseudo R-squ.:                  0.1990
-## Time:                        18:07:15   Log-Likelihood:                -42.295
+## Date:                Thu, 05 Jan 2023   Pseudo R-squ.:                  0.1990
+## Time:                        09:41:19   Log-Likelihood:                -42.295
 ## converged:                       True   LL-Null:                       -52.802
 ## Covariance Type:            nonrobust   LLR p-value:                 0.0001046
 ## ==============================================================================
@@ -2092,8 +2092,8 @@ adquisición de automóviles en el último año, Y la renta familiar total
 del último ejercicio fiscal, HIJOSM18 el número de hijos con edades
 inferiores a dieciocho años y EDAD la edad del cabeza de familia.</p>
 </div>
-<div id="resultados-r-1" class="section level2">
-<h2>Resultados R</h2>
+<div id="código-r-1" class="section level2">
+<h2>Código R</h2>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(censReg) <span class="co"># http://www.sampleselection.org/</span></span>
@@ -2167,8 +2167,8 @@ inferiores a dieciocho años y EDAD la edad del cabeza de familia.</p>
 ## 
 ## No Hauck-Donner effect found in any of the estimates</code></pre>
 </div>
-<div id="resultados-python-1" class="section level2">
-<h2>Resultados Python</h2>
+<div id="código-python-1" class="section level2">
+<h2>Código Python</h2>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">py_run_file</span>(<span class="st">&quot;tobit.py&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
@@ -2220,8 +2220,8 @@ remuneración alguna por ese trabajo. Solo se observaron datos sobre
 salarios de mercado para aquellas mujeres (n = 428) que participaban en
 la fuerza de trabajo.</p>
 </div>
-<div id="resultados-r-2" class="section level2">
-<h2>Resultados R</h2>
+<div id="código-r-2" class="section level2">
+<h2>Código R</h2>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sampleSelection) <span class="co"># http://www.sampleselection.org/</span></span>
@@ -2307,8 +2307,8 @@ la fuerza de trabajo.</p>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## --------------------------------------------</code></pre>
 </div>
-<div id="resultados-python-2" class="section level2">
-<h2>Resultados Python</h2>
+<div id="código-python-2" class="section level2">
+<h2>Código Python</h2>
 <div class="sourceCode" id="cb80"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -2341,8 +2341,8 @@ la fuerza de trabajo.</p>
 ## Dep. Variable:                    PMT   No. Observations:                  753
 ## Model:                         Probit   Df Residuals:                      748
 ## Method:                           MLE   Df Model:                            4
-## Date:                jue, 01 dic 2022   Pseudo R-squ.:                 0.04026
-## Time:                        18:07:23   Log-Likelihood:                -494.15
+## Date:                Thu, 05 Jan 2023   Pseudo R-squ.:                 0.04026
+## Time:                        09:41:26   Log-Likelihood:                -494.15
 ## converged:                       True   LL-Null:                       -514.87
 ## Covariance Type:            nonrobust   LLR p-value:                 2.164e-08
 ## ==============================================================================
@@ -2365,8 +2365,8 @@ la fuerza de trabajo.</p>
 ## Dep. Variable:        np.log(SALARIO)   R-squared:                       0.162
 ## Model:                            OLS   Adj. R-squared:                  0.156
 ## Method:                 Least Squares   F-statistic:                     30.13
-## Date:                jue, 01 dic 2022   Prob (F-statistic):           1.13e-17
-## Time:                        18:07:23   Log-Likelihood:                -430.22
+## Date:                Thu, 05 Jan 2023   Prob (F-statistic):           1.13e-17
+## Time:                        09:41:26   Log-Likelihood:                -430.22
 ## No. Observations:                 428   AIC:                             868.4
 ## Df Residuals:                     424   BIC:                             884.7
 ## Df Model:                           3                                         
@@ -2401,8 +2401,8 @@ la fuerza de trabajo.</p>
 ## Dep. Variable:                 lSALARIO
 ## Model:                          Heckman
 ## Method:                Heckman Two-Step
-## Date:                  jue, 01 dic 2022
-## Time:                          18:07:23
+## Date:                  Thu, 05 Jan 2023
+## Time:                          09:41:26
 ## No. Total Obs.:                     753
 ## No. Censored Obs.:                  325
 ## No. Uncensored Obs.:                428

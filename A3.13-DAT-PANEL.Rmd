@@ -3,7 +3,7 @@ title: 'TEMA 3: Modelos econométricos para datos de panel'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 3.15: Productividad de la industria química en China'
+subtitle: 'Aplicación 3.13: Productividad de la industria química en China'
 output:
   html_document:
     theme: journal
@@ -93,28 +93,8 @@ res = modelo_ea.fit()
 print(res)
 ```
 
-# Código Julia
 
-```{r, echo = FALSE}
-library(JuliaCall)
-julia <- julia_setup()
-```
-
-```{julia, message = FALSE, warning = FALSE}
-# Lectura de librerías
-using DataFrames, CSV, Econometrics;
-# Lectura de datos
-QUIM_CHINA = CSV.read("QUIM_CHINA.csv", DataFrame);
-# Modelos estáticos para datos de panel
-# Modelo plano
-modelo_plano = fit(EconometricModel, @formula(log(Y) ~ log(K) + log(L) + log(M)), QUIM_CHINA)
-# Modelo de efectos fijos (estimador within)
-modelo_ef = fit(EconometricModel, @formula(log(Y) ~ log(K) + log(L) + log(M) + absorb(firm)), QUIM_CHINA)
-# Modelo de efectos aleatorios (à la Swamy-Arora)
-modelo_ea = fit(RandomEffectsEstimator, @formula(log(Y) ~ log(K) + log(L) + log(M)), QUIM_CHINA, panel = :firm, time = :year)
-```
-
-# Anexo R: Paneles dinámicos -> Demanda de empleo en UK
+# Anexo: Paneles dinámicos en R -> Demanda de empleo en UK
 
 En esta segunda parte de la aplicación se estimará un modelo dinámico para datos de panel para estimar de la demanda de empleo ( _L_ ) de las empresas inglesas en función del salario ( _W_ ), del stock de capital ( _K_ ) y del nivel de producción ( _Y_ ).
 

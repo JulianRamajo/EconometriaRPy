@@ -3,7 +3,7 @@ title: 'TEMA 3: No normalidad de los errores y observaciones atípicas'
 author:
   name: Julián Ramajo, ramajo@unex.es
   affiliation: GRADO EN ESTADÍSTICA | ECONOMETRIA (502243)
-subtitle: 'Aplicación 3.4: Análisis de la hipótesis de  normalidad y de la presencia de atípicos con datos simulados'
+subtitle: 'Aplicación 3.4: Muestra de datos con observaciones atípicas simuladas'
 output:
   html_document:
     theme: journal
@@ -20,7 +20,7 @@ output:
 
 En esta aplicación se tratará el tema de la no normalidad de los errores causada por la presencia de observaciones atípicas, y se propondrán estimadores que son 'robustos' ante la presencia de dichos datos en la base muestral.
 
-# Resultados R
+# Código R
 
 ```{r, message=FALSE}
 # Lectura de librerías
@@ -152,7 +152,7 @@ abline(rlm_YX, lty=2)
 legend("topleft", c("Regresión MCO", "Regresión MM"), lty = c(1, 2), bty = "n")
 ```
 
-# Resultados Python
+# Código Python
 
 ```{python, message=FALSE}
 import numpy as np

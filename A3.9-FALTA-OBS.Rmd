@@ -20,7 +20,7 @@ output:
 
 En esta aplicación se usarán los datos de un estudio de la década de 1970 sobre la relación entre la exclusión social de los seguros y la composición racial, los índices de incendio y robo, la antigüedad de las viviendas y los ingresos en 47 distritos postales de Chicago.
 
-# Resultados R
+# Código R
 
 ```{r, message=FALSE}
 # Lectura de datos
@@ -159,7 +159,7 @@ mod_full <- lm(involact ~ race+fire+theft+age+log(income), chredlin)
 summary(mod_full)
 ```
 
-# Resultados Python
+# Código Python
 
 ```{python}
 # Lectura de librerías

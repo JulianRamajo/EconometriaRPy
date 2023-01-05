@@ -20,7 +20,7 @@ output:
 
 En esta aplicación se estimarán varias regresiones que permiten parámetros no constantes.
 
-# Resultados R
+# Código R
 
 ## Diferencia salarial por sexo
 
@@ -201,7 +201,7 @@ plot_ly(data = TCS) %>%
          legend = list(x = 0.05, y = 0.95))
 ```
 
-# Resultados Python
+# Código Python
 
 ## Diferencia salarial por sexo
 
