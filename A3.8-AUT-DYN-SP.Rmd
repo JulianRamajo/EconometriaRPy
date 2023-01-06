@@ -16,12 +16,6 @@ output:
     toc_depth: '2'
 ---
 
-```{r}
-library(reticulate)
-use_python("/usr/local/bin/python3.10")
-#use_python("C:/Users/Usuario/AppData/Local/Programs/Python/Python310")
-```
-
 # Objetivo
 
 En esta aplicación se introducen varios conceptos de estadística espacial, se realiza un análisis espacial de tipo exploratorio con la base de datos utilizada, y también se proponen modelos de regresión en los que las variables de dicho modelo y/o los errores del mismo presentan autocorrelación espacial.
@@ -30,11 +24,9 @@ En esta aplicación se introducen varios conceptos de estadística espacial, se 
 
 ```{r, message=FALSE}
 # Lectura de librerías
-library(dplyr)
-library(ggplot2)
+library(tidyverse)
 library(sf) # https://r-spatial.github.io/sf/index.html
 library(geojsonsf)
-library(rgdal)
 library(spdep)
 library(spatialreg)
 # Lectura de datos
