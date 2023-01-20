@@ -1,3 +1,3 @@
-# Econometría - Con aplicaciones en R y Python
+# **ECONOMETRÍA** - CON APLICACIONES EN R Y PYTHON
 
 ![ ](_EconMetrics-RPy.png)
