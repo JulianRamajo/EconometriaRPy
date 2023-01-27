@@ -207,7 +207,7 @@ py_len(py_ttbs)
 Ahora se usará la función *train_test_split* de la librería `scikit-learn` al objeto de dividir los datos en dos subconjuntos (*splits*), el de entrenamiento y el de prueba, para utilizarlos con `sklearn` más adelante:
 
 ```{r, include = TRUE, echo=TRUE, eval=TRUE}
-split <- skl_model_selection$train_test_split(X, Y, test_size=0.75)
+split <- skl_model_selection$train_test_split(X, Y, test_size=0.2)
 ```
 
 Esto devolverá una lista de elementos, ya que así es como se mantiene como una tupla en Python. Python permite esta asignación múltiple, pero R no tiene esa capacidad, así que hay que indexar los subconjuntos de datos relevantes almacenados en *split* en objetos distintos de R:

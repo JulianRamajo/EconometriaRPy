@@ -1,0 +1,19 @@
+# Aplicación R-Python X.X (X): X
+
+## Cógigo R
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+```
+
+## Código Python
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+```
