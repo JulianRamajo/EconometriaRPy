@@ -155,6 +155,7 @@ legend("topleft", c("Regresión MCO", "Regresión MM"), lty = c(1, 2), bty = "n"
 # Código Python
 
 ```{python, message=FALSE}
+# Lectura de librerías
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
