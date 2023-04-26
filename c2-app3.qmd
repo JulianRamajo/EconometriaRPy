@@ -1,0 +1,92 @@
+---
+format: html
+engine: knitr
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil {.unnumbered}
+
+En esta aplicación trabajaremos con datos de series temporales que consisten en 28 observaciones mensuales sobre los costes totales ($COST$) y la cantidad producida ($Q$) de una empresa del sector textil.
+
+Se estimará por MCO el siguiente modelo de regresión lineal:
+
+$$COST_{i} = \beta_1 + \beta_2  Q_{i} +  \beta_3  Q_{i}^2 + e_{i}$$
+
+es decir, se supondrá que los costes totales son una función polinómica (cuadrática) de la cantidad producida.
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+
+# Lectura de datos
+COST_TEXT <- read_csv("data/COST_TEXT.csv")
+
+# Gráfica de los valores observados
+ggplot(COST_TEXT, aes(x = Q, y = COST)) + geom_point(size = 2, color = "blue")
+
+# Estimación del modelo
+model <- lm(formula=COST ~ Q + I(Q^2), data = COST_TEXT)
+summary(model)
+
+# Fórmula alternativa
+# model2 <- lm(COST ~ poly(Q, 2, raw = TRUE), data = COST_TEXT)
+# summary(model2)
+
+# Función de costes estimada
+ggplot(data = COST_TEXT, aes(x = Q, y = COST)) +
+  geom_line(aes(y = predict(model, newdata = data.frame(Q = Q, Q2 = Q^2))), color = "blue") +
+  geom_point(size = 2, color = "blue") +
+  labs(title = "Función de costes estimada", x = "Cantidad producida", y = "Coste total") +
+  theme_minimal()
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
+
+# Lectura de datos
+COST_TEXT = pd.read_csv('data/COST_TEXT.csv')
+
+# Gráfica de los valores observados
+plt.scatter(COST_TEXT['Q'], COST_TEXT['COST'])
+plt.show()
+
+# Estimación del modelo
+model = smf.ols(formula='COST ~ Q + I(Q**2)', data=COST_TEXT).fit()
+print(model.summary())
+
+# Fórmula alternativa
+# model2 = smf.ols('COST ~ Q + np.power(Q, 2)', data=COST_TEXT).fit()
+# print(model2.summary())
+
+# Función de costes estimada
+Q_min = COST_TEXT['Q'].min()
+Q_max = COST_TEXT['Q'].max()
+Q_values = np.linspace(Q_min, Q_max, num=100)
+C_values = model.params[0] + model.params[1]*Q_values + model.params[2]*Q_values**2
+plt.plot(Q_values, C_values)
+plt.scatter(COST_TEXT['Q'], COST_TEXT['COST'])
+plt.xlabel('Cantidad producida')
+plt.ylabel('Coste total')
+plt.show()
+```

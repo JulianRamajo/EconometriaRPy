@@ -1,0 +1,136 @@
+---
+format: html
+engine: knitr
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 1.4 (Gestión y representación gráfica de datos II): Evolución temporal de activos financieros {.unnumbered}
+
+En esta aplicación se estimará un modelo de regresión lineal simple en un contexto financiero:
+
+$$log(pMSFT_t) = \beta_1 + \beta_2 log(pSP500_t)  + e_t$$
+
+donde $pMSFT$ es el precio de las acciones de Microsoft y $pSP500$ es el índice bursátil SP500.
+
+Antes de llegar a la regresión final, se tendrán que ejecutar comandos específicos de filtrado (*filter*), selección (*select*), transformación (*mutate*) y fusión de ficheros (*join*), lo que se conoce como *data wrangling* (manejo o gestión de datos).
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(lubridate)
+library(scales)
+# Lectura de datos
+stock_data <- read_csv("data/sp500_45.csv")
+head(stock_data)
+tail(stock_data)
+# filter
+MSFT <- stock_data %>% filter(ticker == "MSFT")
+# select
+p_MSFT <- MSFT %>% select(ref.date,price.close) %>% rename(date = ref.date)
+head(p_MSFT)
+tail(p_MSFT)
+# Lectura de datos
+SP500 <- read_csv("data/sp500_index.csv")
+# select
+p_SP500 <- SP500 %>% select(ref.date,price.close) %>% rename(date = ref.date)
+head(p_SP500)
+tail(p_SP500)
+# join
+data_daily <- inner_join(p_SP500,p_MSFT, by = "date") %>% rename(pSP500 = price.close.x, pMSFT = price.close.y)
+# mutate
+data_daily <- data_daily %>% mutate(year = year(date), month = month(date))
+data_daily <- data_daily %>% mutate(l_pMSFT = log(pMSFT), l_pSP500 = log(pSP500))
+# ggplot
+p1 <- ggplot(data = data_daily, aes(x = date)) +
+  geom_line(aes(y = pMSFT), size = 0.5) +
+  scale_y_continuous(expand = c(0.01,0.01),limits = c(0,120), breaks = seq(0,120,20)) +  
+  scale_x_date(breaks = as.Date(c("1998-01-01","2002-01-01","2006-01-01","2010-01-01","2014-01-01","2018-01-01")),
+               limits = as.Date(c("1998-01-01","2018-12-31")), labels = date_format("1%b%Y"),
+               minor_breaks = "1 year") +
+  labs(y = "Precio diario de las acciones de Microsoft (US $)", x = "Fecha")
+p1
+p2 <- ggplot(data = data_daily,aes(x = date)) +
+  geom_line(aes(y = pSP500), size = 0.5) +
+  scale_y_continuous(limits = c(500,3000), breaks = seq(500,3000,500)) +  
+  scale_x_date(breaks = as.Date(c("1998-01-01","2002-01-01","2006-01-01","2010-01-01","2014-01-01","2018-01-01")),
+               limits = as.Date(c("1998-01-01","2018-12-31")), labels = date_format("1%b%Y"),
+               minor_breaks = "1 year") +
+  labs(y = "Índice diario S&P 500 del mercado bursátil", x = "Fecha")
+p2
+p3 <- ggplot(data_daily, aes(x = l_pSP500,y = l_pMSFT)) + 
+               geom_point() +  
+               stat_smooth(method = lm) +  
+               labs(x = "Índice S&P 500 (log)",y = "Precio diario acciones de Microsoft (log)")
+p3
+# Regresión lineal simple
+reg <- lm(l_pMSFT ~ l_pSP500, data = data_daily)
+summary(reg)
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from plotnine import *
+from datetime import datetime
+import matplotlib.pyplot as plt
+# Lectura de datos
+stock_data = pd.read_csv('data/sp500_45.csv')
+stock_data.head()
+# filter
+MSFT = stock_data[stock_data['ticker']=='MSFT']
+# select
+p_MSFT = MSFT[['ref.date','price.close']]. \
+    rename(columns={'ref.date':'date'}). \
+    reset_index(drop=True)
+p_MSFT['date']=pd.to_datetime(p_MSFT['date'])
+p_MSFT.head()
+p_MSFT.tail()
+# Lectura de datos
+sp500_index = pd.read_csv('data/sp500_index.csv')
+p_SP500 = sp500_index[['ref.date','price.close']]. \
+    rename(columns={'ref.date':'date'}). \
+    reset_index(drop=True)
+p_SP500['date']=pd.to_datetime(p_SP500['date'])
+p_SP500.head()
+p_SP500.tail()
+# merge (join)
+data_daily=pd.merge(p_SP500,p_MSFT,how='inner',on='date').\
+    rename(columns={'price.close_x':'pSP500','price.close_y':'pMSFT'})
+# time
+data_daily['year'] = data_daily['date'].dt.year
+data_daily['month'] = data_daily['date'].dt.month
+# mutate
+data_daily['l_pMSFT']=data_daily['pMSFT'].map(lambda x:np.log(x))
+data_daily['l_pSP500']=data_daily['pSP500'].map(lambda x:np.log(x))
+# ggplot (Python)
+(ggplot(data_daily) + geom_line(aes('date','pMSFT'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01],limits = [0,120]) 
++ labs(y = "Precio de las acciones de Microsoft (US $)",x= "Date (day)") + theme_bw())
+plt.show()
+(ggplot(data_daily) + geom_line(aes('date','pSP500'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
++ labs(y = "Índice S&P 500 del mercado bursátil",x= "Date (day)") + theme_bw())
+plt.show()
+(ggplot(data_daily,aes('l_pSP500','l_pMSFT')) + geom_point() + geom_smooth(method='lm',se=False) + labs(x="Índice S&P 500 (log)",y="Precio diario acciones de Microsoft (log)") + theme_bw())
+# Regresión lineal simple
+reg = smf.ols('l_pMSFT ~ l_pSP500', data=data_daily).fit()
+print(reg.summary())
+```

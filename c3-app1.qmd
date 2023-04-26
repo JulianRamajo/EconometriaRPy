@@ -1,0 +1,161 @@
+---
+format: html
+engine: knitr
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos {.unnumbered}
+
+En esta aplicación se estimará un modelo de regresión basado en la [teoría de los precios de arbitraje](https://es.wikipedia.org/wiki/Teor%C3%ADa_del_arbitraje), que desde el punto de vista econométrico es una generalización de la especificación CAPM expuesta en la Aplicación 2.1, a la que se le añaden factores macroeconómicos.
+
+Definamos la rentabilidad de un activo financiero (en porcentaje) como $R=100×log[⁡(p_{1}+d)/p_{0}$, donde $p_{1}$ y $p_{0}$ son, respectivamente, los precios de cotización del valor (título u obligación) al final y al principio de un período de tiempo y $d$ es el dividendo cobrado (si lo hay) durante ese período. Denominemos por $Rf$ al rendimiento de un activo libre de riesgo. Finalmente, denotemos por $Rm$ a la rentabilidad que ofrece la cartera de mercado.
+
+En este ejercicio se va a estimar el modelo APT con datos de series temporales de carácter mensual para el período que va desde marzo de 1986 hasta marzo de 2018.
+
+Se utilizará como rentabilidad de referencia la correspondiente a las acciones de la empresa Microsoft, que denotaremos por $R\_MICROSOFT$. Como rentabilidad sin riesgo, se usará el tipo de interés correspondiente a las letras del tesoro estadounidenses a tres meses, $R\_USTB3M$, y como rentabilidad del mercado se tomará la asociada al índice S&P500, $R\_SP500$. Las variables básicas que deben utilizarse en el modelo de regresión son, entonces, los 'excesos de rentabilidad', $erMSOFT$=($R\_MICROSOFT$-$R\_USTB3M$) y $erSP$=($R\_SP500$-$R\_USTB3M$).
+
+La ecuación de valoración básica del modelo APT puede definirse del siguiente modo:
+
+$$
+erMSOFT_{t} = \beta_1 + \beta_2  erSP_{t} + \gamma_1  F_{1,t} + \gamma_2  F_{2,t} + ...+ \gamma_m  F_{m,t} + e_{t}
+$$
+
+donde las variables $F_{j}$ representan distintos factores que pueden afectar a la rentabilidad observada del título.
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(readxl)
+# Lectura de datos
+apt <- read_excel("data/APT_MICROSOFT.xls")
+# Estructura de la base de datos
+str(apt)
+dim(apt)
+head(apt)
+tail(apt)
+summary(apt[,2:10])
+# Transformación de variables
+apt$dspread = c(NA,diff(apt$BMINUSA))
+apt$dcredit = c(NA,diff(apt$CCREDIT))
+apt$dprod = c(NA,diff(apt$INDPRO))
+apt$dmoney = c(NA,diff(apt$M1SUPPLY))
+apt$inflation = c(NA,100*diff(log(apt$CPI)))
+apt$rterm = c(NA,diff(apt$USTB10Y-apt$USTB3M))
+apt$dinflation = c(NA,100*diff(apt$inflation))
+apt$r_msoft = c(NA,100*diff(log(apt$MICROSOFT)))
+apt$r_sp = c(NA,100*diff(log(apt$SANDP)))
+apt$er_sp = c(NA,100*diff(log(apt$SANDP)))-apt$USTB3M/12
+apt$er_msoft = c(NA,100*diff(log(apt$MICROSOFT)))-apt$USTB3M/12
+# Formato a la fechas
+apt$Date = as.Date(apt$Date)
+
+# Estimación MCO del modelo APT
+APT_msft  <-  lm(er_msoft ~ er_sp + dprod + dcredit + dinflation +
+                   dmoney + dspread + rterm, data = apt)
+summary(APT_msft)
+confint(APT_msft, level=.95)
+
+# Formulación alternativa del modelo de series temporales
+# apt_ts <- ts(apt, start=c(1986,3), end=c(2018,3), frequency = 12)
+# APT_msft_ts  <-  lm(er_msoft ~ er_sp + dprod + dcredit + dinflation +
+#dmoney + dspread + rterm, data = apt_ts)
+# summary(APT_msft_ts)
+
+# Validación global de las hipótesis básicas del MRL
+library(gvlma)
+gvmodel <- gvlma(APT_msft)
+summary(gvmodel)
+# Chequeo general del modelo estimado
+library(performance)
+model_performance(APT_msft)
+check_model(APT_msft)
+
+# Especificación del modelo
+# Contraste de significación de variables irrelevantes
+library(car)
+linearHypothesis(APT_msft,c("dprod=0","dcredit=0","dmoney=0","dspread=0"))
+# Modelo sin variables no significativas: MCR
+APT_msft_r  <-  lm(er_msoft ~ er_sp + dinflation + rterm, data = apt)
+summary(APT_msft_r)
+# Adecuación de la forma funcional: test RESET de Ramsey
+library(lmtest)
+resettest(APT_msft_r, power=2, type="fitted")
+resettest(APT_msft_r, power=2:3, type="fitted")
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import statsmodels.stats.api as sms
+import statsmodels.stats as smstats
+import statsmodels.stats.diagnostic as smsdiag
+from statsmodels.stats.outliers_influence import reset_ramsey
+from statsmodels.compat import lzip
+import scipy.stats as scs
+import matplotlib.pyplot as plt
+import seaborn as sns
+# Lectura de datos
+apt = pd.read_excel('data/APT_MICROSOFT.xls', parse_dates=['Date'], index_col='Date')
+# Estructura de la base de datos
+apt.info()
+apt.head()
+apt.tail()
+apt.describe()
+# Transformación de variables
+def LogDiff(x):
+    x_diff = 100*np.log(x/x.shift(1))
+    return x_diff
+apt['dspread'] = apt['BMINUSA'] - apt['BMINUSA'].shift(1)
+apt['dcredit'] = apt['CCREDIT'] - apt['CCREDIT'].shift(1)
+apt['dprod'] = apt['INDPRO'] - apt['INDPRO'].shift(1)
+apt['r_msft'] = LogDiff(apt['MICROSOFT'])
+apt['r_sp'] = LogDiff(apt['SANDP'])
+apt['dmoney'] = apt['M1SUPPLY'] - apt['M1SUPPLY'].shift(1)
+apt['inflation'] = LogDiff(apt['CPI'])
+apt['term'] = apt['USTB10Y'] - apt['USTB3M']
+apt['dinflation'] = LogDiff(apt['CPI']) - LogDiff(apt['CPI']).shift(1)
+apt['mustb3m'] = apt['USTB3M']/12
+apt['rterm'] = (apt['USTB10Y'] - apt['USTB3M']) - (apt['USTB10Y'] - apt['USTB3M']).shift(1)
+apt['er_msoft'] = LogDiff(apt['MICROSOFT']) - apt['USTB3M']/12
+apt['er_sp'] = LogDiff(apt['SANDP']) - apt['USTB3M']/12
+# Eliminación de observaciones no disponibles (NA)
+data = apt.dropna()
+
+# Estimación MCO del modelo APT
+formula = 'er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm'
+APT_msft = smf.ols(formula, data).fit()
+print(APT_msft.summary())
+
+# Especificación del modelo
+# Contraste de significación de variables irrelevantes
+H_0 = 'dprod = dcredit = dmoney = dspread = 0'
+F_test = APT_msft.f_test(H_0)
+print(F_test)
+# Modelo sin variables no significativas: MCR
+formula = 'er_msoft ~ er_sp + dinflation + rterm'
+APT_msft_r = smf.ols(formula, data).fit()
+print(APT_msft_r.summary())
+# Adecuación de la forma funcional: test RESET de Ramsey
+reset_ramsey(APT_msft_r,degree=2)
+reset_ramsey(APT_msft_r,degree=3)
+```

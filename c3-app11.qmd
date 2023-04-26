@@ -1,0 +1,96 @@
+---
+format: html
+engine: knitr
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional {.unnumbered}
+
+Para explicar las variaciones que se producen en la inflación observada al nivel internacional (muestra de 76 países) se propone el siguiente modelo econométrico, el cual se obtiene de la [teoría cuantitativa del dinero](https://es.wikipedia.org/wiki/Teor%C3%ADa_cuantitativa_del_dinero):
+
+$$INF_{i} = \beta_1 + \beta_2 RM_{i} + \beta_3 RY_{i} + e_{i}$$
+
+siendo $INF$ la inflación (tasa de variación del índice general de precios), $RM$ la tasa de crecimiento de la oferta monetaria, y $RY$ la tasa de crecimiento del PIB.
+
+Se asumirá que la variable $RM$ es exógena (política monetaria independiente), mientras que se supondrá que la variable $RY$ podría ser endógena y, por tanto, puede estar correlacionada con el término de error del modelo, $$Cov(RY,e)≠0$$
+
+Como instrumentos para la variable potencialmente endógena $RY$ se tomarán el nivel inicial de PIB per cápita ($YPC0$), el nivel de educación relativo de la población ($EDUC$), el nivel de inversión ($INV$) y la tasa de crecimiento de la población ($RPOB$ ).
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| eval: true
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(ivreg)
+# Para más detalles sobre el método de variables instrumentales (IV o 2SLS en inglés) 
+# ver las páginas web: 
+# https://cran.r-project.org/web/packages/ivreg/vignettes/ivreg.html 
+# https://cran.r-project.org/web/packages/ivreg/vignettes/Diagnostics-for-2SLS-Regression.html
+
+# Lectura de datos
+INF_INT <- read_csv("data/INF_INTERN.csv")
+summary(INF_INT)
+# Estimación MCO
+modelo_MCO <- lm(INF ~ RM + RY, data=INF_INT)
+summary(modelo_MCO)
+# Estimación VI
+modelo_IV <- ivreg(INF ~ RM + RY | RM + EDUC + INV + RPOB + YPC0, data=INF_INT)
+summary(modelo_IV, diagnostics=TRUE)
+# Comparación de modelos
+car::compareCoefs(modelo_MCO, modelo_IV)
+library("modelsummary")
+model_list <- list(OLS = modelo_MCO, IV = modelo_IV)
+msummary(model_list)
+modelplot(model_list)
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| eval: true
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from linearmodels.iv import IV2SLS
+# Lectura de datos
+INF_INT = pd.read_csv('data/INF_INTERN.csv')
+INF_INT.describe()
+# Estimación MCO
+INF_INT = sm.add_constant(INF_INT)
+modelo_MCO = IV2SLS(dependent = INF_INT.INF,
+               exog = INF_INT[['const','RM','RY']], 
+               endog = None, 
+               instruments = None)
+res_modelo_MCO = modelo_MCO.fit(cov_type='unadjusted')
+print(res_modelo_MCO)
+# Estimación IV (2SLS)
+modelo_IV = IV2SLS(dependent = INF_INT.INF,
+               exog = INF_INT[['const','RM']],
+               endog = INF_INT.RY,
+               instruments = INF_INT[['EDUC','INV','RPOB','YPC0']])
+res_modelo_IV = modelo_IV.fit(cov_type='unadjusted')
+print(res_modelo_IV)
+res_modelo_IV.wu_hausman()
+# Comparación de resultados
+from collections import OrderedDict
+from linearmodels.iv.results import compare
+res_modelos = OrderedDict()
+res_modelos["MCO"] = res_modelo_MCO
+res_modelos["IV"] = res_modelo_IV
+print(compare(res_modelos))
+```

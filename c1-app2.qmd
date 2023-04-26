@@ -1,0 +1,116 @@
+---
+format: html
+engine: knitr
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 1.2 (Datos de series temporales): Consumo privado en Estados Unidos {.unnumbered}
+
+En esta aplicación se estimará una función de consumo de tipo Keynesiano agregada (para un consumidor representativo), usando datos de series temporales para Estados Unidos durante el período 1959-2015 ( *t* = 1, 2,..., 57):
+
+$$C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}$$
+
+donde *C* representa la consumo privado, e *Y* es la renta disponible neta (después de impuestos).
+:::
+
+# Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(GGally)
+library(coefplot)
+library(report)
+# Lectura de datos
+CONS_USA <- read_delim("data/CONS_USA_ts.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+head(CONS_USA)
+tail(CONS_USA)
+#
+# Asignación del formato de series temporales
+# (https://cran.r-project.org/web/views/TimeSeries.html)
+# Aquí se usará la clase básica "ts", válida para series temporales 
+# regulares (espaciadas de forma homogénea en el tiempo).
+# Pueden usarse otras clases más generales, siendo las más usadas:
+# "zoo": https://cran.r-project.org/web/packages/zoo/index.html 
+# "xts": https://github.com/joshuaulrich/xts
+# "tsibble": https://github.com/robjhyndman/fpp3package (https://otexts.com/fpp3/)
+#
+ts_CONS_USA <- ts(CONS_USA, start=c(1959), end = c(2015))
+# Análisis exploratorio (EDA)
+# Estadística descriptiva
+summary(ts_CONS_USA)
+# Gráficas
+#ts.plot(ts_CONS_USA[,"C"])
+g1 <- ggplot(data = CONS_USA, aes(x = date)) +
+  geom_line(aes(y = C)) +
+  labs(y = "Consumo privado en Estados Unidos (millones US $)", x = "Año")
+g1
+#ts.plot(ts_CONS_USA[,"Y"])
+g2 <- ggplot(data = CONS_USA, aes(x = date)) +
+  geom_line(aes(y = Y)) +
+  labs(y = "Renta disponible en Estados Unidos (millones US $)", x = "Año")
+g2
+#CONS_USA %>% ggplot(aes(x = Y, y = C)) + geom_point() + ylab("C") + xlab("Y")
+g3 <- ggplot(CONS_USA, aes(x = Y, y = C)) + 
+               geom_point() +  
+               stat_smooth(method = lm) +  
+               labs(x = "Renta disponible",y = "Consumo privado")
+g3
+# Regresión por MCO
+KEYNES_model <- lm (formula = C ~ Y, data = ts_CONS_USA)
+summary(KEYNES_model)
+```
+
+# Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+# Lectura de datos 
+CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';')
+#
+# Asignación del formato temporal 
+# (https://pandas.pydata.org/docs/user_guide/timeseries.html)
+# Un análisis detallado puede encontrarse en la siguiente página web:
+# https://jakevdp.github.io/PythonDataScienceHandbook/03.11-working-with-time-series.html
+#
+ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', parse_dates=['date'], index_col='date')
+# ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', index_col=0)
+ts_CONS_USA.head()
+ts_CONS_USA.tail()
+# Estadística descriptiva
+ts_CONS_USA.describe()
+# Gráficas
+plt.plot(ts_CONS_USA["C"])
+plt.xlabel("Date")
+plt.ylabel("Consumo privado en Estados Unidos (mill. US $)")
+plt.show()
+plt.plot(ts_CONS_USA["Y"])
+plt.xlabel("Date")
+plt.ylabel("Renta disponible en Estados Unidos (mill. US $)")
+plt.show()
+plt.scatter(ts_CONS_USA["Y"], ts_CONS_USA["C"])
+plt.xlabel("Renta disponible")
+plt.ylabel("Consumo privado")
+plt.show()
+# Regresión por MCO
+model = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
+KEYNES_model = model.fit()
+print(KEYNES_model.summary())
+```

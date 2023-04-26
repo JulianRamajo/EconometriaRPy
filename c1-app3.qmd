@@ -1,0 +1,307 @@
+---
+format: html
+engine: knitr
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 1.3 (Gestión y representación gráfica de datos I): Gramática básica del tidyverse {.unnumbered}
+
+En esta aplicación se pondrán ejemplos básicos en R y Python usando la filosofía *tidyverse*, la cual supone un 'dialecto' dentro de cada lenguaje con el objetivo de "preparar" los datos originales para un tratamiento estadístico posterior:
+
+*"At a high level, the tidyverse is a language for solving data science challenges \[...\]. Its primary goal is to facilitate a conversation between a human and a computer about data. Less abstractly, the tidyverse is a collection of \[...\] packages that share a high-level design philosophy and low-level grammar and data structures, so that learning one package makes it easier to learn the next."* (Wickham et al., 2019)
+:::
+
+## Código R {.unnumbered}
+
+::: justify
+En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión:
+
+Datos ordenados: *Tidy Data* (<https://www.jstatsoft.org/article/view/v059i10>)
+
+Gestión de datos y gráficas en R: *Tidyverse* (<https://www.tidyverse.org/>) -\>
+
+-   <https://tidyr.tidyverse.org/articles/tidy-data.html>
+
+-   <https://tidyverse.tidyverse.org/articles/paper.html>
+
+-   <https://education.rstudio.com/blog/2020/07/teaching-the-tidyverse-in-2020-part-1-getting-started/>
+
+-   <https://education.rstudio.com/blog/2020/07/teaching-the-tidyverse-in-2020-part-2-data-visualisation/>
+
+-   <https://education.rstudio.com/blog/2020/07/teaching-the-tidyverse-in-2020-part-3-data-wrangling-and-tidying/>
+
+-   <https://education.rstudio.com/blog/2020/07/teaching-the-tidyverse-in-2020-part-4-when-to-purrr/>
+
+Sobre los datos utilizados:
+
+-   Datos para el ejemplo 1: Gapminder (<https://www.gapminder.org/tools>)
+
+-   Datos para el ejemplo 2: NYC_Flights_in_2013 (<https://github.com/tidyverse/nycflights13>)
+:::
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+tidyverse_packages()
+# Lectura de datos
+gapminder <- read_delim("data/GAPMINDER.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+head(gapminder)
+# Gramática de datos con dplyr (https://dplyr.tidyverse.org/) y 'tuberías' (`%>%`)
+# (https://es.r4ds.hadley.nz/transform.html#transformaciones-agrupadas-y-filtros)
+#
+# "Verbos" de dplyr 
+# select
+gapminder_selected <- select(gapminder, year, country, pop, gdpPercap)
+# filter
+gapminder_filtered <- filter(gapminder_selected, year >= 1980)
+# mutate
+gapminder_mutated <- mutate(gapminder_filtered, GDP = gdpPercap*pop)
+# group_by
+gapminder_grouped <- group_by(gapminder_mutated, country)
+# summarise
+gapminder_summarised <- summarise(gapminder_grouped, AVG_GDP = mean(GDP))
+# arrange
+gapminder_arranged_ascending <- arrange(gapminder_summarised, AVG_GDP)
+gapminder_arranged_descending <- arrange(gapminder_summarised, -AVG_GDP)
+# El operador tubería (pipe) del tidyverse: %>%
+AVG_GDP <- 
+  gapminder %>% 
+  select(year, country, pop, gdpPercap) %>% 
+  filter(year>=1980) %>% 
+  mutate(GDP=gdpPercap*pop) %>% 
+  group_by(country) %>% 
+  summarise(AVG_GDP=mean(GDP)) %>% 
+  arrange(-AVG_GDP)
+AVG_GDP
+# La tubería nativa de R: |>
+gapminder |> subset(year==2007) |> head()
+# Familia de operaciones join (https://es.r4ds.hadley.nz/datos-relacionales.html)
+# `inner_join(df1, df2)`
+# `left_join(df1, df2)`
+# `right_join(df1, df2)`
+# `full_join(df1, df2)`
+# `semi_join(df1, df2)`
+# `anti_join(df1, df2)`
+
+# Lectura de datos
+library(nycflights13)
+flights 
+planes
+# Ejemplo de left_join
+left_join(flights, planes) %>%
+  select(year, month, day, dep_time, arr_time, carrier, flight, tailnum, type, model)
+# Para evitar errores o malas asignaciones automáticas (tailnum y year) 
+# debe usarse el argumento 'by = '
+left_join(flights, planes, by = "tailnum") %>%
+  select(month, day, dep_time, arr_time, carrier, flight, tailnum, type, model)
+# Ejemplos de otras operacionesn pueden encontrarse en:
+# https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html
+
+# Gramática de gráficas (ggplot2) [https://ggplot2.tidyverse.org/]
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point()
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +  
+  geom_point(aes(size = pop, col = continent), alpha = 0.3)
+p = ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp))
+p + 
+  geom_point(alpha = 0.3)  +
+  geom_smooth(method = "loess")
+p + 
+  geom_point(aes(size = pop, col = continent), alpha = 0.3)  +
+  geom_smooth(method = "loess") 
+ggplot(data = gapminder) + 
+  geom_density(aes(x = gdpPercap), alpha=0.3)
+ggplot(data = gapminder) + 
+  geom_density(aes(x = gdpPercap, fill = continent), alpha=0.3)
+p2 =
+  p +
+  geom_point(aes(size = pop, col = continent), alpha = 0.3) +
+  scale_color_brewer(name = "Continent", palette = "Set1") + # Diferente  escala de colores
+  scale_size(name = "Population", labels = scales::comma) + # Diferente escala de puntos
+  scale_x_log10(labels = scales::dollar) + # Escala logarítmica en el eje X y unidades de $ 
+  labs(x = "Log (GDP per capita)", y = "Life Expectancy") + # Títulos en los ejes
+  theme_minimal() ## minimal (b&w) plot theme
+p2
+library(gganimate)
+ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10(labels = scales::dollar) +
+  facet_wrap(~continent) +
+  labs(title = 'Year: {frame_time}', x = 'Log (GDP per capita)', y = 'Life expectancy') +
+  transition_time(year) +
+  ease_aes('linear')
+# Más gráficas, EDA y regresión
+# GGally  (https://ggobi.github.io/ggally/)
+library(GGally)
+gapminder %>% select(-country) %>% ggpairs()
+# Análisis exploratorio de datos (EDA)
+library(skimr)
+skim(gapminder)
+# Regresión
+ggplot(data = gapminder, aes(x = log(gdpPercap), y = lifeExp)) + 
+    geom_smooth(method = "lm", col = "red") + 
+    geom_point()
+ggplot(data = gapminder, aes(x = year, y = lifeExp)) + 
+    geom_smooth(method = "lm", col = "red") + 
+    geom_point()
+# Numéricamente:
+modelo <- lm(lifeExp ~ log(gdpPercap) + year, data=gapminder)
+summary(modelo)
+```
+
+## Código Python {.unnumbered}
+
+::: justify
+En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión:
+
+Gestión de datos y gráficos en Python:
+
+-   librería `siuba`: <https://siuba.readthedocs.io/en/latest/>
+
+-   librería `plotnine`: <https://plotnine.readthedocs.io/en/stable/>
+
+Sobre los datos utilizados:
+
+-   Datos para el ejemplo: mtcars (<https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html>)
+:::
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import pandas as pd
+import numpy as np
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+from siuba import *
+from plotnine import *
+# Lectura de datos
+mtcars = pd.read_csv('data/MTCARS.csv')
+mtcars.head()
+# Gramática de datos y tuberías (>>) con siuba
+# arrange, group_by
+mtcars_groups = mtcars >> arrange(_.hp) >> group_by(_.cyl)
+mtcars_groups
+# group_by, filter, summarize, arrange
+# and
+(mtcars >> filter((_.cyl == 4), (_.gear == 5)))
+# or
+(mtcars >> filter((_.cyl == 4) | (_.gear == 5)))
+# grouped filters, count
+(mtcars >> group_by(_.cyl) >> summarize(n = _.cyl.count()))
+(mtcars >> count(_.cyl))
+(mtcars >> count(_.cyl, _.gear, sort = True))
+(mtcars >> count(_.cyl, many_gears = _.gear > 3))
+(mtcars >> group_by(_.cyl) >> summarize(n = _.cyl.median()))
+(mtcars >> group_by(_.cyl) >> filter(_.hp > _.hp.median()))
+# arrange, group_by, filter
+from siuba.dply.vector import row_number
+(mtcars >> arrange(_.hp) >> group_by(_.cyl) >> filter(row_number(_) <= 2))
+# lag, led
+from siuba.dply.vector import lag # o led
+(mtcars >> arrange(_.hp) >> filter(_.hp - lag(_.hp) > 50))
+# arrange, select, rename
+small_mtcars = mtcars >> select(_.cyl, _.mpg, _.hp)
+small_mtcars
+# ordenar filas con una variable
+(small_mtcars >> arrange(_.hp)) # ascendente
+(small_mtcars >> arrange(-_.hp)) # descendente
+# ordenar filas usando varias varialbes
+(small_mtcars >> arrange(_.cyl, _.mpg))
+# ordenar por hp/cyl (horsepower per cylinder)
+(small_mtcars >> arrange(_.hp / _.cyl))
+# seleccionar variables 
+# equivalente: mtcars >> select(1, 2) , mtcars >> select("mpg", "cyl")
+(mtcars >> select(_.mpg, _.cyl))
+# excluir columnas
+(mtcars >> select(-_.mpg, -_.cyl))
+(mtcars >> select(-_.model))
+# seleccionar y renombrar
+(mtcars >> select(_.miles_per_gallon == _.mpg, _.number_of_cylinders == _.cyl))
+# seleccionar columnas (adjacentes)
+(mtcars >> select(_["mpg": "hp"])) # equivalente: mtcars >> select(_[1:3])
+# excluir columnas seleccionadas
+(mtcars >> select(-_["mpg": "hp"]))
+# renombrar
+mtcars >> rename(transm = "am")
+# mutate
+# nuevas columnas
+(small_mtcars >> mutate(hp_per_cyl = _.hp / _.cyl))
+(small_mtcars >> mutate(hp_per_cyl = _.hp / _.cyl,  diff = _.hp_per_cyl - _.hp_per_cyl.shift(1)))
+# mutate, group_by
+(small_mtcars >> group_by(_.cyl) >> mutate(hp_mean = _.hp.mean(), demeaned_hp = _.hp - _.hp_mean))
+# transmute = mutate + select
+(mtcars >> transmute(_.cyl, _.mpg, hp_per_cyl = _.hp / _.cyl))
+# summarize
+# global
+(mtcars >> summarize(avg_mpg = _.mpg.mean()))
+# por grupos
+(mtcars >> group_by(_.cyl) >> summarize(avg_mpg = _.mpg.mean()))
+# filter
+high_hp_mtcars = mtcars >> filter(_.hp > _.hp.mean())
+high_hp_mtcars
+(high_hp_mtcars >> mutate(avg_hp = _.hp.mean()))
+# joins
+df1 = pd.DataFrame({'id': [1,2], 'x': ['a', 'b']})
+df2 = pd.DataFrame({'id': [2,2,3], 'y': ['l', 'm', 'n']})
+df1
+df2
+# inner joins
+df1 >> inner_join(_, df2, on = "id")
+inner_join(df1, df2, on = "id")
+# left joins
+left_join(df1, df2, on = "id")
+# full join
+full_join(df1, df2, on = "id")
+# semi join
+semi_join(df1, df2, on = "id")
+
+# Gramática de gráficas con plotnine
+(
+    ggplot(mtcars, aes(x='disp', y='hp'))
+    + geom_point()
+    + labs(x='Displacement', y='Gross horsepower')
+)
+(
+    ggplot(mtcars, aes(x='disp', y='hp'))
+    + geom_point()
+    + geom_smooth(method='lm')
+    + labs(x='Displacement', y='Gross horsepower')
+)
+(
+    ggplot(mtcars, aes(x='disp', y='hp'))
+    + geom_point()
+    + geom_smooth()
+    + labs(x='Displacement', y='Gross horsepower')
+)
+(ggplot(mtcars, aes('disp', 'hp', color='factor(gear)'))
+ + geom_point()
+ + stat_smooth(method='lm')
+ + facet_wrap('~gear'))
+(
+    ggplot(mtcars, aes(x='disp', y='hp', color='factor(gear)'))
+    + geom_point()
+    + geom_smooth(method='lm')
+    +  labs(x='Displacement', y='Gross horsepower')
+)
+(mtcars
+ >> ggplot(aes(x = 'wt', y = 'mpg'))
+  + geom_point(aes(color = 'factor(gear)', shape = 'factor(gear)'), size = 3, alpha = 0.8)
+  + theme_minimal()
+  + labs(title = "Datos mtcars, Motor Trend US magazine (1974)",
+        x = "Peso (libras/1000) [US]",
+        y = "Millas/galón [US]",
+        color = "Number of forward gears",
+        shape = "Number of forward gears"))
+```

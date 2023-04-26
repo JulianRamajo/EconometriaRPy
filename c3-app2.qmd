@@ -1,0 +1,149 @@
+---
+format: html
+engine: knitr
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados {.unnumbered}
+
+En esta aplicación se analizarán las ventas de una cadena de 75 supermercados ubicados en distintas ciudades españolas. Las ventas totales en cada tienda dependen básicamente de dos variables, el precio medio de los productos que se venden en la misma y el gasto en publicidad que se realice en cada ciudad. El objetivo de la regresión estimada consiste en determinar el efecto que tendrán sobre las ventas de cada supermercado distintas políticas de precios, así como distintas opciones de gasto en publicidad.
+
+El modelo econométrico que se utilizará para el análisis de simulación viene dado por la ecuación siguiente:
+
+$$
+V_{i} = \beta_1 + \beta_2  P_{i} + \beta_3  A_{i} + e_{i}
+$$
+ 
+donde $V_{i}$ representan los ingresos mensuales por ventas en el supermercado de cada ciudad, $P_{i}$ el índice ponderado de precios de todos los productos que se venden en el mismo, y $A_{i}$ los gastos mensuales en publicidad en la ciudad para promocionar la tienda. $V$ y $A$ se miden en miles de euros, mientras que $P$ se mide en euros. 
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de datos
+library(tidyverse)
+VENTAS <- read_csv("data/VENTAS_SUPER.csv")
+# Estructura de la base de datos
+str(VENTAS)
+dim(VENTAS)
+head(VENTAS)
+tail(VENTAS)
+summary(VENTAS)
+# Matriz de diagramas de puntos de las variables
+library(alr4)
+scatterplotMatrix(~ V + P + A, id=list(n=3), smooth=list(span=0.75), data=VENTAS)
+# Modelo de ventas
+modelo_ventas_1 <- lm(V ~ P + A, data=VENTAS)
+summary(modelo_ventas_1)
+confint(modelo_ventas_1, level=.95)
+# Gráficos de efectos (Effects plots)
+plot(allEffects(modelo_ventas_1), grid=TRUE, rug=TRUE)
+# Diagnósticos de la regresión
+# Validación global de las hipótesis básicas del MRL
+library(gvlma)
+gvmodel <- gvlma(modelo_ventas_1)
+summary(gvmodel)
+# Chequeo general del modelo estimado
+library(performance)
+model_performance(modelo_ventas_1)
+check_model(modelo_ventas_1)
+# Especificación del modelo
+# Adecuación de la forma funcional: test RESET de Ramsey
+library(lmtest)
+resettest(modelo_ventas_1, power=2, type="fitted")
+resettest(modelo_ventas_1, power=2:3, type="fitted")
+# Análisis gráfico de la hipótesis de linealidad
+library(car)
+# Residuos estandarizados (Pearson) 
+residualPlots(modelo_ventas_1)
+# Gráficos de variables añadidas (AV plots)
+# también denominados de regresiones parciales
+avPlots(modelo_ventas_1) 
+# Gráficos componente+residuos
+# (Component-plus-Residual o Partial-residual plots)
+crPlots(modelo_ventas_1) 
+# Gráficos CERES 
+# (Combining conditional Expectations and RESidual)
+ceresPlots(modelo_ventas_1) 
+# Modelo generalizado: especificación cuadrática en A
+modelo_ventas_2 <- lm(V ~ P + A + I(A^2), data=VENTAS)
+summary(modelo_ventas_2)
+# Gráficos de efectos
+plot(Effect("P", modelo_ventas_2))
+plot(Effect("A", modelo_ventas_2))
+# Comparación con el modelo básico
+compareCoefs(modelo_ventas_1, modelo_ventas_2)
+anova(modelo_ventas_1, modelo_ventas_2)
+compare_performance(modelo_ventas_1, modelo_ventas_2, rank = TRUE)
+plot(compare_performance(modelo_ventas_1, modelo_ventas_2, rank = TRUE))
+test_performance(modelo_ventas_1, modelo_ventas_2)
+test_wald(modelo_ventas_1, modelo_ventas_2)
+test_bf(modelo_ventas_1, modelo_ventas_2)
+test_vuong(modelo_ventas_1, modelo_ventas_2)
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import statsmodels.stats.api as sms
+import statsmodels.stats as smstats
+import statsmodels.stats.diagnostic as smsdiag
+from statsmodels.stats.outliers_influence import reset_ramsey
+from statsmodels.compat import lzip
+import scipy.stats as scs
+
+# Lectura de datos
+VENTAS = pd.read_csv("data/VENTAS_SUPER.csv")
+# Estructura de la base de datos
+VENTAS.info()
+VENTAS.head()
+VENTAS.tail()
+VENTAS.describe()
+# Modelo de ventas
+formula = 'V ~ P + A'
+modelo_ventas_1 = smf.ols(formula, VENTAS).fit()
+print(modelo_ventas_1.summary())
+# Especificación del modelo
+# Adecuación de la forma funcional: test RESET de Ramsey
+reset_ramsey(modelo_ventas_1,degree=2)
+reset_ramsey(modelo_ventas_1,degree=3)
+# Análisis gráfico de la hipótesis de linealidad
+# Gráficos de variables añadidas (AV plots)
+fig = sm.graphics.plot_partregress_grid(modelo_ventas_1)
+fig.tight_layout(pad=1.0)
+plt.show()
+# Gráficos componente+residuos
+fig = sm.graphics.plot_ccpr_grid(modelo_ventas_1)
+fig.tight_layout(pad=1.0)
+plt.show()
+# Diagnósticos de regresión de una sola variable
+fig = sm.graphics.plot_regress_exog(modelo_ventas_1, "P")
+fig.tight_layout(pad=1.0)
+plt.show()
+fig = sm.graphics.plot_regress_exog(modelo_ventas_1, "A")
+fig.tight_layout(pad=1.0)
+plt.show()
+# Modelo generalizado: especificación cuadrática en A
+formula = 'V ~ P + A + + I(A**2)'
+modelo_ventas_2 = smf.ols(formula, VENTAS).fit()
+print(modelo_ventas_2.summary())
+```
