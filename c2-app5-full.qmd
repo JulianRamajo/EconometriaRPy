@@ -37,14 +37,11 @@ library(sandwich)
 library(moments)
 library(corrplot)
 # Lectura de datos
-#
-# INFORMACIÓN SOBRE EL CONJUNTO ORIGINAL DE DATOS Y SOBRE
-# LA OBTENCIÓN DE LA SUBMUESTRA USADA EN LA APLICACIÓN
+cps <- read_csv("data/MORG14_USA.csv")
 #
 #  USA 2014 CENSUS DATA: morg2014.csv
 # - Cross-sectional data: year 2014
-# - Observations are individuals of age 15 to 85 
-#   (representative sample of this sub-pop.)
+# - Observations are individuals of age 15 to 85 (representative sample of this sub-pop.)
 # - ID variables:
 #   HHID: 	houeshold id
 #   HRHHID2: 2nd part of houeshold id (some original hhid-s are split)
@@ -55,22 +52,17 @@ library(corrplot)
 #   UHOURSE: usual work hours
 #   OCC2012:	occupational code (census 2010 classification)
 #   GRADE92:	highest educational grade completed
-# - Labels of the variables are downlodable from here:
-#   <http://data.nber.org/morg/docs/cpsx.pdf>
-# - Occupational classification (census 2010) codes:
-#   <https://www.bls.gov/cps/cenocc2010.htm>
+# - Labels of the variables are downlodable from here: <http://data.nber.org/morg/docs/cpsx.pdf>
+# - Occupational classification (census 2010) codes: <https://www.bls.gov/cps/cenocc2010.htm>
 #
 # FILTRADO DE OBSERVACIONES: 
 #
 # Edad entre 24 to 64 años; 
-# Haber trabajado más de 20 horas semanales; 
-# Ingresos semanales positivos; 
-# Empleados con estudios universitarios (grade92>44)
-#
-# Selección sobre el fichero original [cps = read_csv("MORG14_USA.csv")]:
-# cps <- cps %>% filter(age>=24 & age<=64 & uhours>=20 & earnwke>0 & grade92>=44)
-#
-cps <- read_csv("data/CPS2014_USA.csv")
+# Individuals who reported 20 hours more as their usual weekly time worked; 
+# Ingresos semanales posittivos; 
+# Empleados con al menos estudios primarios ("High school graduate, diploma or GED")
+cps <- cps %>% filter(age>=24 & age<=64 & uhours>=20 & earnwke>0 & grade92>=39)
+glimpse(cps)
 # TRASNSFORMACIÓN DE VARIABLES
 cps <- cps %>% mutate(female=sex==2, w=earnwke/uhours) %>% filter(w>=1)
 # DISTRIBUCIÓN DE LOS SALARIOS
@@ -86,9 +78,6 @@ earnings_hist<- ggplot(data = cps, aes (x = w, y = 2*(..count..)/sum(..count..))
   scale_y_continuous(limits=c(0, 0.20), breaks = seq(0, 0.20, by = 0.05), labels = scales::percent_format(accuracy = 5L))
 earnings_hist
 # Densidad estimada
-# 1 (gráfica básica)
-ggplot(data = cps) + geom_density(aes(x = w, fill = female), alpha=0.3)
-# 2 (gráfica `customizada')
 earnings_density<- ggplot(data = cps, aes(x=w, y = stat(density), color = female)) +
     geom_density(adjust=1.5, show.legend=F, na.rm =TRUE, size=0.7) +
     labs(x="Hourly earnings (dollars)", y="Density", color = "") +
@@ -113,8 +102,8 @@ huxreg(reg1, reg3, statistics = c(N = "nobs", R2 = "r.squared"))
 reg31 <- lm(log(w) ~ age + age2 + age3 + age4 + female + female*age + female*age2 + female*age3 + female*age4, data=cps)
 huxreg(reg3, reg31, statistics = c(N = "nobs", R2 = "r.squared"))
 # SALARIOS, SEXO, EDAD Y EDUCACIÓN
-cps <- cps %>% mutate(ed_MA=as.numeric(grade92==44), ed_PSD = as.numeric(grade92==45), ed_DD = as.numeric(grade92==46))
-reg4 <- lm(log(w) ~ female + age + age2 + age3 + age4 + ed_PSD + ed_DD, data=cps)
+cps <- cps %>% mutate(ed_HSGGED=as.numeric(grade92==39), ed_CND=as.numeric(grade92==40), ed_ADOV=as.numeric(grade92==41), ed_ADAP=as.numeric(grade92==42), ed_BA=as.numeric(grade92==43), ed_MA=as.numeric(grade92==44), ed_PSD = as.numeric(grade92==45), ed_DD = as.numeric(grade92==46))
+reg4 <- lm(log(w) ~ female + age + age2 + age3 + age4 + ed_CND + ed_ADOV + ed_ADAP + ed_BA + ed_MA + ed_PSD + ed_DD, data=cps)
 huxreg(reg1, reg4, statistics = c(N = "nobs", R2 = "r.squared"))
 # SALARIOS, SEXO, EDAD, EDUCACIÓN Y OTROS FACTORES ADICIONALES (CUALITATIVOS)
 # Construcción de factores condicionantes
@@ -145,7 +134,7 @@ cps <- cps %>% mutate(fedgov = as.numeric(class=="Government - Federal"),
                       occ2dig = as.integer(occ2012/100),
                       union = as.numeric(unionmme=="Yes" | unioncov=="Yes"))
 # Regresión con factores
-reg5 <- lm(log(w) ~ female + age + age2 + age3 + age4 + ed_PSD + ed_DD + afram + hisp + asian + othernonw + nonUSborn + married + divorced + wirowed + child1 + child2 + child3 +child4pl + uhours + fedgov + stagov + locgov + nonprof + union + as.factor(stfips) + as.factor(ind2dig) + as.factor(occ2dig), data=cps)
+reg5 <- lm(log(w) ~ female + age + age2 + age3 + age4 + ed_CND + ed_ADOV + ed_ADAP + ed_BA + ed_MA + ed_PSD + ed_DD + afram + hisp + asian + othernonw + nonUSborn + married + divorced + wirowed + child1 + child2 + child3 +child4pl + uhours + fedgov + stagov + locgov + nonprof + union + as.factor(stfips) + as.factor(ind2dig) + as.factor(occ2dig), data=cps)
 # COMPARACIÓN FINAL
 huxreg(reg0, reg5, statistics = c(N = "nobs", R2 = "r.squared"))
 ```
@@ -171,13 +160,10 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from mizani import transforms
 from stargazer.stargazer import Stargazer
-#
 # Lectura de datos
-#
-# Filtrado sobre el fichero original cps = pd.read_csv('data/MORG14_USA.csv')
-# cps = cps.query("age>=24 & age<=64 & uhours>=20 & earnwke>0 & grade92>=44")
-#
-cps = pd.read_csv('data/CPS2014_USA.csv')
+cps = pd.read_csv('data/MORG14_USA.csv')
+# Filtrado
+cps = cps.query("age>=24 & age<=64 & uhours>=20 & earnwke>0 & grade92>=39")
 # Operaciones con variables
 cps["female"] = (cps.sex == 2).astype(int)
 cps["w"] = cps["earnwke"] / cps["uhours"]
@@ -247,13 +233,18 @@ stargazer
 # Regresión con interacciones edad-sexo
 print(reg31.summary())
 # SALARIOS, SEXO, EDAD Y EDUCACIÓN
+cps["ed_HSGGED"] = (cps["grade92"] == 39).astype(int)
+cps["ed_CND"] = (cps["grade92"] == 40).astype(int)
+cps["ed_ADOV"] = (cps["grade92"] == 41).astype(int)
+cps["ed_ADAP"] = (cps["grade92"] == 42).astype(int)
+cps["ed_BA"] = (cps["grade92"] == 43).astype(int)
 cps["ed_MA"] = (cps["grade92"] == 44).astype(int)
 cps["ed_PSD"] = (cps["grade92"] == 45).astype(int)
 cps["ed_DD"] = (cps["grade92"] == 46).astype(int)
-reg4 = smf.ols(formula="np.log(w) ~ female + age + age2 + age3 + age4 + ed_PSD + ed_DD", data=cps).fit()
+reg4 = smf.ols(formula="np.log(w) ~ female + age + age2 + age3 + age4 + ed_CND + ed_ADOV + ed_ADAP + ed_BA + ed_MA + ed_PSD + ed_DD", data=cps).fit()
 stargazer = Stargazer([reg1,reg4])
 stargazer.covariate_order(
-    ["female", "age", "age2", "age3", "age4", "ed_PSD", "ed_DD", "Intercept"]
+    ["female", "age", "age2", "age3", "age4", "ed_CND", "ed_ADOV", "ed_ADAP", "ed_BA", "ed_MA", "ed_PSD", "ed_DD", "Intercept"]
 )
 stargazer.rename_covariates({"Intercept": "Constant"})
 stargazer
@@ -287,7 +278,7 @@ cps['ind2dig']=((pd.Categorical(cps["ind02"]).codes+1)/100).astype(int)
 cps['occ2dig']=(cps["occ2012"]/100).astype(int)
 cps['union']=((cps['unionmme']=="Yes")|(cps['unioncov']=="Yes")).astype(int)
 # Regresión con factores
-reg5 = smf.ols(formula="np.log(w) ~ female + age + age2 + age3 + age4 + ed_DD + afram + hisp + asian + othernonw + nonUSborn +  married + divorced+ wirowed + child1 + child2 + child3 + child4pl + uhours + fedgov + stagov + locgov + nonprof + union + C(stfips) + C(ind2dig) + C(occ2dig)", data=cps).fit()
+reg5 = smf.ols(formula="np.log(w) ~ female + age + age2 + age3 + age4 + ed_CND + ed_ADOV + ed_ADAP + ed_BA + ed_MA + ed_PSD + ed_DD + afram + hisp + asian + othernonw + nonUSborn +  married + divorced+ wirowed + child1 + child2 + child3 + child4pl + uhours + fedgov + stagov + locgov + nonprof + union + C(stfips) + C(ind2dig) + C(occ2dig)", data=cps).fit()
 print(reg5.summary())
 # COMPARACIÓN FINAL
 stargazer = Stargazer([reg0, reg5])
