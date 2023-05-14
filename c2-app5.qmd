@@ -1,6 +1,16 @@
 ---
-format: html
 engine: knitr
+excerpt: ""
+draft: false
+format: 
+  html:
+    theme: simplex
+    self-contained: true
+    max-width: 1920px
+    code-fold: show
+    code-tools: true
+    highlight-style: atom-one-dark
+    code-block-bg: "#282c34"
 ---
 
 ```{css, echo = FALSE}
