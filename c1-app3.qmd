@@ -156,14 +156,14 @@ gapminder %>% select(-country) %>% ggpairs()
 # Análisis exploratorio de datos (EDA)
 library(skimr)
 skim(gapminder)
-# Regresión
+# Gráficas parciales
 ggplot(data = gapminder, aes(x = log(gdpPercap), y = lifeExp)) + 
-    geom_smooth(method = "lm", col = "red") + 
+    geom_smooth(method = "lm", col = "blue") + 
     geom_point()
 ggplot(data = gapminder, aes(x = year, y = lifeExp)) + 
-    geom_smooth(method = "lm", col = "red") + 
+    geom_smooth(method = "lm", col = "blue") + 
     geom_point()
-# Numéricamente:
+# Regresión MCO
 modelo <- lm(lifeExp ~ log(gdpPercap) + year, data=gapminder)
 summary(modelo)
 ```
@@ -173,7 +173,7 @@ summary(modelo)
 ::: justify
 En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión:
 
-Gestión de datos y gráficos en Python:
+Gestión de datos y gráficos en Python al estilo "_tidyverse_":
 
 -   librería `siuba`: <https://siuba.readthedocs.io/en/latest/>
 
@@ -286,13 +286,13 @@ semi_join(df1, df2, on = "id")
 (
     ggplot(mtcars, aes(x='disp', y='hp'))
     + geom_point()
-    + geom_smooth(method='lm')
+    + geom_smooth(method='lm', color = "blue")
     + labs(x='Displacement', y='Gross horsepower')
 )
 (
     ggplot(mtcars, aes(x='disp', y='hp'))
     + geom_point()
-    + geom_smooth()
+    + geom_smooth(color = "blue")
     + labs(x='Displacement', y='Gross horsepower')
 )
 (ggplot(mtcars, aes('disp', 'hp', color='factor(gear)'))

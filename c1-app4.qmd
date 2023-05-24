@@ -139,7 +139,7 @@ plt.show()
 (ggplot(data_daily) + geom_line(aes('date','pSP500'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
 + labs(y = "Índice S&P 500 del mercado bursátil",x= "Date (day)") + theme_bw())
 plt.show()
-(ggplot(data_daily,aes('l_pSP500','l_pMSFT')) + geom_point() + geom_smooth(method='lm',se=False) + labs(x="Índice S&P 500 (log)",y="Precio diario acciones de Microsoft (log)") + theme_bw())
+(ggplot(data_daily,aes('l_pSP500','l_pMSFT')) + geom_point() + geom_smooth(method='lm',se=False, color = "blue") + labs(x="Índice S&P 500 (log)",y="Precio diario acciones de Microsoft (log)") + theme_bw())
 # Regresión lineal simple
 reg = smf.ols('l_pMSFT ~ l_pSP500', data=data_daily).fit()
 print(reg.summary())
