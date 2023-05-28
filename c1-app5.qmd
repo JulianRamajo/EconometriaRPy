@@ -1,0 +1,120 @@
+---
+engine: knitr
+excerpt: ""
+draft: false
+format: 
+  html:
+    theme: simplex
+    self-contained: true
+    max-width: 1920px
+    code-fold: show
+    code-tools: true
+    highlight-style: atom-one-dark
+    code-block-bg: "#282c34"
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 1.5 (Gestión y representación gráfica de datos III): Emisiones de CO2 al nivel mundial {.unnumbered}
+
+En esta aplicación se analizarán los datos de la publicación de 2022 del [*Global Carbon Project*](https://www.globalcarbonproject.org/) sobre emisiones de gases de efecto invernadero al nivel mundial y nacional, con el objetivo de encontrar los países más contaminantes, tanto en términos de emisiones de CO2 totales como en forma per capita. Pueden encontrarse los datos e información sobre los mismos en la siguiente dirección: <https://zenodo.org/record/7215364>.
+
+Igual que en la aplicación anterior, previamente al análisis estadístico deseado se usarán varias técnicas de *data wrangling* para "preparar" los datos para dicho estudio.
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(plotly)
+# Lectura de datos
+emissions_data <- read_csv("data/global_emissions.csv")
+# Reemplazar "USA" por "United States of America"
+emissions_data$Country <- ifelse(emissions_data$Country == "USA", "United States of America", emissions_data$Country)
+# Eliminar los registros "Global" y "International Transport" de la lista de países (variable Country)
+emissions_data <- emissions_data[!(emissions_data$Country %in% c("Global", "International Transport")),]
+# Restringir período temporal al conjunto 1970-2020
+filtered_data <- emissions_data %>% filter(Year >= 1970 & Year <= 2020)
+# Top 10 de emisiones totales medias 1970-2022
+top_10_countries_total <- filtered_data %>% group_by(Country) %>% summarise(mean_total = mean(Total)) %>% top_n(10, mean_total)
+arrange(top_10_countries_total, desc(mean_total))
+# Gráfico de áreas
+data_top_10_countries_total <- filtered_data %>%
+  filter(Country %in% top_10_countries_total$Country)
+ggplot(data_top_10_countries_total, aes(x=Year, y=Total, fill=Country)) + 
+    geom_area()
+# Top 10 de emisiones per capita medias 1970-2022
+top_10_countries_per_capita <- filtered_data %>% group_by(Country) %>% summarise(mean_per_capita = mean(`Per Capita`)) %>% top_n(10, mean_per_capita)
+arrange(top_10_countries_per_capita, desc(mean_per_capita))
+# Gráfico de líneas
+data_top_10_countries_per_capita <- filtered_data %>% 
+  filter(Country %in% top_10_countries_per_capita$Country)
+ggplot(data_top_10_countries_per_capita, aes(x=Year, y=`Per Capita`, group=Country, color=Country)) + 
+    geom_line()
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import pandas as pd
+import plotly.graph_objects as go
+import folium
+import json
+# Lectura de datos
+emissions_data = pd.read_csv("data/global_emissions.csv")
+# Reemplazar "USA" por "United States of America"
+emissions_data["Country"] = emissions_data["Country"].replace("USA", "United States of America")
+# Eliminar los registros "Global" y "International Transport" de la lista de países (variable Country)
+emissions_data = emissions_data[~emissions_data["Country"].isin(["Global", "International Transport"])]
+# Restringir período temporal al conjunto 1970-2020
+filtered_data = emissions_data[(emissions_data["Year"] >= 1970) & (emissions_data["Year"] <= 2020)]
+# Top 10 de emisiones totales medias por país
+top_10_countries = filtered_data.groupby("Country")["Total"].mean().nlargest(10).index
+plot_data = filtered_data[filtered_data["Country"].isin(top_10_countries)]
+pivot_data = plot_data.pivot_table(values="Total", index="Year", columns="Country", aggfunc="sum", fill_value=0)
+# Gráfica de áreas
+fig_area = go.Figure(layout=go.Layout(title="Top 10 Countries by Total Emissions (1970-2020)", xaxis_title="Years", yaxis_title="Total Emissions"))
+# Se insertan los datos
+for country in pivot_data.columns:
+    fig_area.add_trace(go.Scatter(x=pivot_data.index, y=pivot_data[country], name=country, mode="none", stackgroup="one"))
+# Top 10 de emisiones per capita medias por país
+average_emissions = filtered_data.groupby("Country").agg({"Per Capita": "mean"})
+top_10_per_capita = average_emissions.nlargest(10, "Per Capita").index
+# Gráfica de líneas
+plot_data_per_capita = filtered_data[filtered_data["Country"].isin(top_10_per_capita)]
+pivot_data_per_capita = plot_data_per_capita.pivot_table(values="Per Capita", index="Year", columns="Country", aggfunc="mean", fill_value=0)
+fig_line = go.Figure(layout=go.Layout(title="Top 10 Countries by Per Capita Emissions (1970-2020)", xaxis_title="Years", yaxis_title="Per Capita Emissions"))
+for country in pivot_data_per_capita.columns:
+    fig_line.add_trace(go.Scatter(x=pivot_data_per_capita.index, y=pivot_data_per_capita[country], name=country, mode="lines"))
+# Mapa de distribución mundial de emisiones per capita
+# Mapa mundi: https://www.kaggle.com/datasets/ktochylin/world-countries
+world_geo = r'data/world-countries.json'
+average_emissions_map_data = filtered_data.groupby("ISO 3166-1 alpha-3")["Per Capita"].mean().reset_index()
+emissions_map = folium.Map(location=[0, 0], zoom_start=2)
+folium.Choropleth(
+    geo_data=world_geo,
+    name="choropleth",
+    data=average_emissions_map_data,
+    columns=["ISO 3166-1 alpha-3", "Per Capita"],
+    key_on="feature.id",
+    fill_color="YlGn",
+    fill_opacity=0.7,
+    line_opacity=0.2,
+    legend_name="Average Per Capita Emissions"
+).add_to(emissions_map)
+folium.LayerControl().add_to(emissions_map)
+emissions_map
+```
