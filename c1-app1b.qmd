@@ -1,0 +1,573 @@
+---
+engine: knitr
+excerpt: ""
+draft: false
+format: 
+  html:
+    theme: simplex
+    self-contained: true
+    max-width: 1920px
+    code-fold: show
+    code-tools: true
+    highlight-style: atom-one-dark
+    code-block-bg: "#282c34"
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python {.unnumbered}
+
+En esta aplicación se usarán las librerías estándar de R y Python para el "manejo de datos" (*data wrangling*), replicando los resultados con los correspondientes comandos en ambos lenguajes.
+
+Sobre los datos utilizados:
+
+-   Datos para el ejemplo : palmerpenguins (<https://allisonhorst.github.io/palmerpenguins/>)
+:::
+
+# Código R {.unnumbered}
+
+## Lectura de librerías
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(palmerpenguins)
+theme_set(theme_classic())
+```
+
+## Lectura de datos
+
+```{r}
+data("penguins")
+df <- penguins
+df %>%
+  head()
+```
+
+## Análisis exploratorio
+
+Recuento de casos:
+
+Recuento de los NAs en cada columna
+
+```{r}
+df %>%
+  summarize(across(.cols = everything(),
+                   ~sum(is.na(.x)))) %>%
+  pivot_longer(cols = everything())
+  
+```
+
+Para eliminar todas las filas con un NA habría que ejecutar el siguiente código
+
+```{r}
+# df <- df %>% na.omit()
+```
+
+Número de especies
+
+```{r}
+df %>%
+  count(species, sort = TRUE)
+```
+
+Número de islas
+
+```{r}
+df %>%
+  count(island, sort = TRUE)
+```
+
+Número de especies en cada isla
+
+```{r}
+df %>%
+  count(species, island, sort = TRUE)
+```
+
+Tabla 3x3 de recuento de especies por isla
+
+```{r}
+table(species = df$species,
+      island = df$island)
+```
+
+Tabla 3x3 de proporciones de especies por isla
+
+```{r}
+table(species = df$species,
+      island = df$island) / nrow(df)
+```
+
+Gráfico de barras de especies
+
+```{r}
+df %>%
+  count(species, sort = TRUE) %>%
+  ggplot(aes(x = reorder(species, -n), y = n)) +
+  geom_col(aes(fill = species)) +
+  xlab('species')
+```
+
+Descripción de todas la columnas de la base de datos
+
+```{r}
+summary(df)
+```
+
+Cálculo de la media de la longitud y la profundidad del pico
+
+```{r}
+df %>%
+  select(bill_length_mm, bill_depth_mm) %>%
+  summarize(across(.cols = everything(),
+                   ~mean(.x, na.rm = TRUE)))
+```
+
+Cálculo de los cuantiles 25, 50 y 75 para la longitud y profundidad del pico en la Isla Biscoe
+
+```{r}
+df %>%
+  filter(island == "Biscoe") %>%
+  select(bill_length_mm, bill_depth_mm) %>%
+  summarize(length25 = quantile(bill_length_mm, probs = 0.25, na.rm = TRUE),
+            length50 = quantile(bill_length_mm, probs = 0.50, na.rm = TRUE),
+            length75 = quantile(bill_length_mm, probs = 0.75, na.rm = TRUE),
+            depth25 = quantile(bill_depth_mm, probs = 0.25, na.rm = TRUE),
+            depth50 = quantile(bill_depth_mm, probs = 0.50, na.rm = TRUE),
+            depth75 = quantile(bill_depth_mm, probs = 0.75, na.rm = TRUE))
+```
+
+Boxplot vertical de la longitud del pico por especie
+
+```{r}
+df %>%
+  ggplot(aes(x = species, y = bill_length_mm, fill = species)) +
+  geom_boxplot()
+```
+
+Boxplot horizontal
+
+```{r}
+df %>%
+  ggplot(aes(x = bill_length_mm, y = species, fill = species)) +
+  geom_boxplot()
+```
+
+Densidad estimada de la longitud del pico agrupada por sexo
+
+```{r}
+df %>%
+  na.omit() %>%
+  ggplot(aes(x = bill_length_mm, fill = sex)) +
+  geom_density(alpha = 0.4)
+```
+
+con facetas por especie
+
+```{r}
+df %>%
+  na.omit() %>%
+  ggplot(aes(x = bill_length_mm, fill = sex)) +
+  geom_density(alpha = 0.4) +
+  facet_wrap(~species)
+```
+
+Diagrama de dispersión de la masa corporal en relación con la longitud de las aletas  
+
+```{r}
+df %>%
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point()
+```
+
+con línea de regresión añadida
+
+```{r}
+df %>%
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+diferenciado por sexo
+
+```{r}
+df %>%
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g,
+             color = sex)) +
+  geom_point()
+```
+
+diferenciado por sexo con línea de regresión añadida
+
+```{r}
+df %>%
+  filter(!is.na(sex)) %>%
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g,
+             color = sex)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+Variación de la masa corporal media a lo largo de los años por especie
+
+```{r}
+df %>%
+  group_by(species, year) %>%
+  summarize(N = n(),
+            avg = mean(body_mass_g, na.rm = TRUE),
+            SE = sd(body_mass_g, na.rm = TRUE) / sqrt(N),
+            .groups = "drop") %>%
+  ggplot(aes(x = year, y = avg)) +
+  geom_ribbon(aes(ymin = avg - SE, ymax = avg + SE,
+                  fill = species),
+              alpha = 0.3) +
+  geom_line(aes(color = species))
+```
+
+## Agrupación - resumen
+
+Media y desviación estándar de la longitud del pico para cada especie
+
+```{r}
+df %>%
+  group_by(species) %>%
+  summarize(avg_bill_length = mean(bill_length_mm, na.rm = TRUE),
+            sd_bill_length = sd(bill_length_mm, na.rm = TRUE))
+```
+
+Media y desviación estándar de la longitud del pico de cada especie por sexo
+
+```{r}
+df %>%
+  filter(!is.na(sex)) %>%
+  group_by(species, sex) %>%
+  summarize(avg_bill_length = mean(bill_length_mm, na.rm = TRUE),
+            sd_bill_length = sd(bill_length_mm, na.rm = TRUE))
+```
+
+## Agrupación - cálculo
+
+Añadir una nueva columna al fichero de datos que muestre la longitud media de las aletas agrupadas por especies
+
+```{r}
+df <- df %>%
+  group_by(species) %>%
+  mutate(mean_flipper_length = mean(flipper_length_mm, na.rm = TRUE))
+
+df %>%
+  head()
+```
+
+Puntuación estandarizada (z-score) por especie para la longitud de las aletas
+
+```{r}
+df <- df %>%
+  group_by(species) %>%
+  mutate(flipper_z = (flipper_length_mm - mean(flipper_length_mm, na.rm = TRUE)) / sd(flipper_length_mm, na.rm = TRUE))
+df %>%
+  head()
+```
+
+Añadir una columna para la media y la desviación estándar por especie para la longitud del pico
+
+```{r}
+df <- df %>%
+  group_by(species) %>%
+  mutate(mean_val = mean(bill_length_mm, na.rm = TRUE),
+         sd_val = sd(bill_length_mm, na.rm = TRUE))
+
+df %>%
+  head()
+```
+
+## Comandos ifelse / case_when
+
+Crear una nueva columna que codifique las islas como:
+Biscoe = Isla1
+Sueño = Isla2
+Torgersen = Isla3
+
+```{r}
+df <- df %>%
+  mutate(island_code = case_when(island == "Biscoe" ~ "Island1",
+                                 island == "Dream" ~ "Island2",
+                                 island == "Torgersen" ~ "Island3"))
+df %>%
+  head()
+```
+
+## Regresión lineal
+
+Especificación y ajuste del modelo
+
+```{r}
+model <- lm(body_mass_g ~ flipper_length_mm + species + sex, data = df)
+```
+
+Resumen de resultados
+
+```{r}
+summary(model)
+```
+
+# Código Python {.unnumbered}
+
+Sobre los datos utilizados:
+
+-   Datos para el ejemplo : palmerpenguins (<https://github.com/mcnakhaee/palmerpenguins>)
+
+## Lectura de librerías
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+import pandas as pd                       
+import numpy as np                        
+import matplotlib.pyplot as plt         
+import seaborn as sns
+import statsmodels.formula.api as smf
+from palmerpenguins import load_penguins
+```
+
+## Lectura de datos
+
+```{python}
+df = load_penguins()
+df.head()
+```
+
+## Análisis exploratorio
+
+Recuento de casos:
+
+Recuento de los NAs en cada columna
+
+```{python}
+df.isnull().any()
+len(df) - df.count()
+```
+
+Para eliminar todas las filas con un NA habría que ejecutar el siguiente código
+
+```{python}
+# df = df.dropna()
+```
+
+Número de especies
+
+```{python}
+df['species'].value_counts()
+```
+
+Número de islas
+
+```{python}
+df['island'].value_counts()
+```
+
+Número de especies en cada isla
+
+```{python}
+df[['species', 'island']].value_counts()
+```
+
+Tabla 3x3 de recuento de especies por isla
+
+```{python}
+pd.crosstab(df['species'], df['island'])
+```
+
+Tabla 3x3 de proporciones de especies por isla
+
+```{python}
+pd.crosstab(df['species'], df['island']) / len(df)
+```
+
+Gráfico de barras de especies
+
+```{python}
+sns.countplot(x = 'species', data = df)
+```
+
+Descripción de todas la columnas de la base de datos
+
+```{python}
+df.describe()
+```
+
+Cálculo de la media de la longitud y la profundidad del pico
+
+```{python}
+df[['bill_length_mm', 'bill_depth_mm']].mean()
+```
+
+Cálculo de los cuantiles 25, 50 y 75 para la longitud y profundidad del pico en la Isla Biscoe
+
+```{python}
+df.loc[df['island'] == 'Biscoe', ['bill_length_mm', 'bill_depth_mm']].quantile([0.25, 0.5, 0.75])
+```
+
+Boxplot vertical de la longitud del pico por especie
+
+```{python}
+sns.boxplot(x = 'species', y = 'bill_length_mm', data = df, orient = 'v', palette = 'rainbow')
+```
+
+Boxplot horizontal
+
+```{python}
+sns.boxplot(x = 'bill_length_mm', y = 'species', data = df, orient = 'h', palette = 'rainbow')
+```
+
+Densidad estimada de la longitud del pico agrupada por sexo
+
+```{python}
+sns.displot(x = 'bill_length_mm', 
+            data = df,
+            kind = 'kde',
+            hue = 'sex',
+            fill = True)
+```
+
+con facetas por especie
+
+```{python}
+sns.displot(x = 'bill_length_mm', 
+            data = df,
+            kind = 'kde',
+            hue = 'sex',
+            col = 'species', 
+            fill = True)
+```
+
+Diagrama de dispersión de la masa corporal en relación con la longitud de las aletas  
+
+```{python}
+sns.relplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df)
+```
+
+con línea de regresión añadida
+
+```{python}
+sns.lmplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df)
+```
+
+diferenciado por sexo
+
+```{python}
+sns.relplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df, hue = 'sex')
+```
+
+diferenciado por sexo con línea de regresión añadida
+
+```{python}
+sns.lmplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df, hue = 'sex')
+```
+
+Variación de la masa corporal media a lo largo de los años por especie
+
+```{python}
+sns.relplot(x = 'year', y = 'body_mass_g', kind = 'line',
+           hue = 'species', data = df)
+```
+
+## Agrupación - resumen
+
+Media y desviación estándar de la longitud del pico para cada especie
+
+```{python}
+species_bill_length = (df
+           .groupby('species')
+           .agg(avg_bill_length = ('bill_length_mm', 'mean'),
+               sd_bill_length = ('bill_length_mm', 'std')).round(1)
+           .reset_index())
+species_bill_length
+```
+
+Media y desviación estándar de la longitud del pico de cada especie por sexo
+
+```{python}
+species_bill_length_sex = (df
+           .groupby(['species', 'sex'])
+           .agg(avg_bill_length = ('bill_length_mm', 'mean'),
+               sd_bill_length = ('bill_length_mm', 'std')).round(1)
+           .reset_index())
+species_bill_length_sex
+```
+
+## Agrupación - cálculo
+
+Añadir una nueva columna al fichero de datos que muestre la longitud media de las aletas agrupadas por especies
+
+```{python}
+df['mean_flipper_length'] = df.groupby('species')['flipper_length_mm'].transform('mean')
+df.head()
+```
+
+Puntuación estandarizada (z-score) por especie para la longitud de las aletas
+
+```{python}
+df['flipper_z'] = df.groupby('species')['flipper_length_mm'].transform(lambda x: (x - x.mean()) / x.std()).round(2)
+df.head()
+```
+
+Añadir una columna para la media y la desviación estándar por especie para la longitud del pico
+
+```{python}
+df = df.assign(
+    mean_val = df.groupby(["species"]).bill_length_mm.transform('mean'),
+    sd_val = df.groupby(["species"]).bill_length_mm.transform('std'))
+df.head()
+```
+
+## Comandos def / where
+
+Crear una nueva columna que codifique las islas como:
+Biscoe = Isla1
+Sueño = Isla2
+Torgersen = Isla3
+
+```{python}
+# def
+def islad_transform(island):
+ if island == 'Biscoe':
+  return 'Island1'
+ if island == 'Dream':
+  return 'Island2'
+ if island == 'Torgersen':
+  return 'Island3'
+df["island_code"] = df["island"].map(lambda x: islad_transform(x))
+df.head()
+```
+
+```{python}
+# numpy
+df['island_code2'] = np.where(df['island'] == 'Biscoe', 'Island1',
+                        (np.where(df['island'] == 'Dream', 'Island2', 'Island3')))
+df.head()
+```
+
+## Regresión lineal
+
+Especificación y ajuste del modelo
+
+```{python}
+model = smf.ols('body_mass_g ~ flipper_length_mm + species + sex', data = df)
+results = model.fit()
+```
+
+Resumen de resultados
+
+```{python}
+results.summary()
+```

@@ -18,14 +18,16 @@ format:
 ```
 
 ::: justify
-# Aplicación 1.5 (Gestión y representación gráfica de datos III): Emisiones de CO2 al nivel mundial {.unnumbered}
+# Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos {.unnumbered}
 
-En esta aplicación se analizarán los datos de la publicación de 2022 del [*Global Carbon Project*](https://www.globalcarbonproject.org/) sobre emisiones de gases de efecto invernadero al nivel mundial y nacional, con el objetivo de encontrar los países más contaminantes, tanto en términos de emisiones de CO2 totales como en forma per capita. Pueden encontrarse los datos e información sobre los mismos en la siguiente dirección: <https://zenodo.org/record/7215364>.
+En esta aplicación se estimará una función de consumo de tipo Keynesiano agregada (para un consumidor representativo), usando datos de series temporales para Estados Unidos durante el período 1959-2015 ( *t* = 1, 2,..., 57):
 
-Igual que en la aplicación anterior, previamente al análisis estadístico deseado se usarán varias técnicas de *data wrangling* para "preparar" los datos para dicho estudio.
+$$C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}$$
+
+donde *C* representa la consumo privado, e *Y* es la renta disponible neta (después de impuestos).
 :::
 
-## Código R {.unnumbered}
+# Código R {.unnumbered}
 
 ```{r}
 #| include: true
@@ -34,34 +36,52 @@ Igual que en la aplicación anterior, previamente al análisis estadístico dese
 
 # Lectura de librerías
 library(tidyverse)
-library(plotly)
+library(GGally)
+library(coefplot)
+library(report)
+
 # Lectura de datos
-emissions_data <- read_csv("data/global_emissions.csv")
-# Reemplazar "USA" por "United States of America"
-emissions_data$Country <- ifelse(emissions_data$Country == "USA", "United States of America", emissions_data$Country)
-# Eliminar los registros "Global" y "International Transport" de la lista de países (variable Country)
-emissions_data <- emissions_data[!(emissions_data$Country %in% c("Global", "International Transport")),]
-# Restringir período temporal al conjunto 1970-2020
-filtered_data <- emissions_data %>% filter(Year >= 1970 & Year <= 2020)
-# Top 10 de emisiones totales medias 1970-2022
-top_10_countries_total <- filtered_data %>% group_by(Country) %>% summarise(mean_total = mean(Total)) %>% top_n(10, mean_total)
-arrange(top_10_countries_total, desc(mean_total))
-# Gráfico de áreas
-data_top_10_countries_total <- filtered_data %>%
-  filter(Country %in% top_10_countries_total$Country)
-ggplot(data_top_10_countries_total, aes(x=Year, y=Total, fill=Country)) + 
-    geom_area()
-# Top 10 de emisiones per capita medias 1970-2022
-top_10_countries_per_capita <- filtered_data %>% group_by(Country) %>% summarise(mean_per_capita = mean(`Per Capita`)) %>% top_n(10, mean_per_capita)
-arrange(top_10_countries_per_capita, desc(mean_per_capita))
-# Gráfico de líneas
-data_top_10_countries_per_capita <- filtered_data %>% 
-  filter(Country %in% top_10_countries_per_capita$Country)
-ggplot(data_top_10_countries_per_capita, aes(x=Year, y=`Per Capita`, group=Country, color=Country)) + 
-    geom_line()
+CONS_USA <- read_delim("data/CONS_USA_ts.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+head(CONS_USA)
+tail(CONS_USA)
+# Asignación del formato de series temporales
+# (https://cran.r-project.org/web/views/TimeSeries.html)
+# Aquí se usará la clase básica "ts", válida para series temporales 
+# regulares (espaciadas de forma homogénea en el tiempo).
+# Pueden usarse otras clases más generales, siendo las más usadas:
+# "zoo": https://cran.r-project.org/web/packages/zoo/index.html 
+# "xts": https://github.com/joshuaulrich/xts
+# "tsibble": https://github.com/robjhyndman/fpp3package (https://otexts.com/fpp3/)
+ts_CONS_USA <- ts(CONS_USA, start=c(1959), end = c(2015))
+
+# Análisis exploratorio (EDA)
+# Estadística descriptiva
+summary(ts_CONS_USA)
+# Gráficas
+#ts.plot(ts_CONS_USA[,"C"])
+g1 <- ggplot(data = CONS_USA, aes(x = date)) +
+  geom_line(aes(y = C)) +
+  labs(y = "Consumo privado en Estados Unidos (millones US $)", x = "Año")
+g1
+#ts.plot(ts_CONS_USA[,"Y"])
+g2 <- ggplot(data = CONS_USA, aes(x = date)) +
+  geom_line(aes(y = Y)) +
+  labs(y = "Renta disponible en Estados Unidos (millones US $)", x = "Año")
+g2
+# Diagrama de puntos con línea de regresión
+#CONS_USA %>% ggplot(aes(x = Y, y = C)) + geom_point() + ylab("C") + xlab("Y")
+g3 <- ggplot(CONS_USA, aes(x = Y, y = C)) + 
+               geom_point() +  
+               stat_smooth(method = lm) +  
+               labs(x = "Renta disponible",y = "Consumo privado")
+g3
+
+# Regresión por MCO
+KEYNES_model <- lm (formula = C ~ Y, data = ts_CONS_USA)
+summary(KEYNES_model)
 ```
 
-## Código Python {.unnumbered}
+# Código Python {.unnumbered}
 
 ```{python}
 #| include: true
@@ -69,52 +89,46 @@ ggplot(data_top_10_countries_per_capita, aes(x=Year, y=`Per Capita`, group=Count
 #| message: false
 
 # Lectura de librerías
+import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
-import folium
-import json
-# Lectura de datos
-emissions_data = pd.read_csv("data/global_emissions.csv")
-# Reemplazar "USA" por "United States of America"
-emissions_data["Country"] = emissions_data["Country"].replace("USA", "United States of America")
-# Eliminar los registros "Global" y "International Transport" de la lista de países (variable Country)
-emissions_data = emissions_data[~emissions_data["Country"].isin(["Global", "International Transport"])]
-# Restringir período temporal al conjunto 1970-2020
-filtered_data = emissions_data[(emissions_data["Year"] >= 1970) & (emissions_data["Year"] <= 2020)]
-# Top 10 de emisiones totales medias por país
-top_10_countries = filtered_data.groupby("Country")["Total"].mean().nlargest(10).index
-plot_data = filtered_data[filtered_data["Country"].isin(top_10_countries)]
-pivot_data = plot_data.pivot_table(values="Total", index="Year", columns="Country", aggfunc="sum", fill_value=0)
-# Gráfica de áreas
-fig_area = go.Figure(layout=go.Layout(title="Top 10 Countries by Total Emissions (1970-2020)", xaxis_title="Years", yaxis_title="Total Emissions"))
-# Se insertan los datos
-for country in pivot_data.columns:
-    fig_area.add_trace(go.Scatter(x=pivot_data.index, y=pivot_data[country], name=country, mode="none", stackgroup="one"))
-# Top 10 de emisiones per capita medias por país
-average_emissions = filtered_data.groupby("Country").agg({"Per Capita": "mean"})
-top_10_per_capita = average_emissions.nlargest(10, "Per Capita").index
-# Gráfica de líneas
-plot_data_per_capita = filtered_data[filtered_data["Country"].isin(top_10_per_capita)]
-pivot_data_per_capita = plot_data_per_capita.pivot_table(values="Per Capita", index="Year", columns="Country", aggfunc="mean", fill_value=0)
-fig_line = go.Figure(layout=go.Layout(title="Top 10 Countries by Per Capita Emissions (1970-2020)", xaxis_title="Years", yaxis_title="Per Capita Emissions"))
-for country in pivot_data_per_capita.columns:
-    fig_line.add_trace(go.Scatter(x=pivot_data_per_capita.index, y=pivot_data_per_capita[country], name=country, mode="lines"))
-# Mapa de distribución mundial de emisiones per capita
-# Mapa mundi: https://www.kaggle.com/datasets/ktochylin/world-countries
-world_geo = r'data/world-countries.json'
-average_emissions_map_data = filtered_data.groupby("ISO 3166-1 alpha-3")["Per Capita"].mean().reset_index()
-emissions_map = folium.Map(location=[0, 0], zoom_start=2)
-folium.Choropleth(
-    geo_data=world_geo,
-    name="choropleth",
-    data=average_emissions_map_data,
-    columns=["ISO 3166-1 alpha-3", "Per Capita"],
-    key_on="feature.id",
-    fill_color="YlGn",
-    fill_opacity=0.7,
-    line_opacity=0.2,
-    legend_name="Average Per Capita Emissions"
-).add_to(emissions_map)
-folium.LayerControl().add_to(emissions_map)
-emissions_map
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+
+# Lectura de datos 
+CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';')
+# Asignación del formato temporal 
+# (https://pandas.pydata.org/docs/user_guide/timeseries.html)
+# Un análisis detallado puede encontrarse en la siguiente página web:
+# https://jakevdp.github.io/PythonDataScienceHandbook/03.11-working-with-time-series.html
+ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', parse_dates=['date'], index_col='date')
+# ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', index_col=0)
+ts_CONS_USA.head()
+ts_CONS_USA.tail()
+
+# Análisis exploratorio (EDA)
+# Estadística descriptiva
+ts_CONS_USA.describe()
+# Gráficas
+plt.plot(ts_CONS_USA["C"])
+plt.xlabel("Date")
+plt.ylabel("Consumo privado en Estados Unidos (mill. US $)")
+plt.show()
+plt.plot(ts_CONS_USA["Y"])
+plt.xlabel("Date")
+plt.ylabel("Renta disponible en Estados Unidos (mill. US $)")
+plt.show()
+# Diagrama de puntos con línea de regresión
+reg = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
+res = reg.fit()
+plt.scatter(ts_CONS_USA["Y"], ts_CONS_USA["C"], color = "black")
+plt.plot(ts_CONS_USA["Y"], res.fittedvalues, color = "blue")
+plt.xlabel("Renta disponible")
+plt.ylabel("Consumo privado")
+plt.show()
+
+# Regresión por MCO
+model = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
+KEYNES_model = model.fit()
+print(KEYNES_model.summary())
 ```
