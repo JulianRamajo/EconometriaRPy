@@ -1,1 +1,1 @@
-![ ](_EconMetricsRPy-logo.png)
+![ ](_EconometriaRPy-logo.png)
