@@ -41,7 +41,7 @@ library(coefplot)
 library(report)
 
 # Lectura de datos
-CONS_USA <- read_delim("data/CONS_USA_ts.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+CONS_USA <- read_delim("data/CONS_USA_ts.csv", delim = ";")
 head(CONS_USA)
 tail(CONS_USA)
 # Asignación del formato de series temporales
