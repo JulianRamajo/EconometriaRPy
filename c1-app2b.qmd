@@ -1,0 +1,139 @@
+---
+engine: knitr
+excerpt: ""
+draft: false
+format: 
+  html:
+    theme: simplex
+    self-contained: true
+    max-width: 1920px
+    code-fold: show
+    code-tools: true
+    highlight-style: atom-one-dark
+    code-block-bg: "#282c34"
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles {.unnumbered}
+
+En esta aplicación se estimará un modelo de regresión lineal simple en un contexto financiero:
+
+$$log(pSAN_t) = \beta_1 + \beta_2 log(pIBEX_t)  + e_t$$
+
+donde $pSAN$ es el precio de las acciones del Banco Santander y $pIBEX$ es el índice bursátil IBEX 35.
+
+Antes de llegar a la regresión final, se tendrán que ejecutar comandos específicos de filtrado (*filter*), selección (*select*), transformación (*mutate*) y fusión de ficheros (*join*).
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(lubridate)
+library(scales)
+# Lectura de datos de las 30 mayores empresas del IBEX
+# (https://finance.yahoo.com/quote/%5EIBEX/components?p=%5EIBEX&guccounter=1)
+stock_data <- read_csv("data/IBEX_top30.csv")
+head(stock_data)
+tail(stock_data)
+# filter
+SAN <- stock_data %>% filter(symbol == "SAN.MC")
+# select
+p_SAN <- SAN %>% select(date,adjusted)
+head(p_SAN)
+tail(p_SAN)
+# Lectura de datos del índice IBEX 
+IBEX <- read_csv("data/IBEX.csv")
+# select
+p_IBEX <- IBEX %>% select(date,adjusted)
+head(p_IBEX)
+tail(p_IBEX)
+# join
+data_daily <- inner_join(p_IBEX,p_SAN, by = "date") %>% rename(pIBEX = adjusted.x, pSAN = adjusted.y)
+# mutate
+data_daily <- data_daily %>% mutate(year = year(date), month = month(date))
+data_daily <- data_daily %>% mutate(l_pSAN = log(pSAN), l_pIBEX = log(pIBEX))
+head(data_daily)
+tail(data_daily)
+# ggplot
+p1 <- ggplot(data = data_daily, aes(x = date)) +
+  geom_line(aes(y = pSAN), linewidth = 0.5) +
+  labs(y = "Precio de las acciones de Banco Santander, S.A.", x = "Fecha")
+p1
+p2 <- ggplot(data = data_daily,aes(x = date)) +
+  geom_line(aes(y = pIBEX), linewidth = 0.5) +
+  labs(y = "Indice IBEX 35 (Bolsa de Madrid)", x = "Fecha")
+p2
+p3 <- ggplot(data_daily, aes(x = l_pIBEX,y = l_pSAN)) + 
+               geom_point() +  
+               stat_smooth(method = lm, se=FALSE) +  
+               labs(x = "Indice IBEX 35 (log)",y = "Precio acciones Banco Santander (log)")
+p3
+# Regresión lineal simple
+reg <- lm(l_pSAN ~ l_pIBEX, data = data_daily)
+summary(reg)
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from plotnine import *
+from datetime import datetime
+import matplotlib.pyplot as plt
+# Lectura de datos 30 mayores empresas del IBEX
+# (https://finance.yahoo.com/quote/%5EIBEX/components?p=%5EIBEX&guccounter=1)
+stock_data = pd.read_csv('data/IBEX_top30.csv')
+stock_data.head()
+stock_data.tail()
+# filter
+SAN = stock_data[stock_data['symbol']=='SAN.MC']
+# select
+p_SAN = SAN[['date','adjusted']]
+p_SAN['date']=pd.to_datetime(p_SAN['date'])
+p_SAN.head()
+p_SAN.tail()
+# Lectura de datos del índice IBEX
+IBEX = pd.read_csv('data/IBEX.csv')
+p_IBEX = IBEX[['date','adjusted']]
+p_IBEX['date']=pd.to_datetime(p_IBEX['date'])
+p_IBEX.head()
+p_IBEX.tail()
+# merge (join)
+data_daily=pd.merge(p_IBEX,p_SAN,how='inner',on='date').\
+    rename(columns={'adjusted_x':'pIBEX','adjusted_y':'pSAN'})
+# time
+data_daily['year'] = data_daily['date'].dt.year
+data_daily['month'] = data_daily['date'].dt.month
+# mutate
+data_daily['l_pSAN']=data_daily['pSAN'].map(lambda x:np.log(x))
+data_daily['l_pIBEX']=data_daily['pIBEX'].map(lambda x:np.log(x))
+data_daily.head()
+data_daily.tail()
+# ggplot (Python)
+(ggplot(data_daily) + geom_line(aes('date','pSAN'), size = 0.5) 
++ labs(y = "Precio de las acciones de Banco Santander, S.A.",x= "Date (day)") + theme_bw())
+(ggplot(data_daily) + geom_line(aes('date','pIBEX'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
++ labs(y = "Indice IBEX 35 (Bolsa de Madrid)",x= "Date (day)") + theme_bw())
+(ggplot(data_daily,aes('l_pIBEX','l_pSAN')) + geom_point() + geom_smooth(method='lm',se=False, color = "blue") + labs(x="Indice IBEX 35 (log)",y="Precio acciones Banco Santander (log)") + theme_bw())
+# Regresión lineal simple
+reg = smf.ols('l_pSAN ~ l_pIBEX', data=data_daily).fit()
+print(reg.summary())
+```

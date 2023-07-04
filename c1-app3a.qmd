@@ -1,0 +1,222 @@
+---
+engine: knitr
+excerpt: ""
+draft: false
+format: 
+  html:
+    theme: simplex
+    self-contained: true
+    max-width: 1920px
+    code-fold: show
+    code-tools: true
+    highlight-style: atom-one-dark
+    code-block-bg: "#282c34"
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial {.unnumbered}
+
+En esta aplicación se analizarán los datos de la publicación de 2022 del [*Global Carbon Project*](https://www.globalcarbonproject.org/) sobre emisiones de gases de efecto invernadero al nivel mundial y nacional, con el objetivo de encontrar los países más contaminantes, tanto en términos de emisiones de CO2 totales como en forma per capita. Pueden encontrarse los datos e información sobre los mismos en la siguiente dirección: <https://zenodo.org/record/7215364>.
+
+Igual que en la aplicación anterior, previamente al análisis estadístico deseado se usarán varias técnicas de *data wrangling* para "preparar" los datos para dicho estudio.
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(plotly)
+library(viridis)
+library(sf)
+library(geojsonsf)
+library(leaflet)
+library(viridis)
+library(RColorBrewer)
+# Lectura de datos
+df <- read_csv("data/GCPdbase.csv")
+# Reemplazar "USA" por "United States of America"
+df$Country <-
+  ifelse(df$Country == "USA", "United States of America",
+         df$Country)
+# Eliminar los registros "Global" y "International Transport" 
+# de la lista de países (variable Country)
+df <- df[!(df$Country %in% c("Global", "International Transport")),]
+# Restringir período temporal al conjunto 1970-2021
+df1 <-
+  df %>% filter(Year >= 1970 & Year <= 2021)
+# Top 10 de emisiones totales medias 1970-2021
+top_10_emisiones_total <-
+  df1 %>%
+  group_by(Country) %>%
+  summarise(mean_total = mean(Total)) %>%
+  top_n(10, mean_total)
+arrange(top_10_emisiones_total, desc(mean_total))
+# Gráfico de áreas
+datos_top_10_emisiones_total <- df1 %>%
+  filter(Country %in% top_10_emisiones_total$Country)
+ggplot(datos_top_10_emisiones_total, aes(x=Year, y=Total, fill=Country)) +
+    geom_area()
+# Top 10 de emisiones per capita medias 1970-2021
+top_10_emisiones_per_capita <- df1 %>%
+  group_by(Country) %>%
+  summarise(mean_per_capita = mean(`Per Capita`)) %>%
+  top_n(10, mean_per_capita)
+arrange(top_10_emisiones_per_capita, desc(mean_per_capita))
+# Gráfico de líneas
+datos_top_10_emisiones_per_capita <- df1 %>% 
+  filter(Country %in% top_10_emisiones_per_capita$Country)
+ggplot(datos_top_10_emisiones_per_capita,
+       aes(x=Year, y=`Per Capita`, group=Country, color=Country)) + 
+    geom_line()
+# Mapa de distribución mundial de emisiones per capita medias
+datos_emisiones_per_capita_medias <- df1 %>%
+  group_by(`Country`) %>%
+  summarize(CO2pc = mean(`Per Capita`))
+map <- geojson_sf("data/GCPmap.geojson")
+class(map)
+str(map)
+datos_map <- datos_emisiones_per_capita_medias %>% 
+    rename(name = Country)
+datos_geo <- inner_join(map, datos_map, by = "name")
+ggplot(datos_geo) +
+  geom_sf(aes(fill=CO2pc)) +
+  theme_bw() +
+  labs(title = "Emisiones de CO2 per capita medias") +
+  scale_fill_viridis(option="magma")
+# Mapa interactivo
+# Librería leaflet de R: 
+# https://rstudio.github.io/leaflet/
+# Paletas de colores según el tipo de variables:
+# palNumeric <- colorNumeric("viridis", domain = shape$vcontinua)
+# palBin <- colorBin("magma", domain = shape$vdiscreta, bins = 4)
+# palQuantile <- colorQuantile("Spectral", domain = shape$numerica, n=4)
+# palFactor <- colorFactor("RdBu", domain = shape$vcategorica)
+palNumeric <- colorNumeric("YlGnBu", domain = datos_geo$CO2pc)
+leaflet(datos_geo) %>% setView(0, 0, zoom = 2) %>% addTiles() %>%
+    addProviderTiles("CartoDB.Positron") %>%
+    addPolygons(color = "#444444" ,
+                weight = 1, 
+                smoothFactor = 0.5,
+                opacity = 1.0,
+                fillOpacity = 0.7,
+                fillColor = ~palNumeric(datos_geo$CO2pc),   
+                layerId = ~datos_geo$name,                  
+                highlightOptions = highlightOptions(
+                  color = "white", weight = 1,
+                  bringToFront = TRUE))
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import pandas as pd
+import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+import geopandas as gpd
+import folium
+# Lectura de datos
+df = pd.read_csv("data/GCPdbase.csv")
+# Reemplazar "USA" por "United States of America"
+df["Country"] = df["Country"].replace("USA", "United States of America")
+# Eliminar los registros "Global" y "International Transport" 
+# de la lista de países (variable Country)
+df = df[~df["Country"].isin(["Global", "International Transport"])]
+# Restringir período temporal al conjunto 1970-2021
+df1 = df[(df["Year"] >= 1970) & (df["Year"] <= 2021)]
+# Top 10 de emisiones totales medias por país
+top_10_emisiones_total = df1.groupby("Country")["Total"].mean().nlargest(10).index
+top_10_emisiones_total
+datos_top_10_emisiones_total = df1[df1["Country"].isin(top_10_emisiones_total)]
+pivot_data_total =datos_top_10_emisiones_total.pivot_table(
+  values="Total",
+  index="Year",
+  columns="Country",
+  aggfunc="sum",
+  fill_value=0)
+# Gráfica de áreas
+fig_area = go.Figure(layout=go.Layout(
+  title="Top 10 por emisiones de CO2 totales (1970-2021)",
+  xaxis_title="Años",
+  yaxis_title="CO2"))
+# Se insertan los datos
+for country in pivot_data_total.columns:
+    fig_area.add_trace(go.Scatter(x=pivot_data_total.index,
+    y=pivot_data_total[country],
+    name=country,
+    mode="none",
+    stackgroup="one"))
+# Top 10 de emisiones per capita medias por país
+emisiones_per_capita_medias = df1.groupby("Country").agg({"Per Capita": "mean"})
+top_10_emisiones_per_capita = emisiones_per_capita_medias.nlargest(
+  10, "Per Capita").index
+top_10_emisiones_per_capita
+# Gráfica de líneas
+datos_top_10_emisiones_per_capita = df1[df1["Country"].isin(top_10_emisiones_per_capita)]
+pivot_data_per_capita = datos_top_10_emisiones_per_capita.pivot_table(
+  values="Per Capita",
+  index="Year",
+  columns="Country",
+  aggfunc="mean",
+  fill_value=0)
+fig_line = go.Figure(
+  layout=go.Layout(
+    title="Top 10 por emisiones de CO2 per capita (1970-2021)",
+    xaxis_title="Años",
+    yaxis_title="CO2pc"))
+for country in pivot_data_per_capita.columns:
+    fig_line.add_trace(
+      go.Scatter(x=pivot_data_per_capita.index,
+      y=pivot_data_per_capita[country],
+      name=country, mode="lines"))
+# Mapa de distribución mundial de emisiones per capita medias
+datos_map = df1.groupby("Country")["Per Capita"].mean().reset_index()
+map = gpd.read_file("data/GCPmap.geojson")
+map.info()
+datos_map_2 = datos_map.copy()   
+datos_map_2 = datos_map_2.rename(columns = {"Country": "name"})
+datos_map_2 = datos_map_2.rename(columns = {"Per Capita": "CO2pc"})
+datos_geo  = map.merge(datos_map_2, on = 'name', how = 'left')
+fig, ax = plt.subplots(1,1)
+datos_geo.plot(column="CO2pc",
+           legend=True,
+           cmap='magma',
+           ax=ax)
+plt.title('Emisiones de CO2 per capita medias')
+plt.tight_layout()
+plt.show()
+# Mapa interactivo
+# Libreria folium de Python: 
+# https://python-visualization.github.io/folium/
+world_geo = r'data/GCPmap.geojson'
+datos_emisiones_per_capita_medias = df1.groupby(
+  "ISO 3166-1 alpha-3")["Per Capita"].mean().reset_index()
+mapa_emisiones = folium.Map(location=[0, 0], zoom_start=2)
+folium.Choropleth(
+    geo_data=world_geo,
+    name="choropleth",
+    data=datos_emisiones_per_capita_medias,
+    columns=["ISO 3166-1 alpha-3", "Per Capita"],
+    key_on="feature.id",
+    fill_color="YlGnBu",
+    fill_opacity=0.7,
+    line_opacity=0.2,
+    legend_name="Emisiones per capita medias"
+).add_to(mapa_emisiones)
+folium.LayerControl().add_to(mapa_emisiones)
+mapa_emisiones
+```

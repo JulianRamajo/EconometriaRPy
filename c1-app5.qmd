@@ -20,11 +20,11 @@ format:
 ::: justify
 # Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos {.unnumbered}
 
-En esta aplicación se estimará una función de consumo de tipo Keynesiano agregada (para un consumidor representativo), usando datos de series temporales para Estados Unidos durante el período 1959-2015 ( *t* = 1, 2,..., 57):
+En esta aplicación se estimará una función de consumo de tipo Keynesiano agregada (consumidor representativo), usando datos de series temporales para Estados Unidos del período 1959-2015:
 
 $$C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}$$
 
-donde *C* representa la consumo privado, e *Y* es la renta disponible neta (después de impuestos).
+donde $C$ representa la consumo privado, e $Y$ es la renta disponible neta (después de impuestos).
 :::
 
 # Código R {.unnumbered}
@@ -36,14 +36,12 @@ donde *C* representa la consumo privado, e *Y* es la renta disponible neta (desp
 
 # Lectura de librerías
 library(tidyverse)
-library(GGally)
-library(coefplot)
-library(report)
 
 # Lectura de datos
 CONS_USA <- read_delim("data/CONS_USA_ts.csv", delim = ";")
 head(CONS_USA)
 tail(CONS_USA)
+
 # Asignación del formato de series temporales
 # (https://cran.r-project.org/web/views/TimeSeries.html)
 # Aquí se usará la clase básica "ts", válida para series temporales 
@@ -51,25 +49,27 @@ tail(CONS_USA)
 # Pueden usarse otras clases más generales, siendo las más usadas:
 # "zoo": https://cran.r-project.org/web/packages/zoo/index.html 
 # "xts": https://github.com/joshuaulrich/xts
-# "tsibble": https://github.com/robjhyndman/fpp3package (https://otexts.com/fpp3/)
+# "tsibble": https://github.com/robjhyndman/fpp3package
+# Ver anexo para una demostración sobre el tidyverts, 
+# el complemento al tidyverse para el análisis de series temporales.
+#
 ts_CONS_USA <- ts(CONS_USA, start=c(1959), end = c(2015))
-
+#
 # Análisis exploratorio (EDA)
 # Estadística descriptiva
 summary(ts_CONS_USA)
 # Gráficas
-#ts.plot(ts_CONS_USA[,"C"])
+# ts.plot(ts_CONS_USA[,"C"])
 g1 <- ggplot(data = CONS_USA, aes(x = date)) +
   geom_line(aes(y = C)) +
   labs(y = "Consumo privado en Estados Unidos (millones US $)", x = "Año")
 g1
-#ts.plot(ts_CONS_USA[,"Y"])
+# ts.plot(ts_CONS_USA[,"Y"])
 g2 <- ggplot(data = CONS_USA, aes(x = date)) +
   geom_line(aes(y = Y)) +
   labs(y = "Renta disponible en Estados Unidos (millones US $)", x = "Año")
 g2
 # Diagrama de puntos con línea de regresión
-#CONS_USA %>% ggplot(aes(x = Y, y = C)) + geom_point() + ylab("C") + xlab("Y")
 g3 <- ggplot(CONS_USA, aes(x = Y, y = C)) + 
                geom_point() +  
                stat_smooth(method = lm) +  
@@ -79,6 +79,49 @@ g3
 # Regresión por MCO
 KEYNES_model <- lm (formula = C ~ Y, data = ts_CONS_USA)
 summary(KEYNES_model)
+```
+
+```{r}
+# ANEXO: La  librería fpp3 y el tidyverts'
+#
+# La macro-librería `fpp3` contiene varias librerías específicas
+# (https://tidyverts.org/) y otras generales, como `tidyverse` y  `lubridate`.
+# La clase `tsibble` proporciona una infraestructura de datos para ordenar
+# y manipular series temporales.Se pueden encontrar los detalles en la
+# página web https://tsibble.tidyverts.org/index.html.
+# Toda la información de la librería fpp3 se encuentra en:
+# https://github.com/robjhyndman/fpp3package. 
+# El libro de texto que acompaña a esta librería es el siguiente:
+# FORECASTING: PRINCIPLES AND PRACTICE -> https://otexts.com/fpp3/3.
+# NOTA:
+# Existen otras librerías específicas para series temporales, entre las que
+# cabe destacar `TSstudio` (https://ramikrispin.github.io/TSstudio/),
+# `timetk` (https://business-science.github.io/timetk/) y `tsbox`
+# (https://docs.ropensci.org/tsbox/).
+#
+library(fpp3) 
+# Creación del objeto tsibble
+CONS_USA_ts <-  CONS_USA[,2:3] %>%
+  mutate(Year = 1959:2015) %>%
+  as_tsibble(index = Year)
+# Gráficas individuales
+CONS_USA_ts %>% autoplot(C) +
+  ggtitle("Consumo privado en Estados Unidos") +
+  ylab("$ million") + xlab("Year")
+CONS_USA_ts %>% autoplot(Y) +
+  ggtitle("Renta disponible en Estados Unidos") +
+  ylab("$ million") + xlab("Year")
+# Diagrama de puntos junto con la recta de regresión estimada
+CONS_USA_ts %>%
+  ggplot(aes(x=Y, y=C)) +
+  ylab("Consumo") +
+  xlab("Renta") +
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+# Regresión por MCO
+CONS_USA_ts %>%
+  model(tslm = TSLM(C ~ Y)) %>%
+  report()
 ```
 
 # Código Python {.unnumbered}
@@ -97,6 +140,7 @@ import matplotlib.pyplot as plt
 
 # Lectura de datos 
 CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';')
+#
 # Asignación del formato temporal 
 # (https://pandas.pydata.org/docs/user_guide/timeseries.html)
 # Un análisis detallado puede encontrarse en la siguiente página web:
