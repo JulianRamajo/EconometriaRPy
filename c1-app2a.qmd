@@ -36,49 +36,53 @@ Se usará el enfoque *tidyverse* para este tipo de datos, por lo que esta aplica
 library(tidyverse)
 library(tidyquant)
 library(scales)
-# Descarga de los datos de un activo bursátil desde Yahoo!Finanzas: APPLE
+#
+# Descarga de los datos de un activo bursátil desde Yahoo!Finanzas
+#
 # Para acceder a los datos diarios del precio de las acciones 
-# de Apple usamos el comando tq_get de la librería tidyquant.
-# Solicitaremos los datos desde el año 2000 hasta la actualidad.
-# https://es.finance.yahoo.com/quote/AAPL?p=AAPL&.tsrc=fin-srch
-pAAPL <- tq_get("AAPL",
+# se usa el comando tq_get de la librería tidyquant.
+# Solicitaremos los datos del Banco Santander, S.A. (SAN.MC)
+# desde el año 2000 hasta la fecha realización de esta aplicación:
+# https://es.finance.yahoo.com/quote/SAN.MC?p=SAN.MC&.tsrc=fin-srch
+pSAN <- tq_get("SAN.MC",
   get = "stock.prices",
   from = "2000-01-01",
-  to = "2023-06-28"
+  to = "2023-05-23"
 )
-pAAPL
+head(pSAN)
+tail(pSAN)
 # Gráfica de serie temporal: evolución temporal de los precios
-pAAPL |>
+pSAN |>
   ggplot(aes(x = date, y = adjusted)) +
   geom_line() +
   labs(
     x = NULL,
     y = NULL,
-    title = "Precio de las acciones de Apple desde el año 2000 (USD)"
+    title = "Precio de las acciones del Banco Santander desde el año 2000 (EUR)"
   )
-# Cálculo de los rendimientos netos diarios (returns):
-# rAAPL = pAAPL/pAAPL(-1)-1
-rAAPL <- pAAPL |>
+# Cálculo de los rendimientos netos diarios (returns)
+rSAN <- pSAN |>
   arrange(date) |>
   mutate(ret = adjusted / lag(adjusted) - 1) |>
   select(symbol, date, ret)
-rAAPL
+head(rSAN)
+tail(rSAN)
 # Eliminación de datos perdidos (missing data)
-rAAPL <- rAAPL |>
+rSAN <- rSAN |>
   drop_na(ret)
 # Evolución temporal de las rentabilidades diarias
-rAAPL |>
+rSAN |>
   ggplot(aes(x = date, y = ret)) +
   geom_line() +
   labs(
     x = NULL,
     y = NULL,
-    title = "Rendimiento neto diario de las acciones de Apple"
+    title = "Rendimiento diario de las acciones del Banco Santarder"
   )
 # Distribución de los rendimientos diarios (detección de asimetrías)
-q5 <- quantile(rAAPL |> pull(ret), probs = 0.05)
-q95 <- quantile(rAAPL |> pull(ret), probs = 0.95)
-rAAPL |>
+q5 <- quantile(rSAN |> pull(ret), probs = 0.05)
+q95 <- quantile(rSAN |> pull(ret), probs = 0.95)
+rSAN |>
   ggplot(aes(x = ret)) +
   geom_histogram(bins = 100) +
   geom_vline(aes(xintercept = q5), linetype = "dashed") +
@@ -86,11 +90,11 @@ rAAPL |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Distribución de los rendimientos diarios de Apple"
+    title = "Distribución de los rendimientos diarios del Banco Santander"
   ) +
   scale_x_continuous(labels = percent)
 # Estadística resumen global
-rAAPL |>
+rSAN |>
   summarize(across(
     ret,
     list(
@@ -101,7 +105,7 @@ rAAPL |>
     )
   ))
 # Estadística resumen por año
-rAAPL |>
+rSAN |>
   group_by(year = year(date)) |>
   summarize(across(
     ret,
@@ -127,41 +131,63 @@ rAAPL |>
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from plotnine import *
 from datetime import datetime
+from mizani.formatters import percent_format
 import yfinance as yf
 import warnings
 warnings.filterwarnings("ignore")
-# Descarga de los datos diarios del precio de las acciones de Apple 
-# Creación del ticker de Apple
-AAPL = yf.Ticker("AAPL")
+# Descarga de los datos diarios del precio de las acciones del Santander 
+# Creación del ticker del Banco Santander
+SAN = yf.Ticker("SAN.MC")
 # Lectura de los datos para el período seleccionado
-pAAPL = yf.download("AAPL", start="2000-01-01", end="2023-06-28")
-print(pAAPL)
+pSAN = yf.download("SAN.MC", start="2000-01-01", end="2023-05-23")
+print(pSAN)
+pSAN = (pSAN.reset_index())
+pSAN.head()
+pSAN.tail()
 # Gráfica de serie temporal: evolución temporal de los precios
-plt.figure(1)
-plt.plot(pAAPL['Adj Close'])
-plt.title('Precio de las acciones de Apple desde el año 2000 (USD)')
-plt.show()
+(
+  ggplot(pSAN, aes(y="Adj Close", x="Date")) 
+  + geom_line() 
+  + labs(x="", y="", title="Precio de las acciones del Banco Santander desde el año 2000 (EUR)")
+)
 # Cálculo de los rendimientos netos diarios
 def ret(x):
     x_change = (x/x.shift(1)-1)
     return x_change
-pAAPL['ret'] = ret(pAAPL['Adj Close'])
-pAAPL['ret']
+pSAN['ret'] = ret(pSAN['Adj Close'])
+pSAN['ret']
+# Cálculo alternativo de los rendimientos diarios
+ret2 = (pSAN
+  .sort_values("Date")
+  .assign(ret2 = lambda x: x["Adj Close"].pct_change())
+  .get(["Date", "ret2"])
+)
+ret2.head()
 # Eliminación de datos perdidos (missing data)
-pAAPL = pAAPL.dropna()
+pSAN = pSAN.dropna()
 # Evolución temporal de las rentabilidades diarias
-plt.figure(2)
-plt.plot(pAAPL['ret'])
-plt.title('Rendimiento neto diario de las acciones de Apple')
-plt.show()
+(
+  ggplot(pSAN, aes(y="ret", x="Date"))
+ + geom_line()
+ + labs(x="", y="", title="Rendimiento diario de las acciones del Banco Santarder")
+)
 # Distribución de los rendimientos diarios (detección de asimetrías)
-plt.figure(3)
-plt.hist(pAAPL['ret'], bins=100)
-plt.title('Distribución de los rendimientos diarios de Apple')
-plt.show()
+q5 = pSAN["ret"].quantile(0.05)
+q95 = pSAN["ret"].quantile(0.95)
+(
+  ggplot(pSAN, aes(x="ret"))
+ + geom_histogram(bins=100)
+ + geom_vline(aes(xintercept=q5), linetype="dashed")
+ + geom_vline(aes(xintercept=q95), linetype="dashed")
+ + labs(x=None, y=None, title="Distribución de los rendimientos diarios del Banco Santander")
+ + scale_x_continuous(labels=percent_format())
+)
 # Estadística resumen global
-est_res = pAAPL['ret'].agg({
+pSAN["ret"].describe()
+#
+est_res = pSAN['ret'].agg({
     'media': 'mean',
     'desv_típica': 'std',
     'mínimo': 'min',
@@ -169,7 +195,9 @@ est_res = pAAPL['ret'].agg({
 })
 est_res.round(4)
 # Estadística resumen por año
-pAAPL['year'] = pd.DatetimeIndex(pAAPL.index).year
-est_anuales = pAAPL.groupby('year').agg({'ret': ['mean', 'std', 'min', 'max']})
-est_anuales.round(4)
+pSAN["ret"].groupby(pSAN["Date"].dt.year).describe()
+#
+pSAN['year'] = pSAN["Date"].dt.year
+est_anual = pSAN.groupby('year').agg({'ret': ['mean', 'std', 'min', 'max']})
+est_anual.round(4)
 ```

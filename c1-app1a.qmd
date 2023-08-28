@@ -20,19 +20,19 @@ format:
 ::: justify
 # Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del *tidyverse* {.unnumbered}
 
-En esta aplicación se pondrán ejemplos básicos en R y Python usando la filosofía *tidyverse*, la cual supone un 'dialecto' dentro de cada lenguaje con el objetivo de "preparar" los datos originales para un tratamiento estadístico posterior:
+En esta aplicación se pondrán ejemplos básicos en R y Python usando la filosofía *tidyverse*, la cual supone una 'forma de trabajar' dentro de cada lenguaje con el objetivo de "preparar" los datos originales para un tratamiento estadístico posterior:
 
-*"At a high level, the tidyverse is a language for solving data science challenges \[...\]. Its primary goal is to facilitate a conversation between a human and a computer about data. Less abstractly, the tidyverse is a collection of \[...\] packages that share a high-level design philosophy and low-level grammar and data structures, so that learning one package makes it easier to learn the next."* (Wickham et al., 2019)
+*"A grandes rasgos, el tidyverse es un lenguaje para resolver los retos de la ciencia de datos \[...\]. Su objetivo principal es facilitar una conversación entre un humano y un ordenador acerca de los datos. De forma menos abstracta, el tidyverse es una colección de \[...\] librerías que comparten una filosofía de diseño de alto nivel y unas estructuras gramatical y de datos de bajo nivel, de modo que aprender una librería facilita el aprendizaje de la siguiente."* (Traducido al español de Wickham et al., 2019)
 :::
 
 ## Código R {.unnumbered}
 
 ::: justify
-En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión.
+En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión analizada:
 
-Datos ordenados: *Tidy Data* (<https://www.jstatsoft.org/article/view/v059i10>)
+1.  Datos ordenados: *Tidy Data* (<https://www.jstatsoft.org/article/view/v059i10>)
 
-Gestión de datos y gráficas en R: macro-librería `tidyverse` (<https://www.tidyverse.org/>) -\>
+2.  Gestión de datos y gráficas en R: macro-librería `tidyverse` (<https://www.tidyverse.org/>)
 
 -   <https://tidyr.tidyverse.org/articles/tidy-data.html>
 
@@ -46,11 +46,11 @@ Gestión de datos y gráficas en R: macro-librería `tidyverse` (<https://www.ti
 
 -   <https://education.rstudio.com/blog/2020/07/teaching-the-tidyverse-in-2020-part-4-when-to-purrr/>
 
-Sobre los datos utilizados:
+Sobre los datos utilizados en la aplicación R:
 
--   Datos para el ejemplo 1: Gapminder (<https://www.gapminder.org/tools>)
+1. Gapminder (<https://www.gapminder.org/fw/world-health-chart/>)
 
--   Datos para el ejemplo 2: NYC_Flights_in_2013 (<https://github.com/tidyverse/nycflights13>)
+2. NYC_Flights_2013 (<https://github.com/tidyverse/nycflights13>)
 :::
 
 ```{r}
@@ -61,9 +61,20 @@ Sobre los datos utilizados:
 # Lectura de librerías
 library(tidyverse)
 tidyverse_packages()
+# 
+library(deepdep)
+dep_tidyverse <- deepdep("tidyverse", depth = 1)
+plot_dependencies(dep_tidyverse, "circular")
 # Lectura de datos
-gapminder <- read_delim("data/GAPMINDER.csv")
+# Lectura de datos
+gapminder <- read_csv("data/GAPMINDER.csv")
+class(gapminder)
+# Cambio de nombres de variables
+gapminder <- gapminder %>% 
+  rename(year = date, gdpPercap = NY.GDP.PCAP.CD, lifeExp = SP.DYN.LE00.IN, pop = SP.POP.TOTL)
+# Datos iniciales y finales
 head(gapminder)
+tail(gapminder)
 # Gramática de datos con dplyr (https://dplyr.tidyverse.org/) y 'tuberías' (`%>%`)
 # (https://es.r4ds.hadley.nz/transform.html#transformaciones-agrupadas-y-filtros)
 #
@@ -80,7 +91,9 @@ gapminder_grouped <- group_by(gapminder_mutated, country)
 gapminder_summarised <- summarise(gapminder_grouped, AVG_GDP = mean(GDP))
 # arrange
 gapminder_arranged_ascending <- arrange(gapminder_summarised, AVG_GDP)
+gapminder_arranged_ascending
 gapminder_arranged_descending <- arrange(gapminder_summarised, -AVG_GDP)
+gapminder_arranged_descending
 # El operador tubería (pipe) del tidyverse: %>%
 AVG_GDP <- 
   gapminder %>% 
@@ -92,7 +105,7 @@ AVG_GDP <-
   arrange(-AVG_GDP)
 AVG_GDP
 # La tubería nativa de R: |>
-gapminder |> subset(year==2007) |> head()
+gapminder |> subset(year==2021) |> head()
 # Familia de operaciones join (https://es.r4ds.hadley.nz/datos-relacionales.html)
 # `inner_join(df1, df2)`
 # `left_join(df1, df2)`
@@ -100,7 +113,6 @@ gapminder |> subset(year==2007) |> head()
 # `full_join(df1, df2)`
 # `semi_join(df1, df2)`
 # `anti_join(df1, df2)`
-
 # Lectura de datos
 library(nycflights13)
 flights 
@@ -116,72 +128,85 @@ left_join(flights, planes, by = "tailnum") %>%
   select(month, day, dep_time, arr_time, carrier, flight, tailnum, type, model)
 
 # Gramática de gráficas (ggplot2) [https://ggplot2.tidyverse.org/]
-ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + 
-  geom_point()
-ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +  
-  geom_point(aes(size = pop, col = continent), alpha = 0.3)
-p = ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp))
-p + 
-  geom_point(alpha = 0.3)  +
-  geom_smooth(method = "loess")
-p + 
-  geom_point(aes(size = pop, col = continent), alpha = 0.3)  +
-  geom_smooth(method = "loess") 
-ggplot(data = gapminder) + 
-  geom_density(aes(x = gdpPercap), alpha=0.3)
-ggplot(data = gapminder) + 
-  geom_density(aes(x = gdpPercap, fill = continent), alpha=0.3)
-p2 =
-  p +
-  geom_point(aes(size = pop, col = continent), alpha = 0.3) +
-  scale_color_brewer(name = "Continent", palette = "Set1") + # Diferente  escala de colores
-  scale_size(name = "Population", labels = scales::comma) + # Diferente escala de puntos
-  scale_x_log10(labels = scales::dollar) + # Escala logarítmica en el eje X y unidades de $ 
-  labs(x = "Log (GDP per capita)", y = "Life Expectancy") + # Títulos en los ejes
-  theme_minimal() ## minimal (b&w) plot theme
+p  <-  ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp))
+# Gráfica 0
+p0  <-  p + geom_point(alpha = 0.3)
+p0
+p0plus <- p0 + geom_smooth(method = "loess")
+p0plus
+# Gráfica 1
+p1  <-  p + geom_point(aes(size = pop, col = region), alpha = 0.3)
+p1
+# Gráfica 2
+p2  <-  p +
+geom_point(aes(size = pop, col = region), alpha = 0.3) +
+scale_color_brewer(name = "Región", palette = "Set1") + # Diferente  escala de colores
+scale_size(name = "Población", labels = scales::comma) + # Diferente escala de puntos
+scale_x_log10(labels = scales::dollar) + # Escala logarítmica en el eje X y unidades de $
+labs(x = "PIB per capita (log)", y = "Experanza de vida al nacer") + # Títulos en los ejes
+theme_minimal() # Tema mínimo (b&w)
 p2
+# Gráfica 3 de burbujas de Hans-Rosling
+library(viridis)
 library(gganimate)
-ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+p3 <- gapminder |>
+    ggplot(aes(x = log(gdpPercap), y = lifeExp, size = pop)) +
+    geom_point(alpha = 0.5, aes(color = region)) +
+    scale_size(range = c(.1, 16), guide = "none") +
+    scale_x_continuous(limits = c(2.5, 12.5)) +
+    scale_y_continuous(limits = c(30, 90)) +
+    scale_color_viridis(discrete = TRUE, name = "Región", option = "viridis") +
+    labs(x = "RIQUEZA - PIB per capita (log)",
+                  y = "SALUD - Esperanza de vida al nacer") +
+    theme_classic() +
+    geom_text(aes(x = 7.5, y = 60, label = year), size = 14, color = 'lightgrey', family = 'Oswald') +
+    gganimate::transition_states(year, transition_length = 1, state_length = 1) +
+    gganimate::ease_aes('cubic-in-out')
+p3
+# Gráfica 4
+library(gganimate)
+p4  <-  ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   geom_point(alpha = 0.7, show.legend = FALSE) +
-  scale_size(range = c(2, 12)) +
   scale_x_log10(labels = scales::dollar) +
-  facet_wrap(~continent) +
-  labs(title = 'Year: {frame_time}', x = 'Log (GDP per capita)', y = 'Life expectancy') +
+  facet_wrap(~region) +
+  labs(title = 'Año: {frame_time}', x = 'PIB per capita (log)', y = 'Experanza de vida') +
   transition_time(year) +
   ease_aes('linear')
-# Más gráficas, EDA y regresiones
-# GGally  (https://ggobi.github.io/ggally/)
-library(GGally)
-gapminder %>% select(-country) %>% ggpairs()
+p4
+
 # Análisis exploratorio de datos (EDA)
 library(skimr)
 skim(gapminder)
-# Gráficas parciales
+# Gráficas bivariantes con  GGally  (https://ggobi.github.io/ggally/)
+library(GGally)
+gapminder %>% select(-c(iso2c,iso3c,country,year,region)) %>% ggpairs()
+# Gráficas parciales con línea de regresión
 ggplot(data = gapminder, aes(x = log(gdpPercap), y = lifeExp)) + 
     geom_smooth(method = "lm", col = "blue") + 
     geom_point()
 ggplot(data = gapminder, aes(x = year, y = lifeExp)) + 
     geom_smooth(method = "lm", col = "blue") + 
     geom_point()
+
 # Regresión MCO
-modelo <- lm(lifeExp ~ log(gdpPercap) + year, data=gapminder)
-summary(modelo)
+model <- lm(lifeExp ~ log(gdpPercap) + year, data=gapminder)
+summary(model)
 ```
 
 ## Código Python {.unnumbered}
 
 ::: justify
-En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión.
+En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión analizada:
 
-Gestión de datos y gráficos en Python:
+1. Gestión *a la tidyverse*_* de datos y gráficos en Python:
 
 -   librería `siuba`: <https://siuba.readthedocs.io/en/latest/>
 
 -   librería `plotnine`: <https://plotnine.readthedocs.io/en/stable/>
 
-Sobre los datos utilizados:
+Sobre los datos utilizados en la aplicación Python:
 
--   Datos para el ejemplo: mtcars (<https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html>)
+1. mtcars (<https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html>)
 :::
 
 ```{python}
