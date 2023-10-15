@@ -98,7 +98,6 @@ import statsmodels.formula.api as smf
 # from skimpy import skim
 import matplotlib.pyplot as plt
 from plotnine import *
-import matplotlib.pyplot as plt
 
 # Lectura de datos
 DEM_CARNE = pd.read_csv("data/DEM_CARNE.csv")

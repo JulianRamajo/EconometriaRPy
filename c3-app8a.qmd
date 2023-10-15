@@ -1,0 +1,456 @@
+---
+engine: knitr
+excerpt: ""
+draft: false
+format: 
+  html:
+    theme: simplex
+    self-contained: true
+    max-width: 1920px
+    code-fold: show
+    code-tools: true
+    highlight-style: atom-one-dark
+    code-block-bg: "#282c34"
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 3.8a (Dependencia espacial - Polígonos): Estadísticas 'morales' en Francia en 1830 {.unnumbered}
+
+En esta aplicación se analizarán con técnicas modernas de análisis estadístico espacial algunas de las cuestiones abordadas en el estudio fundacional de las ciencias sociales de André-Michel Guerry sobre la delincuencia, el suicidio, la alfabetización y otras "estadísticas morales" en la Francia de 1830.
+
+Referencia original: Guerry, A.M. (1833). "*Essai sur la statistique morale de la France*", París: Crochard.
+
+Fuente de los datos: <https://geodacenter.github.io/data-and-lab/Guerry/>
+
+Información complementaria: <https://www.datavis.ca/gallery/guerry/>
+
+Para una introducción asequible al análisis de datos espaciales puede consultarse el libro de Moraga, P. (2023): "*Spatial Statistics for Data Science: Theory and Practice with R*", Chapman & Hall/CRC: <https://www.paulamoraga.com/book-spatial/>.
+
+Para una revisión completa sobre los principales métodos y técnicas utilizados en ciencia de datos espaciales en R y Python las referencias básicas son los libros de Pebesma, E. y Bivand, R. (2023): "*Spatial Data Science: With Applications in R*", Chapman & Hall/CRC: <https://r-spatial.org/book/>, y Rey, S., Arribas-Bel, D. y Wolf, L. (2023): "*Geographic Data Science with Python*", Chapman & Hall/CRC: <https://geographicdata.science/book/>.
+:::
+
+# Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(sf) # https://r-spatial.github.io/sf/
+
+# Lectura de datos
+Guerry <- st_read("data/GUERRY_FRANCE.shp")
+class(Guerry)
+str(Guerry)
+Guerry
+
+# Análisis exploratorio básico (EDA)
+summary(Guerry)
+
+# Gráficas: representación de datos espaciales
+plot(Guerry['Crm_prs'])
+
+library(mapview)
+mapview(Guerry, zcol = "Crm_prs")
+
+# ESDA (Análisis exploratorio de datos espaciales)
+
+# Estadísticos de autocorrelación espacial para la variable Crm_prs
+
+# Librería rgeoda (https://geodacenter.github.io/rgeoda/)
+library(rgeoda)
+
+Wq <- queen_weights(Guerry)
+summary(Wq)
+
+LISA_Crm_prs <- local_moran(Wq, Guerry['Crm_prs'])
+LISA_Crm_prs
+
+lisa_colors <- lisa_colors(LISA_Crm_prs)
+lisa_labels <- lisa_labels(LISA_Crm_prs)
+lisa_clusters <- lisa_clusters(LISA_Crm_prs)
+
+plot(st_geometry(Guerry), 
+     col=sapply(lisa_clusters, function(x){return(lisa_colors[[x+1]])}), 
+     border = "#333333", lwd=0.2)
+title(main = "Mapa de Moran local de Crm_prs")
+legend('bottomleft', legend = lisa_labels, fill = lisa_colors, border = "#eeeeee")
+
+lisa_p <- lisa_pvalues(LISA_Crm_prs)
+p_labels <- c("Not significant", "p <= 0.05", "p <= 0.01", "p <= 0.001")
+p_colors <- c("#eeeeee", "#84f576", "#53c53c", "#348124")
+plot(st_geometry(Guerry), 
+     col=sapply(lisa_p, function(x){
+       if (x <= 0.001) return(p_colors[4])
+       else if (x <= 0.01) return(p_colors[3])
+       else if (x <= 0.05) return (p_colors[2])
+       else return(p_colors[1])
+       }), 
+     border = "#333333", lwd=0.2)
+title(main = "Mapa de signicación local de Crm_prs")
+legend('bottomleft', legend = p_labels, fill = p_colors, border = "#eeeeee")
+
+# Librería spdep (https://r-spatial.github.io/spdep/)
+# [Ver también la librería sfdep: https://sfdep.josiahparry.com/]
+library(spdep)
+
+# Cálculo de los vecinos de cada región
+nb <- spdep::poly2nb(Guerry, queen = TRUE)
+nb
+
+plot(st_geometry(Guerry), border = "lightgrey")
+plot.nb(nb, st_geometry(Guerry), add = TRUE)
+
+# ¿Cómo funciona al nivel individual la lista nb?
+head(nb)
+id <- 1 # id de la región
+Guerry$neighbors <- "Otros"
+Guerry$neighbors[id] <- "Región"
+Guerry$neighbors[nb[[id]]] <- "Vecinos"
+ggplot(Guerry) + geom_sf(aes(fill = neighbors)) + theme_bw() +
+    scale_fill_manual(values = c("white","gray30", "gray"))
+
+# Construcción de la matriz W de interacciones espaciales
+Wnb <- spdep::nb2listw(nb, style = "W")
+Wnb
+head(Wnb$weights)
+m <- listw2mat(Wnb)
+lattice::levelplot(t(m))
+
+# Cálculo de los estadísticos
+
+# I de Moran global
+moran.plot(Guerry$Crm_prs, Wnb)
+gmoran <- moran.test(Guerry$Crm_prs, Wnb,
+                     alternative = "greater")
+gmoran
+gmoranMC <- moran.mc(Guerry$Crm_prs, Wnb, nsim = 999)
+gmoranMC
+hist(gmoranMC$res)
+abline(v = gmoranMC$statistic, col = "red")
+
+# I de Moran local (LISAs)
+lmoran <- localmoran(Guerry$Crm_prs, Wnb, alternative = "greater")
+head(lmoran)
+tail(lmoran)
+
+library(tmap)
+tmap_mode("view")
+Guerry$lmI <- lmoran[, "Ii"]
+Guerry$lmZ <- lmoran[, "Z.Ii"]
+Guerry$lmpval <- lmoran[, "Pr(z > E(Ii))"]
+p1 <- tm_shape(Guerry) +
+  tm_polygons(col = "Crm_prs", title = "Crm_prs", style = "quantile") +
+  tm_layout(legend.outside = TRUE)
+p2 <- tm_shape(Guerry) +
+  tm_polygons(col = "lmI", title = "I de Moran local",
+              style = "quantile") +
+  tm_layout(legend.outside = TRUE)
+p3 <- tm_shape(Guerry) +
+  tm_polygons(col = "lmZ", title = "Z-score",
+              breaks = c(-Inf, 1.65, Inf)) +
+  tm_layout(legend.outside = TRUE)
+p4 <- tm_shape(Guerry) +
+  tm_polygons(col = "lmpval", title = "p-valor",
+              breaks = c(-Inf, 0.05, Inf)) +
+  tm_layout(legend.outside = TRUE)
+tmap_arrange(p1, p2, p3, p4)
+
+tm_shape(Guerry) + tm_polygons(col = "lmZ",
+title = "I de Moran local", style = "fixed",
+breaks = c(-Inf, -1.96, 1.96, Inf),
+labels = c("SAC negativa", "SAC no significativa", "SAC positiva"),
+palette =  c("blue", "white", "red")) +
+tm_layout(legend.outside = TRUE)
+
+lmoran2 <- localmoran(Guerry$Crm_prs, Wnb, alternative = "two.sided")
+head(lmoran2)
+tail(lmoran2)
+Guerry$lmpval2 <- lmoran2[, 5] # columna 5 contiene p-valores
+mp <- moran.plot(as.vector(scale(Guerry$Crm_prs)), Wnb)
+
+# Mapa LISA
+Guerry$quadrant <- NA
+# Cuadrante HH (high-high)
+Guerry[(mp$x >= 0 & mp$wx >= 0) & (Guerry$lmpval2 <= 0.05), "quadrant"]<- 1
+# Cuadrante LL (low-low)
+Guerry[(mp$x <= 0 & mp$wx <= 0) & (Guerry$lmpval2 <= 0.05), "quadrant"]<- 2
+# Cuadrante HL (high-low)
+Guerry[(mp$x >= 0 & mp$wx <= 0) & (Guerry$lmpval2 <= 0.05), "quadrant"]<- 3
+# Cuadrante LH (low-high)
+Guerry[(mp$x <= 0 & mp$wx >= 0) & (Guerry$lmpval2 <= 0.05), "quadrant"]<- 4
+# Cuadrante NS (no significavo)
+Guerry[(Guerry$lmpval2 > 0.05), "quadrant"] <- 5
+
+tm_shape(Guerry) + tm_fill(col = "quadrant", title = "",
+breaks = c(1, 2, 3, 4, 5, 6),
+palette =  c("red", "blue", "lightpink", "skyblue2", "white"),
+labels = c("HH", "LL", "HL",
+           "LH", "NS")) +
+tm_legend(text.size = 1)  + tm_borders(alpha = 0.5) +
+tm_layout(frame = FALSE,  title = "Clusters")  +
+tm_layout(legend.outside = TRUE)
+
+# ECONOMETRÍA ESPACIAL (Análisis confirmatorio de datos espaciales)
+
+# Modelos econométricos para explicar la variable Crm_prs
+
+# Regresión estándar (modelo lineal)
+Crm_LM <- lm(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
+              data = Guerry)
+summary(Crm_LM)
+
+# Regresiones espaciales
+library(spatialreg)
+
+# Retardo espacial de la variable dependiente (SLM) [estimación S2SLS]
+Crm_SLM <- stsls(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
+                 data = Guerry,
+                 listw = Wnb)
+summary(Crm_SLM)
+
+# Retardo espacial de los errores (SEM) [estimación GMM]
+Crm_SEM <- GMerrorsar(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
+                      data =Guerry,
+                      listw = Wnb)
+summary(Crm_SEM)
+
+# Modelo combinado (SAC -> SLM + SEM) [estimación GS2SLS]
+Crm_SAC <- gstsls(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
+                      data =Guerry,
+                      listw = Wnb)
+summary(Crm_SAC)
+
+# Versiones estimadas por máxima verosimilitud
+Crm_SLM_2 <- lagsarlm(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
+                 data = Guerry,
+                 listw = Wnb)
+summary(Crm_SLM_2)
+Crm_SEM_2 <- errorsarlm(Crm_prs ~  Region + Litercy + Donatns + Infants + Suicids,
+                       data = Guerry,
+                       listw = Wnb,
+                       Durbin = FALSE)
+summary(Crm_SEM_2)
+Crm_SAC_2 <- sacsarlm(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
+                      data = Guerry,
+                      listw = Wnb)
+summary(Crm_SAC_2)
+```
+
+# Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+import warnings
+warnings.filterwarnings("ignore")
+import numpy as np
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+import geopandas as gpd
+
+Guerry  = gpd.read_file('data/GUERRY_FRANCE.shp')
+Guerry.info()
+Guerry
+
+Guerry.plot('Crm_prs', legend = True)
+plt.show()
+
+# ESDA (Análisis exploratorio de datos espaciales)
+
+# Estadísticos de autocorrelación espacial para la variable Crm_prs
+
+# Librería pygeoda (https://geodacenter.github.io/pygeoda/)
+import pygeoda
+
+Guerry_geoda = pygeoda.open(Guerry)
+Guerry_geoda
+
+Wq = pygeoda.queen_weights(Guerry_geoda)
+LISA_Crm_prs = pygeoda.local_moran(Wq, Guerry_geoda['Crm_prs'])
+print(LISA_Crm_prs)
+
+fig, ax = plt.subplots(figsize = (10,10))
+lisa_colors = LISA_Crm_prs.lisa_colors()
+lisa_labels = LISA_Crm_prs.lisa_labels()
+Guerry['LISA'] = LISA_Crm_prs.lisa_clusters()
+for ctype, data in Guerry.groupby('LISA'):
+    color = lisa_colors[ctype]
+    lbl = lisa_labels[ctype]
+    data.plot(color = color,
+        ax = ax,
+        label = lbl,
+        edgecolor = 'black',
+        linewidth = 0.2)
+lisa_legend = [matplotlib.lines.Line2D([0], [0], color=color, lw=2) for color in lisa_colors]
+ax.legend(lisa_legend, lisa_labels,loc='lower left', fontsize=12, frameon=True)
+ax.set(title='Mapa de Moran local de Crm_prs')
+ax.set_axis_off()
+plt.show()
+
+Guerry['LISA_PVAL'] = LISA_Crm_prs.lisa_pvalues()
+fig, ax = plt.subplots(figsize = (10,10))
+Guerry.plot(color='#eeeeee', ax=ax, edgecolor = 'black', linewidth = 0.2)
+Guerry[Guerry['LISA_PVAL'] <= 0.05].plot(color="#84f576", ax=ax)
+Guerry[Guerry['LISA_PVAL'] <= 0.01].plot(color="#53c53c", ax=ax)
+Guerry[Guerry['LISA_PVAL'] <= 0.001].plot(color="#348124", ax=ax)
+ax.set(title='Mapa de significación local de Crm_prs')
+ax.set_axis_off()
+plt.show()
+
+# Librería PySAL (http://pysal.org/)
+import libpysal
+import esda
+from esda.moran import Moran, Moran_Local
+import splot
+from splot.esda import moran_scatterplot, plot_moran, lisa_cluster, plot_local_autocorrelation
+from splot.libpysal import plot_spatial_weights
+from libpysal.weights import Queen, Rook, KNN
+
+# Construcción de la matriz W de interacciones espaciales
+Wnb = Queen.from_dataframe(Guerry)
+Wnb.transform = 'r'
+plot_spatial_weights(Wnb, Guerry)
+plt.show()
+
+Wnb.neighbors[0]
+Wnb.neighbors[1]
+Wnb.neighbors[2]
+Wnb.neighbors[3]
+Wnb.neighbors[4]
+Wnb.neighbors[5]
+
+# Cálculo de los estadísticos
+
+# I de Moran global
+gmoran = Moran(Guerry['Crm_prs'], Wnb)
+print(gmoran.I)
+print(gmoran.p_sim)
+moran_scatterplot(gmoran, aspect_equal=True, zstandard=True)
+plt.show()
+
+# I de Moran local (LISAs)
+lmoran = Moran_Local(Guerry['Crm_prs'], Wnb, permutations = 999, seed=12345)
+lmoran.p_sim
+moran_scatterplot(lmoran, p=0.05, zstandard =False) # p-valor=0.05
+plt.show()
+lisa_cluster(lmoran, Guerry, p=0.05)
+plt.show()
+
+# ECONOMETRÍA ESPACIAL (Análisis confirmatorio de datos espaciales)
+
+# Modelos econométricos para explicar la variable Crm_prs
+
+# Regresión estándar (modelo lineal)
+# Librería statsmodels (https://www.statsmodels.org/stable/)
+import statsmodels.formula.api as smf
+model = smf.ols(formula = "Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids", data = Guerry)
+Crm_LM = model.fit()
+print(Crm_LM.summary())
+
+# Librería spreg (https://pysal.org/spreg/)
+import spreg
+Guerry["Region_E"] = (Guerry.Region == "E").astype(int)
+Guerry["Region_N"] = (Guerry.Region == "N").astype(int)
+Guerry["Region_S"] = (Guerry.Region == "S").astype(int)
+Guerry["Region_W"] = (Guerry.Region == "W").astype(int)
+
+# Método OLS
+variable_names = ["Region_E","Region_N","Region_S","Region_W","Litercy", "Donatns", "Infants", "Suicids",]
+spreg_LM = spreg.OLS(
+    # Variable dependiente
+    Guerry[["Crm_prs"]].values,
+    # Variables explicativas 
+    Guerry[variable_names].values,
+    # Nombre variable dependiente
+    name_y="Crm_prs",
+    # Nombre variables explicativas 
+    name_x=variable_names,
+)
+print(spreg_LM.summary)
+
+# Modelo con retardo espacial (SLM) [estimación STLS: MC2E-espacial]
+spreg_SLM = spreg.GM_Lag(
+    # Variable dependiente
+    Guerry[["Crm_prs"]].values,
+    # Variables explicativas 
+    Guerry[variable_names].values,
+    # Nombre variable dependiente
+    name_y="Crm_prs",
+    # Nombre variables explicativas 
+    name_x=variable_names,
+    # Matriz W
+    w=Wnb, 
+)
+print(spreg_SLM.summary)
+
+# Modelo con errores espaciales (SEM) [estimación GMM]
+spreg_SEM = spreg.GM_Error(    # spreg.GM_Error_Het permite heteroscedasticidad
+    # Variable dependiente
+    Guerry[["Crm_prs"]].values,
+    # Variables explicativas 
+    Guerry[variable_names].values,
+    # Nombre variable dependiente
+    name_y="Crm_prs",
+    # Nombre variables explicativas 
+    name_x=variable_names,
+    # Matriz W
+    w=Wnb, 
+)
+print(spreg_SEM.summary)
+
+# Modelo combinado (SAC -> SLM + SEM) [estimación GMM]
+spreg_SAC = spreg.GM_Combo(
+    # Variable dependiente
+    Guerry[["Crm_prs"]].values,
+    # Variables explicativas 
+    Guerry[variable_names].values,
+    # Nombre variable dependiente
+    name_y="Crm_prs",
+    # Nombre variables explicativas 
+    name_x=variable_names,
+    # Matriz W
+    w=Wnb, 
+)
+print(spreg_SAC.summary)
+
+# Versiones estimadas por máxima verosimilitud
+# Modelo con retardo espacial (SLM)
+spreg_SLM_2 = spreg.ML_Lag(
+    # Variable dependiente
+    Guerry[["Crm_prs"]].values,
+    # Variables explicativas 
+    Guerry[variable_names].values,
+    # Nombre variable dependiente
+    name_y="Crm_prs",
+    # Nombre variables explicativas 
+    name_x=variable_names,
+    # Matriz W
+    w=Wnb, 
+)
+print(spreg_SLM_2.summary)
+
+# Modelo con errores espaciales (SEM)
+spreg_SEM_2 = spreg.ML_Error( 
+    # Variable dependiente
+    Guerry[["Crm_prs"]].values,
+    # Variables explicativas 
+    Guerry[variable_names].values,
+    # Nombre variable dependiente
+    name_y="Crm_prs",
+    # Nombre variables explicativas 
+    name_x=variable_names,
+    # Matriz W
+    w=Wnb, 
+)
+print(spreg_SEM_2.summary)
+```

@@ -1,0 +1,223 @@
+---
+engine: knitr
+excerpt: ""
+draft: false
+format: 
+  html:
+    theme: simplex
+    self-contained: true
+    max-width: 1920px
+    code-fold: show
+    code-tools: true
+    highlight-style: atom-one-dark
+    code-block-bg: "#282c34"
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 3.8b (Dependencia espacial - Puntos): Precio de la vivienda en el condado de Lucas \[Ohio, Estados Unidos\] {.unnumbered}
+
+En esta aplicación se realiza un análisis de tipo espacial de la base de datos utilizada, que contiene información sobre los precios de venta y características de las viviendas del [condado de Lucas](https://en.wikipedia.org/wiki/Lucas_County,_Ohio), en el estado de Ohio, Estados Unidos. Concretamente, se proponen modelos de regresión en los que las variables de dicho modelo y/o los errores del mismo presentan autocorrelación espacial.
+:::
+
+## Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(viridis)
+library(sf)
+library(geojsonsf)
+library(spdep)
+library(spatialreg)
+
+# Lectura de datos (house {spData} -> Lucas county OH housing)
+house <- geojson_sf("data/LUCAS_USA.geojson")
+class(house)
+str(house)
+house
+
+# Análisis exploratorio básico (EDA)
+summary(house)
+
+# Análisis exploratorio para datos espaciales (ESDA)
+
+# Gráficas: representación de datos espaciales
+ggplot(house) + geom_sf(aes(col = price)) + scale_color_viridis() + theme_bw()
+
+library(leaflet)
+pal <- colorNumeric(palette = "viridis", domain = house$price)
+leaflet(house) %>% addTiles() %>%
+    addCircles(lng = st_coordinates(house)[, 1],
+               lat = st_coordinates(house)[, 2],
+               color = ~pal(price)) %>%
+    addLegend(pal = pal, values = ~price, position = "bottomright")
+
+# Información sobre las coordenadas (longitud y latitud) de los datos
+# coords <- coordinates(house_sf)
+coords <- st_coordinates(house)
+# Construcción de matrices de pesos espaciales: vecinos más próximos (k=6, mediana de vecinos)
+knn6 <- knearneigh(coords, k=6) 
+nb6nn <- knn2nb(knn6)
+# Gráficos de vecinos
+plot(st_geometry(house)) 
+plot(nb6nn, coords, add=TRUE, col="red")
+# Matriz espacial W estandarizada por filas
+Wnb6nn <- nb2listw(neighbours=nb6nn, style="W")
+Wnb6nn
+
+# Estadísticos de autocorrelación espacial
+# Globales
+moran.test(house$price, listw=Wnb6nn)
+moran.plot(house$price, listw=Wnb6nn)
+# Locales (LISAs)
+LocalI <- as.data.frame(localmoran(house$price, listw=Wnb6nn))
+str(LocalI)
+house_LocalI <- bind_cols(house,LocalI)
+plot(house_LocalI["Z.Ii"])
+plot(house_LocalI["Pr(z != E(Ii))"])
+
+# Modelos econométricos espaciales
+form <- formula(log(price) ~ age + log(lotsize) + rooms)
+# Modelo lineal (LM) [estimación MCO]
+m1_LM <- lm(formula=form, data=house)
+summary(m1_LM)
+# Modelo con retardo espacial (SLM)
+m2_SLM <- stsls(formula=form, data=house, listw=Wnb6nn)
+summary(m2_SLM)
+# Modelo con errores espaciales (SEM)
+m3_SEM <- GMerrorsar(formula=form, data=house, listw=Wnb6nn)
+summary(m3_SEM)
+# Modelo combinado (SAC -> SLM + SEM)
+m4_SAC <- gstsls(formula=form, data=house, listw=Wnb6nn)
+summary(m4_SAC)
+```
+
+## Código Python {.unnumbered}
+
+```{python}
+#| eval: true
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import warnings
+warnings.filterwarnings("ignore")
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+import geopandas as gpd
+import libpysal
+from libpysal  import weights
+import esda
+from esda.moran import Moran, Moran_Local
+import splot
+from splot.esda import moran_scatterplot, plot_moran, lisa_cluster, plot_local_autocorrelation
+from splot.libpysal import plot_spatial_weights
+import statsmodels.formula.api as smf
+import spreg
+
+# Lectura de datos
+house = gpd.read_file("data/LUCAS_USA.geojson")
+house.head(5)
+
+# Análisis exploratorio básico (EDA)
+house.describe().round(2)
+
+# Análisis exploratorio para datos espaciales (ESDA)
+
+# Mapas básicos
+house.plot('price', legend = True)
+plt.show()
+
+# Vecinos geográficos y matriz de pesos espaciales 
+Wnb6nn = weights.KNN.from_dataframe(house, k=6)
+# Estandarización por filas (Row-standardized W)
+Wnb6nn.transform = 'r'
+plot_spatial_weights(Wnb6nn, house)
+plt.show()
+
+# Estadísticos de autocorrelación espacial
+# Dependencia espacial global
+globalMoran = Moran(house['price'], Wnb6nn)
+print(globalMoran.I)
+print(globalMoran.p_sim)
+moran_scatterplot(globalMoran, aspect_equal=True, zstandard=True)
+plt.show()
+# Dependencia espacial local
+localMoran = Moran_Local(house['price'], Wnb6nn, permutations = 999, seed=12345)
+localMoran.p_sim
+moran_scatterplot(localMoran, p=0.05, zstandard =False) # Nota: p-valor=0.05
+plt.show()
+lisa_cluster(localMoran, house, p=0.05)
+plt.show()
+
+# Modelos econométricos espaciales
+# Operaciones con variables
+house['l_price']=house['price'].map(lambda x:np.log(x))
+house['l_lotsize']=house['lotsize'].map(lambda x:np.log(x))
+variable_names = ['age', 'l_lotsize', 'rooms']
+# Modelo lineal (LM)
+m1_LM = spreg.OLS(
+    # Var. dep.
+    house[['l_price']].values, 
+    # Var. expl.
+    house[variable_names].values,
+    # 
+    name_y='l_price', 
+    # 
+    name_x=variable_names
+)
+print(m1_LM.summary)
+# Modelo con retardo espacial (SLM)
+m2_SLM = spreg.GM_Lag(
+    # Var. dep.
+    house[['l_price']].values, 
+    # Var. expl.
+    house[variable_names].values,
+    # Matriz W
+    w=Wnb6nn, 
+    # 
+    name_y='l_price', 
+    # 
+    name_x=variable_names
+)
+print(m2_SLM.summary)
+# Modelo con errores espaciales (SEM)
+m3_SEM = spreg.GM_Error(
+    # Var. dep.
+    house[['l_price']].values, 
+    # Var. expl.
+    house[variable_names].values,
+    # Matriz W
+    w=Wnb6nn, 
+    #  
+    name_y='l_price', 
+    # 
+    name_x=variable_names
+)
+print(m3_SEM.summary)
+# Modelo combinado (SAC -> SLM + SEM)
+m4_SAC = spreg.GM_Combo(
+    # Var. dep.
+    house[['l_price']].values, 
+    # Var. expl.
+    house[variable_names].values,
+    # Matriz W
+    w=Wnb6nn, 
+    # 
+    name_y='l_price', 
+    # 
+    name_x=variable_names
+)
+print(m4_SAC.summary)
+```

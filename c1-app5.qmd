@@ -53,7 +53,7 @@ tail(CONS_USA)
 # Ver anexo para una demostración sobre el tidyverts, 
 # el complemento al tidyverse para el análisis de series temporales.
 #
-ts_CONS_USA <- ts(CONS_USA, start=c(1959), end = c(2015))
+ts_CONS_USA <- ts(CONS_USA[,2:3], start=c(1959), end = c(2015))
 #
 # Análisis exploratorio (EDA)
 # Estadística descriptiva
@@ -92,7 +92,7 @@ summary(KEYNES_model)
 # Toda la información de la librería fpp3 se encuentra en:
 # https://github.com/robjhyndman/fpp3package. 
 # El libro de texto que acompaña a esta librería es el siguiente:
-# FORECASTING: PRINCIPLES AND PRACTICE -> https://otexts.com/fpp3/3.
+# FORECASTING: PRINCIPLES AND PRACTICE -> https://otexts.com/fpp3/.
 # NOTA:
 # Existen otras librerías específicas para series temporales, entre las que
 # cabe destacar `TSstudio` (https://ramikrispin.github.io/TSstudio/),
