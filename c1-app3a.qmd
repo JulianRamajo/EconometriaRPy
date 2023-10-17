@@ -39,7 +39,6 @@ library(viridis)
 library(sf)
 library(geojsonsf)
 library(leaflet)
-library(viridis)
 library(RColorBrewer)
 # Lectura de datos
 df <- read_csv("data/GCPdbase.csv")
