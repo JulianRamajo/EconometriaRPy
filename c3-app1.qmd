@@ -69,19 +69,15 @@ apt$er_sp = c(NA,100*diff(log(apt$SANDP)))-apt$USTB3M/12
 apt$er_msoft = c(NA,100*diff(log(apt$MICROSOFT)))-apt$USTB3M/12
 # Formato a la fechas
 apt$Date = as.Date(apt$Date)
-
 # Estimación MCO del modelo APT
 APT_msft  <-  lm(er_msoft ~ er_sp + dprod + dcredit + dinflation +
                    dmoney + dspread + rterm, data = apt)
-summary(APT_msft)
-confint(APT_msft, level=.95)
-
 # Formulación alternativa del modelo de series temporales
 # apt_ts <- ts(apt, start=c(1986,3), end=c(2018,3), frequency = 12)
 # APT_msft_ts  <-  lm(er_msoft ~ er_sp + dprod + dcredit + dinflation +
-#dmoney + dspread + rterm, data = apt_ts)
+# dmoney + dspread + rterm, data = apt_ts)
 # summary(APT_msft_ts)
-
+#
 # Validación global de las hipótesis básicas del MRL
 library(gvlma)
 gvmodel <- gvlma(APT_msft)
@@ -90,7 +86,6 @@ summary(gvmodel)
 library(performance)
 model_performance(APT_msft)
 check_model(APT_msft)
-
 # Especificación del modelo
 # Contraste de significación de variables irrelevantes
 library(car)
@@ -150,12 +145,10 @@ apt['er_msoft'] = LogDiff(apt['MICROSOFT']) - apt['USTB3M']/12
 apt['er_sp'] = LogDiff(apt['SANDP']) - apt['USTB3M']/12
 # Eliminación de observaciones no disponibles (NA)
 data = apt.dropna()
-
 # Estimación MCO del modelo APT
 formula = 'er_msoft ~ er_sp + dprod + dcredit + dinflation + dmoney + dspread + rterm'
 APT_msft = smf.ols(formula, data).fit()
 print(APT_msft.summary())
-
 # Especificación del modelo
 # Contraste de significación de variables irrelevantes
 H_0 = 'dprod = dcredit = dmoney = dspread = 0'

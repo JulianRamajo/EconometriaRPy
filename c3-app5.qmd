@@ -30,7 +30,7 @@ Una vez chequeada la hipótesis de varianza constante (homoscedasticidad), se pl
 
 $${σ_i}^2 = e^{α_0 + α_1 log⁡(Y_i)}$$
 
-Esta especificación equivale a suponer que
+especificación equivale a suponer que
 
 $${σ_i}^2 = σ^2 (Y_i)^{α_1}$$
 
@@ -59,7 +59,8 @@ DEM_HET <- read_csv("data/DEM_HET.csv")
 dim(DEM_HET)
 summary(DEM_HET)
 # Estimación MCO
-modelo_MCO <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), data = DEM_HET)
+modelo_MCO <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), 
+                 data = DEM_HET)
 summary(modelo_MCO)
 # Chequeo de la hipótesis de homoscedasticidad
 # Contrastes estándar (automáticos): Z's -> variables explicativas del modelo
@@ -94,7 +95,7 @@ BP ; pval
 bptest(modelo_MCO, varformula = ~ log(Y), data=DEM_HET) 
 # Test de Breusch-Pagan robusto (variante de Koenker)
 bptest(modelo_MCO, varformula = ~ log(Y), data=DEM_HET, studentize = FALSE)
-# Corrección básica de la heteroscedasticidad: MCO con matriz de covarianzas robusta (MCO-HC)
+# Corrección básica de la heteroscedasticidad: matriz de covarianzas robusta (MCO-HC)
 # Corrección de White (librería sandwich)
 coeftest(modelo_MCO, vcov. = vcovHC(modelo_MCO,type="HC1"))
 # Otra versión, con idéntico resultado (librería car)

@@ -20,7 +20,7 @@ format:
 ::: justify
 # Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR {.unnumbered}
 
-## Caso univariante (especificación ARDL: Tipos de interés en España en la década de 1980 {.unnumbered}
+## Caso univariante (especificación ARDL): Tipos de interés en España en la década de 1980 {.unnumbered}
 
 En esta primera aplicación se estimará un modelo de regresión uniecuacional con autocorrelación en los errores y se propondrán soluciones al problema.
 :::
@@ -69,7 +69,7 @@ dwtest(dynlm_KM_0, alternative = "two.sided")
 dwtest(dynlm_KM_0, alternative = "greater")
 # Test de Breusch-Godfrey
 bgtest(dynlm_KM_0, order=1, type="Chisq", fill=0)
-# Corrección de la autocorrelación: MCO corregidos, MCG-AR, modelos dinámicos del tipo ARDL
+# Corrección de la autocorrelación:
 # MCO corregidos: errores estándar robustos, HAC (Newey-West)
 summary(dynlm_KM_0 <- dynlm(RL ~ R3M + RD, data=TIPOS_ESP_ts), vcov.=vcovHAC(dynlm_KM_0))
 # Mínimos cuadrados generalizados (MCG): errores AR(1)
@@ -164,9 +164,10 @@ sms.durbin_watson(residuos).round(5)
 name = ['LM statistic', 'Chi^2 p-val', 'F statistic', 'F p-val']
 BG_test = smsdiag.acorr_breusch_godfrey(lm_KM,1)
 lzip(name, BG_test)
-# Corrección de la autocorrelación: MCO corregidos, MCG-AR, modelos dinámicos del tipo ARDL
+# Corrección de la autocorrelación:
 # MCO corregidos: errores estándar robustos
-# Corrección de la matriz de covarianzas: estimador de Newey-West (si maxlags=0 -> HAC=HC1)
+# Corrección de la matriz de covarianzas: estimador de Newey-West 
+# (si maxlags=0 -> HAC=HC1)
 lm_KM_HAC = smf.ols(formula = "RL ~ R3M + RD", data = TIPOS_ESP_ts).fit(cov_type='HAC', cov_kwds={'maxlags':6,'use_correction':True})
 print(lm_KM_HAC.summary())
 # Modelo de Klein-Monti dinámico 

@@ -20,7 +20,7 @@ format:
 ::: justify
 # Aplicación 3.10 (Información muestral - Multicolinealidad): Análisis de la rentabilidad empresarial {.unnumbered}
 
-En este ejercicio se intentará explicar la rentabilidad anual (RENTAB) obtenida por 80 empresas, utilizando para ello diferente información contable interna en forma de ratios económico-financieros (R1, R2,…, R10), así como datos sobre el volumen de ventas totales (VT) y el tamaño de las empresas, medido este último por el valor total de los activos (AT).
+En este ejercicio se intentará explicar la rentabilidad anual (RENTAB) obtenida por 80 empresas, utilizando para ello diferente información contable interna en forma de ratios económico-financieros (R1, R2,..., R10), así como datos sobre el volumen de ventas totales (VT) y el tamaño de las empresas, medido este último por el valor total de los activos (AT).
 :::
 
 ## Código R {.unnumbered}
@@ -38,10 +38,12 @@ library(broom)
 library(cowplot)
 library(mctest)
 # Lectura de datos
-RENTAB_EMP <- read_delim("data/RENTAB_EMP.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+RENTAB_EMP <- read_delim("data/RENTAB_EMP.csv", ";", 
+                         escape_double = FALSE, trim_ws = TRUE)
 summary(RENTAB_EMP)
 # Regresión MCO para explicar las variaciones en la rentabilidad de las empresas
-lm_1 <- lm(RENTAB ~ log(VT) + R1 + R2 + R3 + R4 + R5 + R6 + R7 + R8 + R9 + R10, data=RENTAB_EMP)
+lm_1 <- lm(RENTAB ~ log(VT) + R1 + R2 + R3 + R4 + R5 + R6 + R7 + R8 + R9 + R10, 
+           data=RENTAB_EMP)
 S(lm_1)
 # Detección de la multicolinealidad
 # Análisis global
@@ -133,7 +135,7 @@ fit_ridge <- glmnet(x_vars,y_var,alpha=0)
 plot(fit_ridge, label=TRUE)
 plot(fit_ridge, label=TRUE, xvar="lambda")
 plot(fit_ridge, label=TRUE, xvar="dev")
-print(fit_ridge)
+# print(fit_ridge)
 coef(fit_ridge,s=0.05) # Parámetros estimados para un lambda s=X concreto
 # Selección del lambda óptimo (criterio CV)
 cvfit_ridge = cv.glmnet(x_vars, y_var, alpha=0)
@@ -154,15 +156,16 @@ fit_lasso <- glmnet(x_vars,y_var,alpha=1)
 plot(fit_lasso, label=TRUE)
 plot(fit_lasso, label=TRUE, xvar="lambda")
 plot(fit_lasso, label=TRUE, xvar="dev")
-print(fit_lasso)
+# print(fit_lasso)
 coef(fit_lasso,s=0.0006) # Parámetros estimados para un lambda s=X concreto
 # Selección del lambda óptimo (criterio CV)
 cvfit_lasso = cv.glmnet(x_vars, y_var, alpha=1)
 plot(cvfit_lasso)
 cvfit_lasso$lambda.min
 coef(cvfit_lasso, s = "lambda.min")
-# NOTA FINAL: Estandarización de las variables antes de aplicar los modelos lm.ridge y lars 
-# (glmnet estandariza las variables X e y por defecto para la familia Gaussiana de modelos)
+# NOTA FINAL: Hay que estandarizar las variables antes de aplicar 
+# los modelos lm.ridge y lars (glmnet estandariza las variables 
+# X e y por defecto para la familia Gaussiana de modelos)
 library(caret)
 preProcValues <- preProcess(data[,-12], method = c("center", "scale"))
 dataTransformed <- predict(preProcValues, data)

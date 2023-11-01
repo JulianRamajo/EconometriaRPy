@@ -22,7 +22,7 @@ format:
 
 En esta aplicación se analizarán las ventas de una cadena de 75 supermercados ubicados en distintas ciudades españolas. Las ventas totales en cada tienda dependen básicamente de dos variables, el precio medio de los productos que se venden en la misma y el gasto en publicidad que se realice en cada ciudad. El objetivo de la regresión estimada consiste en determinar el efecto que tendrán sobre las ventas de cada supermercado distintas políticas de precios, así como distintas opciones de gasto en publicidad.
 
-El modelo econométrico que se utilizará para el análisis de simulación viene dado por la ecuación siguiente:
+El modelo econométrico que se utilizará para el análisis de simulación viene dado por la siguiente ecuación:
 
 $$
 V_{i} = \beta_1 + \beta_2  P_{i} + \beta_3  A_{i} + e_{i}

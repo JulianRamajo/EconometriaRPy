@@ -18,9 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.12 (Variable dependiente discreta o limitada): Préstamos hipotecarios. Compra de automóviles. Salario de las mujeres casadas {.unnumbered}
+# Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit {.unnumbered}
 
-## Variable dependiente discreta (modelos Logit y Probit): Elección entre tipo de interés fijo o variable {.unnumbered}
+## Variable dependiente discreta (modelos Logit y Probit): Préstamos hipotecarios {.unnumbered}
 
 En un artículo del año 1987, Dhillon y otros autores estudiaron el conjunto de características personales y financieras que determinan la elección por parte de los individuos de un tipo de interés fijo frente a uno variable a la hora de contratar un préstamo hipotecario. El interés de su trabajo radicaba en contrastar las dos posturas que dominan los planteamientos teóricos sobre el tema: la primera de ellas opina que, de acuerdo con la *hipótesis de mercados eficientes*, las características personales del prestatario no contienen información que no haya sido ya tenida en cuenta por el mercado a la hora de fijar el tipo de interés y, por tanto, sólo las variables de precios y los términos del contrato serían relevantes cuando un individuo elige el tipo de interés que se le aplicará; la segunda escuela de pensamiento supone que existe *información asimétrica*, es decir, dadas las condiciones del mercado, los prestatarios pueden favorecerse no revelando algunas de sus características personales a la hora de firmar el contrato.
 
@@ -28,17 +28,15 @@ El modelo propuesto relaciona la probabilidad de que un individuo elija, dadas s
 
 Las variables disponibles para estimar el modelo son las siguientes:
 
-- Variable dependiente: $Y$ toma el valor 1 si el individuo elige un tipo de interés variable y 0 si firma el préstamo a un tipo fijo.
+-   Variable dependiente: $Y$ toma el valor 1 si el individuo elige un tipo de interés variable y 0 si firma el préstamo a un tipo fijo.
 
--	Variables explicativas del mercado: $FI$ es el tipo de interés fijo que ofertó el banco, $MARG$ el margen del tipo fijo sobre el tipo de interés variable, $YLD$ la diferencia entre el tipo de interés de las letras del tesoro a 10 años y el tipo de las letras a 1 año (esta variable intenta anticipar el cambio futuro en los tipos de interés a corto plazo), $PTS$ la razón entre el tipo de interés fijo y el variable, y $MAT$ la razón entre los vencimientos de los préstamos hipotecarios con tipo fijo y variable.
+-   Variables explicativas del mercado: $FI$ es el tipo de interés fijo que ofertó el banco, $MARG$ el margen del tipo fijo sobre el tipo de interés variable, $YLD$ la diferencia entre el tipo de interés de las letras del tesoro a 10 años y el tipo de las letras a 1 año (esta variable intenta anticipar el cambio futuro en los tipos de interés a corto plazo), $PTS$ la razón entre el tipo de interés fijo y el variable, y $MAT$ la razón entre los vencimientos de los préstamos hipotecarios con tipo fijo y variable.
 
--	Variables explicativas personales: $BA$ es la edad del prestatario, $BS$ los años de escolarización, $FTB$ una variable ficticia que toma el valor 1 si el prestatario compra vivienda por primera vez y 0 en otro caso, $CB$ una ficticia que toma el valor 1 si existe un co-prestatario y 0 en otro caso, $MC$ una ficticia que toma el valor 1 si el prestatario está casado y 0 si no lo está, $SE$ una ficticia que toma el valor 1 si trabaja por cuenta propia y 0 en otro caso, $MOB$ el número de años que el prestatario lleva residiendo en la dirección actual, $NW$ la riqueza neta, $LA$ los activos líquidos, y $STL$ los compromisos económicos del prestatario a corto plazo.
+-   Variables explicativas personales: $BA$ es la edad del prestatario, $BS$ los años de escolarización, $FTB$ una variable ficticia que toma el valor 1 si el prestatario compra vivienda por primera vez y 0 en otro caso, $CB$ una ficticia que toma el valor 1 si existe un co-prestatario y 0 en otro caso, $MC$ una ficticia que toma el valor 1 si el prestatario está casado y 0 si no lo está, $SE$ una ficticia que toma el valor 1 si trabaja por cuenta propia y 0 en otro caso, $MOB$ el número de años que el prestatario lleva residiendo en la dirección actual, $NW$ la riqueza neta, $LA$ los activos líquidos, y $STL$ los compromisos económicos del prestatario a corto plazo.
 
 El modelo econométrico general que se estimará tiene la siguiente expresión:
 
-$$Y_{i} = \beta_1 + \beta_2 FI_{i} + \beta_3 MARG_{i} + \beta_4 YLD_{i} + \beta_5 PTS_{i} + \beta_6 MAT_{i} +$$
-$$+ \beta_7 BA_{i} + \beta_8 BS_{i} + \beta_9 FTB_{i} + \beta_{10} CB_{i} + \beta_{11} MC_{i} + $$
-$$+ \beta_{12} SE_{i} + \beta_{13} MOB_{i} + \beta_{14} NW_{i} + \beta_{15} LA_{i} + \beta_{16} STL_{i} + e_{i}$$
+$$Y_{i} = \beta_1 + \beta_2 FI_{i} + \beta_3 MARG_{i} + \beta_4 YLD_{i} + \beta_5 PTS_{i} + \beta_6 MAT_{i} +$$ $$+ \beta_7 BA_{i} + \beta_8 BS_{i} + \beta_9 FTB_{i} + \beta_{10} CB_{i} + \beta_{11} MC_{i} + $$ $$+ \beta_{12} SE_{i} + \beta_{13} MOB_{i} + \beta_{14} NW_{i} + \beta_{15} LA_{i} + \beta_{16} STL_{i} + e_{i}$$
 :::
 
 ### Código R {.unnumbered}
@@ -57,20 +55,30 @@ library(margins)
 PREST_HIP <- read_csv("data/PREST_HIP.csv")
 summary(PREST_HIP)
 # Modelo logit
-modelo_logit <- glm(Y ~ FI + MARG + YLD + PTS + MAT + BA + BS + FTB + CB + MC + SE + MOB + NW + LA + STL, data=PREST_HIP, family=binomial(link="logit"))
+modelo_logit <- glm(Y ~ 
+                      FI + MARG + YLD + PTS + MAT + BA + BS + FTB + CB + MC + 
+                      SE + MOB + NW + LA + STL, 
+                    data=PREST_HIP, family=binomial(link="logit"))
 summary(modelo_logit)
 # Modelo probit
-modelo_probit <- glm(Y ~ FI + MARG + YLD + PTS + MAT + BA + BS + FTB + CB + MC + SE + MOB + NW + LA + STL, data=PREST_HIP, family=binomial(link="probit"))
+modelo_probit <- glm(Y ~ FI + MARG + YLD + PTS + MAT + BA + BS + FTB + CB + 
+                       MC + SE + MOB + NW + LA + STL, 
+                     data=PREST_HIP, family=binomial(link="probit"))
 summary(modelo_probit)
 # Significación de las características personales
-linearHypothesis ( modelo_logit , c("BA = 0", "BS = 0","FTB = 0","CB = 0","MC = 0","SE = 0","MOB = 0","NW = 0","LA = 0","STL = 0"))
+linearHypothesis ( modelo_logit , c("BA = 0", "BS = 0","FTB = 0","CB = 0",
+                                    "MC = 0","SE = 0","MOB = 0","NW = 0",
+                                    "LA = 0","STL = 0"))
 # Modelos logit restringidos
-modelo_logit_1 <- glm(Y ~ FI + MARG + YLD + PTS + MAT, data=PREST_HIP, family=binomial(link="logit"))
+modelo_logit_1 <- glm(Y ~ FI + MARG + YLD + PTS + MAT, data=PREST_HIP, 
+                      family=binomial(link="logit"))
 summary(modelo_logit_1)
 linearHypothesis ( modelo_logit_1, c("PTS = 0", "MAT = 0"))
-modelo_logit_2 <- glm(Y ~ FI + MARG + YLD, data=PREST_HIP, family=binomial(link="logit"))
+modelo_logit_2 <- glm(Y ~ FI + MARG + YLD, 
+                      data=PREST_HIP, family=binomial(link="logit"))
 summary(modelo_logit_2)
-coeftest(modelo_logit_2, vcov. = vcovHC, type = "HC1") # Matriz de convarianzas robusta
+# Matriz de convarianzas robusta
+coeftest(modelo_logit_2, vcov. = vcovHC, type = "HC1") 
 # Ajuste del modelo: pseudoR2
 pseudoR2 <- 1 - (modelo_logit_2$deviance) / (modelo_logit_2$null.deviance)
 pseudoR2
@@ -91,23 +99,37 @@ plot(effs, multiline=TRUE, grid=TRUE, lines=c(1, 2, 3),
 # Función de probabilidad estimada para la variable FI
 plot( Y ~ FI, PREST_HIP, xlab="FI", ylab="Prob", ylim=c(0,1))
 FInew <- seq(10, 20, length=78)
-lines(FInew, predict(modelo_logit_2, newdata=data.frame(FI=FInew, MARG=rep(mean(PREST_HIP$MARG), 78), YLD=rep(mean(PREST_HIP$YLD), 78)), type="response"), lwd=1.5)
+lines(FInew, predict(modelo_logit_2, 
+                     newdata=data.frame(FI=FInew, 
+                                        MARG=rep(mean(PREST_HIP$MARG), 78), 
+                                        YLD=rep(mean(PREST_HIP$YLD), 78)),
+                     type="response"), lwd=1.5)
 grid(col="gray", lty="solid")
 # Función de probabilidad estimada para la variable MARG
 plot( Y ~ MARG, PREST_HIP, xlab="MARG", ylab="Prob", ylim=c(0,1))
 MARGnew <- seq(-1, 6, length=78)
-lines(MARGnew, predict(modelo_logit_2, newdata=data.frame(FI=rep(mean(PREST_HIP$FI), 78), MARG=MARGnew, YLD=rep(mean(PREST_HIP$YLD), 78)), type="response"), lwd=1.5)
+lines(MARGnew, predict(modelo_logit_2, 
+                       newdata=data.frame(FI=rep(mean(PREST_HIP$FI), 78), 
+                                          MARG=MARGnew, 
+                                          YLD=rep(mean(PREST_HIP$YLD), 78)),
+                       type="response"), lwd=1.5)
 grid(col="gray", lty="solid")
 # Función de probabilidad estimada para la variable YLD
 plot( Y ~ YLD, PREST_HIP, xlab="YLD", ylab="Prob", ylim=c(0,1))
 YLDnew <- seq(1, 2.5, length=78)
-lines(YLDnew, predict(modelo_logit_2, newdata=data.frame(FI=rep(mean(PREST_HIP$FI), 78), MARG=rep(mean(PREST_HIP$MARG), 78), YLD=YLDnew), type="response"), lwd=1.5)
+lines(YLDnew, predict(modelo_logit_2, 
+                      newdata=data.frame(FI=rep(mean(PREST_HIP$FI), 78), 
+                                         MARG=rep(mean(PREST_HIP$MARG), 78), 
+                                         YLD=YLDnew), 
+                      type="response"), lwd=1.5)
 grid(col="gray", lty="solid")
 # Efecto marginal en la media de las variables explicativas
-EMM_logit = mfx::logitmfx(formula = modelo_logit_2$formula, data = modelo_logit_2$data, atmean = TRUE)
+EMM_logit = mfx::logitmfx(formula = modelo_logit_2$formula, 
+                          data = modelo_logit_2$data, atmean = TRUE)
 print(EMM_logit[[1]])
-# Efecto marginal promedio
-EMP_logit = mfx::logitmfx(formula = modelo_logit_2$formula, data = modelo_logit_2$data, atmean = FALSE)
+# Efecto marginal promedio (EMP)
+EMP_logit = mfx::logitmfx(formula = modelo_logit_2$formula, 
+                          data = modelo_logit_2$data, atmean = FALSE)
 print(EMP_logit[[1]])
 # Forma alternativa del EMP
 margins(modelo_logit_2)
@@ -141,7 +163,9 @@ modelo_probit = smf.probit("Y ~ 1 + FI + MARG + YLD", data = PREST_HIP).fit()
 print(modelo_probit.summary())
 # Tabla de éxito-fracaso
 tmp_out_1 = modelo_logit.pred_table(threshold = 0.5)
-print(pd.DataFrame(tmp_out_1, columns = ["Predichos 0", "Predichos 1"], index = ["Observados 0", "Observados 1"]))
+print(pd.DataFrame(tmp_out_1, 
+                   columns = ["Predichos 0", "Predichos 1"],
+                   index = ["Observados 0", "Observados 1"]))
 # Formulación alternativa
 from sklearn import metrics
 predicted_probs_logit = modelo_logit.predict(exog = PREST_HIP)
@@ -163,7 +187,7 @@ print(EMP_logit.summary())
 ```
 
 ::: justify
-## Variable dependiente limitada (valores censurados -> modelo Tobit): Compra de automóviles {.unnumbered}
+## Variable dependiente limitada (valores censurados -\> modelo Tobit): Compra de automóviles {.unnumbered}
 
 En un trabajo encargado por una asociación de fabricantes de automóviles, se estimó un modelo microeconométrico en el que se relacionaba el gasto en automóviles realizado por las familias que componían una muestra representativa con algunas características socioeconómicas de las mismas.
 
@@ -188,17 +212,21 @@ library(censReg) # http://www.sampleselection.org/
 AUTOS <- read_csv("data/AUTOS.csv")
 summary(AUTOS)
 # Datos censurados: modelo Tobit 
-# Librería censReg (https://cran.r-project.org/web/packages/censReg/vignettes/censReg.pdf)
+# Librería censReg 
+# (https://cran.r-project.org/web/packages/censReg/vignettes/censReg.pdf)
 modelo_tobit_1 <- censReg(GAUT ~ EDAD + HIJOSM18 + Y, data = AUTOS)
 summary(modelo_tobit_1)
 # Efectos marginales
-# Evaluados en un valor concreto de las var. explicativas (media de las variables en este caso)
-margEff(modelo_tobit_1,xValues = c(1,mean(AUTOS$EDAD),mean(AUTOS$HIJOSM18),mean(AUTOS$Y)))
+# Evaluados en un valor concreto de las var. explicativas 
+# (media de las variables en este caso)
+margEff(modelo_tobit_1, 
+        xValues = c(1,mean(AUTOS$EDAD),mean(AUTOS$HIJOSM18),mean(AUTOS$Y)))
 # Efectos marginales promedio
 margEff(modelo_tobit_1)
 # Librería VGAM (https://www.stat.auckland.ac.nz/~yee/VGAM/)
 library(VGAM)
-modelo_tobit_2 <- vglm(GAUT ~ EDAD + HIJOSM18 + Y, family = tobit, data = AUTOS)
+modelo_tobit_2 <- vglm(GAUT ~ EDAD + HIJOSM18 + Y, family = tobit, 
+                       data = AUTOS)
 summary(modelo_tobit_2)
 ```
 
@@ -234,15 +262,15 @@ res.sigma_
 ```
 
 ::: justify
-## Variable dependiente limitada (truncamiento selectivo -> modelo Heckit de selección muestral): Salarios de las mujeres casadas en el Reino Unido {.unnumbered}
+## Variable dependiente limitada (truncamiento selectivo -\> modelo Heckit de selección muestral): Salarios de las mujeres casadas {.unnumbered}
 
-En esta aplicación se estima una ecuación Minceriana de salarios para las mujeres casadas basada en una investigación de Thomas A. Mroz del año 1987 para UK. El modelo propuesto es el siguiente:
+En esta aplicación se estima una ecuación Minceriana de salarios para las mujeres casadas basada en una investigación de Thomas A. Mroz del año 1987 para el Reino Uniod. El modelo propuesto es el siguiente:
 
 $$log(SALARIO_{i}) = \beta_1 + \beta_2 EDUC_{i} + \beta_3 EXPER_{i} + e_{i}$$
 
 donde $SALARIO$ representa el salario por hora trabajada observado, $EDUC$ es el nivel de educación y $EXPER$ es el nivel de experiencia.
 
-Al realizar una encuesta a una muestra de N = 753 mujeres casadas, representativa de la población femenina con ese estado civil en UK, preguntándoles entre otras cosas por su salario, muchas de ellas (325 mujeres) respondieron que esa cuestión no era relevante en su caso, ya que eran “amas de casa” (población no activa) y no recibían remuneración alguna por ese trabajo. Solo se observaron datos sobre salarios de mercado para aquellas mujeres (n = 428) que participaban en la fuerza de trabajo.
+Al realizar una encuesta a una muestra de N = 753 mujeres casadas, representativa de la población femenina con ese estado civil en UK, preguntándoles entre otras cosas por su salario, muchas de ellas (325 mujeres) respondieron que esa cuestión no era relevante en su caso, ya que eran "amas de casa" (población no activa) y no recibían remuneración alguna por ese trabajo. Solo se observaron datos sobre salarios de mercado para aquellas mujeres (n = 428) que participaban en la fuerza de trabajo.
 :::
 
 ### Código R {.unnumbered}
@@ -259,7 +287,9 @@ library(sampleSelection) # http://www.sampleselection.org/
 SAL_MUJ <- read_csv("data/SAL_MUJ.csv")
 summary(SAL_MUJ)
 # Modelo Heckit (https://cran.r-project.org/web/packages/sampleSelection/vignettes/selection.pdf)
-modelo_heckit <- selection(PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP, log(SALARIO) ~ EDUC + EXPER, data=SAL_MUJ, method="ml")
+modelo_heckit <- selection(PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP, 
+                           log(SALARIO) ~ EDUC + EXPER, 
+                           data=SAL_MUJ, method="ml")
 summary(modelo_heckit)
 ```
 

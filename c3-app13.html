@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.357">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -3140,7 +3140,7 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 </div>
 <section id="aplicación-3.13-modelos-econométricos-para-datos-de-panel-productividad-de-la-industria-química-en-china" class="level1 unnumbered justify">
 <h1 class="unnumbered">Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China</h1>
-<p>En esta aplicación se estimará una <a href="https://en.wikipedia.org/wiki/Cobb%E2%80%93Douglas_production_function">función de producción del tipo Cobb-Douglas</a> para una muestra de empresas del sector industrial químico de China. La versión econométrica de dicha función es la siguiente:</p>
+<p>En esta aplicación se estimará una <a href="https://en.wikipedia.org/wiki/Cobb%E2%80%93Douglas_production_function">función de producción del tipo Cobb-Douglas</a> para una muestra de empresas del sector industrial químico de China. La ecuación de regresión asociada a dicha función es la siguiente:</p>
 <p><span class="math display">\[log(Y_{it}) = \beta_1 + \beta_2 log(K_{it}) + \beta_3 log(L_{it}) + \beta_4 log(M_{it})  + e_{it}\]</span></p>
 <p>siendo <span class="math inline">\(Y\)</span> las ventas totales de cada empresa, <span class="math inline">\(K\)</span> el stock de capital físico, <span class="math inline">\(L\)</span> el número de empleados, y <span class="math inline">\(M\)</span> la cantidad de material usado para fabricar los productos químicos.</p>
 </section>
@@ -3179,8 +3179,9 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelos estáticos para datos de panel</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo plano (&#39;pool MCO`)</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>modelo_plano <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;pooling&quot;</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_plano)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>modelo_plano <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;pooling&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_plano)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Pooling Model
@@ -3213,8 +3214,9 @@ F-statistic: 152645 on 3 and 37652 DF, p-value: &lt; 2.22e-16</code></pre>
 <details open>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales fijos (EF)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>modelo_ef <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;within&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>modelo_ef <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;within&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ef)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Oneway (individual) effect Within Model
@@ -3259,8 +3261,10 @@ alternative hypothesis: significant effects</code></pre>
 <details open>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales y temporales fijos (EF)</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>modelo_ef_it <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;within&quot;</span>, <span class="at">effect =</span> <span class="st">&quot;twoways&quot;</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ef_it)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>modelo_ef_it <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> QUIM_CHINA_pdata, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="st">&quot;within&quot;</span>, <span class="at">effect =</span> <span class="st">&quot;twoways&quot;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ef_it)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Twoways effects Within Model
@@ -3341,8 +3345,9 @@ alternative hypothesis: significant effects</code></pre>
 <details open>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales aleatorios (EA)</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>modelo_ea <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;random&quot;</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ea)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>modelo_ea <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;random&quot;</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ea)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Oneway (individual) effect Random Effect Model 
@@ -3381,8 +3386,9 @@ Chisq: 270834 on 3 DF, p-value: &lt; 2.22e-16</code></pre>
 </div>
 <details open>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de los modelos de efectos aleatorios y de efectos fijos: test de Hausman</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">phtest</span>(modelo_ef, modelo_ea)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contraste del modelo de efectos aleatorios frente al de efectos fijos: </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de Hausman</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">phtest</span>(modelo_ef, modelo_ea)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -3394,7 +3400,7 @@ alternative hypothesis: one model is inconsistent</code></pre>
 </div>
 <details open>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaciòn de resultados de los tres modelos</span></span>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de resultados de los tres modelos</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(modelo_plano, modelo_ef, modelo_ea, <span class="at">type=</span><span class="st">&quot;text&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -3512,8 +3518,8 @@ Name: M, dtype: float64</code></pre>
 Dep. Variable:              np.log(Y)   R-squared:                        0.9240
 Estimator:                  PooledOLS   R-squared (Between):              0.9468
 No. Observations:               37656   R-squared (Within):               0.6708
-Date:                Fri, Jun 30 2023   R-squared (Overall):              0.9240
-Time:                        12:59:03   Log-likelihood                -1.406e+04
+Date:                Wed, Nov 01 2023   R-squared (Overall):              0.9240
+Time:                        21:05:10   Log-likelihood                -1.406e+04
 Cov. Estimator:            Unadjusted                                           
                                         F-statistic:                   1.526e+05
 Entities:                       12552   P-value                           0.0000
@@ -3549,8 +3555,8 @@ np.log(M)      0.7655     0.0018     428.44     0.0000      0.7620      0.7690
 Dep. Variable:              np.log(Y)   R-squared:                        0.6862
 Estimator:                   PanelOLS   R-squared (Between):              0.9305
 No. Observations:               37656   R-squared (Within):               0.6862
-Date:                Fri, Jun 30 2023   R-squared (Overall):              0.9103
-Time:                        12:59:03   Log-likelihood                    6173.0
+Date:                Wed, Nov 01 2023   R-squared (Overall):              0.9103
+Time:                        21:05:10   Log-likelihood                    6173.0
 Cov. Estimator:            Unadjusted                                           
                                         F-statistic:                    1.83e+04
 Entities:                       12552   P-value                           0.0000
@@ -3592,8 +3598,8 @@ Included effects: Entity</code></pre>
 Dep. Variable:              np.log(Y)   R-squared:                        0.8779
 Estimator:              RandomEffects   R-squared (Between):              0.9455
 No. Observations:               37656   R-squared (Within):               0.6777
-Date:                Fri, Jun 30 2023   R-squared (Overall):              0.9234
-Time:                        12:59:03   Log-likelihood                   -1974.9
+Date:                Wed, Nov 01 2023   R-squared (Overall):              0.9234
+Time:                        21:05:10   Log-likelihood                   -1974.9
 Cov. Estimator:            Unadjusted                                           
                                         F-statistic:                   9.028e+04
 Entities:                       12552   P-value                           0.0000
@@ -3929,7 +3935,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>::: justify</span>
 <span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China {.unnumbered}</span></span>
 <span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>En esta aplicación se estimará una <span class="co">[</span><span class="ot">función de producción del tipo Cobb-Douglas</span><span class="co">](https://en.wikipedia.org/wiki/Cobb%E2%80%93Douglas_production_function)</span> para una muestra de empresas del sector industrial químico de China. La versión econométrica de dicha función es la siguiente:</span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>En esta aplicación se estimará una <span class="co">[</span><span class="ot">función de producción del tipo Cobb-Douglas</span><span class="co">](https://en.wikipedia.org/wiki/Cobb%E2%80%93Douglas_production_function)</span> para una muestra de empresas del sector industrial químico de China. La ecuación de regresión asociada a dicha función es la siguiente:</span>
 <span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>$$log(Y_{it}) = \beta_1 + \beta_2 log(K_{it}) + \beta_3 log(L_{it}) + \beta_4 log(M_{it})  + e_{it}$$</span>
 <span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a></span>
@@ -3955,63 +3961,69 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb41-48"><a href="#cb41-48" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(QUIM_CHINA_pdata[<span class="fu">c</span>(<span class="st">&quot;Y&quot;</span>,<span class="st">&quot;K&quot;</span>,<span class="st">&quot;L&quot;</span>,<span class="st">&quot;M&quot;</span>)])</span>
 <span id="cb41-49"><a href="#cb41-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelos estáticos para datos de panel</span></span>
 <span id="cb41-50"><a href="#cb41-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo plano (&#39;pool MCO`)</span></span>
-<span id="cb41-51"><a href="#cb41-51" aria-hidden="true" tabindex="-1"></a>modelo_plano <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;pooling&quot;</span>)</span>
-<span id="cb41-52"><a href="#cb41-52" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_plano)</span>
-<span id="cb41-53"><a href="#cb41-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales fijos (EF)</span></span>
-<span id="cb41-54"><a href="#cb41-54" aria-hidden="true" tabindex="-1"></a>modelo_ef <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;within&quot;</span>)</span>
-<span id="cb41-55"><a href="#cb41-55" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ef)</span>
-<span id="cb41-56"><a href="#cb41-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación del mdelo plano frente al modelo de efectos fijos</span></span>
-<span id="cb41-57"><a href="#cb41-57" aria-hidden="true" tabindex="-1"></a><span class="fu">pFtest</span>(modelo_ef, modelo_plano)</span>
-<span id="cb41-58"><a href="#cb41-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales y temporales fijos (EF)</span></span>
-<span id="cb41-59"><a href="#cb41-59" aria-hidden="true" tabindex="-1"></a>modelo_ef_it <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;within&quot;</span>, <span class="at">effect =</span> <span class="st">&quot;twoways&quot;</span>)</span>
-<span id="cb41-60"><a href="#cb41-60" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ef_it)</span>
-<span id="cb41-61"><a href="#cb41-61" aria-hidden="true" tabindex="-1"></a><span class="fu">pFtest</span>(modelo_ef_it, modelo_plano)</span>
-<span id="cb41-62"><a href="#cb41-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Significación de efectos individuales</span></span>
-<span id="cb41-63"><a href="#cb41-63" aria-hidden="true" tabindex="-1"></a><span class="fu">plmtest</span>(modelo_plano, <span class="at">effect=</span><span class="st">&quot;individual&quot;</span>)</span>
-<span id="cb41-64"><a href="#cb41-64" aria-hidden="true" tabindex="-1"></a><span class="fu">plmtest</span>(modelo_plano, <span class="at">effect =</span> <span class="st">&quot;time&quot;</span> )</span>
-<span id="cb41-65"><a href="#cb41-65" aria-hidden="true" tabindex="-1"></a><span class="fu">plmtest</span>(modelo_plano, <span class="at">effect =</span> <span class="st">&quot;twoways&quot;</span> )</span>
-<span id="cb41-66"><a href="#cb41-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales aleatorios (EA)</span></span>
-<span id="cb41-67"><a href="#cb41-67" aria-hidden="true" tabindex="-1"></a>modelo_ea <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;random&quot;</span>)</span>
-<span id="cb41-68"><a href="#cb41-68" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ea)</span>
-<span id="cb41-69"><a href="#cb41-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de los modelos de efectos aleatorios y de efectos fijos: test de Hausman</span></span>
-<span id="cb41-70"><a href="#cb41-70" aria-hidden="true" tabindex="-1"></a><span class="fu">phtest</span>(modelo_ef, modelo_ea)</span>
-<span id="cb41-71"><a href="#cb41-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaciòn de resultados de los tres modelos</span></span>
-<span id="cb41-72"><a href="#cb41-72" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(modelo_plano, modelo_ef, modelo_ea, <span class="at">type=</span><span class="st">&quot;text&quot;</span>)</span>
-<span id="cb41-73"><a href="#cb41-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb41-74"><a href="#cb41-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-75"><a href="#cb41-75" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código Python {.unnumbered}</span></span>
-<span id="cb41-76"><a href="#cb41-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-79"><a href="#cb41-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb41-80"><a href="#cb41-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb41-81"><a href="#cb41-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb41-82"><a href="#cb41-82" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb41-83"><a href="#cb41-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-84"><a href="#cb41-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías </span></span>
-<span id="cb41-85"><a href="#cb41-85" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb41-86"><a href="#cb41-86" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb41-87"><a href="#cb41-87" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels <span class="im">import</span> PooledOLS, PanelOLS, RandomEffects</span>
-<span id="cb41-88"><a href="#cb41-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb41-89"><a href="#cb41-89" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/QUIM_CHINA.csv&quot;</span>)</span>
-<span id="cb41-90"><a href="#cb41-90" aria-hidden="true" tabindex="-1"></a><span class="co"># Estructura de panel de datos</span></span>
-<span id="cb41-91"><a href="#cb41-91" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA_pdata <span class="op">=</span> QUIM_CHINA.set_index([<span class="st">&#39;firm&#39;</span>,<span class="st">&#39;year&#39;</span>])</span>
-<span id="cb41-92"><a href="#cb41-92" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA[<span class="st">&quot;Y&quot;</span>].describe()</span>
-<span id="cb41-93"><a href="#cb41-93" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA[<span class="st">&quot;K&quot;</span>].describe()</span>
-<span id="cb41-94"><a href="#cb41-94" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA[<span class="st">&quot;L&quot;</span>].describe()</span>
-<span id="cb41-95"><a href="#cb41-95" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA[<span class="st">&quot;M&quot;</span>].describe()</span>
-<span id="cb41-96"><a href="#cb41-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelos estáticos para datos de panel</span></span>
-<span id="cb41-97"><a href="#cb41-97" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo plano</span></span>
-<span id="cb41-98"><a href="#cb41-98" aria-hidden="true" tabindex="-1"></a>modelo_plano <span class="op">=</span> PooledOLS.from_formula(<span class="st">&#39;np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M)&#39;</span>, QUIM_CHINA_pdata)</span>
-<span id="cb41-99"><a href="#cb41-99" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> modelo_plano.fit()</span>
-<span id="cb41-100"><a href="#cb41-100" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res)</span>
-<span id="cb41-101"><a href="#cb41-101" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos fijos</span></span>
-<span id="cb41-102"><a href="#cb41-102" aria-hidden="true" tabindex="-1"></a>modelo_ef <span class="op">=</span> PanelOLS.from_formula(<span class="st">&#39;np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M) + EntityEffects&#39;</span>, QUIM_CHINA_pdata)</span>
-<span id="cb41-103"><a href="#cb41-103" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> modelo_ef.fit()</span>
-<span id="cb41-104"><a href="#cb41-104" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res)</span>
-<span id="cb41-105"><a href="#cb41-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos aleatorios</span></span>
-<span id="cb41-106"><a href="#cb41-106" aria-hidden="true" tabindex="-1"></a>modelo_ea <span class="op">=</span> RandomEffects.from_formula(<span class="st">&#39;np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M)&#39;</span>, QUIM_CHINA_pdata)</span>
-<span id="cb41-107"><a href="#cb41-107" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> modelo_ea.fit()</span>
-<span id="cb41-108"><a href="#cb41-108" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res)</span>
-<span id="cb41-109"><a href="#cb41-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb41-51"><a href="#cb41-51" aria-hidden="true" tabindex="-1"></a>modelo_plano <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), </span>
+<span id="cb41-52"><a href="#cb41-52" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;pooling&quot;</span>)</span>
+<span id="cb41-53"><a href="#cb41-53" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_plano)</span>
+<span id="cb41-54"><a href="#cb41-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales fijos (EF)</span></span>
+<span id="cb41-55"><a href="#cb41-55" aria-hidden="true" tabindex="-1"></a>modelo_ef <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), </span>
+<span id="cb41-56"><a href="#cb41-56" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;within&quot;</span>)</span>
+<span id="cb41-57"><a href="#cb41-57" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ef)</span>
+<span id="cb41-58"><a href="#cb41-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación del mdelo plano frente al modelo de efectos fijos</span></span>
+<span id="cb41-59"><a href="#cb41-59" aria-hidden="true" tabindex="-1"></a><span class="fu">pFtest</span>(modelo_ef, modelo_plano)</span>
+<span id="cb41-60"><a href="#cb41-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales y temporales fijos (EF)</span></span>
+<span id="cb41-61"><a href="#cb41-61" aria-hidden="true" tabindex="-1"></a>modelo_ef_it <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), </span>
+<span id="cb41-62"><a href="#cb41-62" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> QUIM_CHINA_pdata, </span>
+<span id="cb41-63"><a href="#cb41-63" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="st">&quot;within&quot;</span>, <span class="at">effect =</span> <span class="st">&quot;twoways&quot;</span>)</span>
+<span id="cb41-64"><a href="#cb41-64" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ef_it)</span>
+<span id="cb41-65"><a href="#cb41-65" aria-hidden="true" tabindex="-1"></a><span class="fu">pFtest</span>(modelo_ef_it, modelo_plano)</span>
+<span id="cb41-66"><a href="#cb41-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Significación de efectos individuales</span></span>
+<span id="cb41-67"><a href="#cb41-67" aria-hidden="true" tabindex="-1"></a><span class="fu">plmtest</span>(modelo_plano, <span class="at">effect=</span><span class="st">&quot;individual&quot;</span>)</span>
+<span id="cb41-68"><a href="#cb41-68" aria-hidden="true" tabindex="-1"></a><span class="fu">plmtest</span>(modelo_plano, <span class="at">effect =</span> <span class="st">&quot;time&quot;</span> )</span>
+<span id="cb41-69"><a href="#cb41-69" aria-hidden="true" tabindex="-1"></a><span class="fu">plmtest</span>(modelo_plano, <span class="at">effect =</span> <span class="st">&quot;twoways&quot;</span> )</span>
+<span id="cb41-70"><a href="#cb41-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos individuales aleatorios (EA)</span></span>
+<span id="cb41-71"><a href="#cb41-71" aria-hidden="true" tabindex="-1"></a>modelo_ea <span class="ot">&lt;-</span> <span class="fu">plm</span>(<span class="fu">log</span>(Y) <span class="sc">~</span> <span class="fu">log</span>(K) <span class="sc">+</span> <span class="fu">log</span>(L) <span class="sc">+</span> <span class="fu">log</span>(M), </span>
+<span id="cb41-72"><a href="#cb41-72" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> QUIM_CHINA_pdata, <span class="at">model =</span> <span class="st">&quot;random&quot;</span>)</span>
+<span id="cb41-73"><a href="#cb41-73" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_ea)</span>
+<span id="cb41-74"><a href="#cb41-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Contraste del modelo de efectos aleatorios frente al de efectos fijos: </span></span>
+<span id="cb41-75"><a href="#cb41-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de Hausman</span></span>
+<span id="cb41-76"><a href="#cb41-76" aria-hidden="true" tabindex="-1"></a><span class="fu">phtest</span>(modelo_ef, modelo_ea)</span>
+<span id="cb41-77"><a href="#cb41-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de resultados de los tres modelos</span></span>
+<span id="cb41-78"><a href="#cb41-78" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(modelo_plano, modelo_ef, modelo_ea, <span class="at">type=</span><span class="st">&quot;text&quot;</span>)</span>
+<span id="cb41-79"><a href="#cb41-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb41-80"><a href="#cb41-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-81"><a href="#cb41-81" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código Python {.unnumbered}</span></span>
+<span id="cb41-82"><a href="#cb41-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-85"><a href="#cb41-85" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb41-86"><a href="#cb41-86" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb41-87"><a href="#cb41-87" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb41-88"><a href="#cb41-88" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb41-89"><a href="#cb41-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-90"><a href="#cb41-90" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías </span></span>
+<span id="cb41-91"><a href="#cb41-91" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb41-92"><a href="#cb41-92" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb41-93"><a href="#cb41-93" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels <span class="im">import</span> PooledOLS, PanelOLS, RandomEffects</span>
+<span id="cb41-94"><a href="#cb41-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb41-95"><a href="#cb41-95" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/QUIM_CHINA.csv&quot;</span>)</span>
+<span id="cb41-96"><a href="#cb41-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Estructura de panel de datos</span></span>
+<span id="cb41-97"><a href="#cb41-97" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA_pdata <span class="op">=</span> QUIM_CHINA.set_index([<span class="st">&#39;firm&#39;</span>,<span class="st">&#39;year&#39;</span>])</span>
+<span id="cb41-98"><a href="#cb41-98" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA[<span class="st">&quot;Y&quot;</span>].describe()</span>
+<span id="cb41-99"><a href="#cb41-99" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA[<span class="st">&quot;K&quot;</span>].describe()</span>
+<span id="cb41-100"><a href="#cb41-100" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA[<span class="st">&quot;L&quot;</span>].describe()</span>
+<span id="cb41-101"><a href="#cb41-101" aria-hidden="true" tabindex="-1"></a>QUIM_CHINA[<span class="st">&quot;M&quot;</span>].describe()</span>
+<span id="cb41-102"><a href="#cb41-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelos estáticos para datos de panel</span></span>
+<span id="cb41-103"><a href="#cb41-103" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo plano</span></span>
+<span id="cb41-104"><a href="#cb41-104" aria-hidden="true" tabindex="-1"></a>modelo_plano <span class="op">=</span> PooledOLS.from_formula(<span class="st">&#39;np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M)&#39;</span>, QUIM_CHINA_pdata)</span>
+<span id="cb41-105"><a href="#cb41-105" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> modelo_plano.fit()</span>
+<span id="cb41-106"><a href="#cb41-106" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res)</span>
+<span id="cb41-107"><a href="#cb41-107" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos fijos</span></span>
+<span id="cb41-108"><a href="#cb41-108" aria-hidden="true" tabindex="-1"></a>modelo_ef <span class="op">=</span> PanelOLS.from_formula(<span class="st">&#39;np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M) + EntityEffects&#39;</span>, QUIM_CHINA_pdata)</span>
+<span id="cb41-109"><a href="#cb41-109" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> modelo_ef.fit()</span>
+<span id="cb41-110"><a href="#cb41-110" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res)</span>
+<span id="cb41-111"><a href="#cb41-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo de efectos aleatorios</span></span>
+<span id="cb41-112"><a href="#cb41-112" aria-hidden="true" tabindex="-1"></a>modelo_ea <span class="op">=</span> RandomEffects.from_formula(<span class="st">&#39;np.log(Y) ~ 1 + np.log(K) + np.log(L) + np.log(M)&#39;</span>, QUIM_CHINA_pdata)</span>
+<span id="cb41-113"><a href="#cb41-113" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> modelo_ea.fit()</span>
+<span id="cb41-114"><a href="#cb41-114" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res)</span>
+<span id="cb41-115"><a href="#cb41-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

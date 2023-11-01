@@ -18,7 +18,7 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.6 (Modelos de regresión con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo {.unnumbered}
+# Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo {.unnumbered}
 
 En esta aplicación se estimará un modelo dinámico para el precio de la gasolina en el que los errores muestran clústeres de volatilidad (heteroscedasticidad autorregresiva condicional, ARCH).
 :::
@@ -44,7 +44,9 @@ GASOL_CRUDO_ts <- read.zoo(GASOL_CRUDO)
 # Gráfica de las series temporales
 plot(GASOL_CRUDO_ts)
 # Modelo dinámico para el precio de la gasolina (precio minorista)
-dyn_model <- dynlm (log(PGASOL) ~ D2008JD + time + L(log(PGASOL), 1:2) + L(log(PCRUDO),0:2), data=GASOL_CRUDO_ts)
+dyn_model <- dynlm (log(PGASOL) ~ D2008JD + time + 
+                      L(log(PGASOL), 1:2) + L(log(PCRUDO),0:2), 
+                    data=GASOL_CRUDO_ts)
 summary(dyn_model)
 # Estimación de efectos parciales a corto y largo plazo
 nlConfint(dyn_model, c("b[6]","(b[6]+b[7]+b[8])/(1-b[4]-b[5])"))
