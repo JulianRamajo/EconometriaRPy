@@ -24,7 +24,7 @@ En esta aplicación se usarán las librerías estándar de R y Python para el "m
 
 Sobre los datos utilizados:
 
--   Datos para el ejemplo : palmerpenguins (<https://allisonhorst.github.io/palmerpenguins/>)
+-   Datos para el ejemplo : `palmerpenguins`  (<https://allisonhorst.github.io/palmerpenguins/>)
 :::
 
 # Código R {.unnumbered}
@@ -38,7 +38,6 @@ Sobre los datos utilizados:
 
 library(tidyverse)
 library(palmerpenguins)
-theme_set(theme_classic())
 ```
 
 ## Lectura de datos
@@ -144,7 +143,7 @@ df %>%
             depth75 = quantile(bill_depth_mm, probs = 0.75, na.rm = TRUE))
 ```
 
-Boxplot vertical de la longitud del pico por especie
+Diagrama de cajas (boxplot) vertical de la longitud del pico por especie
 
 ```{r}
 df %>%
@@ -196,7 +195,7 @@ df %>%
   geom_smooth(method = "lm")
 ```
 
-diferenciado por sexo
+Diferenciado por sexo
 
 ```{r}
 df %>%
@@ -205,7 +204,7 @@ df %>%
   geom_point()
 ```
 
-diferenciado por sexo con línea de regresión añadida
+con línea de regresión añadida
 
 ```{r}
 df %>%
@@ -304,25 +303,11 @@ df %>%
   head()
 ```
 
-## Regresión lineal
-
-Especificación y ajuste del modelo
-
-```{r}
-model <- lm(body_mass_g ~ flipper_length_mm + species + sex, data = df)
-```
-
-Resumen de resultados
-
-```{r}
-summary(model)
-```
-
 # Código Python {.unnumbered}
 
 Sobre los datos utilizados:
 
--   Datos para el ejemplo : palmerpenguins (<https://github.com/mcnakhaee/palmerpenguins>)
+-   Datos para el ejemplo : `palmerpenguins` (<https://github.com/mcnakhaee/palmerpenguins>)
 
 ## Lectura de librerías
 
@@ -396,7 +381,8 @@ pd.crosstab(df['species'], df['island']) / len(df)
 Gráfico de barras de especies
 
 ```{python}
-sns.countplot(x = 'species', data = df)
+sns.countplot(x = 'species', data = df);
+plt.show()
 ```
 
 Descripción de todas la columnas de la base de datos
@@ -420,13 +406,15 @@ df.loc[df['island'] == 'Biscoe', ['bill_length_mm', 'bill_depth_mm']].quantile([
 Boxplot vertical de la longitud del pico por especie
 
 ```{python}
-sns.boxplot(x = 'species', y = 'bill_length_mm', data = df, orient = 'v', palette = 'rainbow')
+sns.boxplot(x = 'species', y = 'bill_length_mm', data = df, orient = 'v', palette = 'rainbow');
+plt.show()
 ```
 
 Boxplot horizontal
 
 ```{python}
-sns.boxplot(x = 'bill_length_mm', y = 'species', data = df, orient = 'h', palette = 'rainbow')
+sns.boxplot(x = 'bill_length_mm', y = 'species', data = df, orient = 'h', palette = 'rainbow');
+plt.show()
 ```
 
 Densidad estimada de la longitud del pico agrupada por sexo
@@ -436,7 +424,8 @@ sns.displot(x = 'bill_length_mm',
             data = df,
             kind = 'kde',
             hue = 'sex',
-            fill = True)
+            fill = True);
+plt.show()
 ```
 
 con facetas por especie
@@ -447,38 +436,44 @@ sns.displot(x = 'bill_length_mm',
             kind = 'kde',
             hue = 'sex',
             col = 'species', 
-            fill = True)
+            fill = True);
+plt.show()
 ```
 
 Diagrama de dispersión de la masa corporal en relación con la longitud de las aletas  
 
 ```{python}
-sns.relplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df)
+sns.relplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df);
+plt.show()
 ```
 
 con línea de regresión añadida
 
 ```{python}
-sns.lmplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df)
+sns.lmplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df);
+plt.show()
 ```
 
-diferenciado por sexo
+Diferenciado por sexo
 
 ```{python}
-sns.relplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df, hue = 'sex')
+sns.relplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df, hue = 'sex');
+plt.show()
 ```
 
-diferenciado por sexo con línea de regresión añadida
+y con línea de regresión añadida
 
 ```{python}
-sns.lmplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df, hue = 'sex')
+sns.lmplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df, hue = 'sex');
+plt.show()
 ```
 
 Variación de la masa corporal media a lo largo de los años por especie
 
 ```{python}
 sns.relplot(x = 'year', y = 'body_mass_g', kind = 'line',
-           hue = 'species', data = df)
+           hue = 'species', data = df);
+plt.show()
 ```
 
 ## Agrupación - resumen
@@ -555,19 +550,4 @@ df.head()
 df['island_code2'] = np.where(df['island'] == 'Biscoe', 'Island1',
                         (np.where(df['island'] == 'Dream', 'Island2', 'Island3')))
 df.head()
-```
-
-## Regresión lineal
-
-Especificación y ajuste del modelo
-
-```{python}
-model = smf.ols('body_mass_g ~ flipper_length_mm + species + sex', data = df)
-results = model.fit()
-```
-
-Resumen de resultados
-
-```{python}
-results.summary()
 ```

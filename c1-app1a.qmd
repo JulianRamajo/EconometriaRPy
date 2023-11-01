@@ -48,9 +48,11 @@ En las siguientes páginas web se pueden encontrar los detalles sobre cada cuest
 
 Sobre los datos utilizados en la aplicación R:
 
-1. Gapminder (<https://www.gapminder.org/fw/world-health-chart/>)
+1.  *Gapminder* (<https://www.gapminder.org/fw/world-health-chart/>)
 
-2. NYC_Flights_2013 (<https://github.com/tidyverse/nycflights13>)
+Los datos por países se han extraído de la base de datos del Banco Mundial (<https://data.worldbank.org/>), usando la librería `WDI` (<https://vincentarelbundock.github.io/WDI/index.html>).
+
+2.  *NYC_Flights_2013* (<https://github.com/tidyverse/nycflights13>)
 :::
 
 ```{r}
@@ -61,11 +63,10 @@ Sobre los datos utilizados en la aplicación R:
 # Lectura de librerías
 library(tidyverse)
 tidyverse_packages()
-# 
+# Estructura de la macro-librería tidyverse
 library(deepdep)
 dep_tidyverse <- deepdep("tidyverse", depth = 1)
 plot_dependencies(dep_tidyverse, "circular")
-# Lectura de datos
 # Lectura de datos
 gapminder <- read_csv("data/GAPMINDER.csv")
 class(gapminder)
@@ -132,12 +133,13 @@ p  <-  ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp))
 # Gráfica 0
 p0  <-  p + geom_point(alpha = 0.3)
 p0
+# Gráfica 0 plus: con ajuste no paramétrico
 p0plus <- p0 + geom_smooth(method = "loess")
 p0plus
-# Gráfica 1
+# Gráfica 1: colores por regiones
 p1  <-  p + geom_point(aes(size = pop, col = region), alpha = 0.3)
 p1
-# Gráfica 2
+# Gráfica 2: colores por regiones y tamaño por población
 p2  <-  p +
 geom_point(aes(size = pop, col = region), alpha = 0.3) +
 scale_color_brewer(name = "Región", palette = "Set1") + # Diferente  escala de colores
@@ -146,7 +148,7 @@ scale_x_log10(labels = scales::dollar) + # Escala logarítmica en el eje X y uni
 labs(x = "PIB per capita (log)", y = "Experanza de vida al nacer") + # Títulos en los ejes
 theme_minimal() # Tema mínimo (b&w)
 p2
-# Gráfica 3 de burbujas de Hans-Rosling
+# Gráfica 3: burbujas de Hans-Rosling
 library(viridis)
 library(gganimate)
 p3 <- gapminder |>
@@ -163,7 +165,7 @@ p3 <- gapminder |>
     gganimate::transition_states(year, transition_length = 1, state_length = 1) +
     gganimate::ease_aes('cubic-in-out')
 p3
-# Gráfica 4
+# Gráfica 4: gráfica animada (cambio de la relación por años)
 library(gganimate)
 p4  <-  ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   geom_point(alpha = 0.7, show.legend = FALSE) +
@@ -173,7 +175,6 @@ p4  <-  ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country))
   transition_time(year) +
   ease_aes('linear')
 p4
-
 # Análisis exploratorio de datos (EDA)
 library(skimr)
 skim(gapminder)
@@ -187,10 +188,6 @@ ggplot(data = gapminder, aes(x = log(gdpPercap), y = lifeExp)) +
 ggplot(data = gapminder, aes(x = year, y = lifeExp)) + 
     geom_smooth(method = "lm", col = "blue") + 
     geom_point()
-
-# Regresión MCO
-model <- lm(lifeExp ~ log(gdpPercap) + year, data=gapminder)
-summary(model)
 ```
 
 ## Código Python {.unnumbered}
@@ -198,7 +195,7 @@ summary(model)
 ::: justify
 En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión analizada:
 
-1. Gestión *a la tidyverse*_* de datos y gráficos en Python:
+1.  Gestión *a la tidyverse* de datos y gráficos en Python:
 
 -   librería `siuba`: <https://siuba.readthedocs.io/en/latest/>
 
@@ -206,7 +203,7 @@ En las siguientes páginas web se pueden encontrar los detalles sobre cada cuest
 
 Sobre los datos utilizados en la aplicación Python:
 
-1. mtcars (<https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html>)
+1.  `mtcars` (<https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html>)
 :::
 
 ```{python}
@@ -306,19 +303,19 @@ semi_join(df1, df2, on = "id")
 (
     ggplot(mtcars, aes(x='disp', y='hp'))
     + geom_point()
-    + labs(x='Displacement', y='Gross horsepower')
+    + labs(x='Cilindrada', y='Potencia')
 )
 (
     ggplot(mtcars, aes(x='disp', y='hp'))
     + geom_point()
     + geom_smooth(method='lm', color = "blue")
-    + labs(x='Displacement', y='Gross horsepower')
+    + labs(x='Cilindrada', y='Potencia')
 )
 (
     ggplot(mtcars, aes(x='disp', y='hp'))
     + geom_point()
     + geom_smooth(color = "blue")
-    + labs(x='Displacement', y='Gross horsepower')
+    + labs(x='Cilindrada', y='Potencia')
 )
 (ggplot(mtcars, aes('disp', 'hp', color='factor(gear)'))
  + geom_point()
@@ -328,7 +325,7 @@ semi_join(df1, df2, on = "id")
     ggplot(mtcars, aes(x='disp', y='hp', color='factor(gear)'))
     + geom_point()
     + geom_smooth(method='lm')
-    +  labs(x='Displacement', y='Gross horsepower')
+    +  labs(x='Cilindrada', y='Potencia')
 )
 (mtcars
  >> ggplot(aes(x = 'wt', y = 'mpg'))
@@ -337,6 +334,6 @@ semi_join(df1, df2, on = "id")
   + labs(title = "Datos mtcars, Motor Trend US magazine (1974)",
         x = "Peso (libras/1000) [US]",
         y = "Millas/galón [US]",
-        color = "Number of forward gears",
-        shape = "Number of forward gears"))
+        color = "Número de marchas",
+        shape = "Número de marchas"))
 ```

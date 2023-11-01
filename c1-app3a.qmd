@@ -35,10 +35,10 @@ Igual que en la aplicación anterior, previamente al análisis estadístico dese
 # Lectura de librerías
 library(tidyverse)
 library(plotly)
-library(viridis)
 library(sf)
 library(geojsonsf)
 library(leaflet)
+library(viridis)
 library(RColorBrewer)
 # Lectura de datos
 df <- read_csv("data/GCPdbase.csv")

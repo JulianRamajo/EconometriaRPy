@@ -22,9 +22,9 @@ format:
 
 En esta aplicación se estimará una función de demanda de carne con datos microeconómicos sobre 30 familias americanas ( *i* = 1, 2,..., 30):
 
-$$Q_i = \beta_0 + \beta_1 P_i + \beta_2 Y_i + e_i$$
+$$Q_{i} = f(P_{i}, Y_{i}) + e_{i}$$
 
-donde *Q* representa la cantidad demandada, *P* es el precio pagado por ella en el mercado, y finalmente *Y* es la renta familiar neta disponible.
+donde *Q* representa la cantidad demandada, *P* es el precio pagado por ella en el mercado y, finalmente, *Y* es la renta familiar neta disponible.
 :::
 
 # Código R {.unnumbered}
@@ -53,8 +53,8 @@ tail(DEM_CARNE)
 # Estadística descriptiva
 # Resultados estándar (R 'base')
 summary(DEM_CARNE)
-# Librerías skimr (https://cran.r-project.org/web/packages/skimr/index.html)
-# y modelsummary (https://vincentarelbundock.github.io/modelsummary/index.html)
+# Librerías skimr (https://cran.r-project.org/web/packages/skimr/index.html) y
+# modelsummary (https://vincentarelbundock.github.io/modelsummary/index.html)
 skim(DEM_CARNE)
 datasummary_correlation(DEM_CARNE)
 # Gráficas parciales
@@ -73,14 +73,20 @@ ggplot(DEM_CARNE, aes(x = Y, y = Q)) +
   ylab("Q (cantidad)") +
   theme_minimal()
 
-# Regresión por MCO
+# Regresión por MCO del modelo lineal:
+# Q = beta1 + beta2*P + beta3*Y + e
 # Comando `lm` de *R stats* (<https://rdrr.io/r/stats/lm.html>).
 lin_model <- lm(formula = Q ~ P + Y, data = DEM_CARNE)
 # Resultados estándar (R base)
 summary(lin_model)
-# Resultados con la librería modelsummary (https://vincentarelbundock.github.io/modelsummary/)
+# Resultados con la librería modelsummary
 modelsummary(lin_model)
 modelplot(lin_model)
+
+# Regresión por MCO del modelo logarítmico:
+# log(Q) = beta1 + beta2*log(P) + beta3*log(Y) + e
+log_model <- lm(formula = log(Q) ~ log(P) + log(Y), data = DEM_CARNE)
+summary(log_model)
 ```
 
 # Código Python {.unnumbered}
@@ -95,9 +101,9 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
-# from skimpy import skim
 import matplotlib.pyplot as plt
 from plotnine import *
+# from skimpy import skim
 
 # Lectura de datos
 DEM_CARNE = pd.read_csv("data/DEM_CARNE.csv")
@@ -115,14 +121,20 @@ DEM_CARNE.describe()
 # Librería Skimpy (https://aeturrell.github.io/skimpy/)
 # skim(DEM_CARNE)
 # Gráficas parciales
-# Librerías ggplot de Python
+# Librería plotnine (ggplot en Python)
 (ggplot(DEM_CARNE,aes('P','Q')) + geom_point() + geom_smooth(method='lm',se=False, color = "blue") + labs(x="P (precio)",y="Q (cantidad)") + theme_bw())
 (ggplot(DEM_CARNE,aes('Y','Q')) + geom_point() + geom_smooth(method='lm',se=False, color = "blue") + labs(x="Y (renta)",y="Q (cantidad)") + theme_bw())
 
-# Regresión por MCO
-# Comando `smf.ols` de la librería `statsmodels` (<https://www.statsmodels.org/>).
+# Regresión por MCO del modelo lineal:
+# Q = beta1 + beta2*P + beta3*Y + e
+# Comando `smf.ols` de la librería `statsmodels` (<https://www.statsmodels.org/>)
 model = smf.ols(formula = "Q ~ P + Y", data = DEM_CARNE)
 lin_model = model.fit()
-# Resultados estándar (Python base)
 print(lin_model.summary())
+
+# Regresión por MCO del modelo logarítmico:
+# log(Q) = beta1 + beta2*log(P) + beta3*log(Y) + e
+model = smf.ols(formula = "np.log(Q) ~ np.log(P) + np.log(Y)", data = DEM_CARNE)
+log_model = model.fit()
+print(log_model.summary())
 ```

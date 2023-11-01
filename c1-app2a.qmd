@@ -42,12 +42,12 @@ library(scales)
 # Para acceder a los datos diarios del precio de las acciones 
 # se usa el comando tq_get de la librería tidyquant.
 # Solicitaremos los datos del Banco Santander, S.A. (SAN.MC)
-# desde el año 2000 hasta la fecha realización de esta aplicación:
+# desde el año 2000 hasta la fecha de realización de esta aplicación:
 # https://es.finance.yahoo.com/quote/SAN.MC?p=SAN.MC&.tsrc=fin-srch
 pSAN <- tq_get("SAN.MC",
   get = "stock.prices",
   from = "2000-01-01",
-  to = "2023-05-23"
+  to = "2023-10-31"
 )
 head(pSAN)
 tail(pSAN)
@@ -137,11 +137,13 @@ from mizani.formatters import percent_format
 import yfinance as yf
 import warnings
 warnings.filterwarnings("ignore")
-# Descarga de los datos diarios del precio de las acciones del Santander 
+#
+# Descarga de los datos diarios del precio de las acciones del Santander
+#
 # Creación del ticker del Banco Santander
 SAN = yf.Ticker("SAN.MC")
 # Lectura de los datos para el período seleccionado
-pSAN = yf.download("SAN.MC", start="2000-01-01", end="2023-05-23")
+pSAN = yf.download("SAN.MC", start="2000-01-01", end="2023-10-31")
 print(pSAN)
 pSAN = (pSAN.reset_index())
 pSAN.head()
@@ -158,7 +160,7 @@ def ret(x):
     return x_change
 pSAN['ret'] = ret(pSAN['Adj Close'])
 pSAN['ret']
-# Cálculo alternativo de los rendimientos diarios
+# Cálculo alternativo de la rentabilidad diaria
 ret2 = (pSAN
   .sort_values("Date")
   .assign(ret2 = lambda x: x["Adj Close"].pct_change())
@@ -186,7 +188,7 @@ q95 = pSAN["ret"].quantile(0.95)
 )
 # Estadística resumen global
 pSAN["ret"].describe()
-#
+# Selección de estadísticos y precisión
 est_res = pSAN['ret'].agg({
     'media': 'mean',
     'desv_típica': 'std',
@@ -196,7 +198,7 @@ est_res = pSAN['ret'].agg({
 est_res.round(4)
 # Estadística resumen por año
 pSAN["ret"].groupby(pSAN["Date"].dt.year).describe()
-#
+# Selección de estadísticos y precisión
 pSAN['year'] = pSAN["Date"].dt.year
 est_anual = pSAN.groupby('year').agg({'ret': ['mean', 'std', 'min', 'max']})
 est_anual.round(4)

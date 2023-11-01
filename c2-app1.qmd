@@ -24,7 +24,7 @@ En esta aplicación se estimará una versión simple del [modelo CAPM](https://e
 
 $$erSAN_{t} = \beta_{1} + \beta_{2}\, erIBEX_{t} + e_{t}$$
 
-donde $erSAN$ representa el *exceso de rendimiento* de las acciones del Banco Santander, definido como la diferencia entre la rentabilidad de las acciones del banco y la rentabilidad de un activo libre de riesgo, en nuestro caso las letras del tesoro, y $erIBEX$ es el exceso de rendimiento del mercado, representado por el índice IBEX35 de la bolsa española.
+donde *erSAN* representa el *exceso de rendimiento* de las acciones del Banco Santander, definido como la diferencia entre la rentabilidad de las acciones del banco y la rentabilidad de un activo libre de riesgo, en nuestro caso las letras del tesoro, y *erIBEX* es el exceso de rendimiento del mercado, representado por el índice IBEX35 de la bolsa española.
 
 Como ejercicio, se pueden repetir todos los cálculos de la aplicación para analizar las empresas Telefónica e Inditex.
 :::
@@ -49,37 +49,38 @@ CAPM_ESP$r_LT1Y = CAPM_ESP$R_LT1Y/12
 CAPM_ESP$er_SAN = CAPM_ESP$r_SAN - CAPM_ESP$r_LT1Y
 CAPM_ESP$er_IBEX = CAPM_ESP$r_IBEX - CAPM_ESP$r_LT1Y
 # Formato de series temporales
-ts_CAPM_ESP <- ts(CAPM_ESP, start = c(2001,5), end = c(2018,1), frequency = 12)
+ts_CAPM_ESP <- ts(CAPM_ESP, 
+                  start = c(2001,5), 
+                  end = c(2018,1), 
+                  frequency = 12)
 # Algunas gráficas de las variables básicas del modelo
 ts.plot(ts_CAPM_ESP[,"P_IBEX35"])
 ts.plot(ts_CAPM_ESP[,"P_SANTANDER"])
-ts.plot(ts_CAPM_ESP[,"r_SAN"],ts_CAPM_ESP[,"r_IBEX"])
-ts.plot(ts_CAPM_ESP[,"r_LT1Y"])
 ts.plot(ts_CAPM_ESP[,"er_SAN"],ts_CAPM_ESP[,"er_IBEX"])
 # Modelo CAPM para las acciones del Banco Santander 
 CAPM_SANTANDER  <-  lm(er_SAN ~ er_IBEX, data = ts_CAPM_ESP)
 summary(CAPM_SANTANDER)
 # Intervalos de confianza para los parámetros estructurales del modelo
-# Cálculo automático
-confint(CAPM_SANTANDER)
 # Cálculo de forma 'manual'
 alpha <- 0.05
 df <- df.residual(CAPM_SANTANDER) # grados de libertad
 t_c <- qt(1-alpha/2, df)
 b1 <- coef(CAPM_SANTANDER)[[1]] # estimación del parámetro beta1
 b1
-seb1 <- sqrt(vcov(CAPM_SANTANDER)[1,1]) # estimación de la desviación típica de beta1
+seb1 <- sqrt(vcov(CAPM_SANTANDER)[1,1]) # eest. desviación típica beta1
 seb1
 inf_b1 <- b1-t_c*seb1 # cota inferior
 sup_b1 <- b1+t_c*seb1 # cota superior
 inf_b1 ; sup_b1
 b2 <- coef(CAPM_SANTANDER)[[2]] # estimación del parámetro beta2
 b2
-seb2 <- sqrt(vcov(CAPM_SANTANDER)[2,2]) # estimación de la desviación típica de beta2
+seb2 <- sqrt(vcov(CAPM_SANTANDER)[2,2]) # est. desviación típica beta2
 seb2
 inf_b2 <- b2-t_c*seb2 # cota inferior
 sup_b2 <- b2+t_c*seb2 # cota superior
 inf_b2 ; sup_b2
+# Cálculo automático
+confint(CAPM_SANTANDER)
 # Ajuste del modelo (R^2) y ANOVA
 s_CAPM_SANTANDER <- summary(CAPM_SANTANDER)
 print(s_CAPM_SANTANDER)
@@ -107,12 +108,13 @@ sdehat <- sd(ehat)
 hist(ehat, col="grey", breaks = 20, freq=FALSE, main="", ylab="density", xlab="ehat")
 curve(dnorm(x, ebar, sdehat), col=2, add=TRUE, ylab="density", xlab="ehat")
 # Contrastes de hipótesis bilaterales
-# beta1=0 versus beta1≠0
+#
+# "Valor alfa" del activo: beta1=0 versus beta1≠0
 # Estadístico t
 alpha <- 0.05 # nivel de significación
 b1 <- coef(CAPM_SANTANDER)[[1]] # estimación del parámetro beta1
 b1
-seb1 <- sqrt(vcov(CAPM_SANTANDER)[1,1]) # estimación de la desviación típica de beta1
+seb1 <- sqrt(vcov(CAPM_SANTANDER)[1,1]) # est. desviación típica beta1
 seb1
 c <- 0
 df <- df.residual(CAPM_SANTANDER) # grados de libertad
@@ -121,8 +123,8 @@ t_0
 # Método del valor crítico
 t_c <- qt(1-alpha/2, df) # valor crítico
 t_c
-# Gráfico de la función de densidad de la distribución t de Student, del valor crítico 
-# y del estadístico t_0
+# Gráfico de la función de densidad de la distribución t de Student, 
+# del valor crítico y del estadístico t_0
 curve(dt(x, df), -5, 5, ylab=" ", xlab="t")
 abline(v=c(-t_c, t_c, t_0), col=c("red", "red", "blue"), lty=c(2,2,3))
 legend("topleft", legend=c("-t_c", "t_c", "t_0"), col=c("red", "red", "blue"), lty=c(2, 2, 3))
@@ -137,8 +139,8 @@ legend("topleft", legend=c("t_0"), col=c("blue"), lty=c(3))
 library(car)
 H_0 <- "(Intercept) = 0"
 linearHypothesis(CAPM_SANTANDER, H_0, test="F")
-# Gráfico de la función de densidad de la distribución F de Fisher-Snedecor, del valor crítico 
-# y del estadístico F_0
+# Gráfico de la función de densidad de la distribución F de Fisher-Snedecor, 
+# del valor crítico y del estadístico F_0
 F_0 <- linearHypothesis(CAPM_SANTANDER, H_0, test="F")[2,5] # estadístico F
 F_0
 F_c <- qf(1-alpha, 1, df) # valor crítico
@@ -146,12 +148,12 @@ F_c
 curve(df(x, 1, df), 0, 5, ylab=" ", xlab="F")
 abline(v=c(F_0,F_c), col=c("blue","red"), lty=c(2,3))
 legend("topleft", legend=c("F","Fcr"), col=c("blue","red"), lty=c(2,3))
-# beta2=1 versus beta2≠1
+# "Valor beta" del activo: beta2=1 versus beta2≠1
 # Estadístico t
 alpha <- 0.05 # nivel de significación
 b2 <- coef(CAPM_SANTANDER)[[2]] # estimación del parámetro beta2
 b2
-seb2 <- sqrt(vcov(CAPM_SANTANDER)[2,2]) # estimación de la desviación típica de beta2
+seb2 <- sqrt(vcov(CAPM_SANTANDER)[2,2]) # eest. desviación típica beta2
 seb2
 c <- 1
 df <- df.residual(CAPM_SANTANDER) # grados de libertad
@@ -179,7 +181,8 @@ linearHypothesis(CAPM_SANTANDER,H_0,test="F")
 H_0 <- c("(Intercept) = 0", "er_IBEX = 1")
 linearHypothesis(CAPM_SANTANDER,H_0,test="F")
 # Contrastes unilaterales
-# beta2≤1 versus beta2>1
+#
+# ¿Activo defensivo o agresivo?: beta2≤1 versus beta2>1
 c <- 1
 alpha <- 0.05
 t_0 <- (b2-c)/seb2
@@ -193,7 +196,7 @@ legend("topleft", legend=c("t_c", "t_0"), col=c("red", "blue"), lty=c(2, 3))
 # Método del P-valor
 p <- 1-pt(t_0, df)
 p
-# beta2≥2 versus beta2<2
+# ¿Activo ultra-agresivo?: beta2≥2 versus beta2<2
 c <- 2
 alpha <- 0.05
 t_0 <- (b2-c)/seb2
@@ -207,6 +210,9 @@ legend("topleft", legend=c("t_c", "t_0"), col=c("red", "blue"), lty=c(2, 3))
 # Método del P-valor
 p <- pt(t_0, df)
 p
+# NOTA:
+# Distribuciones de probabilidad en R
+# https://rstudio.github.io/r-manuals/r-intro/Probability-distributions.html
 ```
 
 ## Código Python {.unnumbered}
@@ -251,7 +257,6 @@ plt.scatter(CAPM_ESP['er_IBEX'], CAPM_ESP['er_SAN'])
 plt.xlabel('er_IBEX')
 plt.ylabel('er_SAN')
 plt.title('Exceso de rendimiento de SAN frente a IBEX')
-plt.grid(True)
 plt.show()
 # Modelo CAPM para las acciones del Banco Santander
 formula = 'er_SAN ~ er_IBEX'
@@ -310,7 +315,7 @@ print(F_0)
 # beta2=1 versus beta2≠1
 # Estadístico t y P-valor
 t_0 = (CAPM_SANTANDER.params['er_IBEX']-1)/CAPM_SANTANDER.bse['er_IBEX']
-t_0, 2*sp.stats.t.cdf(t_0, CAPM_SANTANDER.df_resid)
+t_0, 2*(1-sp.stats.t.cdf(abs(t_0), CAPM_SANTANDER.df_resid))
 # Estadístico F y P-valor
 H_0 = 'er_IBEX = 1'
 F_0 = CAPM_SANTANDER.f_test(H_0)
@@ -329,4 +334,7 @@ t_0, 1-sp.stats.t.cdf(t_0, CAPM_SANTANDER.df_resid)
 # Estadístico t y P-valor
 t_0 = (CAPM_SANTANDER.params['er_IBEX']-2)/CAPM_SANTANDER.bse['er_IBEX']
 t_0, sp.stats.t.cdf(t_0, CAPM_SANTANDER.df_resid)
+# NOTA:
+# Distribuciones de probabilidad en Python: librería scipy
+# https://docs.scipy.org/doc/scipy/reference/stats.html#
 ```

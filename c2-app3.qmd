@@ -47,17 +47,19 @@ ggplot(COST_TEXT, aes(x = Q, y = COST)) + geom_point(size = 2, color = "blue")
 
 # Estimación del modelo
 model <- lm(formula=COST ~ Q + I(Q^2), data = COST_TEXT)
-summary(model)
-
 # Fórmula alternativa
-# model2 <- lm(COST ~ poly(Q, 2, raw = TRUE), data = COST_TEXT)
-# summary(model2)
+# model <- lm(COST ~ poly(Q, 2, raw = TRUE), data = COST_TEXT)
+summary(model)
 
 # Función de costes estimada
 ggplot(data = COST_TEXT, aes(x = Q, y = COST)) +
-  geom_line(aes(y = predict(model, newdata = data.frame(Q = Q, Q2 = Q^2))), color = "blue") +
+  geom_line(aes(y = predict(model, 
+                            newdata = data.frame(Q = Q, Q2 = Q^2))), 
+            color = "blue") +
   geom_point(size = 2, color = "blue") +
-  labs(title = "Función de costes estimada", x = "Cantidad producida", y = "Coste total") +
+  labs(title = "Función de costes estimada", 
+       x = "Cantidad producida", 
+       y = "Coste total") +
   theme_minimal()
 ```
 

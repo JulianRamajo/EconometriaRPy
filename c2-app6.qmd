@@ -43,10 +43,16 @@ class(dem_elec_vict)
 # Demanda de electricidad 2012-2014
 dem_elec_vict %>% 
   autoplot(Demanda) +
-  labs(title = "Demanda de electricidad (cada media hora, en MW)", subtitle = "Victoria-Australia")
-# Estacionalidad(es) en la demanda: diaria, semanal y anual
-dem_elec_vict %>% gg_season(Demanda, period="day") + theme(legend.position = "none")
-dem_elec_vict %>% gg_season(Demanda, period="week") + theme(legend.position = "none")
+  labs(title = "Demanda de electricidad (cada media hora, en MW)", 
+       subtitle = "Victoria-Australia")
+# Estacionalidad(es) en la demanda
+# Diaria
+dem_elec_vict %>% gg_season(Demanda, period="day") + 
+  theme(legend.position = "none")
+# Semanal
+dem_elec_vict %>% gg_season(Demanda, period="week") + 
+  theme(legend.position = "none")
+# Mensual
 dem_elec_vict %>% gg_season(Demanda, period="year")
 # Consumo y temperatura en el período 2012-2014
 dem_elec_vict %>%
@@ -86,14 +92,18 @@ dem_elec_vict %>%
   geom_point() +
   ylab("Demanda (MWh)") + xlab("Temperatura (ºC)")
 # Modelo de demanda de electricidad
-dem_elec <- lm(log(Demanda) ~ Temperatura + I(Temperatura^2) + Dia_sem + Dia_lab + Frio + Calor, 
+dem_elec <- lm(log(Demanda) ~ Temperatura + I(Temperatura^2) + 
+                 Dia_sem + Dia_lab + Frio + Calor, 
                data = dem_elec_vict)
 summary(dem_elec)
-# Predicción de consumo para un lunes laborable, suponiendo una temparatura media de 26ª
-# (podrían usarse predicciones del servicio de meteorología)
+# Predicción de consumo para un lunes laborable, suponiendo una 
+# temparatura media de 26ª (podrían usarse predicciones del servicio 
+# de meteorología)
 Xs_1d <- new_data(dem_elec_vict, 1) %>%
-    mutate(Temperatura = 26, Dia_sem = "lun" , Dia_lab = TRUE, Frio = FALSE, Calor = FALSE)
-pred_dem_IC <- predict(dem_elec, Xs_1d[,2:6], interval = "confidence", level = 0.95)
+    mutate(Temperatura = 26, Dia_sem = "lun" , Dia_lab = TRUE, 
+           Frio = FALSE, Calor = FALSE)
+pred_dem_IC <- predict(dem_elec, Xs_1d[,2:6], 
+                       interval = "confidence", level = 0.95)
 pred_dem_IC
 exp(pred_dem_IC)
 ```

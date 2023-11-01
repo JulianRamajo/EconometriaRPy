@@ -78,9 +78,6 @@ p3 <- ggplot(data_daily, aes(x = l_pIBEX,y = l_pSAN)) +
                stat_smooth(method = lm, se=FALSE) +  
                labs(x = "Indice IBEX 35 (log)",y = "Precio acciones Banco Santander (log)")
 p3
-# Regresión lineal simple
-reg <- lm(l_pSAN ~ l_pIBEX, data = data_daily)
-summary(reg)
 ```
 
 ## Código Python {.unnumbered}
@@ -133,7 +130,4 @@ data_daily.tail()
 (ggplot(data_daily) + geom_line(aes('date','pIBEX'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
 + labs(y = "Indice IBEX 35 (Bolsa de Madrid)",x= "Date (day)") + theme_bw())
 (ggplot(data_daily,aes('l_pIBEX','l_pSAN')) + geom_point() + geom_smooth(method='lm',se=False, color = "blue") + labs(x="Indice IBEX 35 (log)",y="Precio acciones Banco Santander (log)") + theme_bw())
-# Regresión lineal simple
-reg = smf.ols('l_pSAN ~ l_pIBEX', data=data_daily).fit()
-print(reg.summary())
 ```
