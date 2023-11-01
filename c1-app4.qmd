@@ -20,7 +20,7 @@ format:
 ::: justify
 # Aplicación 1.4 (Regresiones con datos de corte transversal): Demanda familiar de carne {.unnumbered}
 
-En esta aplicación se estimará una función de demanda de carne con datos microeconómicos sobre 30 familias americanas ( *i* = 1, 2,..., 30):
+En esta aplicación se estimará una función de demanda de carne, usando con datos microeconómicos sobre 30 familias americanas ( *i* = 1, 2,..., 30):
 
 $$Q_{i} = f(P_{i}, Y_{i}) + e_{i}$$
 
