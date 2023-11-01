@@ -22,7 +22,7 @@ format:
 
 En esta aplicación se analizarán los datos de la última publicación del [*Global Data Lab*](https://globaldatalab.org/) sobre las variaciones habidas en el desarrollo humano, la salud, la educación y la renta dentro de más de 160 países ('*within*') y entre ellos ('*between*') desde 1990 hasta 2021.
 
-Puede encontrarse toda la información detallada sobre el índice de desarrollo humano al nivel subnacional (SHDI en sus siglas en inglés) en la siguiente dirección: <https://www.nature.com/articles/sdata201938>; y también se puede acceder a los datos originales desde esta otra página: <https://globaldatalab.org/shdi/download_files/>.
+Puede encontrarse toda la información detallada sobre el índice de desarrollo humano al nivel subnacional (SHDI en sus siglas en inglés) en la siguiente dirección: <https://www.nature.com/articles/sdata201938>. También se puede acceder a los datos originales desde esta otra página: <https://globaldatalab.org/shdi/download_files/>.
 
 Respecto a las librerías especializadas en gráficas dinámicas (`plotly`) y en análisis exploratorio de datos espaciales (`sf` y `geopandas`), su información se encuentra en las siguientes páginas web:
 
