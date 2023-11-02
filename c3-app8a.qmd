@@ -18,7 +18,7 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.8a (Dependencia espacial - Polígonos): Estadísticas 'morales' en Francia en 1830 {.unnumbered}
+# Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas 'morales' en Francia en 1830 {.unnumbered}
 
 En esta aplicación se analizarán con técnicas modernas de análisis estadístico espacial algunas de las cuestiones abordadas en el estudio fundacional de las ciencias sociales de André-Michel Guerry sobre la delincuencia, el suicidio, la alfabetización y otras "estadísticas morales" en la Francia de 1830.
 
@@ -59,16 +59,15 @@ plot(Guerry['Crm_prs'])
 library(mapview)
 mapview(Guerry, zcol = "Crm_prs")
 
-# ESDA (Análisis exploratorio de datos espaciales)
-
-# Estadísticos de autocorrelación espacial para la variable Crm_prs
+# ESTADÍSTICA ESPACIAL: ANÁLISIS EXPLORATORIO DE DATOS ESPACIALES (ESDA)
 
 # Librería rgeoda (https://geodacenter.github.io/rgeoda/)
 library(rgeoda)
-
+# Matriz de pesos espaciales 
+# (www.paulamoraga.com/book-spatial/spatial-neighborhood-matrices.html)
 Wq <- queen_weights(Guerry)
 summary(Wq)
-
+# Estadísticos de autocorrelación espacial para la variable Crm_prs
 LISA_Crm_prs <- local_moran(Wq, Guerry['Crm_prs'])
 LISA_Crm_prs
 
@@ -116,14 +115,14 @@ Guerry$neighbors[nb[[id]]] <- "Vecinos"
 ggplot(Guerry) + geom_sf(aes(fill = neighbors)) + theme_bw() +
     scale_fill_manual(values = c("white","gray30", "gray"))
 
-# Construcción de la matriz W de interacciones espaciales
+# Construcción de la matriz W de pesos espaciales
 Wnb <- spdep::nb2listw(nb, style = "W")
 Wnb
 head(Wnb$weights)
 m <- listw2mat(Wnb)
 lattice::levelplot(t(m))
 
-# Cálculo de los estadísticos
+# Cálculo de los estadísticos de autocorrelación espacial
 
 # I de Moran global
 moran.plot(Guerry$Crm_prs, Wnb)
@@ -197,7 +196,7 @@ tm_legend(text.size = 1)  + tm_borders(alpha = 0.5) +
 tm_layout(frame = FALSE,  title = "Clusters")  +
 tm_layout(legend.outside = TRUE)
 
-# ECONOMETRÍA ESPACIAL (Análisis confirmatorio de datos espaciales)
+# ECONOMETRÍA ESPACIAL: ANÁLISIS CONFIRMATORIO DE DATOS ESPACIALES
 
 # Modelos econométricos para explicar la variable Crm_prs
 
@@ -265,9 +264,7 @@ Guerry
 Guerry.plot('Crm_prs', legend = True)
 plt.show()
 
-# ESDA (Análisis exploratorio de datos espaciales)
-
-# Estadísticos de autocorrelación espacial para la variable Crm_prs
+# ESTADÍSTICA ESPACIAL: ANÁLISIS EXPLORATORIO DE DATOS ESPACIALES (ESDA)
 
 # Librería pygeoda (https://geodacenter.github.io/pygeoda/)
 import pygeoda
@@ -275,7 +272,10 @@ import pygeoda
 Guerry_geoda = pygeoda.open(Guerry)
 Guerry_geoda
 
+# Matriz de pesos espaciales
 Wq = pygeoda.queen_weights(Guerry_geoda)
+
+# Estadísticos de autocorrelación espacial para la variable Crm_prs
 LISA_Crm_prs = pygeoda.local_moran(Wq, Guerry_geoda['Crm_prs'])
 print(LISA_Crm_prs)
 
@@ -316,7 +316,7 @@ from splot.esda import moran_scatterplot, plot_moran, lisa_cluster, plot_local_a
 from splot.libpysal import plot_spatial_weights
 from libpysal.weights import Queen, Rook, KNN
 
-# Construcción de la matriz W de interacciones espaciales
+# Construcción de la matriz W de pesos espaciales
 Wnb = Queen.from_dataframe(Guerry)
 Wnb.transform = 'r'
 plot_spatial_weights(Wnb, Guerry)
@@ -329,7 +329,7 @@ Wnb.neighbors[3]
 Wnb.neighbors[4]
 Wnb.neighbors[5]
 
-# Cálculo de los estadísticos
+# Cálculo de los estadísticos de autocorrelación espacial
 
 # I de Moran global
 gmoran = Moran(Guerry['Crm_prs'], Wnb)
@@ -346,7 +346,7 @@ plt.show()
 lisa_cluster(lmoran, Guerry, p=0.05)
 plt.show()
 
-# ECONOMETRÍA ESPACIAL (Análisis confirmatorio de datos espaciales)
+# ECONOMETRÍA ESPACIAL: ANÁLISIS CONFIRMATORIO DE DATOS ESPACIALES
 
 # Modelos econométricos para explicar la variable Crm_prs
 

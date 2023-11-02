@@ -18,7 +18,7 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.8b (Dependencia espacial - Puntos): Precio de la vivienda en el condado de Lucas \[Ohio, Estados Unidos\] {.unnumbered}
+# Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas \[Ohio, Estados Unidos\] {.unnumbered}
 
 En esta aplicación se realiza un análisis de tipo espacial de la base de datos utilizada, que contiene información sobre los precios de venta y características de las viviendas del [condado de Lucas](https://en.wikipedia.org/wiki/Lucas_County,_Ohio), en el estado de Ohio, Estados Unidos. Concretamente, se proponen modelos de regresión en los que las variables de dicho modelo y/o los errores del mismo presentan autocorrelación espacial.
 :::
@@ -63,7 +63,8 @@ leaflet(house) %>% addTiles() %>%
 # Información sobre las coordenadas (longitud y latitud) de los datos
 # coords <- coordinates(house_sf)
 coords <- st_coordinates(house)
-# Construcción de matrices de pesos espaciales: vecinos más próximos (k=6, mediana de vecinos)
+# Construcción de matrices de pesos espaciales: 
+# Vecinos más próximos (k=6, mediana de vecinos)
 knn6 <- knearneigh(coords, k=6) 
 nb6nn <- knn2nb(knn6)
 # Gráficos de vecinos
