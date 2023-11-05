@@ -49,9 +49,6 @@ ggplot(ATIP, aes(x=X, y=Y)) + geom_point() +
 summary(lm_YX <- lm(Y ~ X, data = ATIP))
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
-# Gráficas de diagnóstico estándar de la regresión MCO
-par(mfrow=c(2,2))
-plot(lm_YX)
 # ¿Qué pasa si se eliminan las tres observaciones atípicas?
 lmtr_YX <- lm(Y ~ X, data = ATIP[1:19,])
 compareCoefs(lm_YX,lmtr_YX)
@@ -206,13 +203,8 @@ lzip(name, test)
 name = ["Chi^2", "Two-tail probability"]
 test = sms.omni_normtest(lm_YX.resid)
 lzip(name, test)
-# Gráficas de diagnóstico estándar de la regresión MCO
-exec(open("diagnos.py").read())
-plt.figure(3)
-cls = Linear_Reg_Diagnostic(lm_YX)
-fig, ax = cls()
 # Detección de observaciones atípicas
-plt.figure(4)
+plt.figure(3)
 fig = sm.graphics.influence_plot(lm_YX, criterion="cooks")
 fig.tight_layout(pad=1.0)
 plt.show()
@@ -248,7 +240,7 @@ ols = dict(a=ols.params["Intercept"], b=ols.params["X"], lb=ols_ci[0], ub=ols_ci
 print(models)
 print(ols)
 # Gráfica asociada
-plt.figure(5)
+plt.figure(4)
 n = models.shape[0]
 p1 = plt.plot(models.q, models.b, color="black", label="Reg.cuart.")
 p2 = plt.plot(models.q, models.ub, linestyle="dotted", color="black")

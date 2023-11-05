@@ -127,11 +127,19 @@ DEM_CARNE.describe()
 
 # Regresión por MCO del modelo lineal:
 # Q = beta1 + beta2*P + beta3*Y + e
-# Comando `smf.ols` de la librería `statsmodels` (<https://www.statsmodels.org/>)
+# Comando `smf.ols` de la librería `statsmodels` 
+# (<https://www.statsmodels.org/>)
 model = smf.ols(formula = "Q ~ P + Y", data = DEM_CARNE)
-lin_model = model.fit()
-print(lin_model.summary())
-
+lin_model_1 = model.fit()
+print(lin_model_1.summary())
+# Comando `linear_model` de la librería `scikit-learn` 
+# (<https://scikit-learn.org/>)
+from sklearn import linear_model
+from sklearn.metrics import r2_score
+lr = linear_model.LinearRegression()
+lin_model_2 = lr.fit (X=DEM_CARNE[["P", "Y"]], y=DEM_CARNE["Q"])
+print("Ordenada en el origen: \n", lin_model_2.intercept_)
+print("Efectos marginales: \n", lin_model_2.coef_)
 # Regresión por MCO del modelo logarítmico:
 # log(Q) = beta1 + beta2*log(P) + beta3*log(Y) + e
 model = smf.ols(formula = "np.log(Q) ~ np.log(P) + np.log(Y)", data = DEM_CARNE)
