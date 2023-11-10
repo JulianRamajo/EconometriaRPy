@@ -47,9 +47,15 @@ dim(VENTAS)
 head(VENTAS)
 tail(VENTAS)
 summary(VENTAS)
-# Matriz de diagramas de puntos de las variables
+# Matriz de diagramas de puntos y gráficas parciales
 library(alr4)
-scatterplotMatrix(~ V + P + A, id=list(n=3), smooth=list(span=0.75), data=VENTAS)
+scatterplotMatrix(~ V + P + A, data=VENTAS)
+scatterplot(V ~ P, data=VENTAS, 
+            smooth=list(smoother=loessLine, var=FALSE, lwd.smooth=3), 
+            col="blue", regLine=list(lwd=3))
+scatterplot(V ~ A, data=VENTAS, 
+            smooth=list(smoother=loessLine, var=FALSE, lwd.smooth=3), 
+            col="blue", regLine=list(lwd=3))
 # Modelo de ventas
 modelo_ventas_1 <- lm(V ~ P + A, data=VENTAS)
 summary(modelo_ventas_1)
@@ -80,9 +86,6 @@ avPlots(modelo_ventas_1)
 # Gráficos componente+residuos
 # (Component-plus-Residual o Partial-residual plots)
 crPlots(modelo_ventas_1) 
-# Gráficos CERES 
-# (Combining conditional Expectations and RESidual)
-ceresPlots(modelo_ventas_1) 
 # Modelo generalizado: especificación cuadrática en A
 modelo_ventas_2 <- lm(V ~ P + A + I(A^2), data=VENTAS)
 summary(modelo_ventas_2)
