@@ -64,6 +64,22 @@ datos_top_10_emisiones_total <- df1 %>%
   filter(Country %in% top_10_emisiones_total$Country)
 ggplot(datos_top_10_emisiones_total, aes(x=Year, y=Total, fill=Country)) +
     geom_area()
+# Restringir período temporal al año 2021
+df2 <- df %>% filter(Year == 2021)
+# Top 5 de emisiones totales en 2021 y % sobre el total
+top5_emisiones_2021 <- df2 %>% 
+  select(Country, Total) %>% 
+  mutate(Percent = round(Total/sum(Total), digits = 3)) %>% 
+  top_n(5, Percent)%>% 
+  arrange(desc(Percent)) %>%
+  mutate(Lab_percent = scales::percent(Percent))
+top5_emisiones_2021
+# Diagrama de sectores
+ggplot(top5_emisiones_2021, aes(x = "", y = Percent, fill = Country)) +
+    geom_col() + 
+    geom_text(aes(label = Lab_percent),
+              position = position_stack(vjust = 0.5)) +
+    coord_polar(theta = "y")
 # Top 10 de emisiones per capita medias 1970-2021
 top_10_emisiones_per_capita <- df1 %>%
   group_by(Country) %>%
@@ -122,10 +138,11 @@ leaflet(datos_geo) %>% setView(0, 0, zoom = 2) %>% addTiles() %>%
 #| message: false
 
 # Lectura de librerías
+import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
+import plotly.graph_objects as go
 import geopandas as gpd
 import folium
 # Lectura de datos
@@ -159,6 +176,18 @@ for country in pivot_data_total.columns:
     name=country,
     mode="none",
     stackgroup="one"))
+# Restringir período temporal al año 2021
+df2 = df[(df["Year"] == 2021)]
+# Top 10 de emisiones totales medias por país
+df2 = df2[["Country", "Total"]]
+# Calculating Percentage
+df2["Percent"] = (df2["Total"] / df2["Total"].sum())
+top5_emisiones_2021 = df2.nlargest(5, "Percent")
+top5_emisiones_2021
+# Diagrama de sectores
+fig, ax = plt.subplots()
+ax.pie(top5_emisiones_2021["Percent"], labels = top5_emisiones_2021["Country"], autopct = '%1.1f%%', normalize=False)
+plt.show()
 # Top 10 de emisiones per capita medias por país
 emisiones_per_capita_medias = df1.groupby("Country").agg({"Per Capita": "mean"})
 top_10_emisiones_per_capita = emisiones_per_capita_medias.nlargest(
