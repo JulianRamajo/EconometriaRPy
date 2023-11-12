@@ -20,7 +20,7 @@ format:
 ::: justify
 # Aplicación 1.3b (Gestión y representación gráfica de datos espaciales): Desarrollo humano al nivel mundial {.unnumbered}
 
-En esta aplicación se analizarán los datos de la última publicación del [*Global Data Lab*](https://globaldatalab.org/) sobre las variaciones habidas en el desarrollo humano, la salud, la educación y la renta dentro de más de 160 países ('*within*') y entre ellos ('*between*') desde 1990 hasta 2021.
+En esta aplicación se analizarán los datos de la publicación del [*Global Data Lab*](https://globaldatalab.org/) sobre las variaciones habidas en el desarrollo humano, la salud, la educación y la renta dentro de más de 160 países ('*within*') y entre ellos ('*between*') desde 1990 hasta 2021.
 
 Puede encontrarse toda la información detallada sobre el índice de desarrollo humano al nivel subnacional (SHDI en sus siglas en inglés) en la siguiente dirección: <https://www.nature.com/articles/sdata201938>. También se puede acceder a los datos originales desde esta otra página: <https://globaldatalab.org/shdi/download_files/>.
 
@@ -63,50 +63,45 @@ print(map)
 df1 <- filter(df, level != 'National')
 df1
 colnames(df1)
-# Selección de los años inicial y final
+# Selección del año de análisis, 2021
 df1$year <- as.character(df1$year)
-df1990 <- filter(df1, year == '1990')
-print(df1990)
 df2021 <- filter(df1, year == '2021')
 print(df2021)
 unique(df2021$continent)
 unique(df2021$country)
-# Estadística descriptiva (EDA)
+# Análisis exploratorio básico (EDA)
+# Estadísticos para todo el período
 df1 %>% 
   select(-c(...1,iso_code, year, country, GDLCODE, level, region,continent)) %>%
   summary()
-df1990 %>%
-  select(-c(...1,iso_code, year, country, GDLCODE, level, region,continent)) %>%
-  summary()
-df1990 %>%
-  select(-c(...1,iso_code, year, GDLCODE, level, region,continent)) %>%
-  filter(country == 'Spain') %>%
-  summary()
+# Estadísticos para el año 2021
 df2021 %>%
   select(-c(...1,iso_code, year, country, GDLCODE, level, region,continent)) %>%
   summary()
+# Estadísticos para España en el año 2021
 df2021 %>%
   select(-c(...1,iso_code, year, GDLCODE, level, region,continent)) %>%
   filter(country == 'Spain') %>% 
   summary()
-# Box plots: diferencias regionales
+# Diferencias regionales durante el período (box plots)
 # Comparación entre continentes
 df1 %>%
   plot_ly(x = ~shdi, y = ~continent, frame = ~year, color = ~continent, 
           type = 'box') %>%
     layout(xaxis = list(title = "SHDI"),
            yaxis = list(title = "Continente"))
-# Comparación entre países
+# Comparación entre varios países
 subset(df1, country %in% c("Spain", "Portugal", "France")) %>%
   plot_ly(x = ~shdi, y = ~country, frame = ~year, color = ~country, 
           type = 'box') %>%
     layout(xaxis = list(title = "SHDI"),
            yaxis = list(title = "País"))
-# Series temporales: evolución regional dentro de un país
-plot_ly(df1[df1$country == "Spain",], x = ~year, y = ~shdi, color = ~region, type = "scatter", mode = "lines") %>%
+# Evolución regional dentro de un país (series temporales)
+plot_ly(df1[df1$country == "Spain",], x = ~year, y = ~shdi, 
+        color = ~region, type = "scatter", mode = "lines") %>%
     layout(xaxis = list(title = "Año"),
            yaxis = list(title = "SHDI", type = "log"))
-# Scatter plots (gráficos de dispersión X-Y): correlaciones
+# Correlación desarrollo humano-renta per cápita (scatter plots)
 plot_ly(df1, 
         y = ~shdi, 
         x = ~lgnic,
@@ -118,21 +113,9 @@ plot_ly(df1,
     layout(xaxis = list(title = "Renta nacional bruta per capita (log)"),
            yaxis = list(title = "SHDI"))
 # Análisis exploratorio espacial (ESDA)
-# Mapas de distribución espacial del SHDI
-df1990_2 <- df1990 %>% 
-  rename(GDLcode = GDLCODE)
+# Mapa de distribución espacial del SHDI en 2021
 df2021_2 <- df2021 %>% 
   rename(GDLcode = GDLCODE)
-# Año 1990
-gdf1990 <- inner_join(map, df1990_2, by = "GDLcode")
-colnames(gdf1990)
-print(gdf1990)
-ggplot(gdf1990) +
-  geom_sf(aes(fill=shdi)) +
-  theme_bw() +
-  labs(title = "Distribución espacial del SHDI en 1990") +
-  scale_fill_viridis(option="OrRd")
-# Año 2021
 gdf2021 <- inner_join(map, df2021_2, by = "GDLcode")
 colnames(gdf2021)
 print(gdf2021)
@@ -147,7 +130,7 @@ ggplot(gdf2021Spain) + geom_sf(aes(fill=shdi)) +
   theme_bw() +
   labs(title = "Distribución espacial del SHDI español en 2021") +
   scale_fill_viridis(option="OrRd")
-# Sólo las regiones peninsulares
+# Gráfica sólo con las regiones peninsulares
 ggplot(gdf2021Spain_2 <- gdf2021Spain[-c(14,17),]) + geom_sf(aes(fill=shdi)) +
   theme_bw() +
   labs(title = "Distribución espacial del SHDI peninsular español en 2021") +
@@ -192,22 +175,20 @@ map
 df1 = df[df.level != 'National']
 df1
 df1.columns
-# Selección de los años inicial y final
+# Selección del año de análisis, 2021
 df1["year"]= df1["year"].astype(str)
-df1990 = df1[df1['year'] == '1990']
-df1990
 df2021 = df1[df1['year'] == '2021']
 df2021
 df2021['continent'].unique()
 df2021['country'].unique()
-# Estadística descriptiva (EDA)
+# Análisis exploratorio básico (EDA)
+# Estadísticos para todo el período
 df1.loc[:, (df1.columns != 'iso_code') & (df1.columns != 'year') & (df1.columns != 'country') & (df1.columns != 'GDLCODE') & (df1.columns != 'level') & (df1.columns != 'region') & (df1.columns != 'continent')].describe().round(3)
-df1990.describe().round(3)
-df1990.query("country == 'Spain'").describe().round(3)
+# Estadísticos para el año 2021
 df2021.describe().round(3)
-#df2021['shdi'].describe().round(3)
+# Estadísticos para España en el año 2021
 df2021.query("country == 'Spain'").describe().round(3)
-# Box plots: diferencias regionales
+# Diferencias regionales durante el período (box plots)
 # Comparación entre continentes
 px.box(df1,
          x = 'shdi',
@@ -232,7 +213,7 @@ px.box(df1[df1['country'].isin(['Spain', 'Portugal', 'France'])],
          labels=dict(country = "País",
                      shdi ="SHDI")
          )
-# Series temporales: evolución regional dentro de un país
+# Evolución regional dentro de un país (series temporales)
 fig = px.line(
     df1[df1['country'].isin(['Spain'])],
     x="year",
@@ -249,7 +230,7 @@ fig = px.line(
     height= 500
     )
 fig.update_layout(showlegend=False)
-# Scatter plots (gráficos de dispersión X-Y): correlaciones
+# Correlación desarrollo humano-renta per cápita (scatter plots)
 px.scatter(df1,
             y = "shdi", 
             x = "lgnic",
@@ -267,26 +248,10 @@ px.scatter(df1,
                         shdi="SHDI")
             )
 # Análisis exploratorio espacial (ESDA)
-# Mapas de distribución espacial del SHDI
-df1990_2 = df1990.copy()   
-df1990_2 = df1990_2.rename(columns = {"GDLCODE": "GDLcode"})
+# Mapa de distribución espacial del SHDI en 2021
 df2021_2 = df2021.copy()   
 df2021_2 = df2021_2.rename(columns = {"GDLCODE": "GDLcode"})
-gdf1990 = map.merge(df1990_2, on = 'GDLcode', how = 'left')
 gdf2021 = map.merge(df2021_2, on = 'GDLcode', how = 'left')
-# Año 1990
-gdf1990.columns
-gdf1990
-fig, ax = plt.subplots(1,1)
-gdf1990.plot(column="shdi",
-           #scheme='BoxPlot' ('quantiles', 'FisherJenks')
-           #cmap='OrRd', 
-           legend=True,
-           ax=ax)
-plt.title('Distribución espacial del SHDI en 1990')
-plt.tight_layout()
-plt.show()
-# Año 2021
 gdf2021.columns
 gdf2021
 fig, ax = plt.subplots(1,1)
@@ -306,7 +271,7 @@ gdf2021Spain.plot(column="shdi",
 plt.title('Distribución del SHDI español en 2021')
 plt.tight_layout()
 plt.show()
-# Sólo las regiones peninsulares
+# Gráfica sólo con las regiones peninsulares
 gdf2021Spain_2 = gdf2021Spain.drop(labels=[13,16])
 gdf2021Spain_2
 fig, ax = plt.subplots(1,1)
