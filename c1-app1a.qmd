@@ -20,7 +20,7 @@ format:
 ::: justify
 # Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del *tidyverse* {.unnumbered}
 
-En esta aplicación se pondrán ejemplos básicos en R y Python usando la filosofía *tidyverse*, la cual supone una 'forma de trabajar' dentro de cada lenguaje con el objetivo de "preparar" los datos originales para un tratamiento estadístico posterior:
+En esta aplicación se pondrán ejemplos básicos en R y Python usando la filosofía *tidyverse*, que supone una 'forma de trabajar' dentro de cada lenguaje con el objetivo de "preparar" los datos originales para un tratamiento estadístico posterior:
 
 *"A grandes rasgos, el tidyverse es un lenguaje para resolver los retos de la ciencia de datos \[...\]. Su objetivo principal es facilitar una conversación entre un humano y un ordenador acerca de los datos. De forma menos abstracta, el tidyverse es una colección de \[...\] librerías que comparten una filosofía de diseño de alto nivel y unas estructuras gramatical y de datos de bajo nivel, de modo que aprender una librería facilita el aprendizaje de la siguiente."* (Traducido al español de Wickham et al., 2019)
 :::
@@ -28,15 +28,19 @@ En esta aplicación se pondrán ejemplos básicos en R y Python usando la filoso
 ## Código R {.unnumbered}
 
 ::: justify
-En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión analizada:
+En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión analizada en la aplicación:
 
 1.  Datos ordenados: *Tidy Data* (<https://www.jstatsoft.org/article/view/v059i10>)
 
 2.  Gestión de datos y gráficas en R: macro-librería `tidyverse` (<https://www.tidyverse.org/>)
 
--   <https://tidyr.tidyverse.org/articles/tidy-data.html>
+-   <https://tidyr.tidyverse.org/articles/tidy-data.html> (datos ordenados)
 
 -   <https://tidyverse.tidyverse.org/articles/paper.html>
+
+-   <https://es.r4ds.hadley.nz/12-tidy.html> (*tidy data*)
+
+-   <https://es.r4ds.hadley.nz/09-wrangle.html> (*data wrangling*)
 
 -   <https://education.rstudio.com/blog/2020/07/teaching-the-tidyverse-in-2020-part-1-getting-started/>
 
@@ -48,9 +52,7 @@ En las siguientes páginas web se pueden encontrar los detalles sobre cada cuest
 
 Sobre los datos utilizados en la aplicación R:
 
-1.  *Gapminder* (<https://www.gapminder.org/fw/world-health-chart/>)
-
-Los datos por países se han extraído de la base de datos del Banco Mundial (<https://data.worldbank.org/>), usando la librería `WDI` (<https://vincentarelbundock.github.io/WDI/index.html>).
+1.  *Gapminder* (<https://www.gapminder.org/fw/world-health-chart/>): los datos por países se han extraído de la base de datos del Banco Mundial (<https://data.worldbank.org/>), usando la librería `WDI` (<https://vincentarelbundock.github.io/WDI/index.html>).
 
 2.  *NYC_Flights_2013* (<https://github.com/tidyverse/nycflights13>)
 :::
@@ -68,16 +70,24 @@ library(deepdep)
 dep_tidyverse <- deepdep("tidyverse", depth = 1)
 plot_dependencies(dep_tidyverse, "circular")
 # Lectura de datos
+# https://es.r4ds.hadley.nz/11-import.html
 gapminder <- read_csv("data/GAPMINDER.csv")
+# https://es.r4ds.hadley.nz/10-tibble.html
 class(gapminder)
 # Cambio de nombres de variables
 gapminder <- gapminder %>% 
-  rename(year = date, gdpPercap = NY.GDP.PCAP.CD, lifeExp = SP.DYN.LE00.IN, pop = SP.POP.TOTL)
+  rename(year = date, 
+         gdpPercap = NY.GDP.PCAP.CD, 
+         lifeExp = SP.DYN.LE00.IN, 
+         pop = SP.POP.TOTL)
 # Datos iniciales y finales
 head(gapminder)
 tail(gapminder)
-# Gramática de datos con dplyr (https://dplyr.tidyverse.org/) y 'tuberías' (`%>%`)
-# (https://es.r4ds.hadley.nz/transform.html#transformaciones-agrupadas-y-filtros)
+# Manejo y transformación de datos
+# (https://es.r4ds.hadley.nz/05-transform.html)
+#
+# Librería dplyr (https://dplyr.tidyverse.org/) 
+# y 'tuberías' (https://es.r4ds.hadley.nz/18-pipes.html)
 #
 # "Verbos" de dplyr 
 # select
@@ -95,7 +105,7 @@ gapminder_arranged_ascending <- arrange(gapminder_summarised, AVG_GDP)
 gapminder_arranged_ascending
 gapminder_arranged_descending <- arrange(gapminder_summarised, -AVG_GDP)
 gapminder_arranged_descending
-# El operador tubería (pipe) del tidyverse: %>%
+# Operador tubería (pipe) del tidyverse: %>%
 AVG_GDP <- 
   gapminder %>% 
   select(year, country, pop, gdpPercap) %>% 
@@ -105,30 +115,35 @@ AVG_GDP <-
   summarise(AVG_GDP=mean(GDP)) %>% 
   arrange(-AVG_GDP)
 AVG_GDP
-# La tubería nativa de R: |>
+# Tubería nativa de R: |>
 gapminder |> subset(year==2021) |> head()
-# Familia de operaciones join (https://es.r4ds.hadley.nz/datos-relacionales.html)
+# Familia de operaciones join 
+# (https://es.r4ds.hadley.nz/13-relational-data.html)
+#
 # `inner_join(df1, df2)`
 # `left_join(df1, df2)`
 # `right_join(df1, df2)`
 # `full_join(df1, df2)`
 # `semi_join(df1, df2)`
 # `anti_join(df1, df2)`
+#
 # Lectura de datos
 library(nycflights13)
 flights 
 planes
 # Ejemplo de left_join
 left_join(flights, planes) %>%
-  select(year, month, day, dep_time, arr_time, carrier, flight, tailnum, type, model)
+  select(year, month, day, dep_time, arr_time, 
+         carrier, flight, tailnum, type, model)
 # Para evitar errores o malas asignaciones automáticas (tailnum y year) 
 # debe usarse el argumento 'by = '
 # Ejemplos de otras operacionesn pueden encontrarse en:
 # https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html
 left_join(flights, planes, by = "tailnum") %>%
-  select(month, day, dep_time, arr_time, carrier, flight, tailnum, type, model)
-
+  select(month, day, dep_time, arr_time, 
+         carrier, flight, tailnum, type, model)
 # Gramática de gráficas (ggplot2) [https://ggplot2.tidyverse.org/]
+# (https://es.r4ds.hadley.nz/03-visualize.html)
 p  <-  ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp))
 # Gráfica 0
 p0  <-  p + geom_point(alpha = 0.3)
@@ -142,10 +157,10 @@ p1
 # Gráfica 2: colores por regiones y tamaño por población
 p2  <-  p +
 geom_point(aes(size = pop, col = region), alpha = 0.3) +
-scale_color_brewer(name = "Región", palette = "Set1") + # Diferente  escala de colores
-scale_size(name = "Población", labels = scales::comma) + # Diferente escala de puntos
-scale_x_log10(labels = scales::dollar) + # Escala logarítmica en el eje X y unidades de $
-labs(x = "PIB per capita (log)", y = "Experanza de vida al nacer") + # Títulos en los ejes
+scale_color_brewer(name = "Región", palette = "Set1") + # Escala de colores
+scale_size(name = "Población", labels = scales::comma) + # Escala de puntos
+scale_x_log10(labels = scales::dollar) + # Esc. logarítmica eje X, unidades $
+labs(x = "PIB per capita (log)", y = "Experanza de vida al nacer") + # Títulos
 theme_minimal() # Tema mínimo (b&w)
 p2
 # Gráfica 3: burbujas de Hans-Rosling
@@ -176,6 +191,7 @@ p4  <-  ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country))
   ease_aes('linear')
 p4
 # Análisis exploratorio de datos (EDA)
+# (https://es.r4ds.hadley.nz/07-eda.html)
 library(skimr)
 skim(gapminder)
 # Gráficas bivariantes con  GGally  (https://ggobi.github.io/ggally/)
@@ -193,7 +209,7 @@ ggplot(data = gapminder, aes(x = year, y = lifeExp)) +
 ## Código Python {.unnumbered}
 
 ::: justify
-En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión analizada:
+En las siguientes páginas web se pueden encontrar los detalles sobre cada cuestión analizada en este lenguaje:
 
 1.  Gestión *a la tidyverse* de datos y gráficos en Python:
 
@@ -203,7 +219,7 @@ En las siguientes páginas web se pueden encontrar los detalles sobre cada cuest
 
 Sobre los datos utilizados en la aplicación Python:
 
-1.  `mtcars` (<https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html>)
+-   `mtcars` (<https://cran.r-project.org/web/packages/explore/vignettes/explore_mtcars.html>)
 :::
 
 ```{python}
@@ -212,9 +228,8 @@ Sobre los datos utilizados en la aplicación Python:
 #| message: false
 
 # Lectura de librerías
-import pandas as pd
 import numpy as np
-import statsmodels.formula.api as smf
+import pandas as pd
 import matplotlib.pyplot as plt
 from siuba import *
 from plotnine import *
