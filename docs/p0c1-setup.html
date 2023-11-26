@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Econometría - Instalación y configuración de R y Python en RStudio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p0c2-rpy-comp.html" rel="next">
+<link href="./p0-aspectos-tecnicos.html" rel="prev">
+<link href="./EconMetricsRPy-logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p0-aspectos-tecnicos.html">CAPÍTULO 0: ASPECTOS TÉCNICOS</a></li><li class="breadcrumb-item"><a href="./p0c1-setup.html">Instalación y configuración de R y Python en RStudio</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Econometría</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/JulianRamajo/EconometriaRPy" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PREFACIO</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p0-aspectos-tecnicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 0: ASPECTOS TÉCNICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c1-setup.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Instalación y configuración de R y Python en RStudio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c2-rpy-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R versus Python: Comparación de lenguajes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c3-reticulate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programación conjunta en R y Python con reticulate</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p1-introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 1: CONCEPTOS BÁSICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Conceptos básicos de la econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del <em>tidyverse</em></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3b (Gestión y representación gráfica de datos espaciales): Desarrollo humano al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.4 (Regresiones con datos de corte transversal): Demanda familiar de carne</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p2-mrl-basico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo de regresión lineal y sus hipótesis básicas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p3-mrl-extendido.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Diagnosis, correcciones y extensiones del modelo de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas ‘morales’ en Francia en 1830</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas [Ohio, Estados Unidos]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.9 (Información muestral - Falta de observaciones): Exclusión social en el comportamiento de las aseguradoras de Chicago</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.10 (Información muestral - Multicolinealidad): Análisis de la rentabilidad empresarial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">BIBLIOGRAFÍA</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Instalación y configuración de R y Python en RStudio</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+.justify { text-align: justify !important }
+</style>
+</div>
+<div class="justify">
+<p>En este apartado se darán las indicaciones necesarias para la instalación del software necesario para ejecutar las aplicaciones econométricas de cada tema.</p>
+<section id="nota-introductoria" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="nota-introductoria">Nota introductoria</h2>
+<p>En las distintas aplicaciones del libro se usan los lenguajes de programación R (<a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>) y Python (<a href="https://www.python.org" class="uri">https://www.python.org</a>), utilizando RStudio (<a href="https://www.rstudio.com/" class="uri">https://www.rstudio.com/</a>) como entorno de ejecución (IDE) de dichos lenguajes.</p>
+<p>También pueden emplearse otras opciones alternativas, como JupyterLab (<a href="https://jupyter.org/" class="uri">https://jupyter.org/</a>), Visual Studio Code (<a href="https://code.visualstudio.com/" class="uri">https://code.visualstudio.com/</a>), Google Colab (<a href="https://colab.research.google.com/?hl=es" class="uri">https://colab.research.google.com/?hl=es</a>), Amazon SageMaker Studio Lab (<a href="https://studiolab.sagemaker.aws/" class="uri">https://studiolab.sagemaker.aws/</a>), DataCamp Workspace (<a href="https://www.datacamp.com/workspace" class="uri">https://www.datacamp.com/workspace</a>) o Deepnote Worspace (<a href="https://deepnote.com/workspace" class="uri">https://deepnote.com/workspace</a>).</p>
+</section>
+<section id="instalación-y-configuración-de-r-en-rstudio" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instalación-y-configuración-de-r-en-rstudio">Instalación y configuración de R en RStudio</h2>
+<ol type="1">
+<li><p>Descargar e instalar <strong>R</strong> y <strong>RStudio</strong>: <a href="https://posit.co/download/rstudio-desktop/" class="uri">https://posit.co/download/rstudio-desktop/</a></p></li>
+<li><p>(Windows) Instalar el <strong>software Rtools</strong> (<a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a>) y,</p></li>
+<li><p>Desde R, instalar la <strong>librería <code>Rcpp</code></strong>:</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"Rcpp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>Abrir RStudio e instalar la colección de librerías <code>tidyverse</code> (<a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>), y opcionalmente las librerías <code>shiny</code> y <code>tidymodels</code>:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerías básicas para analizar y explorar</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerías complementarias (opcionales)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Para comunicar e interactuar</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"shiny"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Para modelizar y predecir</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidymodels"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" type="1">
+<li>Una vez instalados R y RStudio, y sus librerías generales básicas, el siguiente paso consiste en instalar las librerías específicas para realizar análisis de tipo estadístico y/o econométrico. Hay una <a href="https://cran.r-project.org/web/packages/available_packages_by_name.html">gama muy amplia de paquetes disponibles en R</a>, aunque afortunadamente la mayoría de las librerías más populares, o muy especializadas, están agrupadas en diferentes categorías en <strong>CRAN TASK Views</strong> (<a href="https://cran.r-project.org/web/views/" class="uri">https://cran.r-project.org/web/views/</a>). Para descargarse estos paquetes de <strong>macro-librerías</strong>, primero debe instalarse la <strong>librería <code>ctv</code></strong>, y posteriormente se instalarán los conjuntos de librerías homogéneos:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ctv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerías básica de econometría</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ctv<span class="sc">::</span><span class="fu">install.views</span>(<span class="st">"Econometrics"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerías complementarias (opcionales)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ctv<span class="sc">::</span><span class="fu">install.views</span>(<span class="st">"TimeSeries"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ctv<span class="sc">::</span><span class="fu">install.views</span>(<span class="st">"Spatial"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ctv<span class="sc">::</span><span class="fu">install.views</span>(<span class="st">"SpatioTemporal"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>ctv<span class="sc">::</span><span class="fu">install.views</span>(<span class="st">"MissingData"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>ctv<span class="sc">::</span><span class="fu">install.views</span>(<span class="st">"Robust"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ctv<span class="sc">::</span><span class="fu">install.views</span>(<span class="st">"Finance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Es recomendable instalar sólo los paquetes necesarios para el análisis econométrico “básico”, <a href="https://cran.r-project.org/web/views/Econometrics.html" class="uri">https://cran.r-project.org/web/views/Econometrics.html</a>. Siempre se pueden instalar paquetes adicionales más adelante; así, la IDE RStudio instalada nos avisará cuándo un <em>script</em> contenga alguna librería no instalada y nos dará la opción de descargarla antes de ejecutar el código.</p>
+<p>No obstante el comentario anterior, tras la instalación de la <strong>macro-librería <code>Econometrics</code></strong>, para la ejecución de todos los <em>scripts</em> de R correspondientes a la aplicaciones econométricas seleccionadas en el libro se necesitan algunas librerías específicas que se detallan a continuación, las cuales pueden instalarse desde el principio, o instalarlas cuando RStudio lo pida a la vista de la líneas de cógigo de R que se intenten ejecutar:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"skimr"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"modelsummary"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"easystats"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"effects"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"marginaleffects"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"jtools"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"plotly"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggstatsplot"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"esquisse"</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"viridis"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"RColorBrewer"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"stargazer"</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"huxtable"</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"fpp3"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"gvlma"</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"alr4"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"skedastic"</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"nlWaldTest"</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"orcutt"</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"faraway"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"mctest"</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ivreg"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"sampleSelection"</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"geojsonsf"</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"leaflet"</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"sf"</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"mapsf"</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"mapview"</span>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tmap"</span>)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"spdep"</span>)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"spatialreg"</span>)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rgeoda"</span>)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"DataEditR"</span>)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyquant"</span>)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"scales"</span>)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"palmerpenguins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="instalación-y-configuración-de-python-en-rstudio" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="instalación-y-configuración-de-python-en-rstudio">Instalación y configuración de Python en RStudio</h2>
+<p>Hay varias formas de configurar Python en el ordenador. Los tres métodos más frecuentes son los siguientes:</p>
+<ol type="a">
+<li>Distribución <strong>estándar</strong>: <a href="https://www.python.org/" class="uri">https://www.python.org/</a></li>
+<li>Distribución <strong>Anaconda</strong>: <a href="https://www.anaconda.com/" class="uri">https://www.anaconda.com/</a></li>
+<li>Distribución <strong>Miniconda</strong>: <a href="https://docs.conda.io/en/latest/miniconda.html" class="uri">https://docs.conda.io/en/latest/miniconda.html</a></li>
+</ol>
+<p>Tanto la distribución Anaconda como la Miniconda utilizan la librería <code>conda</code> en sus instalaciones de Python, la cual permite descargar e instalar paquetes adicionales de Python. La instalación estándar de Python utiliza <code>pip</code> para descargar e instalar librerías adicionales de Python.</p>
+<p>Para las necesidades de este libro, donde se ejecutarán simultáneamente líneas de código (<em>chunks</em>) en R y Python, hay que disponer en el ordenador de una las distribuciones, <strong>Python estándar</strong> o <strong>Miniconda</strong>. Veamos a continuación cómo hacerlo; los detalles pueden encontrarse <a href="https://support.posit.co/hc/en-us/articles/1500007929061-Using-Python-with-the-RStudio-IDE">aquí</a>.</p>
+<p>Si se usa la primera distribución, <strong>Python estándar</strong>, lo primero que hay que hacer es ir a la página de descargas de la web oficial de Python, <a href="https://www.python.org/downloads/" class="uri">https://www.python.org/downloads/</a>, y luego buscar e instalar la versión correspondiente al sistema operativo utilizado.</p>
+<p>A continuación, una vez realizada la instalación, para configurar el entorno de Python en RStudio hay que instalar y ejecutar la librería de R <code>reticulate</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"reticulate"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>y luego hay que realizar las acciones siguientes desde RStudio: ir al menú de herramientas (Tools), luego a opciones globales (Global Options), y en el listado de la izquierda (Options) hay que ir a Python y asignar en la casilla del intérprete el directorio donde está instalado el software.</p>
+<p>Por ejemplo, si se tiene instalado Python 3.XX en un ordenador con el sistema operativo Windows o macOS, y se quiere utilizar esa versión, debe utilizarse la siguiente línea de comandos indicando la localización correspondiente a la instalación de Python:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">use_python</span>(<span class="st">"C:/.../python3.XX"</span>) <span class="co"># En Windows</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">use_python</span>(<span class="st">"/usr/local/bin/python3.XX"</span>) <span class="co"># En macOS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si se elige la segunda distribución, <strong>Miniconda</strong>, lo único que hay que hacer es configurar el entorno de Python en RStudio con la librería de R <code>reticulate</code>. Así, una vez instalada esta última, cuando se ejecuta por primera vez dicho paquete se crea una instalación <code>miniconda</code> adaptada a R llamada <strong>R-Miniconda</strong>; también se puede instalar <code>miniconda</code> manualmente utilizando el comando <em>install_miniconda()</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"reticulate"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_miniconda</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Sea cual sea la opción elegida, Python estándar o Miniconda, para comprobar que existe alguna instalación de Python disponible se pueden usar los siguientes comandos en R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">conda_list</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">conda_version</span>()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">py_config</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si no aparece ninguna instalación de Python hay que volver a intentar la instalación de Python estándar o la versión Miniconda.</p>
+<p>Para comprobar que el entorno Python se ha creado adecuadamente se puede entrar en la consola de Python y hacer algún cálculo sencillo para ver si la instalación es correcta.</p>
+<p>Así, desde R, tras cargar la librería <code>reticulate</code>, se debe usar el comando <em>repl_python()</em> y luego, ya en la consola de Python, se pueden teclear por ejemplo los siguientes comandos:</p>
+<ul>
+<li><em>import numpy as np</em></li>
+<li><em>a = np.sqrt(2)</em></li>
+<li><em>print(a)</em></li>
+<li><em>x = 42*2</em></li>
+<li><em>print(x)</em></li>
+<li><em>exit</em></li>
+</ul>
+<p>También se pueden ejecutar algunos comandos Python desde R importando la librería correspondiente:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>np <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">"numpy"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>np<span class="sc">$</span><span class="fu">sqrt</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O se puede ejecutar un <em>script</em> de Python y mostrar los resultados en RStudio:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">11</span>))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.randn(<span class="dv">10</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">0</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y,  linestyle <span class="op">=</span> <span class="st">"--"</span>, color <span class="op">=</span> <span class="st">"blue"</span>, marker <span class="op">=</span> <span class="st">"s"</span>, label <span class="op">=</span> <span class="st">"Línea 1"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Ejemplo de gráfico de líneas"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>plt.legend(loc <span class="op">=</span> <span class="st">"upper left"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="instalación-de-librerías-python" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instalación-de-librerías-python">Instalación de librerías Python</h3>
+<p>El siguiente paso consiste en instalar las librerías de Python pertinentes en el entorno de Python recién creado.</p>
+<p>Si se usa la versión estándar de Python, se instalarán las librerías a través de <code>pip</code> en el terminal de Windows o macOS:</p>
+<ul>
+<li><p><em>pip install –upgrade nombre-librería</em> # En Windows</p></li>
+<li><p><em>pip3 install –upgrade nombre-librería</em> # En macOS</p></li>
+</ul>
+<p>Si se utiliza R-Miniconda a través de <code>reticulate</code>, se pueden instalar las librerías desde RStudio utilizando el comando <em>py_install</em>. Debajo se muestran los comandos necesarios para la instalación de todas las librerías Python necesarias en este libro; si se utilizase la opcíon Python estándar habría que usar el comando <code>pip</code> mostrado anteriormente, instalando una a una todas las librerías sugeridas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerías básicas</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"numpy"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"pandas"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"statsmodels"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"matplotlib"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerías complementarias</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"seaborn"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"plotly"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"plotnine"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"pandas-bokeh"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"scipy"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"scikit-learn"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"linearmodels"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"arch"</span>, <span class="at">pip=</span><span class="cn">TRUE</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"datetime"</span>, <span class="at">pip =</span>  <span class="cn">TRUE</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"stargazer"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"xlrd"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"category_encoders"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"palmerpenguins"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"siuba"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"plydata"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"skimpy"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"yfinance"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"geopandas"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"folium"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"leafmap"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"chart_studio"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"pysal"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">"pygeoda"</span>, <span class="at">pip =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p0-aspectos-tecnicos.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">CAPÍTULO 0: ASPECTOS TÉCNICOS</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p0c2-rpy-comp.html" class="pagination-link">
+        <span class="nav-page-text">R versus Python: Comparación de lenguajes</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

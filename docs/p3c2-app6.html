@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Econometría - Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p3c2-app7.html" rel="next">
+<link href="./p3c2-app5.html" rel="prev">
+<link href="./EconMetricsRPy-logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p3-mrl-extendido.html">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</a></li><li class="breadcrumb-item"><a href="./p3c2-app6.html">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Econometría</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/JulianRamajo/EconometriaRPy" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PREFACIO</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p0-aspectos-tecnicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 0: ASPECTOS TÉCNICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c1-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instalación y configuración de R y Python en RStudio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c2-rpy-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R versus Python: Comparación de lenguajes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c3-reticulate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programación conjunta en R y Python con reticulate</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p1-introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 1: CONCEPTOS BÁSICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Conceptos básicos de la econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del <em>tidyverse</em></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3b (Gestión y representación gráfica de datos espaciales): Desarrollo humano al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.4 (Regresiones con datos de corte transversal): Demanda familiar de carne</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p2-mrl-basico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo de regresión lineal y sus hipótesis básicas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p3-mrl-extendido.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Diagnosis, correcciones y extensiones del modelo de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app6.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas ‘morales’ en Francia en 1830</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas [Ohio, Estados Unidos]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.9 (Información muestral - Falta de observaciones): Exclusión social en el comportamiento de las aseguradoras de Chicago</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.10 (Información muestral - Multicolinealidad): Análisis de la rentabilidad empresarial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">BIBLIOGRAFÍA</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#código-r" id="toc-código-r" class="nav-link active" data-scroll-target="#código-r">Código R</a></li>
+  <li><a href="#código-python" id="toc-código-python" class="nav-link" data-scroll-target="#código-python">Código Python</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+.justify { text-align: justify !important }
+</style>
+</div>
+<div class="justify">
+<p>En esta aplicación se estimará un modelo dinámico para el precio de la gasolina en el que los errores muestran clústeres de volatilidad (heteroscedasticidad autorregresiva condicional, ARCH).</p>
+</div>
+<section id="código-r" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="código-r">Código R</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dynlm)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlWaldTest)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FinTS)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rugarch)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/GASOL_CRUDO.csv"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts <span class="ot">&lt;-</span> <span class="fu">read.zoo</span>(GASOL_CRUDO)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfica de las series temporales</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GASOL_CRUDO_ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo dinámico para el precio de la gasolina (precio minorista)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dyn_model <span class="ot">&lt;-</span> <span class="fu">dynlm</span> (<span class="fu">log</span>(PGASOL) <span class="sc">~</span> D2008JD <span class="sc">+</span> time <span class="sc">+</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">L</span>(<span class="fu">log</span>(PGASOL), <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">L</span>(<span class="fu">log</span>(PCRUDO),<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>), </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data=</span>GASOL_CRUDO_ts)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dyn_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Time series regression with "zoo" data:
+Start = 2000-01-15, End = 2013-07-13
+
+Call:
+dynlm(formula = log(PGASOL) ~ D2008JD + time + L(log(PGASOL), 
+    1:2) + L(log(PCRUDO), 0:2), data = GASOL_CRUDO_ts)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.296134 -0.027702  0.002138  0.029019  0.289684 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)          -8.127e-02  6.474e-02  -1.255 0.209773    
+D2008JD              -3.358e-02  1.332e-02  -2.520 0.011949 *  
+time                  7.733e-05  2.371e-05   3.261 0.001162 ** 
+L(log(PGASOL), 1:2)1  5.176e-01  3.600e-02  14.378  &lt; 2e-16 ***
+L(log(PGASOL), 1:2)2  3.003e-01  3.508e-02   8.560  &lt; 2e-16 ***
+L(log(PCRUDO), 0:2)0  1.524e-01  4.029e-02   3.781 0.000169 ***
+L(log(PCRUDO), 0:2)1  1.117e-01  5.185e-02   2.154 0.031616 *  
+L(log(PCRUDO), 0:2)2 -1.304e-01  4.205e-02  -3.100 0.002012 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.06243 on 697 degrees of freedom
+Multiple R-squared:  0.9663,    Adjusted R-squared:  0.966 
+F-statistic:  2858 on 7 and 697 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación de efectos parciales a corto y largo plazo</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nlConfint</span>(dyn_model, <span class="fu">c</span>(<span class="st">"b[6]"</span>,<span class="st">"(b[6]+b[7]+b[8])/(1-b[4]-b[5])"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                   value      2.5 %    97.5 %
+b[6]                           0.1523516 0.07338349 0.2313197
+(b[6]+b[7]+b[8])/(1-b[4]-b[5]) 0.7338844 0.60592473 0.8618440</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nlWaldtest</span>(dyn_model, <span class="st">"b[6]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wald Chi-square test of a restriction on model parameters
+
+data:  dyn_model
+Chisq = 14.298, df = 1, p-value = 0.000156</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nlWaldtest</span>(dyn_model, <span class="st">"(b[6]+b[7]+b[8])/(1-b[4]-b[5])"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wald Chi-square test of a restriction on model parameters
+
+data:  dyn_model
+Chisq = 126.36, df = 1, p-value &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contraste de heteroscedasticidad autoregresiva condicional (efectos ARCH)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>resid <span class="ot">&lt;-</span> <span class="fu">as.zoo</span>(dyn_model<span class="sc">$</span>residuals)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">dynlm</span>(<span class="fu">I</span>(dyn_model<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>) <span class="sc">~</span> <span class="fu">L</span>(<span class="fu">I</span>(dyn_model<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>), <span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Time series regression with "numeric" data:
+Start = 1(1), End = 704(1)
+
+Call:
+dynlm(formula = I(dyn_model$residuals^2) ~ L(I(dyn_model$residuals^2), 
+    1:1))
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.019284 -0.002994 -0.002524 -0.000487  0.084493 
+
+Coefficients:
+                                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                      0.0029745  0.0003589   8.289 5.82e-16 ***
+L(I(dyn_model$residuals^2), 1:1) 0.2166995  0.0365381   5.931 4.73e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.008756 on 702 degrees of freedom
+Multiple R-squared:  0.04771,   Adjusted R-squared:  0.04636 
+F-statistic: 35.17 on 1 and 702 DF,  p-value: 4.731e-09</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ArchTest</span>(dyn_model<span class="sc">$</span>residuals, <span class="at">lag =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    ARCH LM-test; Null hypothesis: no ARCH effects
+
+data:  dyn_model$residuals
+Chi-squared = 33.591, df = 1, p-value = 6.8e-09</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">dynlm</span>(<span class="fu">I</span>(dyn_model<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>) <span class="sc">~</span> <span class="fu">L</span>(<span class="fu">I</span>(dyn_model<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>), <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Time series regression with "numeric" data:
+Start = 1(1), End = 703(1)
+
+Call:
+dynlm(formula = I(dyn_model$residuals^2) ~ L(I(dyn_model$residuals^2), 
+    1:2))
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.016743 -0.002748 -0.002240 -0.000395  0.083559 
+
+Coefficients:
+                                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                       0.0025408  0.0003727   6.818 2.00e-11 ***
+L(I(dyn_model$residuals^2), 1:2)1 0.1909697  0.0373769   5.109 4.18e-07 ***
+L(I(dyn_model$residuals^2), 1:2)2 0.1413477  0.0370799   3.812  0.00015 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.008671 on 700 degrees of freedom
+Multiple R-squared:  0.06865,   Adjusted R-squared:  0.06599 
+F-statistic:  25.8 on 2 and 700 DF,  p-value: 1.547e-11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ArchTest</span>(dyn_model<span class="sc">$</span>residuals, <span class="at">lag =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    ARCH LM-test; Null hypothesis: no ARCH effects
+
+data:  dyn_model$residuals
+Chi-squared = 48.261, df = 2, p-value = 3.313e-11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo GARCH para los errores del modelo</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Librería tseries</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>resid.ARCH <span class="ot">&lt;-</span> <span class="fu">garch</span>(resid,<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="at">trace=</span><span class="cn">FALSE</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resid.ARCH)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+garch(x = resid, order = c(0, 2), trace = FALSE)
+
+Model:
+GARCH(0,2)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-5.13757 -0.48437  0.04168  0.51027  5.64979 
+
+Coefficient(s):
+    Estimate  Std. Error  t value Pr(&gt;|t|)    
+a0 1.892e-03   9.665e-05   19.573  &lt; 2e-16 ***
+a1 2.324e-01   5.917e-02    3.928 8.57e-05 ***
+a2 3.742e-01   4.906e-02    7.628 2.40e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Diagnostic Tests:
+    Jarque Bera Test
+
+data:  Residuals
+X-squared = 643.78, df = 2, p-value &lt; 2.2e-16
+
+
+    Box-Ljung test
+
+data:  Squared.Residuals
+X-squared = 0.00054561, df = 1, p-value = 0.9814</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>hhat_1 <span class="ot">&lt;-</span> <span class="fu">as.zoo</span>(resid.ARCH<span class="sc">$</span>fitted.values[,<span class="dv">1</span>]<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hhat_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Librería rugarch</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>resid_GARCH_spec <span class="ot">&lt;-</span>  <span class="fu">ugarchspec</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.mean =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variance.model =</span> <span class="fu">list</span>(<span class="at">model=</span><span class="st">"sGARCH"</span>, <span class="at">garchOrder=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">0</span>)),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution.model =</span><span class="st">"norm"</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>resid_GARCH_fit <span class="ot">&lt;-</span> <span class="fu">ugarchfit</span>(<span class="at">spec =</span> resid_GARCH_spec, <span class="at">data =</span> resid)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(resid_GARCH_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+*---------------------------------*
+*          GARCH Model Fit        *
+*---------------------------------*
+
+Conditional Variance Dynamics   
+-----------------------------------
+GARCH Model : sGARCH(2,0)
+Mean Model  : ARFIMA(0,0,0)
+Distribution    : norm 
+
+Optimal Parameters
+------------------------------------
+        Estimate  Std. Error  t value Pr(&gt;|t|)
+omega   0.001892    0.000187  10.1387  0.0e+00
+alpha1  0.232407    0.057631   4.0327  5.5e-05
+alpha2  0.374224    0.085864   4.3583  1.3e-05
+
+Robust Standard Errors:
+        Estimate  Std. Error  t value Pr(&gt;|t|)
+omega   0.001892    0.000488   3.8799 0.000105
+alpha1  0.232407    0.057430   4.0468 0.000052
+alpha2  0.374224    0.159605   2.3447 0.019043
+
+LogLikelihood : 1009.718 
+
+Information Criteria
+------------------------------------
+                    
+Akaike       -2.8559
+Bayes        -2.8365
+Shibata      -2.8560
+Hannan-Quinn -2.8484
+
+Weighted Ljung-Box Test on Standardized Residuals
+------------------------------------
+                        statistic  p-value
+Lag[1]                      6.347 0.011758
+Lag[2*(p+q)+(p+q)-1][2]     7.360 0.009566
+Lag[4*(p+q)+(p+q)-1][5]     9.434 0.012845
+d.o.f=0
+H0 : No serial correlation
+
+Weighted Ljung-Box Test on Standardized Squared Residuals
+------------------------------------
+                        statistic   p-value
+Lag[1]                   0.003479 9.530e-01
+Lag[2*(p+q)+(p+q)-1][5] 11.673463 3.392e-03
+Lag[4*(p+q)+(p+q)-1][9] 35.350902 1.454e-08
+d.o.f=2
+
+Weighted ARCH LM Tests
+------------------------------------
+            Statistic Shape Scale   P-Value
+ARCH Lag[3]   0.06681 0.500 2.000 7.960e-01
+ARCH Lag[5]  33.44106 1.440 1.667 8.336e-09
+ARCH Lag[7]  43.09372 2.315 1.543 5.252e-11
+
+Nyblom stability test
+------------------------------------
+Joint Statistic:  3.9216
+Individual Statistics:             
+omega  3.7505
+alpha1 0.9287
+alpha2 0.8884
+
+Asymptotic Critical Values (10% 5% 1%)
+Joint Statistic:         0.846 1.01 1.35
+Individual Statistic:    0.35 0.47 0.75
+
+Sign Bias Test
+------------------------------------
+                   t-value   prob sig
+Sign Bias          0.98942 0.3228    
+Negative Sign Bias 0.09161 0.9270    
+Positive Sign Bias 0.99225 0.3214    
+Joint Effect       1.35262 0.7167    
+
+
+Adjusted Pearson Goodness-of-Fit Test:
+------------------------------------
+  group statistic p-value(g-1)
+1    20     57.87    8.379e-06
+2    30     71.21    2.066e-05
+3    40     73.38    7.103e-04
+4    50     92.38    1.774e-04
+
+
+Elapsed time : 0.09360504 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>hhat_2 <span class="ot">&lt;-</span> <span class="fu">as.zoo</span>(resid_GARCH_fit<span class="sc">@</span>fit<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(hhat_2) <span class="co"># ts.plot(resid_GARCH_fit@fit$sigma^2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-2-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modo interactivo: permite seleccionar el tipo de gráfica</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(resid_GARCH_fit)</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_GARCH_fit, <span class="at">which=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-2-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(resid_GARCH_fit, <span class="at">which=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-2-7.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="código-python" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="código-python">Código Python</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.stats.api <span class="im">as</span> sms</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.stats.diagnostic <span class="im">as</span> smsdiag</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.compat <span class="im">import</span> lzip</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> arch <span class="im">import</span> arch_model</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos y asignación del índice temporal</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts <span class="op">=</span> pd.read_csv(<span class="st">"data/GASOL_CRUDO.csv"</span>, parse_dates<span class="op">=</span>[<span class="st">'date'</span>], index_col<span class="op">=</span><span class="st">'date'</span>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+DatetimeIndex: 707 entries, 2000-01-01 to 2013-07-13
+Data columns (total 4 columns):
+ #   Column   Non-Null Count  Dtype  
+---  ------   --------------  -----  
+ 0   D2008JD  707 non-null    int64  
+ 1   PCRUDO   707 non-null    float64
+ 2   PGASOL   707 non-null    float64
+ 3   time     707 non-null    int64  
+dtypes: float64(2), int64(2)
+memory usage: 27.6 KB</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            D2008JD  PCRUDO  PGASOL  time
+date                                     
+2000-01-01        0  226.18    29.2     1
+2000-01-08        0  229.43    31.4     2
+2000-01-15        0  263.68    26.6     3
+2000-01-22        0  256.43    30.9     4
+2000-01-29        0  253.18    32.1     5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts.index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>DatetimeIndex(['2000-01-01', '2000-01-08', '2000-01-15', '2000-01-22',
+               '2000-01-29', '2000-02-05', '2000-02-12', '2000-02-19',
+               '2000-02-26', '2000-03-04',
+               ...
+               '2013-05-11', '2013-05-18', '2013-05-25', '2013-06-01',
+               '2013-06-08', '2013-06-15', '2013-06-22', '2013-06-29',
+               '2013-07-06', '2013-07-13'],
+              dtype='datetime64[ns]', name='date', length=707, freq=None)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Asignación del formato semanal (opcional)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>date_w <span class="op">=</span> pd.date_range(start <span class="op">=</span> <span class="st">'2000'</span>, periods <span class="op">=</span> <span class="bu">len</span>(GASOL_CRUDO_ts.index), freq <span class="op">=</span> <span class="st">'W'</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts.index <span class="op">=</span> date_w</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts.index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>DatetimeIndex(['2000-01-02', '2000-01-09', '2000-01-16', '2000-01-23',
+               '2000-01-30', '2000-02-06', '2000-02-13', '2000-02-20',
+               '2000-02-27', '2000-03-05',
+               ...
+               '2013-05-12', '2013-05-19', '2013-05-26', '2013-06-02',
+               '2013-06-09', '2013-06-16', '2013-06-23', '2013-06-30',
+               '2013-07-07', '2013-07-14'],
+              dtype='datetime64[ns]', length=707, freq='W-SUN')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfica de las series temporales</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">1</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">4</span>, <span class="dv">1</span>, sharex <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(GASOL_CRUDO_ts.D2008JD)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_ylabel(<span class="st">'D2008JD'</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(GASOL_CRUDO_ts.PCRUDO)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_ylabel(<span class="st">'PCRUDO'</span>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].plot(GASOL_CRUDO_ts.PGASOL)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].set_ylabel(<span class="st">'PGASOL'</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">3</span>].plot(GASOL_CRUDO_ts.time)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">3</span>].set_ylabel(<span class="st">'time'</span>)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo dinámico para el precio de la gasolina (precio minorista)</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts[<span class="st">'l_PGASOL'</span>] <span class="op">=</span> np.log(GASOL_CRUDO_ts[<span class="st">'PGASOL'</span>])</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>GASOL_CRUDO_ts[<span class="st">'l_PCRUDO'</span>] <span class="op">=</span> np.log(GASOL_CRUDO_ts[<span class="st">'PCRUDO'</span>])</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>formula <span class="op">=</span> <span class="st">'l_PGASOL ~ D2008JD + time + l_PGASOL.shift(1) + l_PGASOL.shift(2) + l_PCRUDO + l_PCRUDO.shift(1) + l_PCRUDO.shift(2)'</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>dyn_model <span class="op">=</span> smf.ols(formula, data <span class="op">=</span> GASOL_CRUDO_ts)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>lm_dyn_model <span class="op">=</span> dyn_model.fit()</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_dyn_model.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               l_PGASOL   R-squared:                       0.966
+Model:                            OLS   Adj. R-squared:                  0.966
+Method:                 Least Squares   F-statistic:                     2858.
+Date:                Wed, 15 Nov 2023   Prob (F-statistic):               0.00
+Time:                        09:40:53   Log-Likelihood:                 959.11
+No. Observations:                 705   AIC:                            -1902.
+Df Residuals:                     697   BIC:                            -1866.
+Df Model:                           7                                         
+Covariance Type:            nonrobust                                         
+=====================================================================================
+                        coef    std err          t      P&gt;|t|      [0.025      0.975]
+-------------------------------------------------------------------------------------
+Intercept            -0.0813      0.065     -1.255      0.210      -0.208       0.046
+D2008JD              -0.0336      0.013     -2.520      0.012      -0.060      -0.007
+time               7.733e-05   2.37e-05      3.261      0.001    3.08e-05       0.000
+l_PGASOL.shift(1)     0.5176      0.036     14.378      0.000       0.447       0.588
+l_PGASOL.shift(2)     0.3003      0.035      8.560      0.000       0.231       0.369
+l_PCRUDO              0.1524      0.040      3.781      0.000       0.073       0.231
+l_PCRUDO.shift(1)     0.1117      0.052      2.154      0.032       0.010       0.213
+l_PCRUDO.shift(2)    -0.1304      0.042     -3.100      0.002      -0.213      -0.048
+==============================================================================
+Omnibus:                       88.212   Durbin-Watson:                   1.949
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              384.370
+Skew:                          -0.482   Prob(JB):                     3.43e-84
+Kurtosis:                       6.487   Cond. No.                     1.15e+04
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.15e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación de efectos parciales a corto y largo plazo</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> lm_dyn_model.params[<span class="dv">0</span>:]</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiplicador de corto plazo</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>b[<span class="dv">5</span>].<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.152</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiplicador de largo plazo</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>((b[<span class="dv">5</span>]<span class="op">+</span>b[<span class="dv">6</span>]<span class="op">+</span>b[<span class="dv">7</span>])<span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>b[<span class="dv">3</span>]<span class="op">-</span>b[<span class="dv">4</span>])).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.734</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contraste de heteroscedasticidad autoregresiva condicional (efectos ARCH)</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>residuals <span class="op">=</span> lm_dyn_model.resid</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">5</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>plt.plot(residuals, label<span class="op">=</span><span class="st">'Residuos'</span>)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Semana'</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">6</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>plt.plot(residuals<span class="op">**</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Residuos al cuadrado'</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Semana'</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de Engle</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> [<span class="st">'LM statistic'</span>, <span class="st">'Chi^2 p-val'</span>, <span class="st">'F statistic'</span>, <span class="st">'F p-val'</span>]</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>E_test_1 <span class="op">=</span> smsdiag.het_arch(residuals, nlags<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>lzip(name,E_test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[('LM statistic', 33.59125111341629), ('Chi^2 p-val', 6.79978851875406e-09), ('F statistic', 35.17415057721384), ('F p-val', 4.731167717319399e-09)]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame([np.<span class="bu">round</span>(E_test_1, <span class="dv">3</span>)], columns<span class="op">=</span>name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   LM statistic  Chi^2 p-val  F statistic  F p-val
+0        33.591          0.0       35.174      0.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>E_test_2 <span class="op">=</span> smsdiag.het_arch(residuals, nlags<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>lzip(name,E_test_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[('LM statistic', 48.26143118405129), ('Chi^2 p-val', 3.312557106655711e-11), ('F statistic', 25.79884814936918), ('F p-val', 1.5467136016750854e-11)]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame([np.<span class="bu">round</span>(E_test_2, <span class="dv">3</span>)], columns<span class="op">=</span>name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   LM statistic  Chi^2 p-val  F statistic  F p-val
+0        48.261          0.0       25.799      0.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo GARCH para los errores del modelo</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>garch_model <span class="op">=</span> arch_model(residuals, mean<span class="op">=</span><span class="st">'Zero'</span>, vol<span class="op">=</span><span class="st">'GARCH'</span>, p<span class="op">=</span><span class="dv">2</span>, q<span class="op">=</span><span class="dv">0</span>, dist<span class="op">=</span><span class="st">'normal'</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>mv_garch_model <span class="op">=</span> garch_model.fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration:      1,   Func. Count:      5,   Neg. LLF: -440.3038423896095
+Iteration:      2,   Func. Count:     13,   Neg. LLF: -848.4746617760027
+Iteration:      3,   Func. Count:     18,   Neg. LLF: -40.92526664364976
+Iteration:      4,   Func. Count:     23,   Neg. LLF: -997.1901354377039
+Iteration:      5,   Func. Count:     28,   Neg. LLF: 4501163.304429701
+Iteration:      6,   Func. Count:     33,   Neg. LLF: -991.4353946793708
+Iteration:      7,   Func. Count:     38,   Neg. LLF: -1009.757502482586
+Iteration:      8,   Func. Count:     42,   Neg. LLF: -1009.9254909725157
+Iteration:      9,   Func. Count:     46,   Neg. LLF: -1009.9299853001154
+Iteration:     10,   Func. Count:     50,   Neg. LLF: -1009.9303155884547
+Iteration:     11,   Func. Count:     54,   Neg. LLF: -1009.9303168451199
+Iteration:     12,   Func. Count:     57,   Neg. LLF: -1009.9303168451216
+Optimization terminated successfully    (Exit mode 0)
+            Current function value: -1009.9303168451199
+            Iterations: 12
+            Function evaluations: 57
+            Gradient evaluations: 12</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mv_garch_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        Zero Mean - ARCH Model Results                        
+==============================================================================
+Dep. Variable:                   None   R-squared:                       0.000
+Mean Model:                 Zero Mean   Adj. R-squared:                  0.001
+Vol Model:                       ARCH   Log-Likelihood:                1009.93
+Distribution:                  Normal   AIC:                          -2013.86
+Method:            Maximum Likelihood   BIC:                          -2000.19
+                                        No. Observations:                  705
+Date:                Wed, Nov 15 2023   Df Residuals:                      705
+Time:                        09:40:53   Df Model:                            0
+                              Volatility Model                              
+============================================================================
+                 coef    std err          t      P&gt;|t|      95.0% Conf. Int.
+----------------------------------------------------------------------------
+omega      1.8836e-03  3.690e-04      5.105  3.309e-07 [1.160e-03,2.607e-03]
+alpha[1]       0.2349  6.195e-02      3.792  1.494e-04     [  0.114,  0.356]
+alpha[2]       0.3902      0.155      2.518  1.181e-02   [8.646e-02,  0.694]
+============================================================================
+
+Covariance estimator: robust</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> mv_garch_model.plot()</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-3-4.png" class="img-fluid" width="614"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="p3c2-app6_files/figure-html/unnamed-chunk-3-5.png" class="img-fluid" width="614"></p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p3c2-app5.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p3c2-app7.html" class="pagination-link">
+        <span class="nav-page-text">Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

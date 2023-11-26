@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Econometría - Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p1c2-app2a.html" rel="next">
+<link href="./p1c2-app1a.html" rel="prev">
+<link href="./EconMetricsRPy-logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p1-introduccion.html">CAPÍTULO 1: CONCEPTOS BÁSICOS</a></li><li class="breadcrumb-item"><a href="./p1c2-app1b.html">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Econometría</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/JulianRamajo/EconometriaRPy" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PREFACIO</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p0-aspectos-tecnicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 0: ASPECTOS TÉCNICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c1-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instalación y configuración de R y Python en RStudio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c2-rpy-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R versus Python: Comparación de lenguajes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c3-reticulate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programación conjunta en R y Python con reticulate</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p1-introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 1: CONCEPTOS BÁSICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Conceptos básicos de la econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del <em>tidyverse</em></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1b.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3b (Gestión y representación gráfica de datos espaciales): Desarrollo humano al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.4 (Regresiones con datos de corte transversal): Demanda familiar de carne</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p2-mrl-basico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo de regresión lineal y sus hipótesis básicas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p3-mrl-extendido.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Diagnosis, correcciones y extensiones del modelo de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas ‘morales’ en Francia en 1830</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas [Ohio, Estados Unidos]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.9 (Información muestral - Falta de observaciones): Exclusión social en el comportamiento de las aseguradoras de Chicago</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.10 (Información muestral - Multicolinealidad): Análisis de la rentabilidad empresarial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">BIBLIOGRAFÍA</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#código-r" id="toc-código-r" class="nav-link active" data-scroll-target="#código-r">Código R</a>
+  <ul>
+  <li><a href="#lectura-de-librerías" id="toc-lectura-de-librerías" class="nav-link" data-scroll-target="#lectura-de-librerías">Lectura de librerías</a></li>
+  <li><a href="#lectura-de-datos" id="toc-lectura-de-datos" class="nav-link" data-scroll-target="#lectura-de-datos">Lectura de datos</a></li>
+  <li><a href="#análisis-exploratorio" id="toc-análisis-exploratorio" class="nav-link" data-scroll-target="#análisis-exploratorio">Análisis exploratorio</a></li>
+  <li><a href="#agrupación---resumen" id="toc-agrupación---resumen" class="nav-link" data-scroll-target="#agrupación---resumen">Agrupación - resumen</a></li>
+  <li><a href="#agrupación---cálculo" id="toc-agrupación---cálculo" class="nav-link" data-scroll-target="#agrupación---cálculo">Agrupación - cálculo</a></li>
+  <li><a href="#comandos-ifelse-case_when" id="toc-comandos-ifelse-case_when" class="nav-link" data-scroll-target="#comandos-ifelse-case_when">Comandos ifelse / case_when</a></li>
+  </ul></li>
+  <li><a href="#código-python" id="toc-código-python" class="nav-link" data-scroll-target="#código-python">Código Python</a>
+  <ul>
+  <li><a href="#lectura-de-librerías-1" id="toc-lectura-de-librerías-1" class="nav-link" data-scroll-target="#lectura-de-librerías-1">Lectura de librerías</a></li>
+  <li><a href="#lectura-de-datos-1" id="toc-lectura-de-datos-1" class="nav-link" data-scroll-target="#lectura-de-datos-1">Lectura de datos</a></li>
+  <li><a href="#análisis-exploratorio-1" id="toc-análisis-exploratorio-1" class="nav-link" data-scroll-target="#análisis-exploratorio-1">Análisis exploratorio</a></li>
+  <li><a href="#agrupación---resumen-1" id="toc-agrupación---resumen-1" class="nav-link" data-scroll-target="#agrupación---resumen-1">Agrupación - resumen</a></li>
+  <li><a href="#agrupación---cálculo-1" id="toc-agrupación---cálculo-1" class="nav-link" data-scroll-target="#agrupación---cálculo-1">Agrupación - cálculo</a></li>
+  <li><a href="#comandos-def-where" id="toc-comandos-def-where" class="nav-link" data-scroll-target="#comandos-def-where">Comandos def / where</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+.justify { text-align: justify !important }
+</style>
+</div>
+<div class="justify">
+<p>En esta aplicación se usarán las librerías estándar de R y Python en “ciencia de datos” (<em>data science</em>), replicando los resultados con los correspondientes comandos en ambos lenguajes. En concreto, para el lenguaje R se utilizará la colección de librerías contenidas en el paquete <strong><em>Tidyverse</em></strong> (<a href="https://www.tidyverse.org/packages/" class="uri">https://www.tidyverse.org/packages/</a>), y para Python se usarán las librerías <strong><em>NumPy</em></strong> (<a href="https://numpy.org/" class="uri">https://numpy.org/</a>), <strong><em>pandas</em></strong> (<a href="https://pandas.pydata.org/" class="uri">https://pandas.pydata.org/</a>), <strong><em>Matplotlib</em></strong> (<a href="https://matplotlib.org/" class="uri">https://matplotlib.org/</a>) y <strong><em>seaborn</em></strong> (<a href="https://seaborn.pydata.org/" class="uri">https://seaborn.pydata.org/</a>). Las librerías especializadas en estadística y econometría se verán en aplicaciones posteriores.</p>
+<p>Sobre los datos utilizados:</p>
+<ul>
+<li>Datos para el ejemplo : <code>palmerpenguins</code> (<a href="https://allisonhorst.github.io/palmerpenguins/" class="uri">https://allisonhorst.github.io/palmerpenguins/</a>)</li>
+</ul>
+</div>
+<section id="código-r" class="level1 unnumbered">
+<h1 class="unnumbered">Código R</h1>
+<section id="lectura-de-librerías" class="level2">
+<h2 class="anchored" data-anchor-id="lectura-de-librerías">Lectura de librerías</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)   <span class="co"># Datos de la aplicación</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="lectura-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="lectura-de-datos">Lectura de datos</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"penguins"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> penguins</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie  Torgersen           39.1          18.7               181        3750
+2 Adelie  Torgersen           39.5          17.4               186        3800
+3 Adelie  Torgersen           40.3          18                 195        3250
+4 Adelie  Torgersen           NA            NA                  NA          NA
+5 Adelie  Torgersen           36.7          19.3               193        3450
+6 Adelie  Torgersen           39.3          20.6               190        3650
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="análisis-exploratorio" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-exploratorio">Análisis exploratorio</h2>
+<p>Recuento de casos:</p>
+<p>Recuento de los NAs en cada columna</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">everything</span>(),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">~</span><span class="fu">sum</span>(<span class="fu">is.na</span>(.x)))) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+  name              value
+  &lt;chr&gt;             &lt;int&gt;
+1 species               0
+2 island                0
+3 bill_length_mm        2
+4 bill_depth_mm         2
+5 flipper_length_mm     2
+6 body_mass_g           2
+7 sex                  11
+8 year                  0</code></pre>
+</div>
+</div>
+<p>Para eliminar todas las filas con un NA habría que ejecutar el siguiente código</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># df &lt;- df %&gt;% na.omit()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Número de especies</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(species, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  species       n
+  &lt;fct&gt;     &lt;int&gt;
+1 Adelie      152
+2 Gentoo      124
+3 Chinstrap    68</code></pre>
+</div>
+</div>
+<p>Número de islas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(island, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  island        n
+  &lt;fct&gt;     &lt;int&gt;
+1 Biscoe      168
+2 Dream       124
+3 Torgersen    52</code></pre>
+</div>
+</div>
+<p>Número de especies en cada isla</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(species, island, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  species   island        n
+  &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;
+1 Gentoo    Biscoe      124
+2 Chinstrap Dream        68
+3 Adelie    Dream        56
+4 Adelie    Torgersen    52
+5 Adelie    Biscoe       44</code></pre>
+</div>
+</div>
+<p>Tabla 3x3 de recuento de especies por isla</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">species =</span> df<span class="sc">$</span>species,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">island =</span> df<span class="sc">$</span>island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           island
+species     Biscoe Dream Torgersen
+  Adelie        44    56        52
+  Chinstrap      0    68         0
+  Gentoo       124     0         0</code></pre>
+</div>
+</div>
+<p>Tabla 3x3 de proporciones de especies por isla</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">species =</span> df<span class="sc">$</span>species,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">island =</span> df<span class="sc">$</span>island) <span class="sc">/</span> <span class="fu">nrow</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           island
+species        Biscoe     Dream Torgersen
+  Adelie    0.1279070 0.1627907 0.1511628
+  Chinstrap 0.0000000 0.1976744 0.0000000
+  Gentoo    0.3604651 0.0000000 0.0000000</code></pre>
+</div>
+</div>
+<p>Gráfico de barras de especies</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(species, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(species, <span class="sc">-</span>n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'species'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Descripción de todas la columnas de la base de datos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      species          island    bill_length_mm  bill_depth_mm  
+ Adelie   :152   Biscoe   :168   Min.   :32.10   Min.   :13.10  
+ Chinstrap: 68   Dream    :124   1st Qu.:39.23   1st Qu.:15.60  
+ Gentoo   :124   Torgersen: 52   Median :44.45   Median :17.30  
+                                 Mean   :43.92   Mean   :17.15  
+                                 3rd Qu.:48.50   3rd Qu.:18.70  
+                                 Max.   :59.60   Max.   :21.50  
+                                 NA's   :2       NA's   :2      
+ flipper_length_mm  body_mass_g       sex           year     
+ Min.   :172.0     Min.   :2700   female:165   Min.   :2007  
+ 1st Qu.:190.0     1st Qu.:3550   male  :168   1st Qu.:2007  
+ Median :197.0     Median :4050   NA's  : 11   Median :2008  
+ Mean   :200.9     Mean   :4202                Mean   :2008  
+ 3rd Qu.:213.0     3rd Qu.:4750                3rd Qu.:2009  
+ Max.   :231.0     Max.   :6300                Max.   :2009  
+ NA's   :2         NA's   :2                                 </code></pre>
+</div>
+</div>
+<p>Cálculo de la media de la longitud y la profundidad del pico</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(bill_length_mm, bill_depth_mm) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">everything</span>(),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  bill_length_mm bill_depth_mm
+           &lt;dbl&gt;         &lt;dbl&gt;
+1           43.9          17.2</code></pre>
+</div>
+</div>
+<p>Cálculo de los cuantiles 25, 50 y 75 para la longitud y profundidad del pico en la Isla Biscoe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(island <span class="sc">==</span> <span class="st">"Biscoe"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(bill_length_mm, bill_depth_mm) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">length25 =</span> <span class="fu">quantile</span>(bill_length_mm, <span class="at">probs =</span> <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">length50 =</span> <span class="fu">quantile</span>(bill_length_mm, <span class="at">probs =</span> <span class="fl">0.50</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">length75 =</span> <span class="fu">quantile</span>(bill_length_mm, <span class="at">probs =</span> <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">depth25 =</span> <span class="fu">quantile</span>(bill_depth_mm, <span class="at">probs =</span> <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">depth50 =</span> <span class="fu">quantile</span>(bill_depth_mm, <span class="at">probs =</span> <span class="fl">0.50</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">depth75 =</span> <span class="fu">quantile</span>(bill_depth_mm, <span class="at">probs =</span> <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 6
+  length25 length50 length75 depth25 depth50 depth75
+     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1       42     45.8     48.7    14.5    15.5      17</code></pre>
+</div>
+</div>
+<p>Diagrama de cajas (boxplot) vertical de la longitud del pico por especie</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> bill_length_mm, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Boxplot horizontal</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">y =</span> species, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Densidad estimada de la longitud del pico agrupada por sexo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>con facetas por especie</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Diagrama de dispersión de la masa corporal en relación con la longitud de las aletas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>con línea de regresión añadida</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Diferenciado por sexo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> body_mass_g,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>con línea de regresión añadida</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex)) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> body_mass_g,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Variación de la masa corporal media a lo largo de los años por especie</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species, year) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">N =</span> <span class="fu">n</span>(),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">avg =</span> <span class="fu">mean</span>(body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">SE =</span> <span class="fu">sd</span>(body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(N),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg)) <span class="sc">+</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> avg <span class="sc">-</span> SE, <span class="at">ymax =</span> avg <span class="sc">+</span> SE,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fill =</span> species),</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> species))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="agrupación---resumen" class="level2">
+<h2 class="anchored" data-anchor-id="agrupación---resumen">Agrupación - resumen</h2>
+<p>Media y desviación estándar de la longitud del pico para cada especie</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_bill_length =</span> <span class="fu">mean</span>(bill_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_bill_length =</span> <span class="fu">sd</span>(bill_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  species   avg_bill_length sd_bill_length
+  &lt;fct&gt;               &lt;dbl&gt;          &lt;dbl&gt;
+1 Adelie               38.8           2.66
+2 Chinstrap            48.8           3.34
+3 Gentoo               47.5           3.08</code></pre>
+</div>
+</div>
+<p>Media y desviación estándar de la longitud del pico de cada especie por sexo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex)) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_bill_length =</span> <span class="fu">mean</span>(bill_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_bill_length =</span> <span class="fu">sd</span>(bill_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+# Groups:   species [3]
+  species   sex    avg_bill_length sd_bill_length
+  &lt;fct&gt;     &lt;fct&gt;            &lt;dbl&gt;          &lt;dbl&gt;
+1 Adelie    female            37.3           2.03
+2 Adelie    male              40.4           2.28
+3 Chinstrap female            46.6           3.11
+4 Chinstrap male              51.1           1.56
+5 Gentoo    female            45.6           2.05
+6 Gentoo    male              49.5           2.72</code></pre>
+</div>
+</div>
+</section>
+<section id="agrupación---cálculo" class="level2">
+<h2 class="anchored" data-anchor-id="agrupación---cálculo">Agrupación - cálculo</h2>
+<p>Añadir una nueva columna al fichero de datos que muestre la longitud media de las aletas agrupadas por especies</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_flipper_length =</span> <span class="fu">mean</span>(flipper_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 9
+# Groups:   species [1]
+  species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie  Torgersen           39.1          18.7               181        3750
+2 Adelie  Torgersen           39.5          17.4               186        3800
+3 Adelie  Torgersen           40.3          18                 195        3250
+4 Adelie  Torgersen           NA            NA                  NA          NA
+5 Adelie  Torgersen           36.7          19.3               193        3450
+6 Adelie  Torgersen           39.3          20.6               190        3650
+# ℹ 3 more variables: sex &lt;fct&gt;, year &lt;int&gt;, mean_flipper_length &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Puntuación estandarizada (z-score) por especie para la longitud de las aletas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">flipper_z =</span> (flipper_length_mm <span class="sc">-</span> <span class="fu">mean</span>(flipper_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="fu">sd</span>(flipper_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 10
+# Groups:   species [1]
+  species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie  Torgersen           39.1          18.7               181        3750
+2 Adelie  Torgersen           39.5          17.4               186        3800
+3 Adelie  Torgersen           40.3          18                 195        3250
+4 Adelie  Torgersen           NA            NA                  NA          NA
+5 Adelie  Torgersen           36.7          19.3               193        3450
+6 Adelie  Torgersen           39.3          20.6               190        3650
+# ℹ 4 more variables: sex &lt;fct&gt;, year &lt;int&gt;, mean_flipper_length &lt;dbl&gt;,
+#   flipper_z &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Añadir una columna para la media y la desviación estándar por especie para la longitud del pico</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_val =</span> <span class="fu">mean</span>(bill_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">sd_val =</span> <span class="fu">sd</span>(bill_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 12
+# Groups:   species [1]
+  species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie  Torgersen           39.1          18.7               181        3750
+2 Adelie  Torgersen           39.5          17.4               186        3800
+3 Adelie  Torgersen           40.3          18                 195        3250
+4 Adelie  Torgersen           NA            NA                  NA          NA
+5 Adelie  Torgersen           36.7          19.3               193        3450
+6 Adelie  Torgersen           39.3          20.6               190        3650
+# ℹ 6 more variables: sex &lt;fct&gt;, year &lt;int&gt;, mean_flipper_length &lt;dbl&gt;,
+#   flipper_z &lt;dbl&gt;, mean_val &lt;dbl&gt;, sd_val &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="comandos-ifelse-case_when" class="level2">
+<h2 class="anchored" data-anchor-id="comandos-ifelse-case_when">Comandos ifelse / case_when</h2>
+<p>Crear una nueva columna que codifique las islas como: Biscoe = Isla1 Sueño = Isla2 Torgersen = Isla3</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">island_code =</span> <span class="fu">case_when</span>(island <span class="sc">==</span> <span class="st">"Biscoe"</span> <span class="sc">~</span> <span class="st">"Island1"</span>,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                                 island <span class="sc">==</span> <span class="st">"Dream"</span> <span class="sc">~</span> <span class="st">"Island2"</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                                 island <span class="sc">==</span> <span class="st">"Torgersen"</span> <span class="sc">~</span> <span class="st">"Island3"</span>))</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+# Groups:   species [1]
+  species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie  Torgersen           39.1          18.7               181        3750
+2 Adelie  Torgersen           39.5          17.4               186        3800
+3 Adelie  Torgersen           40.3          18                 195        3250
+4 Adelie  Torgersen           NA            NA                  NA          NA
+5 Adelie  Torgersen           36.7          19.3               193        3450
+6 Adelie  Torgersen           39.3          20.6               190        3650
+# ℹ 7 more variables: sex &lt;fct&gt;, year &lt;int&gt;, mean_flipper_length &lt;dbl&gt;,
+#   flipper_z &lt;dbl&gt;, mean_val &lt;dbl&gt;, sd_val &lt;dbl&gt;, island_code &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="código-python" class="level1 unnumbered">
+<h1 class="unnumbered">Código Python</h1>
+<p>Sobre los datos utilizados:</p>
+<ul>
+<li>Datos para el ejemplo : <code>palmerpenguins</code> (<a href="https://github.com/mcnakhaee/palmerpenguins" class="uri">https://github.com/mcnakhaee/palmerpenguins</a>)</li>
+</ul>
+<section id="lectura-de-librerías-1" class="level2">
+<h2 class="anchored" data-anchor-id="lectura-de-librerías-1">Lectura de librerías</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd                       </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt         </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> palmerpenguins <span class="im">import</span> load_penguins   <span class="co"># Datos de la aplicación</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="lectura-de-datos-1" class="level2">
+<h2 class="anchored" data-anchor-id="lectura-de-datos-1">Lectura de datos</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> load_penguins()</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  species     island  bill_length_mm  ...  body_mass_g     sex  year
+0  Adelie  Torgersen            39.1  ...       3750.0    male  2007
+1  Adelie  Torgersen            39.5  ...       3800.0  female  2007
+2  Adelie  Torgersen            40.3  ...       3250.0  female  2007
+3  Adelie  Torgersen             NaN  ...          NaN     NaN  2007
+4  Adelie  Torgersen            36.7  ...       3450.0  female  2007
+
+[5 rows x 8 columns]</code></pre>
+</div>
+</div>
+</section>
+<section id="análisis-exploratorio-1" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-exploratorio-1">Análisis exploratorio</h2>
+<p>Recuento de casos:</p>
+<p>Recuento de los NAs en cada columna</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>df.isnull().<span class="bu">any</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>species              False
+island               False
+bill_length_mm        True
+bill_depth_mm         True
+flipper_length_mm     True
+body_mass_g           True
+sex                   True
+year                 False
+dtype: bool</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(df) <span class="op">-</span> df.count()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>species               0
+island                0
+bill_length_mm        2
+bill_depth_mm         2
+flipper_length_mm     2
+body_mass_g           2
+sex                  11
+year                  0
+dtype: int64</code></pre>
+</div>
+</div>
+<p>Para eliminar todas las filas con un NA habría que ejecutar el siguiente código</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># df = df.dropna()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Número de especies</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'species'</span>].value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Adelie       152
+Gentoo       124
+Chinstrap     68
+Name: species, dtype: int64</code></pre>
+</div>
+</div>
+<p>Número de islas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'island'</span>].value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Biscoe       168
+Dream        124
+Torgersen     52
+Name: island, dtype: int64</code></pre>
+</div>
+</div>
+<p>Número de especies en cada isla</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'species'</span>, <span class="st">'island'</span>]].value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>species    island   
+Gentoo     Biscoe       124
+Chinstrap  Dream         68
+Adelie     Dream         56
+           Torgersen     52
+           Biscoe        44
+dtype: int64</code></pre>
+</div>
+</div>
+<p>Tabla 3x3 de recuento de especies por isla</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>pd.crosstab(df[<span class="st">'species'</span>], df[<span class="st">'island'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>island     Biscoe  Dream  Torgersen
+species                            
+Adelie         44     56         52
+Chinstrap       0     68          0
+Gentoo        124      0          0</code></pre>
+</div>
+</div>
+<p>Tabla 3x3 de proporciones de especies por isla</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>pd.crosstab(df[<span class="st">'species'</span>], df[<span class="st">'island'</span>]) <span class="op">/</span> <span class="bu">len</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>island       Biscoe     Dream  Torgersen
+species                                 
+Adelie     0.127907  0.162791   0.151163
+Chinstrap  0.000000  0.197674   0.000000
+Gentoo     0.360465  0.000000   0.000000</code></pre>
+</div>
+</div>
+<p>Gráfico de barras de especies</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>sns.countplot(x <span class="op">=</span> <span class="st">'species'</span>, data <span class="op">=</span> df)<span class="op">;</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Descripción de todas la columnas de la base de datos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       bill_length_mm  bill_depth_mm  ...  body_mass_g         year
+count      342.000000     342.000000  ...   342.000000   344.000000
+mean        43.921930      17.151170  ...  4201.754386  2008.029070
+std          5.459584       1.974793  ...   801.954536     0.818356
+min         32.100000      13.100000  ...  2700.000000  2007.000000
+25%         39.225000      15.600000  ...  3550.000000  2007.000000
+50%         44.450000      17.300000  ...  4050.000000  2008.000000
+75%         48.500000      18.700000  ...  4750.000000  2009.000000
+max         59.600000      21.500000  ...  6300.000000  2009.000000
+
+[8 rows x 5 columns]</code></pre>
+</div>
+</div>
+<p>Cálculo de la media de la longitud y la profundidad del pico</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'bill_length_mm'</span>, <span class="st">'bill_depth_mm'</span>]].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>bill_length_mm    43.92193
+bill_depth_mm     17.15117
+dtype: float64</code></pre>
+</div>
+</div>
+<p>Cálculo de los cuantiles 25, 50 y 75 para la longitud y profundidad del pico en la Isla Biscoe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>df.loc[df[<span class="st">'island'</span>] <span class="op">==</span> <span class="st">'Biscoe'</span>, [<span class="st">'bill_length_mm'</span>, <span class="st">'bill_depth_mm'</span>]].quantile([<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bill_length_mm  bill_depth_mm
+0.25            42.0           14.5
+0.50            45.8           15.5
+0.75            48.7           17.0</code></pre>
+</div>
+</div>
+<p>Boxplot vertical de la longitud del pico por especie</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x <span class="op">=</span> <span class="st">'species'</span>, y <span class="op">=</span> <span class="st">'bill_length_mm'</span>, data <span class="op">=</span> df, orient <span class="op">=</span> <span class="st">'v'</span>, palette <span class="op">=</span> <span class="st">'rainbow'</span>)<span class="op">;</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-43-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Boxplot horizontal</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x <span class="op">=</span> <span class="st">'bill_length_mm'</span>, y <span class="op">=</span> <span class="st">'species'</span>, data <span class="op">=</span> df, orient <span class="op">=</span> <span class="st">'h'</span>, palette <span class="op">=</span> <span class="st">'rainbow'</span>)<span class="op">;</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-44-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Densidad estimada de la longitud del pico agrupada por sexo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>sns.displot(x <span class="op">=</span> <span class="st">'bill_length_mm'</span>, </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>            data <span class="op">=</span> df,</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>            kind <span class="op">=</span> <span class="st">'kde'</span>,</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>            hue <span class="op">=</span> <span class="st">'sex'</span>,</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>            fill <span class="op">=</span> <span class="va">True</span>)<span class="op">;</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-45-7.png" class="img-fluid" width="574"></p>
+</div>
+</div>
+<p>con facetas por especie</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>sns.displot(x <span class="op">=</span> <span class="st">'bill_length_mm'</span>, </span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>            data <span class="op">=</span> df,</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>            kind <span class="op">=</span> <span class="st">'kde'</span>,</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>            hue <span class="op">=</span> <span class="st">'sex'</span>,</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>            col <span class="op">=</span> <span class="st">'species'</span>, </span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>            fill <span class="op">=</span> <span class="va">True</span>)<span class="op">;</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-46-9.png" class="img-fluid" width="1534"></p>
+</div>
+</div>
+<p>Diagrama de dispersión de la masa corporal en relación con la longitud de las aletas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(x <span class="op">=</span> <span class="st">'flipper_length_mm'</span>, y <span class="op">=</span> <span class="st">'body_mass_g'</span>, data <span class="op">=</span> df)<span class="op">;</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-47-11.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+<p>con línea de regresión añadida</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>sns.lmplot(x <span class="op">=</span> <span class="st">'flipper_length_mm'</span>, y <span class="op">=</span> <span class="st">'body_mass_g'</span>, data <span class="op">=</span> df)<span class="op">;</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-48-13.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+<p>Diferenciado por sexo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(x <span class="op">=</span> <span class="st">'flipper_length_mm'</span>, y <span class="op">=</span> <span class="st">'body_mass_g'</span>, data <span class="op">=</span> df, hue <span class="op">=</span> <span class="st">'sex'</span>)<span class="op">;</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-49-15.png" class="img-fluid" width="574"></p>
+</div>
+</div>
+<p>y con línea de regresión añadida</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>sns.lmplot(x <span class="op">=</span> <span class="st">'flipper_length_mm'</span>, y <span class="op">=</span> <span class="st">'body_mass_g'</span>, data <span class="op">=</span> df, hue <span class="op">=</span> <span class="st">'sex'</span>)<span class="op">;</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-50-17.png" class="img-fluid" width="574"></p>
+</div>
+</div>
+<p>Variación de la masa corporal media a lo largo de los años por especie</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(x <span class="op">=</span> <span class="st">'year'</span>, y <span class="op">=</span> <span class="st">'body_mass_g'</span>, kind <span class="op">=</span> <span class="st">'line'</span>,</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>           hue <span class="op">=</span> <span class="st">'species'</span>, data <span class="op">=</span> df)<span class="op">;</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app1b_files/figure-html/unnamed-chunk-51-19.png" class="img-fluid" width="592"></p>
+</div>
+</div>
+</section>
+<section id="agrupación---resumen-1" class="level2">
+<h2 class="anchored" data-anchor-id="agrupación---resumen-1">Agrupación - resumen</h2>
+<p>Media y desviación estándar de la longitud del pico para cada especie</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>species_bill_length <span class="op">=</span> (df</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>           .groupby(<span class="st">'species'</span>)</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>           .agg(avg_bill_length <span class="op">=</span> (<span class="st">'bill_length_mm'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>               sd_bill_length <span class="op">=</span> (<span class="st">'bill_length_mm'</span>, <span class="st">'std'</span>)).<span class="bu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>           .reset_index())</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>species_bill_length</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     species  avg_bill_length  sd_bill_length
+0     Adelie             38.8             2.7
+1  Chinstrap             48.8             3.3
+2     Gentoo             47.5             3.1</code></pre>
+</div>
+</div>
+<p>Media y desviación estándar de la longitud del pico de cada especie por sexo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>species_bill_length_sex <span class="op">=</span> (df</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>           .groupby([<span class="st">'species'</span>, <span class="st">'sex'</span>])</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>           .agg(avg_bill_length <span class="op">=</span> (<span class="st">'bill_length_mm'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>               sd_bill_length <span class="op">=</span> (<span class="st">'bill_length_mm'</span>, <span class="st">'std'</span>)).<span class="bu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>           .reset_index())</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>species_bill_length_sex</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     species     sex  avg_bill_length  sd_bill_length
+0     Adelie  female             37.3             2.0
+1     Adelie    male             40.4             2.3
+2  Chinstrap  female             46.6             3.1
+3  Chinstrap    male             51.1             1.6
+4     Gentoo  female             45.6             2.1
+5     Gentoo    male             49.5             2.7</code></pre>
+</div>
+</div>
+</section>
+<section id="agrupación---cálculo-1" class="level2">
+<h2 class="anchored" data-anchor-id="agrupación---cálculo-1">Agrupación - cálculo</h2>
+<p>Añadir una nueva columna al fichero de datos que muestre la longitud media de las aletas agrupadas por especies</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'mean_flipper_length'</span>] <span class="op">=</span> df.groupby(<span class="st">'species'</span>)[<span class="st">'flipper_length_mm'</span>].transform(<span class="st">'mean'</span>)</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  species     island  bill_length_mm  ...     sex  year  mean_flipper_length
+0  Adelie  Torgersen            39.1  ...    male  2007           189.953642
+1  Adelie  Torgersen            39.5  ...  female  2007           189.953642
+2  Adelie  Torgersen            40.3  ...  female  2007           189.953642
+3  Adelie  Torgersen             NaN  ...     NaN  2007           189.953642
+4  Adelie  Torgersen            36.7  ...  female  2007           189.953642
+
+[5 rows x 9 columns]</code></pre>
+</div>
+</div>
+<p>Puntuación estandarizada (z-score) por especie para la longitud de las aletas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'flipper_z'</span>] <span class="op">=</span> df.groupby(<span class="st">'species'</span>)[<span class="st">'flipper_length_mm'</span>].transform(<span class="kw">lambda</span> x: (x <span class="op">-</span> x.mean()) <span class="op">/</span> x.std()).<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  species     island  bill_length_mm  ...  year  mean_flipper_length  flipper_z
+0  Adelie  Torgersen            39.1  ...  2007           189.953642      -1.37
+1  Adelie  Torgersen            39.5  ...  2007           189.953642      -0.60
+2  Adelie  Torgersen            40.3  ...  2007           189.953642       0.77
+3  Adelie  Torgersen             NaN  ...  2007           189.953642        NaN
+4  Adelie  Torgersen            36.7  ...  2007           189.953642       0.47
+
+[5 rows x 10 columns]</code></pre>
+</div>
+</div>
+<p>Añadir una columna para la media y la desviación estándar por especie para la longitud del pico</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.assign(</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>    mean_val <span class="op">=</span> df.groupby([<span class="st">"species"</span>]).bill_length_mm.transform(<span class="st">'mean'</span>),</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>    sd_val <span class="op">=</span> df.groupby([<span class="st">"species"</span>]).bill_length_mm.transform(<span class="st">'std'</span>))</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  species     island  bill_length_mm  ...  flipper_z   mean_val    sd_val
+0  Adelie  Torgersen            39.1  ...      -1.37  38.791391  2.663405
+1  Adelie  Torgersen            39.5  ...      -0.60  38.791391  2.663405
+2  Adelie  Torgersen            40.3  ...       0.77  38.791391  2.663405
+3  Adelie  Torgersen             NaN  ...        NaN  38.791391  2.663405
+4  Adelie  Torgersen            36.7  ...       0.47  38.791391  2.663405
+
+[5 rows x 12 columns]</code></pre>
+</div>
+</div>
+</section>
+<section id="comandos-def-where" class="level2">
+<h2 class="anchored" data-anchor-id="comandos-def-where">Comandos def / where</h2>
+<p>Crear una nueva columna que codifique las islas como: Biscoe = Isla1 Sueño = Isla2 Torgersen = Isla3</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># def</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> islad_transform(island):</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a> <span class="cf">if</span> island <span class="op">==</span> <span class="st">'Biscoe'</span>:</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="st">'Island1'</span></span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a> <span class="cf">if</span> island <span class="op">==</span> <span class="st">'Dream'</span>:</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="st">'Island2'</span></span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a> <span class="cf">if</span> island <span class="op">==</span> <span class="st">'Torgersen'</span>:</span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="st">'Island3'</span></span>
+<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"island_code"</span>] <span class="op">=</span> df[<span class="st">"island"</span>].<span class="bu">map</span>(<span class="kw">lambda</span> x: islad_transform(x))</span>
+<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  species     island  bill_length_mm  ...   mean_val    sd_val  island_code
+0  Adelie  Torgersen            39.1  ...  38.791391  2.663405      Island3
+1  Adelie  Torgersen            39.5  ...  38.791391  2.663405      Island3
+2  Adelie  Torgersen            40.3  ...  38.791391  2.663405      Island3
+3  Adelie  Torgersen             NaN  ...  38.791391  2.663405      Island3
+4  Adelie  Torgersen            36.7  ...  38.791391  2.663405      Island3
+
+[5 rows x 13 columns]</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># numpy</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'island_code2'</span>] <span class="op">=</span> np.where(df[<span class="st">'island'</span>] <span class="op">==</span> <span class="st">'Biscoe'</span>, <span class="st">'Island1'</span>,</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>                        (np.where(df[<span class="st">'island'</span>] <span class="op">==</span> <span class="st">'Dream'</span>, <span class="st">'Island2'</span>, <span class="st">'Island3'</span>)))</span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  species     island  bill_length_mm  ...    sd_val  island_code  island_code2
+0  Adelie  Torgersen            39.1  ...  2.663405      Island3       Island3
+1  Adelie  Torgersen            39.5  ...  2.663405      Island3       Island3
+2  Adelie  Torgersen            40.3  ...  2.663405      Island3       Island3
+3  Adelie  Torgersen             NaN  ...  2.663405      Island3       Island3
+4  Adelie  Torgersen            36.7  ...  2.663405      Island3       Island3
+
+[5 rows x 14 columns]</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p1c2-app1a.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del <em>tidyverse</em></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p1c2-app2a.html" class="pagination-link">
+        <span class="nav-page-text">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

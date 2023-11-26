@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Econometría - Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p1c2-app2b.html" rel="next">
+<link href="./p1c2-app1b.html" rel="prev">
+<link href="./EconMetricsRPy-logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p1-introduccion.html">CAPÍTULO 1: CONCEPTOS BÁSICOS</a></li><li class="breadcrumb-item"><a href="./p1c2-app2a.html">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Econometría</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/JulianRamajo/EconometriaRPy" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PREFACIO</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p0-aspectos-tecnicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 0: ASPECTOS TÉCNICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c1-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instalación y configuración de R y Python en RStudio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c2-rpy-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R versus Python: Comparación de lenguajes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c3-reticulate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programación conjunta en R y Python con reticulate</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p1-introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 1: CONCEPTOS BÁSICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Conceptos básicos de la econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del <em>tidyverse</em></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2a.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3b (Gestión y representación gráfica de datos espaciales): Desarrollo humano al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.4 (Regresiones con datos de corte transversal): Demanda familiar de carne</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p2-mrl-basico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo de regresión lineal y sus hipótesis básicas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p3-mrl-extendido.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Diagnosis, correcciones y extensiones del modelo de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas ‘morales’ en Francia en 1830</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas [Ohio, Estados Unidos]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.9 (Información muestral - Falta de observaciones): Exclusión social en el comportamiento de las aseguradoras de Chicago</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.10 (Información muestral - Multicolinealidad): Análisis de la rentabilidad empresarial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">BIBLIOGRAFÍA</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#código-r" id="toc-código-r" class="nav-link active" data-scroll-target="#código-r">Código R</a></li>
+  <li><a href="#código-python" id="toc-código-python" class="nav-link" data-scroll-target="#código-python">Código Python</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+.justify { text-align: justify !important }
+</style>
+</div>
+<div class="justify">
+<p>El objetivo de esta aplicación es familiarizarse con la descarga, manejo y visualización de datos bursátiles procedentes de la plataforma <a href="https://es.finance.yahoo.com/">Yahoo!Finanzas</a>, así como entender las propiedades estadísticas básicas de las series temporales asociadas.</p>
+<p>Se usará el enfoque <em>tidyverse</em> para este tipo de datos, por lo que esta aplicación puede entenderse como un “análisis financiero ordenado” (<em>tidy finance</em>).</p>
+</div>
+<section id="código-r" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="código-r">Código R</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyquant)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Descarga de los datos de un activo bursátil desde Yahoo!Finanzas</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Para acceder a los datos diarios del precio de las acciones </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># se usa el comando tq_get de la librería tidyquant.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Solicitaremos los datos del Banco Santander, S.A. (SAN.MC)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># desde el año 2000 hasta la fecha de realización de esta aplicación:</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># https://es.finance.yahoo.com/quote/SAN.MC?p=SAN.MC&amp;.tsrc=fin-srch</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>pSAN <span class="ot">&lt;-</span> <span class="fu">tq_get</span>(<span class="st">"SAN.MC"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">get =</span> <span class="st">"stock.prices"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="st">"2000-01-01"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> <span class="st">"2023-10-31"</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pSAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  symbol date        open  high   low close  volume adjusted
+  &lt;chr&gt;  &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+1 SAN.MC 2000-01-03  9.95  9.99  9.74  9.85 8797337     2.60
+2 SAN.MC 2000-01-04  9.73  9.78  9.53  9.62 8811013     2.54
+3 SAN.MC 2000-01-05  9.43  9.56  9.30  9.38 9333517     2.48
+4 SAN.MC 2000-01-06  9.38  9.38  9.38  9.38       0     2.48
+5 SAN.MC 2000-01-07  9.45  9.82  9.44  9.80 9603132     2.59
+6 SAN.MC 2000-01-10  9.88  9.88  9.62  9.71 6747710     2.57</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(pSAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  symbol date        open  high   low close    volume adjusted
+  &lt;chr&gt;  &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 SAN.MC 2023-10-23  3.46  3.47  3.39  3.42 178180697     3.34
+2 SAN.MC 2023-10-24  3.44  3.44  3.35  3.38 170601157     3.30
+3 SAN.MC 2023-10-25  3.40  3.50  3.35  3.46  87290373     3.38
+4 SAN.MC 2023-10-26  3.44  3.52  3.41  3.51  32176659     3.43
+5 SAN.MC 2023-10-27  3.55  3.56  3.46  3.48  53188968     3.40
+6 SAN.MC 2023-10-30  3.5   3.58  3.47  3.57  70729714     3.49</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfica de serie temporal: evolución temporal de los precios</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pSAN <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> adjusted)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Precio de las acciones del Banco Santander desde el año 2000 (EUR)"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app2a_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cálculo de los rendimientos netos diarios (returns)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>rSAN <span class="ot">&lt;-</span> pSAN <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ret =</span> adjusted <span class="sc">/</span> <span class="fu">lag</span>(adjusted) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(symbol, date, ret)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rSAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  symbol date            ret
+  &lt;chr&gt;  &lt;date&gt;        &lt;dbl&gt;
+1 SAN.MC 2000-01-03 NA      
+2 SAN.MC 2000-01-04 -0.0237 
+3 SAN.MC 2000-01-05 -0.0243 
+4 SAN.MC 2000-01-06  0      
+5 SAN.MC 2000-01-07  0.0443 
+6 SAN.MC 2000-01-10 -0.00883</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(rSAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  symbol date            ret
+  &lt;chr&gt;  &lt;date&gt;        &lt;dbl&gt;
+1 SAN.MC 2023-10-23 -0.0101 
+2 SAN.MC 2023-10-24 -0.0117 
+3 SAN.MC 2023-10-25  0.0235 
+4 SAN.MC 2023-10-26  0.0144 
+5 SAN.MC 2023-10-27 -0.00854
+6 SAN.MC 2023-10-30  0.0254 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminación de datos perdidos (missing data)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>rSAN <span class="ot">&lt;-</span> rSAN <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(ret)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Evolución temporal de las rentabilidades diarias</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>rSAN <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> ret)) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Rendimiento diario de las acciones del Banco Santarder"</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app2a_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución de los rendimientos diarios (detección de asimetrías)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>q5 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(rSAN <span class="sc">|&gt;</span> <span class="fu">pull</span>(ret), <span class="at">probs =</span> <span class="fl">0.05</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>q95 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(rSAN <span class="sc">|&gt;</span> <span class="fu">pull</span>(ret), <span class="at">probs =</span> <span class="fl">0.95</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>rSAN <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ret)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> q5), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> q95), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribución de los rendimientos diarios del Banco Santander"</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p1c2-app2a_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadística resumen global</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>rSAN <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    ret,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">media =</span> mean,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      desv_típica <span class="ot">=</span> sd,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      mínimo <span class="ot">=</span> min,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      máximo <span class="ot">=</span> max</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  ret_media ret_desv_típica ret_mínimo ret_máximo
+      &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+1  0.000291          0.0222     -0.199      0.232</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadística resumen por año</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>rSAN <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">year =</span> <span class="fu">year</span>(date)) <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    ret,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">media =</span> mean,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      desv_típica <span class="ot">=</span> sd,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      mínimo <span class="ot">=</span> min,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      máximo <span class="ot">=</span> max</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.names =</span> <span class="st">"{.fn}"</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 5
+    year      media desv_típica  mínimo máximo
+   &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+ 1  2000  0.000424      0.0230  -0.0686 0.0909
+ 2  2001 -0.000279      0.0252  -0.0988 0.101 
+ 3  2002 -0.000757      0.0313  -0.107  0.0943
+ 4  2003  0.00176       0.0209  -0.0558 0.0899
+ 5  2004  0.000135      0.0115  -0.0442 0.0357
+ 6  2005  0.000948      0.00885 -0.0313 0.0356
+ 7  2006  0.00113       0.0110  -0.0348 0.0345
+ 8  2007  0.000419      0.0132  -0.0440 0.0415
+ 9  2008 -0.00200       0.0341  -0.119  0.143 
+10  2009  0.00295       0.0290  -0.0816 0.134 
+11  2010 -0.000833      0.0286  -0.0940 0.232 
+12  2011 -0.000516      0.0239  -0.0833 0.0956
+13  2012  0.000911      0.0241  -0.0732 0.107 
+14  2013  0.000795      0.0164  -0.0570 0.0516
+15  2014  0.000704      0.0141  -0.0403 0.0378
+16  2015 -0.00121       0.0206  -0.141  0.0593
+17  2016  0.000917      0.0278  -0.199  0.0758
+18  2017  0.000698      0.0140  -0.0383 0.0582
+19  2018 -0.00109       0.0137  -0.0543 0.0373
+20  2019  0.0000873     0.0154  -0.0429 0.0429
+21  2020 -0.000491      0.0362  -0.169  0.192 
+22  2021  0.000852      0.0192  -0.0892 0.0687
+23  2022  0.000216      0.0221  -0.0769 0.0725
+24  2023  0.00140       0.0191  -0.0735 0.0573</code></pre>
+</div>
+</div>
+</section>
+<section id="código-python" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="código-python">Código Python</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mizani.formatters <span class="im">import</span> percent_format</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Descarga de los datos diarios del precio de las acciones del Santander</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Creación del ticker del Banco Santander</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>SAN <span class="op">=</span> yf.Ticker(<span class="st">"SAN.MC"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de los datos para el período seleccionado</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>pSAN <span class="op">=</span> yf.download(<span class="st">"SAN.MC"</span>, start<span class="op">=</span><span class="st">"2000-01-01"</span>, end<span class="op">=</span><span class="st">"2023-10-31"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[*********************100%%**********************]  1 of 1 completed</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pSAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Open      High       Low     Close  Adj Close     Volume
+Date                                                                    
+2000-01-03  9.953261  9.987881  9.736886  9.849401   2.603298    8797337
+2000-01-04  9.728231  9.780161  9.529166  9.615716   2.541532    8811013
+2000-01-05  9.433961  9.555131  9.304136  9.382031   2.479768    9333517
+2000-01-06  9.382031  9.382031  9.382031  9.382031   2.479768          0
+2000-01-07  9.451271  9.823436  9.442616  9.797471   2.589572    9603132
+...              ...       ...       ...       ...        ...        ...
+2023-10-24  3.441000  3.442500  3.352500  3.381500   3.304766  170601157
+2023-10-25  3.400500  3.501500  3.345000  3.461000   3.382462   87290373
+2023-10-26  3.440000  3.520000  3.405500  3.511000   3.431327   32176659
+2023-10-27  3.545000  3.563000  3.457500  3.481000   3.402008   53188968
+2023-10-30  3.500000  3.576500  3.471500  3.569500   3.488500   70729714
+
+[6123 rows x 6 columns]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pSAN <span class="op">=</span> (pSAN.reset_index())</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>pSAN.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Date      Open      High       Low     Close  Adj Close   Volume
+0 2000-01-03  9.953261  9.987881  9.736886  9.849401   2.603298  8797337
+1 2000-01-04  9.728231  9.780161  9.529166  9.615716   2.541532  8811013
+2 2000-01-05  9.433961  9.555131  9.304136  9.382031   2.479768  9333517
+3 2000-01-06  9.382031  9.382031  9.382031  9.382031   2.479768        0
+4 2000-01-07  9.451271  9.823436  9.442616  9.797471   2.589572  9603132</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pSAN.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Date    Open    High     Low   Close  Adj Close     Volume
+6118 2023-10-24  3.4410  3.4425  3.3525  3.3815   3.304766  170601157
+6119 2023-10-25  3.4005  3.5015  3.3450  3.4610   3.382462   87290373
+6120 2023-10-26  3.4400  3.5200  3.4055  3.5110   3.431327   32176659
+6121 2023-10-27  3.5450  3.5630  3.4575  3.4810   3.402008   53188968
+6122 2023-10-30  3.5000  3.5765  3.4715  3.5695   3.488500   70729714</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfica de serie temporal: evolución temporal de los precios</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  ggplot(pSAN, aes(y<span class="op">=</span><span class="st">"Adj Close"</span>, x<span class="op">=</span><span class="st">"Date"</span>)) </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_line() </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">""</span>, title<span class="op">=</span><span class="st">"Precio de las acciones del Banco Santander desde el año 2000 (EUR)"</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;ggplot: (322842294)&gt;</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="p1c2-app2a_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cálculo de los rendimientos netos diarios</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ret(x):</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    x_change <span class="op">=</span> (x<span class="op">/</span>x.shift(<span class="dv">1</span>)<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_change</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>pSAN[<span class="st">'ret'</span>] <span class="op">=</span> ret(pSAN[<span class="st">'Adj Close'</span>])</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>pSAN[<span class="st">'ret'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0            NaN
+1      -0.023726
+2      -0.024302
+3       0.000000
+4       0.044280
+          ...   
+6118   -0.011691
+6119    0.023510
+6120    0.014447
+6121   -0.008545
+6122    0.025424
+Name: ret, Length: 6123, dtype: float64</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cálculo alternativo de la rentabilidad diaria</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>ret2 <span class="op">=</span> (pSAN</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  .sort_values(<span class="st">"Date"</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  .assign(ret2 <span class="op">=</span> <span class="kw">lambda</span> x: x[<span class="st">"Adj Close"</span>].pct_change())</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  .get([<span class="st">"Date"</span>, <span class="st">"ret2"</span>])</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>ret2.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Date      ret2
+0 2000-01-03       NaN
+1 2000-01-04 -0.023726
+2 2000-01-05 -0.024302
+3 2000-01-06  0.000000
+4 2000-01-07  0.044280</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminación de datos perdidos (missing data)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>pSAN <span class="op">=</span> pSAN.dropna()</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Evolución temporal de las rentabilidades diarias</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  ggplot(pSAN, aes(y<span class="op">=</span><span class="st">"ret"</span>, x<span class="op">=</span><span class="st">"Date"</span>))</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_line()</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">""</span>, title<span class="op">=</span><span class="st">"Rendimiento diario de las acciones del Banco Santarder"</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;ggplot: (322911833)&gt;</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="p1c2-app2a_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución de los rendimientos diarios (detección de asimetrías)</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>q5 <span class="op">=</span> pSAN[<span class="st">"ret"</span>].quantile(<span class="fl">0.05</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>q95 <span class="op">=</span> pSAN[<span class="st">"ret"</span>].quantile(<span class="fl">0.95</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  ggplot(pSAN, aes(x<span class="op">=</span><span class="st">"ret"</span>))</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_histogram(bins<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_vline(aes(xintercept<span class="op">=</span>q5), linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_vline(aes(xintercept<span class="op">=</span>q95), linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(x<span class="op">=</span><span class="va">None</span>, y<span class="op">=</span><span class="va">None</span>, title<span class="op">=</span><span class="st">"Distribución de los rendimientos diarios del Banco Santander"</span>)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_x_continuous(labels<span class="op">=</span>percent_format())</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;ggplot: (322950631)&gt;</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="p1c2-app2a_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadística resumen global</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pSAN[<span class="st">"ret"</span>].describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>count    6122.000000
+mean        0.000295
+std         0.022250
+min        -0.198864
+25%        -0.010764
+50%         0.000000
+75%         0.010888
+max         0.232166
+Name: ret, dtype: float64</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selección de estadísticos y precisión</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>est_res <span class="op">=</span> pSAN[<span class="st">'ret'</span>].agg({</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'media'</span>: <span class="st">'mean'</span>,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'desv_típica'</span>: <span class="st">'std'</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'mínimo'</span>: <span class="st">'min'</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'máximo'</span>: <span class="st">'max'</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>est_res.<span class="bu">round</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>media          0.0003
+desv_típica    0.0222
+mínimo        -0.1989
+máximo         0.2322
+Name: ret, dtype: float64</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estadística resumen por año</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>pSAN[<span class="st">"ret"</span>].groupby(pSAN[<span class="st">"Date"</span>].dt.year).describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      count      mean       std  ...       50%       75%       max
+Date                             ...                              
+2000  259.0  0.000424  0.022951  ...  0.000000  0.014402  0.090854
+2001  261.0 -0.000279  0.025248  ...  0.000000  0.014374  0.101011
+2002  261.0 -0.000757  0.031266  ...  0.000000  0.015038  0.094340
+2003  261.0  0.001760  0.020850  ...  0.000000  0.011713  0.089888
+2004  262.0  0.000135  0.011547  ...  0.000000  0.006670  0.035714
+2005  260.0  0.000948  0.008852  ...  0.000923  0.005877  0.035646
+2006  255.0  0.001134  0.010973  ...  0.001440  0.008154  0.034546
+2007  255.0  0.000419  0.013181  ...  0.000697  0.008081  0.041507
+2008  254.0 -0.002003  0.034099  ... -0.002576  0.013783  0.143284
+2009  254.0  0.002950  0.028959  ...  0.003462  0.017250  0.133913
+2010  256.0 -0.000833  0.028594  ... -0.000615  0.011564  0.232166
+2011  257.0 -0.000516  0.023928  ... -0.001449  0.012061  0.095599
+2012  256.0  0.000911  0.024094  ...  0.001128  0.012814  0.106749
+2013  255.0  0.000795  0.016403  ...  0.000329  0.010241  0.051650
+2014  255.0  0.000704  0.014124  ...  0.000616  0.009475  0.037773
+2015  256.0 -0.001209  0.020640  ...  0.000304  0.009400  0.059319
+2016  257.0  0.000917  0.027789  ...  0.002039  0.015687  0.075822
+2017  255.0  0.000698  0.014017  ...  0.000866  0.008121  0.058201
+2018  254.0 -0.001001  0.013758  ... -0.001448  0.007173  0.037286
+2019  256.0  0.000087  0.015410  ... -0.001028  0.009087  0.042904
+2020  257.0 -0.000491  0.036154  ... -0.004403  0.019257  0.192221
+2021  256.0  0.000852  0.019230  ...  0.000943  0.012088  0.068725
+2022  257.0  0.000216  0.022138  ... -0.000956  0.013416  0.072488
+2023  213.0  0.001404  0.019096  ...  0.001115  0.014208  0.057257
+
+[24 rows x 8 columns]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selección de estadísticos y precisión</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>pSAN[<span class="st">'year'</span>] <span class="op">=</span> pSAN[<span class="st">"Date"</span>].dt.year</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>est_anual <span class="op">=</span> pSAN.groupby(<span class="st">'year'</span>).agg({<span class="st">'ret'</span>: [<span class="st">'mean'</span>, <span class="st">'std'</span>, <span class="st">'min'</span>, <span class="st">'max'</span>]})</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>est_anual.<span class="bu">round</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         ret                        
+        mean     std     min     max
+year                                
+2000  0.0004  0.0230 -0.0686  0.0909
+2001 -0.0003  0.0252 -0.0988  0.1010
+2002 -0.0008  0.0313 -0.1074  0.0943
+2003  0.0018  0.0209 -0.0558  0.0899
+2004  0.0001  0.0115 -0.0442  0.0357
+2005  0.0009  0.0089 -0.0313  0.0356
+2006  0.0011  0.0110 -0.0348  0.0345
+2007  0.0004  0.0132 -0.0440  0.0415
+2008 -0.0020  0.0341 -0.1194  0.1433
+2009  0.0030  0.0290 -0.0816  0.1339
+2010 -0.0008  0.0286 -0.0940  0.2322
+2011 -0.0005  0.0239 -0.0833  0.0956
+2012  0.0009  0.0241 -0.0732  0.1067
+2013  0.0008  0.0164 -0.0570  0.0516
+2014  0.0007  0.0141 -0.0403  0.0378
+2015 -0.0012  0.0206 -0.1409  0.0593
+2016  0.0009  0.0278 -0.1989  0.0758
+2017  0.0007  0.0140 -0.0383  0.0582
+2018 -0.0010  0.0138 -0.0543  0.0373
+2019  0.0001  0.0154 -0.0429  0.0429
+2020 -0.0005  0.0362 -0.1686  0.1922
+2021  0.0009  0.0192 -0.0892  0.0687
+2022  0.0002  0.0221 -0.0769  0.0725
+2023  0.0014  0.0191 -0.0735  0.0573</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p1c2-app1b.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p1c2-app2b.html" class="pagination-link">
+        <span class="nav-page-text">Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Econometría - Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p3c2-app4.html" rel="next">
+<link href="./p3c2-app2.html" rel="prev">
+<link href="./EconMetricsRPy-logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p3-mrl-extendido.html">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</a></li><li class="breadcrumb-item"><a href="./p3c2-app3.html">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Econometría</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/JulianRamajo/EconometriaRPy" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PREFACIO</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p0-aspectos-tecnicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 0: ASPECTOS TÉCNICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c1-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instalación y configuración de R y Python en RStudio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c2-rpy-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R versus Python: Comparación de lenguajes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c3-reticulate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programación conjunta en R y Python con reticulate</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p1-introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 1: CONCEPTOS BÁSICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Conceptos básicos de la econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del <em>tidyverse</em></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3b (Gestión y representación gráfica de datos espaciales): Desarrollo humano al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.4 (Regresiones con datos de corte transversal): Demanda familiar de carne</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p2-mrl-basico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo de regresión lineal y sus hipótesis básicas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p3-mrl-extendido.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Diagnosis, correcciones y extensiones del modelo de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app3.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas ‘morales’ en Francia en 1830</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas [Ohio, Estados Unidos]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.9 (Información muestral - Falta de observaciones): Exclusión social en el comportamiento de las aseguradoras de Chicago</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.10 (Información muestral - Multicolinealidad): Análisis de la rentabilidad empresarial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">BIBLIOGRAFÍA</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#diferenciación-salarial-por-sexo" id="toc-diferenciación-salarial-por-sexo" class="nav-link active" data-scroll-target="#diferenciación-salarial-por-sexo">Diferenciación salarial por sexo</a>
+  <ul>
+  <li><a href="#código-r" id="toc-código-r" class="nav-link" data-scroll-target="#código-r">Código R</a></li>
+  <li><a href="#código-python" id="toc-código-python" class="nav-link" data-scroll-target="#código-python">Código Python</a></li>
+  </ul></li>
+  <li><a href="#exportaciones-antes-y-después-de-la-entrada-de-españa-en-la-unión-europea" id="toc-exportaciones-antes-y-después-de-la-entrada-de-españa-en-la-unión-europea" class="nav-link" data-scroll-target="#exportaciones-antes-y-después-de-la-entrada-de-españa-en-la-unión-europea">Exportaciones antes y después de la entrada de España en la Unión Europea</a>
+  <ul>
+  <li><a href="#código-r-1" id="toc-código-r-1" class="nav-link" data-scroll-target="#código-r-1">Código R</a></li>
+  <li><a href="#código-python-1" id="toc-código-python-1" class="nav-link" data-scroll-target="#código-python-1">Código Python</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+.justify { text-align: justify !important }
+</style>
+</div>
+<div class="justify">
+<p>En esta aplicación se estimarán varias regresiones que permiten parámetros no constantes.</p>
+</div>
+<section id="diferenciación-salarial-por-sexo" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="diferenciación-salarial-por-sexo">Diferenciación salarial por sexo</h2>
+<div class="justify">
+<p>De nuevo en este ejemplo se usará como especificación econométrica de partida el siguiente modelo log-lineal, que se corresponde con la <a href="https://es.wikipedia.org/wiki/Funci%C3%B3n_de_ingresos_de_Mincer">ecuación de salarios de Mincer</a>:</p>
+<p><span class="math display">\[
+log(SALARIO_{i}) = \beta_1 + \beta_2  EDUC_{i} +  \beta_3  EXPER_{i} + e_{i}
+\]</span></p>
+<p>donde <span class="math inline">\(SALARIO\)</span>, <span class="math inline">\(EDUC\)</span> y <span class="math inline">\(EXPER\)</span> representan, respectivamente, el salario percibido, el nivel de educación y el grado de experiencia de cada uno de los 526 indviduos que componen la base muestral.</p>
+</div>
+<section id="código-r" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="código-r">Código R</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>SAL_SEX <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/SAL_SEX.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(SAL_SEX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 526   4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(SAL_SEX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [526 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ EDUC   : num [1:526] 11 12 11 8 12 16 18 12 12 17 ...
+ $ EXPER  : num [1:526] 2 22 2 44 7 9 15 5 26 22 ...
+ $ MUJER  : num [1:526] 1 1 0 0 0 0 0 1 1 0 ...
+ $ SALARIO: num [1:526] 3.1 3.24 3 6 5.3 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   EDUC = col_double(),
+  ..   EXPER = col_double(),
+  ..   MUJER = col_double(),
+  ..   SALARIO = col_double()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(SAL_SEX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+   EDUC EXPER MUJER SALARIO
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1    11     2     1    3.1 
+2    12    22     1    3.24
+3    11     2     0    3   
+4     8    44     0    6   
+5    12     7     0    5.3 
+6    16     9     0    8.75</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(SAL_SEX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+   EDUC EXPER MUJER SALARIO
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1    12     2     0    5.65
+2    16    14     1   15   
+3    10     2     1    2.27
+4    15    13     0    4.67
+5    16     5     0   11.6 
+6    14     5     1    3.5 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución de la variable dependiente</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Boxplot</span>(<span class="sc">~</span>SALARIO, <span class="at">data=</span>SAL_SEX, <span class="at">main=</span><span class="st">""</span>, <span class="at">ylab=</span><span class="st">"SALARIO"</span>, <span class="at">id=</span><span class="fu">list</span>(<span class="at">method =</span> <span class="st">"none"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversión de variable numérica MUJER (0/1) a cualitativa (factor)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(SAL_SEX<span class="sc">$</span>MUJER)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SEXO <span class="ot">&lt;-</span> <span class="fu">factor</span>(SAL_SEX<span class="sc">$</span>MUJER, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(SEXO)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hombre  Mujer 
+   274    252 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución de la variable dependiente por sexo</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Boxplot</span>(SALARIO<span class="sc">~</span>SEXO, <span class="at">data=</span>SAL_SEX, <span class="at">ylab=</span><span class="st">"SALARIO"</span>, <span class="at">id=</span><span class="fu">list</span>(<span class="at">method =</span> <span class="st">"none"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ecuación de salarios para la muestra total</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_SAL <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(SALARIO) <span class="sc">~</span> EDUC <span class="sc">+</span> EXPER , <span class="at">data =</span> SAL_SEX))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(SALARIO) ~ EDUC + EXPER, data = SAL_SEX)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.05800 -0.30136 -0.04539  0.30601  1.44425 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 0.216854   0.108595   1.997   0.0464 *  
+EDUC        0.097936   0.007622  12.848  &lt; 2e-16 ***
+EXPER       0.010347   0.001555   6.653 7.24e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4614 on 523 degrees of freedom
+Multiple R-squared:  0.2493,    Adjusted R-squared:  0.2465 
+F-statistic: 86.86 on 2 and 523 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficas parciales con diferenciación por sexo</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterplot</span>(<span class="fu">log</span>(SALARIO) <span class="sc">~</span> EDUC<span class="sc">|</span> SEXO, <span class="at">data=</span>SAL_SEX, <span class="at">smooth=</span><span class="cn">FALSE</span>, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">boxplots=</span><span class="cn">FALSE</span>, <span class="at">ylab=</span><span class="st">"Relación parcial log(Salario)/Educación"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterplot</span>(<span class="fu">log</span>(SALARIO) <span class="sc">~</span> EXPER<span class="sc">|</span> SEXO, <span class="at">data=</span>SAL_SEX, <span class="at">smooth=</span><span class="cn">FALSE</span>, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">boxplots=</span><span class="cn">FALSE</span>, <span class="at">ylab=</span><span class="st">"Relación parcial log(Salario)/Experiencia"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diferenciación por sexos:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ¿existe realmente diferenciación por sexos? (estadísticamente significativa)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Hombres</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_SAL_h <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(SALARIO) <span class="sc">~</span> EDUC <span class="sc">+</span> EXPER , </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> SAL_SEX[<span class="fu">which</span>(SAL_SEX<span class="sc">$</span>MUJER<span class="sc">==</span><span class="dv">0</span>),]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(SALARIO) ~ EDUC + EXPER, data = SAL_SEX[which(SAL_SEX$MUJER == 
+    0), ])
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.20460 -0.29936 -0.01032  0.28558  1.25532 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 0.249794   0.144264   1.732   0.0845 .  
+EDUC        0.101813   0.009656  10.544  &lt; 2e-16 ***
+EXPER       0.014908   0.002148   6.941 2.87e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4457 on 271 degrees of freedom
+Multiple R-squared:  0.3106,    Adjusted R-squared:  0.3055 
+F-statistic: 61.04 on 2 and 271 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mujeres</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_SAL_m <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(SALARIO) <span class="sc">~</span> EDUC <span class="sc">+</span> EXPER , </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> SAL_SEX[<span class="fu">which</span>(SAL_SEX<span class="sc">$</span>MUJER<span class="sc">==</span><span class="dv">1</span>),]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(SALARIO) ~ EDUC + EXPER, data = SAL_SEX[which(SAL_SEX$MUJER == 
+    1), ])
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.96983 -0.21953 -0.06965  0.21896  1.22467 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 0.334836   0.141456   2.367   0.0187 *  
+EDUC        0.082314   0.010458   7.871 1.08e-13 ***
+EXPER       0.004116   0.001894   2.173   0.0307 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.399 on 249 degrees of freedom
+Multiple R-squared:  0.1996,    Adjusted R-squared:  0.1932 
+F-statistic: 31.06 on 2 and 249 DF,  p-value: 9.089e-13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de coeficientes estimados</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">compareCoefs</span>(lm_SAL_h, lm_SAL_m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Calls:
+1: lm(formula = log(SALARIO) ~ EDUC + EXPER, data = 
+  SAL_SEX[which(SAL_SEX$MUJER == 0), ])
+2: lm(formula = log(SALARIO) ~ EDUC + EXPER, data = 
+  SAL_SEX[which(SAL_SEX$MUJER == 1), ])
+
+            Model 1 Model 2
+(Intercept)   0.250   0.335
+SE            0.144   0.141
+                           
+EDUC        0.10181 0.08231
+SE          0.00966 0.01046
+                           
+EXPER       0.01491 0.00412
+SE          0.00215 0.00189
+                           </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de Chow de cambio estructural</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>lm_SAL_int <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(SALARIO) <span class="sc">~</span> (EDUC <span class="sc">+</span> EXPER)<span class="sc">*</span>MUJER, <span class="at">data =</span> SAL_SEX)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_SAL, lm_SAL_int)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: log(SALARIO) ~ EDUC + EXPER
+Model 2: log(SALARIO) ~ (EDUC + EXPER) * MUJER
+  Res.Df     RSS Df Sum of Sq      F    Pr(&gt;F)    
+1    523 111.345                                  
+2    520  93.477  3    17.868 33.133 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regresión diferenciada por sexos</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_SAL_int)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(SALARIO) ~ (EDUC + EXPER) * MUJER, data = SAL_SEX)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.96983 -0.26177 -0.03718  0.25663  1.25532 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.249794   0.137237   1.820 0.069308 .  
+EDUC         0.101813   0.009186  11.084  &lt; 2e-16 ***
+EXPER        0.014908   0.002043   7.296 1.11e-12 ***
+MUJER        0.085042   0.203534   0.418 0.676247    
+EDUC:MUJER  -0.019499   0.014417  -1.352 0.176818    
+EXPER:MUJER -0.010792   0.002868  -3.763 0.000187 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.424 on 520 degrees of freedom
+Multiple R-squared:  0.3698,    Adjusted R-squared:  0.3637 
+F-statistic: 61.03 on 5 and 520 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="código-python" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="código-python">Código Python</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.stats <span class="im">as</span> smstats</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> sp</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>SAL_SEX <span class="op">=</span> pd.read_csv(<span class="st">"data/SAL_SEX.csv"</span>)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>SAL_SEX.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(526, 4)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>SAL_SEX.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 526 entries, 0 to 525
+Data columns (total 4 columns):
+ #   Column   Non-Null Count  Dtype  
+---  ------   --------------  -----  
+ 0   EDUC     526 non-null    int64  
+ 1   EXPER    526 non-null    int64  
+ 2   MUJER    526 non-null    int64  
+ 3   SALARIO  526 non-null    float64
+dtypes: float64(1), int64(3)
+memory usage: 16.6 KB</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>SAL_SEX.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   EDUC  EXPER  MUJER  SALARIO
+0    11      2      1     3.10
+1    12     22      1     3.24
+2    11      2      0     3.00
+3     8     44      0     6.00
+4    12      7      0     5.30</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>SAL_SEX.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     EDUC  EXPER  MUJER  SALARIO
+521    16     14      1    15.00
+522    10      2      1     2.27
+523    15     13      0     4.67
+524    16      5      0    11.56
+525    14      5      1     3.50</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución de la variable dependiente</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">1</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x<span class="op">=</span>SAL_SEX[<span class="st">"SALARIO"</span>])</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversión de variable numérica a cualitativa (factor)</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>SAL_SEX[<span class="st">'SEXO'</span>]<span class="op">=</span>SAL_SEX[<span class="st">'MUJER'</span>].astype(<span class="st">'category'</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>SAL_SEX[<span class="st">'SEXO'</span>]<span class="op">=</span>SAL_SEX[<span class="st">'SEXO'</span>].cat.rename_categories([<span class="st">'Hombre'</span>, <span class="st">'Mujer'</span>])</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución de la variable dependiente por sexo</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">2</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x<span class="op">=</span>SAL_SEX[<span class="st">"SALARIO"</span>] , y<span class="op">=</span>SAL_SEX[<span class="st">"SEXO"</span>])</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ecuación de salarios para la muestra total</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>lm_SAL <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'np.log(SALARIO) ~ EDUC + EXPER'</span>, data<span class="op">=</span>SAL_SEX).fit()</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_SAL.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        np.log(SALARIO)   R-squared:                       0.249
+Model:                            OLS   Adj. R-squared:                  0.246
+Method:                 Least Squares   F-statistic:                     86.86
+Date:                Wed, 22 Nov 2023   Prob (F-statistic):           2.68e-33
+Time:                        18:42:06   Log-Likelihood:                -338.01
+No. Observations:                 526   AIC:                             682.0
+Df Residuals:                     523   BIC:                             694.8
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.2169      0.109      1.997      0.046       0.004       0.430
+EDUC           0.0979      0.008     12.848      0.000       0.083       0.113
+EXPER          0.0103      0.002      6.653      0.000       0.007       0.013
+==============================================================================
+Omnibus:                        7.740   Durbin-Watson:                   1.789
+Prob(Omnibus):                  0.021   Jarque-Bera (JB):                9.485
+Skew:                           0.165   Prob(JB):                      0.00872
+Kurtosis:                       3.569   Cond. No.                         130.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficas parciales con diferenciación por sexo</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>SAL_SEX[<span class="st">'l_SALARIO'</span>]<span class="op">=</span>np.log(SAL_SEX[<span class="st">'SALARIO'</span>])</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">3</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>sns.lmplot(x<span class="op">=</span><span class="st">"EDUC"</span>, y<span class="op">=</span><span class="st">"l_SALARIO"</span>, hue<span class="op">=</span><span class="st">"SEXO"</span>, data<span class="op">=</span>SAL_SEX)<span class="op">;</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="580"></p>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">4</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>sns.lmplot(x<span class="op">=</span><span class="st">"EXPER"</span>, y<span class="op">=</span><span class="st">"l_SALARIO"</span>, hue<span class="op">=</span><span class="st">"SEXO"</span>, data<span class="op">=</span>SAL_SEX)<span class="op">;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-3-4.png" class="img-fluid" width="580"></p>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diferenciación por sexos:</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ¿existe realmente diferenciación por sexos? (estadísticamente significativa)</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Hombres</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>lm_SAL_h <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'np.log(SALARIO) ~ EDUC + EXPER'</span>, </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>subset<span class="op">=</span>(SAL_SEX[<span class="st">'MUJER'</span>] <span class="op">==</span> <span class="dv">0</span>), data<span class="op">=</span>SAL_SEX).fit()</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_SAL_h.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        np.log(SALARIO)   R-squared:                       0.311
+Model:                            OLS   Adj. R-squared:                  0.305
+Method:                 Least Squares   F-statistic:                     61.04
+Date:                Wed, 22 Nov 2023   Prob (F-statistic):           1.30e-22
+Time:                        18:42:08   Log-Likelihood:                -165.86
+No. Observations:                 274   AIC:                             337.7
+Df Residuals:                     271   BIC:                             348.5
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.2498      0.144      1.732      0.084      -0.034       0.534
+EDUC           0.1018      0.010     10.544      0.000       0.083       0.121
+EXPER          0.0149      0.002      6.941      0.000       0.011       0.019
+==============================================================================
+Omnibus:                        0.921   Durbin-Watson:                   1.872
+Prob(Omnibus):                  0.631   Jarque-Bera (JB):                0.674
+Skew:                           0.098   Prob(JB):                        0.714
+Kurtosis:                       3.143   Cond. No.                         131.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mujeres</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>lm_SAL_m <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'np.log(SALARIO) ~ EDUC + EXPER'</span>, </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>subset<span class="op">=</span>(SAL_SEX[<span class="st">'MUJER'</span>] <span class="op">==</span> <span class="dv">1</span>), data<span class="op">=</span>SAL_SEX).fit()</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_SAL_m.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        np.log(SALARIO)   R-squared:                       0.200
+Model:                            OLS   Adj. R-squared:                  0.193
+Method:                 Least Squares   F-statistic:                     31.06
+Date:                Wed, 22 Nov 2023   Prob (F-statistic):           9.09e-13
+Time:                        18:42:08   Log-Likelihood:                -124.54
+No. Observations:                 252   AIC:                             255.1
+Df Residuals:                     249   BIC:                             265.7
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.3348      0.141      2.367      0.019       0.056       0.613
+EDUC           0.0823      0.010      7.871      0.000       0.062       0.103
+EXPER          0.0041      0.002      2.173      0.031       0.000       0.008
+==============================================================================
+Omnibus:                       17.664   Durbin-Watson:                   2.103
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               56.098
+Skew:                           0.007   Prob(JB):                     6.58e-13
+Kurtosis:                       5.311   Cond. No.                         133.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regresión diferenciada por sexos</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>lm_SAL_int <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'np.log(SALARIO) ~ (EDUC + EXPER)*MUJER'</span>, </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>data<span class="op">=</span>SAL_SEX).fit()</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_SAL_int.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:        np.log(SALARIO)   R-squared:                       0.370
+Model:                            OLS   Adj. R-squared:                  0.364
+Method:                 Least Squares   F-statistic:                     61.03
+Date:                Wed, 22 Nov 2023   Prob (F-statistic):           5.27e-50
+Time:                        18:42:08   Log-Likelihood:                -292.01
+No. Observations:                 526   AIC:                             596.0
+Df Residuals:                     520   BIC:                             621.6
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P&gt;|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.2498      0.137      1.820      0.069      -0.020       0.519
+EDUC            0.1018      0.009     11.084      0.000       0.084       0.120
+EXPER           0.0149      0.002      7.296      0.000       0.011       0.019
+MUJER           0.0850      0.204      0.418      0.676      -0.315       0.485
+EDUC:MUJER     -0.0195      0.014     -1.352      0.177      -0.048       0.009
+EXPER:MUJER    -0.0108      0.003     -3.763      0.000      -0.016      -0.005
+==============================================================================
+Omnibus:                       12.139   Durbin-Watson:                   1.802
+Prob(Omnibus):                  0.002   Jarque-Bera (JB):               22.040
+Skew:                           0.063   Prob(JB):                     1.64e-05
+Kurtosis:                       3.995   Cond. No.                         333.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de Chow de cambio estructural</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>sm.stats.anova_lm(lm_SAL,lm_SAL_int) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   df_resid         ssr  df_diff    ss_diff          F        Pr(&gt;F)
+0     523.0  111.344709      0.0        NaN        NaN           NaN
+1     520.0   93.476534      3.0  17.868174  33.132916  1.306612e-19</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-3-5.png" class="img-fluid" width="614"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="exportaciones-antes-y-después-de-la-entrada-de-españa-en-la-unión-europea" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exportaciones-antes-y-después-de-la-entrada-de-españa-en-la-unión-europea">Exportaciones antes y después de la entrada de España en la Unión Europea</h2>
+<div class="justify">
+<p>Tanto la teoría económica como la experiencia econométrica internacional nos señalan que las exportaciones de bienes y servicios de un país dependen de dos variables básicas, un indicador de actividad económica mundial y un indicador de precios relativos. Para estimar una ecuación de exportaciones para el caso español, se han tomado series de datos históricos para el período 1970-1997 de las siguientes variables: las exportaciones reales de bienes y servicios, excluido el turismo (<span class="math inline">\(XGS\)</span>); el índice anual del producto interior bruto real mundial (<span class="math inline">\(WGDP\)</span>); y el tipo de cambio efectivo real respecto al conjunto de las diez monedas principales, corregido por la relación de precios de exportación de España respecto a la media ponderada de los precios de exportación de los principales países (<span class="math inline">\(REER\)</span>).</p>
+</div>
+<p>El modelo de regresión que se usará como soporte del ejemplo es el siguiente:</p>
+<p><span class="math display">\[
+log(XGS_{t}) = \beta_1 + \beta_2  log(WGDP_{t}) +  \beta_3  log(REER_{t}) + e_{t}
+\]</span></p>
+<section id="código-r-1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="código-r-1">Código R</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>EXP_ESP <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"data/EXP_ESP_Y.csv"</span>, <span class="at">delim =</span> <span class="st">";"</span>)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># División de la muestra entre preUE (1970-1985) y postUE (1986-1997)</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>Y1986 <span class="ot">=</span> <span class="fu">match</span>(<span class="fu">as.Date</span>(<span class="st">"1986-01-01"</span>), EXP_ESP<span class="sc">$</span>date)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>Y1986</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Variables numérica y cualitativa de subperíodos</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>UE <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">16</span>), <span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">12</span>)), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"preUE"</span>, <span class="st">"postUE"</span>))</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>UE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] preUE  preUE  preUE  preUE  preUE  preUE  preUE  preUE  preUE  preUE 
+[11] preUE  preUE  preUE  preUE  preUE  preUE  postUE postUE postUE postUE
+[21] postUE postUE postUE postUE postUE postUE postUE postUE
+Levels: preUE postUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(UE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "factor"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>EXP_ESP<span class="sc">$</span>D1986 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(UE)<span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>EXP_ESP<span class="sc">$</span>D1986</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(EXP_ESP<span class="sc">$</span>D1986)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Formato de series temporales</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>EXP_ESP_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(EXP_ESP[,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">start=</span><span class="fu">c</span>(<span class="dv">1970</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">1997</span>), <span class="at">frequency =</span> <span class="dv">1</span>)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(EXP_ESP_ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-4-11.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ecuación de exportaciones para el período completo (1970-1997)</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>lm_X_ESP <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> <span class="fu">log</span>(WGDP) <span class="sc">+</span> <span class="fu">log</span>(REER), <span class="at">data =</span> EXP_ESP_ts)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_X_ESP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(XGS) ~ log(WGDP) + log(REER), data = EXP_ESP_ts)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.08302 -0.04419 -0.02013  0.03883  0.14376 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -0.24239    0.84432  -0.287    0.776    
+log(WGDP)    2.04618    0.06235  32.820   &lt;2e-16 ***
+log(REER)   -0.34878    0.21480  -1.624    0.117    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.06663 on 25 degrees of freedom
+Multiple R-squared:  0.9853,    Adjusted R-squared:  0.9841 
+F-statistic: 836.6 on 2 and 25 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficas parciales con diferenciación por subperíodos</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterplot</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> <span class="fu">log</span>(WGDP)<span class="sc">|</span> D1986, <span class="at">data=</span>EXP_ESP_ts, </span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">smooth=</span><span class="cn">FALSE</span>, <span class="at">boxplots=</span><span class="cn">FALSE</span>, </span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ylab=</span><span class="st">"Relación parcial Exportaciones/PIB mundial (logs)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-4-12.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterplot</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> <span class="fu">log</span>(REER)<span class="sc">|</span> D1986, <span class="at">data=</span>EXP_ESP_ts, </span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">smooth=</span><span class="cn">FALSE</span>, <span class="at">boxplots=</span><span class="cn">FALSE</span>, </span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">ylab=</span><span class="st">"Relación parcial Exportaciones/Tipo de cambio (logs)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-4-13.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diferenciación por subperíodos</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co"># PreUE</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>preUE <span class="ot">&lt;-</span> <span class="fu">window</span>(EXP_ESP_ts, <span class="at">start=</span><span class="dv">1970</span>, <span class="at">end =</span> <span class="dv">1985</span>)</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>lm_X_ESP_preUE <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> <span class="fu">log</span>(WGDP) <span class="sc">+</span> <span class="fu">log</span>(REER) , <span class="at">data =</span> preUE)</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_X_ESP_preUE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(XGS) ~ log(WGDP) + log(REER), data = preUE)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.085980 -0.029433  0.003653  0.027247  0.084831 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   2.5078     1.6493   1.520   0.1523    
+log(WGDP)     1.8144     0.0846  21.447 1.57e-11 ***
+log(REER)    -0.6945     0.3187  -2.179   0.0483 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.05124 on 13 degrees of freedom
+Multiple R-squared:  0.9763,    Adjusted R-squared:  0.9727 
+F-statistic: 267.8 on 2 and 13 DF,  p-value: 2.725e-11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PostUE</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>postUE <span class="ot">&lt;-</span> <span class="fu">window</span>(EXP_ESP_ts, <span class="at">start=</span><span class="dv">1986</span>, <span class="at">end =</span> <span class="dv">1997</span>)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>lm_X_ESP_postUE <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> <span class="fu">log</span>(WGDP) <span class="sc">+</span> <span class="fu">log</span>(REER) , <span class="at">data =</span> postUE)</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_X_ESP_postUE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(XGS) ~ log(WGDP) + log(REER), data = postUE)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.052680 -0.032117  0.005373  0.029904  0.037074 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -1.6788     0.8889  -1.889  0.09153 .  
+log(WGDP)     2.6425     0.1032  25.610 1.02e-09 ***
+log(REER)    -0.7220     0.1933  -3.735  0.00466 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.03661 on 9 degrees of freedom
+Multiple R-squared:  0.9871,    Adjusted R-squared:  0.9842 
+F-statistic: 344.6 on 2 and 9 DF,  p-value: 3.133e-09</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de coeficientes estimados</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">compareCoefs</span>(lm_X_ESP_preUE,lm_X_ESP_postUE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Calls:
+1: lm(formula = log(XGS) ~ log(WGDP) + log(REER), data = preUE)
+2: lm(formula = log(XGS) ~ log(WGDP) + log(REER), data = postUE)
+
+            Model 1 Model 2
+(Intercept)   2.508  -1.679
+SE            1.649   0.889
+                           
+log(WGDP)    1.8144  2.6425
+SE           0.0846  0.1032
+                           
+log(REER)    -0.694  -0.722
+SE            0.319   0.193
+                           </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ¿Existe diferenciación estadísticamente significativa por períodos?</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de Chow de cambio estructural</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Método 1 (ANOVA)</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>lm_X_EXP_int <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> (<span class="fu">log</span>(WGDP) <span class="sc">+</span> <span class="fu">log</span>(REER))<span class="sc">*</span>D1986, </span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> EXP_ESP_ts)</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_X_EXP_int)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(XGS) ~ (log(WGDP) + log(REER)) * D1986, data = EXP_ESP_ts)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.085980 -0.030598  0.004582  0.029904  0.084831 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      2.50775    1.47498   1.700   0.1032    
+log(WGDP)        1.81445    0.07566  23.982  &lt; 2e-16 ***
+log(REER)       -0.69447    0.28504  -2.436   0.0234 *  
+D1986           -4.18659    1.84754  -2.266   0.0336 *  
+log(WGDP):D1986  0.82803    0.14968   5.532 1.47e-05 ***
+log(REER):D1986 -0.02750    0.37389  -0.074   0.9420    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.04583 on 22 degrees of freedom
+Multiple R-squared:  0.9939,    Adjusted R-squared:  0.9925 
+F-statistic: 713.6 on 5 and 22 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_X_ESP, lm_X_EXP_int)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: log(XGS) ~ log(WGDP) + log(REER)
+Model 2: log(XGS) ~ (log(WGDP) + log(REER)) * D1986
+  Res.Df      RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     25 0.110991                                  
+2     22 0.046204  3  0.064787 10.283 0.0001978 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Método 2 (librería structchange)</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(strucchange)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sctest</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> <span class="fu">log</span>(WGDP) <span class="sc">+</span> <span class="fu">log</span>(REER), <span class="at">data=</span>EXP_ESP_ts, </span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">type =</span> <span class="st">"Chow"</span>, <span class="at">point =</span> Y1986<span class="dv">-1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Chow test
+
+data:  log(XGS) ~ log(WGDP) + log(REER)
+F = 10.283, p-value = 0.0001978</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrastes tipo Chow basados en estimaciones recursivas</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [se elimina un % de observaciones en los extremmos]</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>sbtest <span class="ot">&lt;-</span> <span class="fu">Fstats</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> <span class="fu">log</span>(WGDP) <span class="sc">+</span> <span class="fu">log</span>(REER), <span class="at">data =</span> EXP_ESP_ts, </span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">from =</span> <span class="fl">0.15</span>, <span class="at">to =</span> <span class="fl">0.85</span>)</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>sbtest[[<span class="st">"Fstats"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 1973 
+End = 1992 
+Frequency = 1 
+ [1] 26.94858 40.37538 52.72550 53.14715 43.28653 41.27132 51.76225 53.52206
+ [9] 43.97098 39.04442 33.07102 30.47271 30.84853 32.31100 37.23453 41.05085
+[17] 41.68393 41.71401 38.20854 33.80421</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sbtest, <span class="at">alpha =</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-4-14.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de Chow (1960) [versión Chi2]</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [punto de ruptura conocido: 17 - 4 (15% suprimidos a la izquierda) ]</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>Chow_F <span class="ot">&lt;-</span> sbtest<span class="sc">$</span>Fstats[Y1986<span class="dv">-4</span>] </span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>Chow_F </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 30.84853</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Se puede comprobar que CHOW=Chow_F/K</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Chow_F tiene una distribución asintótica Chi^2 mientras que</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CHOW tiene una distribución exacta F_K,T-2*K</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>pval <span class="ot">&lt;-</span>  <span class="dv">1</span><span class="sc">-</span><span class="fu">pchisq</span>(Chow_F,sbtest<span class="sc">$</span>nreg) </span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>pval</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9.148179e-07</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrastes de Andrews (1993) y Andrews y Ploberger (1994): supF, aveF, expF</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [punto de ruptura desconocido]</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sctest</span>(sbtest, <span class="at">type =</span> <span class="st">"supF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    supF test
+
+data:  sbtest
+sup.F = 53.522, p-value = 2.556e-10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sctest</span>(sbtest, <span class="at">type =</span> <span class="st">"aveF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    aveF test
+
+data:  sbtest
+ave.F = 40.323, p-value = 1.043e-13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sctest</span>(sbtest, <span class="at">type =</span> <span class="st">"expF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    expF test
+
+data:  sbtest
+exp.F = 24.845, p-value = 0.0007622</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test CUSUM (Brown, Durbin y Evans, 1975)</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">efp</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> <span class="fu">log</span>(WGDP) <span class="sc">+</span> <span class="fu">log</span>(REER), <span class="at">data =</span> EXP_ESP_ts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-4-15.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regresión diferenciada por tramos temporales</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="fu">log</span>(XGS) <span class="sc">~</span> (<span class="fu">log</span>(WGDP) <span class="sc">+</span> <span class="fu">log</span>(REER))<span class="sc">*</span>D1986, <span class="at">data=</span>EXP_ESP_ts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(XGS) ~ (log(WGDP) + log(REER)) * D1986, data = EXP_ESP_ts)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.085980 -0.030598  0.004582  0.029904  0.084831 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      2.50775    1.47498   1.700   0.1032    
+log(WGDP)        1.81445    0.07566  23.982  &lt; 2e-16 ***
+log(REER)       -0.69447    0.28504  -2.436   0.0234 *  
+D1986           -4.18659    1.84754  -2.266   0.0336 *  
+log(WGDP):D1986  0.82803    0.14968   5.532 1.47e-05 ***
+log(REER):D1986 -0.02750    0.37389  -0.074   0.9420    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.04583 on 22 degrees of freedom
+Multiple R-squared:  0.9939,    Adjusted R-squared:  0.9925 
+F-statistic: 713.6 on 5 and 22 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="código-python-1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="código-python-1">Código Python</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> sp</span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.stats <span class="im">as</span> smstats</span>
+<span id="cb94-10"><a href="#cb94-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb94-11"><a href="#cb94-11" aria-hidden="true" tabindex="-1"></a>EXP_ESP <span class="op">=</span> pd.read_csv(<span class="st">"data/EXP_ESP_Y.csv"</span>, sep<span class="op">=</span><span class="st">";"</span>, </span>
+<span id="cb94-12"><a href="#cb94-12" aria-hidden="true" tabindex="-1"></a>parse_dates<span class="op">=</span>[<span class="st">'date'</span>], index_col<span class="op">=</span><span class="st">'date'</span>)</span>
+<span id="cb94-13"><a href="#cb94-13" aria-hidden="true" tabindex="-1"></a>date <span class="op">=</span> pd.date_range(start <span class="op">=</span> <span class="st">'1970'</span>, periods <span class="op">=</span> <span class="bu">len</span>(EXP_ESP.index), freq <span class="op">=</span> <span class="st">'Y'</span>)</span>
+<span id="cb94-14"><a href="#cb94-14" aria-hidden="true" tabindex="-1"></a>EXP_ESP.index <span class="op">=</span> date</span>
+<span id="cb94-15"><a href="#cb94-15" aria-hidden="true" tabindex="-1"></a>EXP_ESP.index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>DatetimeIndex(['1970-12-31', '1971-12-31', '1972-12-31', '1973-12-31',
+               '1974-12-31', '1975-12-31', '1976-12-31', '1977-12-31',
+               '1978-12-31', '1979-12-31', '1980-12-31', '1981-12-31',
+               '1982-12-31', '1983-12-31', '1984-12-31', '1985-12-31',
+               '1986-12-31', '1987-12-31', '1988-12-31', '1989-12-31',
+               '1990-12-31', '1991-12-31', '1992-12-31', '1993-12-31',
+               '1994-12-31', '1995-12-31', '1996-12-31', '1997-12-31'],
+              dtype='datetime64[ns]', freq='A-DEC')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>EXP_ESP.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+DatetimeIndex: 28 entries, 1970-12-31 to 1997-12-31
+Freq: A-DEC
+Data columns (total 3 columns):
+ #   Column  Non-Null Count  Dtype  
+---  ------  --------------  -----  
+ 0   XGS     28 non-null     float64
+ 1   REER    28 non-null     float64
+ 2   WGDP    28 non-null     float64
+dtypes: float64(3)
+memory usage: 896.0 bytes</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>EXP_ESP.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    XGS        REER        WGDP
+1970-12-31  2225.123047  100.495876  104.200000
+1971-12-31  2541.091064  101.909402  109.410000
+1972-12-31  2881.596924  107.146269  115.646370
+1973-12-31  3169.757080  108.713460  123.972908
+1974-12-31  3138.059082  108.003898  127.072231</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>EXP_ESP.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  XGS        REER        WGDP
+1993-12-31   9579.586  114.520445  225.825635
+1994-12-31  11181.767  109.674712  235.084486
+1995-12-31  12299.895  116.021269  243.782612
+1996-12-31  13604.854  121.631204  253.777699
+1997-12-31  15611.863  116.142901  264.436363</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Variables numérica y cualitativa de subperíodos</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>EXP_ESP[<span class="st">'D1986'</span>] <span class="op">=</span> np.where(EXP_ESP.index <span class="op">&gt;</span> <span class="st">'1985-12-31'</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>EXP_ESP[<span class="st">'UE'</span>]<span class="op">=</span>EXP_ESP[<span class="st">'D1986'</span>].astype(<span class="st">'category'</span>)</span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>EXP_ESP[<span class="st">'UE'</span>]<span class="op">=</span>EXP_ESP[<span class="st">'UE'</span>].cat.rename_categories([<span class="st">'preUE'</span>, <span class="st">'postUE'</span>])</span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ecuación de exportaciones para el período completo (1970-1997)</span></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>lm_X_ESP <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'np.log(XGS) ~ np.log(WGDP) + np.log(REER)'</span>, </span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a>data<span class="op">=</span>EXP_ESP).fit()</span>
+<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_X_ESP.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:            np.log(XGS)   R-squared:                       0.985
+Model:                            OLS   Adj. R-squared:                  0.984
+Method:                 Least Squares   F-statistic:                     836.6
+Date:                Wed, 22 Nov 2023   Prob (F-statistic):           1.26e-23
+Time:                        18:42:10   Log-Likelihood:                 37.697
+No. Observations:                  28   AIC:                            -69.39
+Df Residuals:                      25   BIC:                            -65.40
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+================================================================================
+                   coef    std err          t      P&gt;|t|      [0.025      0.975]
+--------------------------------------------------------------------------------
+Intercept       -0.2424      0.844     -0.287      0.776      -1.981       1.497
+np.log(WGDP)     2.0462      0.062     32.820      0.000       1.918       2.175
+np.log(REER)    -0.3488      0.215     -1.624      0.117      -0.791       0.094
+==============================================================================
+Omnibus:                        2.960   Durbin-Watson:                   0.290
+Prob(Omnibus):                  0.228   Jarque-Bera (JB):                2.618
+Skew:                           0.693   Prob(JB):                        0.270
+Kurtosis:                       2.434   Cond. No.                         485.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficas parciales con diferenciación por subperíodos</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>EXP_ESP[<span class="st">'l_XGS'</span>]<span class="op">=</span>np.log(EXP_ESP[<span class="st">'XGS'</span>])</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>EXP_ESP[<span class="st">'l_WGDP'</span>]<span class="op">=</span>np.log(EXP_ESP[<span class="st">'WGDP'</span>])</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>EXP_ESP[<span class="st">'l_REER'</span>]<span class="op">=</span>np.log(EXP_ESP[<span class="st">'REER'</span>])</span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">5</span>)</span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>sns.lmplot(x<span class="op">=</span><span class="st">"l_WGDP"</span>, y<span class="op">=</span><span class="st">"l_XGS"</span>, hue<span class="op">=</span><span class="st">"UE"</span>, data<span class="op">=</span>EXP_ESP)<span class="op">;</span></span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="574"></p>
+</div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>plt.figure(<span class="dv">6</span>)</span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>sns.lmplot(x<span class="op">=</span><span class="st">"l_REER"</span>, y<span class="op">=</span><span class="st">"l_XGS"</span>, hue<span class="op">=</span><span class="st">"UE"</span>, data<span class="op">=</span>EXP_ESP)<span class="op">;</span></span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="574"></p>
+</div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diferenciación por subperíodos</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="co"># PreUE</span></span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>lm_X_ESP_preUE <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'np.log(XGS) ~ np.log(WGDP) + np.log(REER)'</span>, </span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>subset<span class="op">=</span>(EXP_ESP[<span class="st">'D1986'</span>] <span class="op">==</span> <span class="dv">0</span>), data<span class="op">=</span>EXP_ESP).fit()</span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_X_ESP_preUE.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:            np.log(XGS)   R-squared:                       0.976
+Model:                            OLS   Adj. R-squared:                  0.973
+Method:                 Least Squares   F-statistic:                     267.8
+Date:                Wed, 22 Nov 2023   Prob (F-statistic):           2.72e-11
+Time:                        18:42:11   Log-Likelihood:                 26.496
+No. Observations:                  16   AIC:                            -46.99
+Df Residuals:                      13   BIC:                            -44.68
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+================================================================================
+                   coef    std err          t      P&gt;|t|      [0.025      0.975]
+--------------------------------------------------------------------------------
+Intercept        2.5077      1.649      1.520      0.152      -1.055       6.071
+np.log(WGDP)     1.8144      0.085     21.447      0.000       1.632       1.997
+np.log(REER)    -0.6945      0.319     -2.179      0.048      -1.383      -0.006
+==============================================================================
+Omnibus:                        0.094   Durbin-Watson:                   0.755
+Prob(Omnibus):                  0.954   Jarque-Bera (JB):                0.314
+Skew:                           0.078   Prob(JB):                        0.855
+Kurtosis:                       2.331   Cond. No.                         899.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PostUE</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>lm_X_ESP_postUE <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'np.log(XGS) ~ np.log(WGDP) + np.log(REER)'</span>, </span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>subset<span class="op">=</span>(EXP_ESP[<span class="st">'D1986'</span>] <span class="op">==</span> <span class="dv">1</span>), data<span class="op">=</span>EXP_ESP).fit()</span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_X_ESP_postUE.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:            np.log(XGS)   R-squared:                       0.987
+Model:                            OLS   Adj. R-squared:                  0.984
+Method:                 Least Squares   F-statistic:                     344.6
+Date:                Wed, 22 Nov 2023   Prob (F-statistic):           3.13e-09
+Time:                        18:42:12   Log-Likelihood:                 24.386
+No. Observations:                  12   AIC:                            -42.77
+Df Residuals:                       9   BIC:                            -41.32
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+================================================================================
+                   coef    std err          t      P&gt;|t|      [0.025      0.975]
+--------------------------------------------------------------------------------
+Intercept       -1.6788      0.889     -1.889      0.092      -3.690       0.332
+np.log(WGDP)     2.6425      0.103     25.610      0.000       2.409       2.876
+np.log(REER)    -0.7220      0.193     -3.735      0.005      -1.159      -0.285
+==============================================================================
+Omnibus:                        3.241   Durbin-Watson:                   1.134
+Prob(Omnibus):                  0.198   Jarque-Bera (JB):                1.223
+Skew:                          -0.318   Prob(JB):                        0.543
+Kurtosis:                       1.572   Cond. No.                         620.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regresión diferenciada por tramos temporales</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>lm_X_ESP_int <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'np.log(XGS) ~ (np.log(WGDP) + np.log(REER))*D1986'</span>, </span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>data<span class="op">=</span>EXP_ESP).fit()</span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lm_X_ESP_int.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:            np.log(XGS)   R-squared:                       0.994
+Model:                            OLS   Adj. R-squared:                  0.992
+Method:                 Least Squares   F-statistic:                     713.6
+Date:                Wed, 22 Nov 2023   Prob (F-statistic):           1.46e-23
+Time:                        18:42:12   Log-Likelihood:                 49.966
+No. Observations:                  28   AIC:                            -87.93
+Df Residuals:                      22   BIC:                            -79.94
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+======================================================================================
+                         coef    std err          t      P&gt;|t|      [0.025      0.975]
+--------------------------------------------------------------------------------------
+Intercept              2.5077      1.475      1.700      0.103      -0.551       5.567
+np.log(WGDP)           1.8144      0.076     23.982      0.000       1.658       1.971
+np.log(REER)          -0.6945      0.285     -2.436      0.023      -1.286      -0.103
+D1986                 -4.1866      1.848     -2.266      0.034      -8.018      -0.355
+np.log(WGDP):D1986     0.8280      0.150      5.532      0.000       0.518       1.138
+np.log(REER):D1986    -0.0275      0.374     -0.074      0.942      -0.803       0.748
+==============================================================================
+Omnibus:                        0.097   Durbin-Watson:                   0.854
+Prob(Omnibus):                  0.953   Jarque-Bera (JB):                0.319
+Skew:                           0.000   Prob(JB):                        0.853
+Kurtosis:                       2.477   Cond. No.                     2.08e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 2.08e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de Chow de cambio estructural</span></span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>sm.stats.anova_lm(lm_X_ESP,lm_X_ESP_int) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   df_resid       ssr  df_diff   ss_diff          F    Pr(&gt;F)
+0      25.0  0.110991      0.0       NaN        NaN       NaN
+1      22.0  0.046204      3.0  0.064787  10.282842  0.000198</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="p3c2-app3_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p3c2-app2.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p3c2-app4.html" class="pagination-link">
+        <span class="nav-page-text">Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

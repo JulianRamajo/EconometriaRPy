@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Econometría - Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p2c2-app6.html" rel="next">
+<link href="./p2c2-app4.html" rel="prev">
+<link href="./EconMetricsRPy-logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p2-mrl-basico.html">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</a></li><li class="breadcrumb-item"><a href="./p2c2-app5.html">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Econometría</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/JulianRamajo/EconometriaRPy" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PREFACIO</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p0-aspectos-tecnicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 0: ASPECTOS TÉCNICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c1-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instalación y configuración de R y Python en RStudio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c2-rpy-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R versus Python: Comparación de lenguajes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c3-reticulate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programación conjunta en R y Python con reticulate</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p1-introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 1: CONCEPTOS BÁSICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Conceptos básicos de la econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del <em>tidyverse</em></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3b (Gestión y representación gráfica de datos espaciales): Desarrollo humano al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.4 (Regresiones con datos de corte transversal): Demanda familiar de carne</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p2-mrl-basico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo de regresión lineal y sus hipótesis básicas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app5.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p3-mrl-extendido.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Diagnosis, correcciones y extensiones del modelo de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas ‘morales’ en Francia en 1830</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas [Ohio, Estados Unidos]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.9 (Información muestral - Falta de observaciones): Exclusión social en el comportamiento de las aseguradoras de Chicago</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.10 (Información muestral - Multicolinealidad): Análisis de la rentabilidad empresarial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">BIBLIOGRAFÍA</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#código-r" id="toc-código-r" class="nav-link active" data-scroll-target="#código-r">Código R</a></li>
+  <li><a href="#código-python" id="toc-código-python" class="nav-link" data-scroll-target="#código-python">Código Python</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+.justify { text-align: justify !important }
+</style>
+</div>
+<div class="justify">
+<p>Desde un punto de vista económico, el objetivo de esta aplicación es cuantificar el alcance de la discriminación salarial de las mujeres en el mercado laboral americano. Así, en primer lugar compararemos los salarios de hombres y mujeres que comparten similitudes en los dos factores más relevantes para la determinación del salario, que son la edad o el nivel de educación, y luego extenderemos la especificación básica con diferentes <strong>variables de control</strong> para tener una aproximación más realista del concepto <em>ceteris paribus</em> (para poder aproximarse a la verdadera relación causal hay que tratar de condicionar sobre “todas” las variables relevantes para la determinación del salario).</p>
+<p>Como especificación econométrica base se usará el siguiente modelo log-lineal, que se corresponde con la <a href="https://es.wikipedia.org/wiki/Funci%C3%B3n_de_ingresos_de_Mincer">ecuación de salarios de Mincer</a>:</p>
+<p><span class="math display">\[
+log(w_{i}) = \beta_1 + \beta_2  age_{i} +  \beta_3  educ_{i} + e_{i}
+\]</span></p>
+<p>Desde un punto de vista metodológico, en este ejemplo se introduce el concepto de <em>variables ficticia</em> y su uso en econometría, mostrando su potencial para modelizar situaciones donde alguno de los regresores es de tipo cualitativo. Asimismo, se mostrará cómo debe cambiarse la especificación base en función de las características específicas de los datos con los que se trabaje.</p>
+</div>
+<section id="código-r" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="código-r">Código R</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(huxtable)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># INFORMACIÓN SOBRE EL CONJUNTO ORIGINAL DE DATOS Y SOBRE</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># LA OBTENCIÓN DE LA SUBMUESTRA USADA EN LA APLICACIÓN</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#  USA 2014 CENSUS DATA: MORG14_USA.csv</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># - Cross-sectional data: year 2014</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># - Observations are individuals of age 15 to 85 </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   (representative sample of this sub-pop.)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># - ID variables:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   HHID:   houeshold id</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   HRHHID2: 2nd part of houeshold id (some original hhid-s are split)</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   LINENO:  person ("line") number in household</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   AGE:    age</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   SEX:    gender</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   EARNWKE: weakly earnings</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   UHOURSE: usual work hours</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   OCC2012:    occupational code (census 2010 classification)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   GRADE92:    highest educational grade completed</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># - Labels of the variables are downlodable from here:</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;http://data.nber.org/morg/docs/cpsx.pdf&gt;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># - Occupational classification (census 2010) codes:</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;https://www.bls.gov/cps/cenocc2010.htm&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># FILTRADO PREVIO DE OBSERVACIONES: </span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Edad entre 24 to 64 años; </span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Haber trabajado más de 20 horas semanales; </span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Ingresos semanales positivos; </span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Empleados con estudios universitarios (grade92&gt;44)</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Operación sobre el fichero original [cps = read_csv("MORG14_USA.csv")]:</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># cps &lt;- cps %&gt;% </span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># filter(age&gt;=24 &amp; age&lt;=64 &amp; uhours&gt;=20 &amp; earnwke&gt;0 &amp; grade92&gt;=44)</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/CPS2014_USA.csv"</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformación de variables</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> cps <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">female=</span>sex<span class="sc">==</span><span class="dv">2</span>, <span class="at">w=</span>earnwke<span class="sc">/</span>uhours) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(w<span class="sc">&gt;=</span><span class="dv">1</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución de los salarios</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>cps <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(earnwke,uhours,w) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    earnwke         uhours            w          
+ Min.   :  38   Min.   :20.00   Min.   :  1.026  
+ 1st Qu.: 923   1st Qu.:40.00   1st Qu.: 21.634  
+ Median :1346   Median :40.00   Median : 31.250  
+ Mean   :1483   Mean   :42.97   Mean   : 34.565  
+ 3rd Qu.:1923   3rd Qu.:47.00   3rd Qu.: 45.673  
+ Max.   :2885   Max.   :99.00   Max.   :144.231  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma diferenciado por género</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>earnings_hist<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> cps, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">aes</span> (<span class="at">x =</span> w, <span class="at">y =</span> <span class="dv">2</span><span class="sc">*</span>(..count..)<span class="sc">/</span><span class="fu">sum</span>(..count..))) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">4</span>,  <span class="at">size =</span> <span class="fl">0.25</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>,  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">boundary=</span><span class="dv">0</span>, <span class="at">closed=</span><span class="st">'left'</span>,  <span class="at">show.legend=</span>F, <span class="at">na.rm =</span><span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Hourly earnings (dollars)"</span>, <span class="at">y =</span> <span class="st">"Percent"</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">ifelse</span>(female, <span class="st">"Female"</span>, <span class="st">"Male"</span>))<span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Hourly earnings (dollars)"</span>,<span class="at">y =</span> <span class="st">"Percent"</span>)<span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>) , <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>),) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.20</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.20</span>, <span class="at">by =</span> <span class="fl">0.05</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">accuracy =</span> 5L))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>earnings_hist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p2c2-app5_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Densidad estimada diferenciada por género</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cps) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> w, <span class="at">fill =</span> female), <span class="at">alpha=</span><span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p2c2-app5_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SALARIOS, EDAD Y GÉNERO</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>reg0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(w) <span class="sc">~</span> female, <span class="at">data=</span>cps)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>reg1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(w) <span class="sc">~</span> female <span class="sc">+</span> age, <span class="at">data=</span>cps)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>reg2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(w) <span class="sc">~</span> female<span class="sc">*</span>age, <span class="at">data=</span>cps) <span class="co"># Interacción entre género y edad</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>reg21 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(w) <span class="sc">~</span> age, <span class="at">data=</span>cps <span class="sc">%&gt;%</span> <span class="fu">filter</span>(female<span class="sc">==</span><span class="dv">1</span>)) <span class="co"># Ec. mujeres</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>reg22 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(w) <span class="sc">~</span> age, <span class="at">data=</span>cps <span class="sc">%&gt;%</span> <span class="fu">filter</span>(female<span class="sc">==</span><span class="dv">0</span>)) <span class="co"># Ec. hombres</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">huxreg</span>(reg0, reg1, reg2, reg21, reg22, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">statistics =</span> <span class="fu">c</span>(<span class="at">N =</span> <span class="st">"nobs"</span>, <span class="at">R2 =</span> <span class="st">"r.squared"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table id="tab:unnamed-chunk-2" class="huxtable table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(1)</td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(2)</td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(3)</td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(4)</td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(5)</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.522 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.196 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.117 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.081 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.117 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.006)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.017)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.023)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.021)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.023)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">femaleTRUE</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.193 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.182 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.036&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.008)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.008)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.032)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.007 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.009 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.006 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.009 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.001)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.001)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">femaleTRUE:age</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.003 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.001)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9672&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">8548&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.034&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.057&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.058&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.015&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.036&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td colspan="6" data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">*** p &lt; 0.001; ** p &lt; 0.01; * p &lt; 0.05.</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No linealidad en la edad</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> cps <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">age2=</span>age<span class="sc">**</span><span class="dv">2</span>, <span class="at">age3=</span>age<span class="sc">**</span><span class="dv">3</span>, <span class="at">age4=</span>age<span class="sc">**</span><span class="dv">4</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>reg3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(w) <span class="sc">~</span> female <span class="sc">+</span> age <span class="sc">+</span> age2 <span class="sc">+</span> age3 <span class="sc">+</span> age4, <span class="at">data=</span>cps)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">huxreg</span>(reg1, reg3, <span class="at">statistics =</span> <span class="fu">c</span>(<span class="at">N =</span> <span class="st">"nobs"</span>, <span class="at">R2 =</span> <span class="st">"r.squared"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table id="tab:unnamed-chunk-2" class="huxtable table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(1)</td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(2)</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.196 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-3.131 **&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.017)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(1.059)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">femaleTRUE</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.182 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.180 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.008)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.007)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.007 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.525 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.103)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age2</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.016 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.004)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age3</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.000 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age4</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.000 **&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.057&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.079&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td colspan="3" data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">*** p &lt; 0.001; ** p &lt; 0.01; * p &lt; 0.05.</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SALARIOS, SEXO, EDAD Y NIVEL DE EDUCACIÓN</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> cps <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ed_MA=</span><span class="fu">as.numeric</span>(grade92<span class="sc">==</span><span class="dv">44</span>), </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ed_PSD =</span> <span class="fu">as.numeric</span>(grade92<span class="sc">==</span><span class="dv">45</span>), </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ed_DD =</span> <span class="fu">as.numeric</span>(grade92<span class="sc">==</span><span class="dv">46</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>reg4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(w) <span class="sc">~</span> female <span class="sc">+</span> age <span class="sc">+</span> age2 <span class="sc">+</span> age3 <span class="sc">+</span> age4 <span class="sc">+</span> ed_PSD <span class="sc">+</span> ed_DD, </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">data=</span>cps)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">huxreg</span>(reg3, reg4, <span class="at">statistics =</span> <span class="fu">c</span>(<span class="at">N =</span> <span class="st">"nobs"</span>, <span class="at">R2 =</span> <span class="st">"r.squared"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table id="tab:unnamed-chunk-2" class="huxtable table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(1)</td>
+<td data-quarto-table-cell-role="th" style="text-align: center; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(2)</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-3.131 **&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-2.789 **&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(1.059)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(1.052)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">femaleTRUE</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.180 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.167 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.007)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.007)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.525 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.491 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.103)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.102)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age2</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.016 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.014 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.004)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.004)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age3</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.000 ***</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.000 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">age4</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.000 **&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.000 **&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.000)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ed_PSD</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.142 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.012)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ed_DD</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.129 ***</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(0.011)&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">R2</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.079&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="text-align: right; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.091&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr class="even">
+<td colspan="3" data-quarto-table-cell-role="th" style="text-align: left; vertical-align: top; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">*** p &lt; 0.001; ** p &lt; 0.01; * p &lt; 0.05.</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SALARIOS, SEXO, EDAD, EDUCACIÓN Y OTROS FACTORES (CUALITATIVOS) ADICIONALES</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Construcción de factores condicionantes</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Factores demográficos (predeterminados)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> cps <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">white=</span><span class="fu">as.numeric</span>(race<span class="sc">==</span><span class="dv">1</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">afram =</span> <span class="fu">as.numeric</span>(race<span class="sc">==</span><span class="dv">2</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">asian =</span> <span class="fu">as.numeric</span>(race<span class="sc">==</span><span class="dv">4</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">hisp =</span> <span class="sc">!</span><span class="fu">is.na</span>(ethnic),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">othernonw =</span> <span class="fu">as.numeric</span>(white<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span> afram<span class="sc">==</span><span class="dv">0</span> </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                                             <span class="sc">&amp;</span> asian<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span> hisp<span class="sc">==</span><span class="dv">0</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nonUSborn =</span> <span class="fu">as.numeric</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                        prcitshp<span class="sc">==</span><span class="st">"Foreign Born, US Cit By Naturalization"</span> <span class="sc">|</span> </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                          prcitshp<span class="sc">==</span><span class="st">"Foreign Born, Not a US Citizen"</span>) </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Factores demográficos (potencialmente endógenos)</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> cps <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">married =</span> <span class="fu">as.numeric</span>(marital<span class="sc">==</span><span class="dv">1</span> <span class="sc">|</span> marital<span class="sc">==</span><span class="dv">2</span>),</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                      <span class="at">divorced =</span> <span class="fu">as.numeric</span>(marital<span class="sc">==</span><span class="dv">3</span> <span class="sc">|</span> marital<span class="sc">==</span><span class="dv">5</span> <span class="sc">|</span> </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                                              marital<span class="sc">==</span><span class="dv">6</span>),</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                      <span class="at">wirowed =</span> <span class="fu">as.numeric</span>(marital<span class="sc">==</span><span class="dv">4</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nevermar =</span> <span class="fu">as.numeric</span>(marital<span class="sc">==</span><span class="dv">7</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                      <span class="at">child0 =</span> <span class="fu">as.numeric</span>(chldpres<span class="sc">==</span><span class="dv">0</span>),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>                      <span class="at">child1 =</span> <span class="fu">as.numeric</span>(chldpres<span class="sc">==</span><span class="dv">1</span>),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                      <span class="at">child2 =</span> <span class="fu">as.numeric</span>(chldpres<span class="sc">==</span><span class="dv">2</span>),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">child3 =</span> <span class="fu">as.numeric</span>(chldpres<span class="sc">==</span><span class="dv">3</span>),</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>                      <span class="at">child4pl =</span> <span class="fu">as.numeric</span>(chldpres<span class="sc">&gt;=</span><span class="dv">4</span>))</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Factores laborales</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> cps <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">fedgov =</span> <span class="fu">as.numeric</span>(class<span class="sc">==</span><span class="st">"Government - Federal"</span>),</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>                      <span class="at">stagov =</span> <span class="fu">as.numeric</span>(class<span class="sc">==</span><span class="st">"Government - State"</span>),</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>                      <span class="at">locgov =</span> <span class="fu">as.numeric</span>(class<span class="sc">==</span><span class="st">"Government - Local"</span>),</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nonprof =</span> <span class="fu">as.numeric</span>(class<span class="sc">==</span><span class="st">"Private, Nonprofit"</span>),</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ind2dig =</span> <span class="fu">as.integer</span>(<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(ind02))<span class="sc">/</span><span class="dv">100</span>),</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>                      <span class="at">occ2dig =</span> <span class="fu">as.integer</span>(occ2012<span class="sc">/</span><span class="dv">100</span>),</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>                      <span class="at">union =</span> <span class="fu">as.numeric</span>(unionmme<span class="sc">==</span><span class="st">"Yes"</span> <span class="sc">|</span> unioncov<span class="sc">==</span><span class="st">"Yes"</span>))</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Regresión con factores</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>reg5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(w) <span class="sc">~</span> female </span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>           <span class="sc">+</span> age <span class="sc">+</span> age2 <span class="sc">+</span> age3 <span class="sc">+</span> age4 </span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>           <span class="sc">+</span> ed_PSD <span class="sc">+</span> ed_DD </span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>           <span class="sc">+</span> afram <span class="sc">+</span> hisp <span class="sc">+</span> asian <span class="sc">+</span> othernonw <span class="sc">+</span> nonUSborn </span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>           <span class="sc">+</span> married <span class="sc">+</span> divorced <span class="sc">+</span> wirowed <span class="sc">+</span> child1 <span class="sc">+</span> child2 <span class="sc">+</span> child3 <span class="sc">+</span>child4pl</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>           <span class="sc">+</span> uhours <span class="sc">+</span> fedgov <span class="sc">+</span> stagov <span class="sc">+</span> locgov <span class="sc">+</span> nonprof <span class="sc">+</span> union </span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>           <span class="sc">+</span> <span class="fu">as.factor</span>(stfips) <span class="sc">+</span> <span class="fu">as.factor</span>(ind2dig) <span class="sc">+</span> <span class="fu">as.factor</span>(occ2dig), </span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>           <span class="at">data=</span>cps)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(w) ~ female + age + age2 + age3 + age4 + ed_PSD + 
+    ed_DD + afram + hisp + asian + othernonw + nonUSborn + married + 
+    divorced + wirowed + child1 + child2 + child3 + child4pl + 
+    uhours + fedgov + stagov + locgov + nonprof + union + as.factor(stfips) + 
+    as.factor(ind2dig) + as.factor(occ2dig), data = cps)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.6504 -0.2513  0.0367  0.2953  1.5951 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           1.540e-01  9.778e-01   0.157 0.874859    
+femaleTRUE           -1.117e-01  7.428e-03 -15.034  &lt; 2e-16 ***
+age                   2.666e-01  9.527e-02   2.798 0.005141 ** 
+age2                 -7.109e-03  3.390e-03  -2.097 0.036017 *  
+age3                  8.662e-05  5.222e-05   1.659 0.097183 .  
+age4                 -4.078e-07  2.942e-07  -1.386 0.165817    
+ed_PSD                7.534e-02  1.333e-02   5.653 1.60e-08 ***
+ed_DD                 1.139e-01  1.166e-02   9.764  &lt; 2e-16 ***
+afram                -8.387e-02  1.337e-02  -6.272 3.65e-10 ***
+hispTRUE             -2.341e-02  1.546e-02  -1.514 0.129996    
+asian                 2.119e-02  1.411e-02   1.502 0.133025    
+othernonw             2.047e-02  2.613e-02   0.783 0.433408    
+nonUSborn            -5.023e-02  1.161e-02  -4.328 1.51e-05 ***
+married               6.139e-02  1.049e-02   5.852 4.95e-09 ***
+divorced              5.025e-02  1.359e-02   3.697 0.000219 ***
+wirowed               6.760e-02  3.606e-02   1.875 0.060876 .  
+child1                5.796e-02  1.665e-02   3.480 0.000502 ***
+child2                1.093e-02  2.036e-02   0.537 0.591310    
+child3                2.589e-02  1.243e-02   2.083 0.037250 *  
+child4pl              2.769e-02  9.711e-03   2.851 0.004359 ** 
+uhours               -4.568e-03  3.873e-04 -11.795  &lt; 2e-16 ***
+fedgov                8.580e-02  1.535e-02   5.588 2.33e-08 ***
+stagov               -4.648e-02  1.272e-02  -3.654 0.000259 ***
+locgov               -3.900e-02  1.312e-02  -2.974 0.002946 ** 
+nonprof              -7.461e-02  1.075e-02  -6.939 4.08e-12 ***
+union                 6.531e-02  1.067e-02   6.122 9.41e-10 ***
+as.factor(stfips)AL  -2.471e-01  4.712e-02  -5.245 1.58e-07 ***
+as.factor(stfips)AR  -2.096e-01  5.323e-02  -3.939 8.22e-05 ***
+as.factor(stfips)AZ  -1.321e-01  4.641e-02  -2.846 0.004436 ** 
+as.factor(stfips)CA   3.500e-02  3.499e-02   1.000 0.317191    
+as.factor(stfips)CO  -9.456e-02  3.903e-02  -2.423 0.015409 *  
+as.factor(stfips)CT   2.059e-02  3.853e-02   0.534 0.593052    
+as.factor(stfips)DC   1.263e-01  3.664e-02   3.447 0.000569 ***
+as.factor(stfips)DE  -8.644e-02  4.360e-02  -1.983 0.047434 *  
+as.factor(stfips)FL  -1.453e-01  3.806e-02  -3.817 0.000136 ***
+as.factor(stfips)GA  -1.081e-01  4.055e-02  -2.667 0.007665 ** 
+as.factor(stfips)HI  -1.569e-01  4.494e-02  -3.492 0.000481 ***
+as.factor(stfips)IA  -1.883e-01  4.391e-02  -4.288 1.81e-05 ***
+as.factor(stfips)ID  -1.807e-01  4.934e-02  -3.662 0.000251 ***
+as.factor(stfips)IL  -8.466e-02  3.758e-02  -2.253 0.024275 *  
+as.factor(stfips)IN  -1.404e-01  4.594e-02  -3.057 0.002241 ** 
+as.factor(stfips)KS  -1.695e-01  4.228e-02  -4.010 6.10e-05 ***
+as.factor(stfips)KY  -2.156e-01  4.476e-02  -4.817 1.47e-06 ***
+as.factor(stfips)LA  -1.571e-01  4.781e-02  -3.285 0.001022 ** 
+as.factor(stfips)MA  -5.402e-03  3.909e-02  -0.138 0.890090    
+as.factor(stfips)MD  -3.931e-02  3.767e-02  -1.044 0.296715    
+as.factor(stfips)ME  -1.688e-01  4.346e-02  -3.885 0.000103 ***
+as.factor(stfips)MI  -6.645e-02  4.041e-02  -1.644 0.100111    
+as.factor(stfips)MN  -5.169e-02  3.949e-02  -1.309 0.190542    
+as.factor(stfips)MO  -1.155e-01  4.354e-02  -2.653 0.007979 ** 
+as.factor(stfips)MS  -1.933e-01  4.925e-02  -3.925 8.69e-05 ***
+as.factor(stfips)MT  -2.543e-01  4.967e-02  -5.121 3.07e-07 ***
+as.factor(stfips)NC  -1.602e-01  4.171e-02  -3.841 0.000123 ***
+as.factor(stfips)ND  -1.706e-01  4.657e-02  -3.663 0.000250 ***
+as.factor(stfips)NE  -2.020e-01  4.338e-02  -4.656 3.25e-06 ***
+as.factor(stfips)NH  -9.275e-02  4.036e-02  -2.298 0.021581 *  
+as.factor(stfips)NJ   4.035e-02  3.941e-02   1.024 0.305976    
+as.factor(stfips)NM  -1.522e-01  4.872e-02  -3.124 0.001784 ** 
+as.factor(stfips)NV  -1.545e-01  4.747e-02  -3.255 0.001134 ** 
+as.factor(stfips)NY   3.355e-02  3.604e-02   0.931 0.351794    
+as.factor(stfips)OH  -1.475e-01  3.994e-02  -3.694 0.000222 ***
+as.factor(stfips)OK  -1.969e-01  4.855e-02  -4.056 5.01e-05 ***
+as.factor(stfips)OR  -8.150e-02  4.307e-02  -1.892 0.058466 .  
+as.factor(stfips)PA  -7.683e-02  3.851e-02  -1.995 0.046071 *  
+as.factor(stfips)RI  -2.267e-02  4.185e-02  -0.542 0.588023    
+as.factor(stfips)SC  -2.086e-01  4.653e-02  -4.483 7.42e-06 ***
+as.factor(stfips)SD  -2.505e-01  4.683e-02  -5.350 8.90e-08 ***
+as.factor(stfips)TN  -1.922e-01  4.772e-02  -4.027 5.67e-05 ***
+as.factor(stfips)TX  -9.406e-02  3.691e-02  -2.548 0.010843 *  
+as.factor(stfips)UT  -1.021e-01  4.637e-02  -2.202 0.027679 *  
+as.factor(stfips)VA  -1.775e-02  3.870e-02  -0.459 0.646472    
+as.factor(stfips)VT  -1.210e-01  4.196e-02  -2.884 0.003932 ** 
+as.factor(stfips)WA  -2.774e-02  4.105e-02  -0.676 0.499183    
+as.factor(stfips)WI  -9.754e-02  4.191e-02  -2.328 0.019943 *  
+as.factor(stfips)WV  -1.948e-01  4.651e-02  -4.187 2.84e-05 ***
+as.factor(stfips)WY  -1.534e-01  4.793e-02  -3.201 0.001373 ** 
+as.factor(ind2dig)1   2.052e-02  9.260e-03   2.216 0.026685 *  
+as.factor(ind2dig)2  -8.211e-03  1.352e-02  -0.607 0.543716    
+as.factor(occ2dig)1  -4.142e-02  2.327e-02  -1.780 0.075074 .  
+as.factor(occ2dig)2  -1.594e-01  2.500e-02  -6.376 1.86e-10 ***
+as.factor(occ2dig)3  -9.494e-02  3.087e-02  -3.076 0.002103 ** 
+as.factor(occ2dig)4  -9.839e-02  2.194e-02  -4.485 7.35e-06 ***
+as.factor(occ2dig)5  -2.686e-01  4.071e-02  -6.597 4.30e-11 ***
+as.factor(occ2dig)6  -2.539e-01  4.095e-02  -6.201 5.72e-10 ***
+as.factor(occ2dig)7  -7.895e-02  2.750e-02  -2.871 0.004095 ** 
+as.factor(occ2dig)8  -1.457e-01  2.534e-02  -5.748 9.17e-09 ***
+as.factor(occ2dig)9  -1.297e-01  5.286e-02  -2.454 0.014144 *  
+as.factor(occ2dig)10 -7.087e-02  2.317e-02  -3.058 0.002230 ** 
+as.factor(occ2dig)11 -7.689e-02  3.927e-02  -1.958 0.050245 .  
+as.factor(occ2dig)12 -1.407e-01  4.141e-02  -3.398 0.000679 ***
+as.factor(occ2dig)13 -1.240e-01  3.173e-02  -3.908 9.36e-05 ***
+as.factor(occ2dig)14 -6.905e-04  3.200e-02  -0.022 0.982787    
+as.factor(occ2dig)15 -6.228e-02  3.901e-02  -1.597 0.110381    
+as.factor(occ2dig)16 -2.731e-01  3.417e-02  -7.993 1.39e-15 ***
+as.factor(occ2dig)17 -1.805e-01  3.260e-02  -5.536 3.14e-08 ***
+as.factor(occ2dig)18 -2.434e-01  3.260e-02  -7.468 8.53e-14 ***
+as.factor(occ2dig)19 -3.420e-01  8.258e-02  -4.142 3.46e-05 ***
+as.factor(occ2dig)20 -4.054e-01  2.198e-02 -18.442  &lt; 2e-16 ***
+as.factor(occ2dig)21 -1.400e-01  2.341e-02  -5.980 2.27e-09 ***
+as.factor(occ2dig)22 -3.356e-01  2.314e-02 -14.499  &lt; 2e-16 ***
+as.factor(occ2dig)23 -3.713e-01  2.025e-02 -18.333  &lt; 2e-16 ***
+as.factor(occ2dig)24 -4.447e-01  3.779e-02 -11.765  &lt; 2e-16 ***
+as.factor(occ2dig)25 -4.854e-01  3.938e-02 -12.326  &lt; 2e-16 ***
+as.factor(occ2dig)26 -2.782e-01  6.122e-02  -4.544 5.55e-06 ***
+as.factor(occ2dig)27 -4.193e-01  5.510e-02  -7.610 2.88e-14 ***
+as.factor(occ2dig)28 -2.648e-01  3.883e-02  -6.820 9.40e-12 ***
+as.factor(occ2dig)29 -3.460e-01  1.599e-01  -2.164 0.030511 *  
+as.factor(occ2dig)30 -1.165e-01  2.295e-02  -5.077 3.87e-07 ***
+as.factor(occ2dig)31 -9.354e-02  3.050e-02  -3.067 0.002166 ** 
+as.factor(occ2dig)32 -1.551e-01  2.342e-02  -6.620 3.70e-11 ***
+as.factor(occ2dig)33 -3.636e-01  7.318e-02  -4.968 6.82e-07 ***
+as.factor(occ2dig)34 -6.699e-01  9.335e-02  -7.176 7.44e-13 ***
+as.factor(occ2dig)35 -2.709e-01  5.356e-02  -5.057 4.31e-07 ***
+as.factor(occ2dig)36 -6.530e-01  5.767e-02 -11.323  &lt; 2e-16 ***
+as.factor(occ2dig)37 -2.927e-01  6.200e-02  -4.721 2.36e-06 ***
+as.factor(occ2dig)38 -5.000e-01  6.009e-02  -8.321  &lt; 2e-16 ***
+as.factor(occ2dig)39 -6.071e-01  7.307e-02  -8.309  &lt; 2e-16 ***
+as.factor(occ2dig)40 -1.005e+00  6.490e-02 -15.479  &lt; 2e-16 ***
+as.factor(occ2dig)41 -1.086e+00  1.001e-01 -10.847  &lt; 2e-16 ***
+as.factor(occ2dig)42 -9.658e-01  6.934e-02 -13.928  &lt; 2e-16 ***
+as.factor(occ2dig)43 -4.194e-01  1.074e-01  -3.905 9.47e-05 ***
+as.factor(occ2dig)44 -1.228e+00  1.598e-01  -7.685 1.60e-14 ***
+as.factor(occ2dig)45 -9.310e-01  9.541e-02  -9.757  &lt; 2e-16 ***
+as.factor(occ2dig)46 -7.886e-01  5.903e-02 -13.359  &lt; 2e-16 ***
+as.factor(occ2dig)47 -4.754e-01  3.038e-02 -15.647  &lt; 2e-16 ***
+as.factor(occ2dig)48 -2.589e-01  3.387e-02  -7.643 2.23e-14 ***
+as.factor(occ2dig)49 -4.440e-01  5.644e-02  -7.867 3.83e-15 ***
+as.factor(occ2dig)50 -3.438e-01  4.802e-02  -7.160 8.39e-13 ***
+as.factor(occ2dig)51 -5.860e-01  5.659e-02 -10.354  &lt; 2e-16 ***
+as.factor(occ2dig)52 -5.306e-01  4.572e-02 -11.606  &lt; 2e-16 ***
+as.factor(occ2dig)53 -6.387e-01  6.287e-02 -10.160  &lt; 2e-16 ***
+as.factor(occ2dig)54 -6.779e-01  7.299e-02  -9.287  &lt; 2e-16 ***
+as.factor(occ2dig)55 -6.143e-01  1.074e-01  -5.720 1.08e-08 ***
+as.factor(occ2dig)56 -3.998e-01  7.674e-02  -5.210 1.91e-07 ***
+as.factor(occ2dig)57 -6.743e-01  4.334e-02 -15.560  &lt; 2e-16 ***
+as.factor(occ2dig)58 -6.413e-01  5.626e-02 -11.400  &lt; 2e-16 ***
+as.factor(occ2dig)59 -5.035e-01  6.912e-02  -7.285 3.35e-13 ***
+as.factor(occ2dig)60 -4.953e-01  1.511e-01  -3.278 0.001048 ** 
+as.factor(occ2dig)62 -6.111e-01  8.530e-02  -7.164 8.15e-13 ***
+as.factor(occ2dig)63 -4.139e-01  1.510e-01  -2.741 0.006137 ** 
+as.factor(occ2dig)64 -5.010e-01  2.020e-01  -2.481 0.013126 *  
+as.factor(occ2dig)66 -2.778e-01  2.604e-01  -1.067 0.286138    
+as.factor(occ2dig)67 -1.139e+00  2.253e-01  -5.055 4.34e-07 ***
+as.factor(occ2dig)68  4.518e-01  4.499e-01   1.004 0.315280    
+as.factor(occ2dig)70 -3.977e-01  8.503e-02  -4.678 2.92e-06 ***
+as.factor(occ2dig)71 -3.346e-01  2.255e-01  -1.484 0.137858    
+as.factor(occ2dig)72 -6.765e-01  1.511e-01  -4.477 7.63e-06 ***
+as.factor(occ2dig)73 -3.578e-01  1.431e-01  -2.500 0.012420 *  
+as.factor(occ2dig)74 -4.804e-01  2.253e-01  -2.132 0.033028 *  
+as.factor(occ2dig)75 -1.129e+00  4.499e-01  -2.508 0.012136 *  
+as.factor(occ2dig)76 -7.677e-01  4.500e-01  -1.706 0.088066 .  
+as.factor(occ2dig)77 -3.976e-01  7.773e-02  -5.116 3.16e-07 ***
+as.factor(occ2dig)78 -7.281e-01  3.185e-01  -2.286 0.022248 *  
+as.factor(occ2dig)79 -1.216e+00  4.499e-01  -2.703 0.006888 ** 
+as.factor(occ2dig)80  1.036e-01  4.499e-01   0.230 0.817887    
+as.factor(occ2dig)81 -6.093e-01  2.019e-01  -3.017 0.002555 ** 
+as.factor(occ2dig)82 -6.297e-01  1.843e-01  -3.417 0.000635 ***
+as.factor(occ2dig)83 -1.262e+00  2.601e-01  -4.853 1.23e-06 ***
+as.factor(occ2dig)84 -7.511e-01  3.188e-01  -2.356 0.018494 *  
+as.factor(occ2dig)86 -2.707e-01  1.708e-01  -1.585 0.112883    
+as.factor(occ2dig)87 -4.341e-01  8.815e-02  -4.925 8.51e-07 ***
+as.factor(occ2dig)88 -9.160e-01  1.599e-01  -5.727 1.04e-08 ***
+as.factor(occ2dig)89 -4.953e-01  1.432e-01  -3.460 0.000542 ***
+as.factor(occ2dig)90 -1.211e-01  8.998e-02  -1.345 0.178527    
+as.factor(occ2dig)91 -8.391e-01  6.843e-02 -12.263  &lt; 2e-16 ***
+as.factor(occ2dig)93 -9.595e-01  2.260e-01  -4.245 2.19e-05 ***
+as.factor(occ2dig)94 -3.147e-01  1.711e-01  -1.839 0.065928 .  
+as.factor(occ2dig)96 -8.983e-01  1.212e-01  -7.408 1.34e-13 ***
+as.factor(occ2dig)97 -1.182e+00  4.501e-01  -2.625 0.008669 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4488 on 18051 degrees of freedom
+Multiple R-squared:  0.2641,    Adjusted R-squared:  0.2572 
+F-statistic: 38.56 on 168 and 18051 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="código-python" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="código-python">Código Python</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mizani <span class="im">import</span> transforms</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mizani.formatters <span class="im">import</span> percent_format</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> stargazer.stargazer <span class="im">import</span> Stargazer</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># FILTRADO PREVIO DE OBSERVACIONES: </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Operación sobre el fichero original: cps = pd.read_csv('data/MORG14_USA.csv')</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># cps = cps.query("age&gt;=24 &amp; age&lt;=64 &amp; uhours&gt;=20 &amp; earnwke&gt;0 &amp; grade92&gt;=44")</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>cps <span class="op">=</span> pd.read_csv(<span class="st">'data/CPS2014_USA.csv'</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Operaciones con variables</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"female"</span>] <span class="op">=</span> (cps.sex <span class="op">==</span> <span class="dv">2</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"w"</span>] <span class="op">=</span> cps[<span class="st">"earnwke"</span>] <span class="op">/</span> cps[<span class="st">"uhours"</span>]</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>cps <span class="op">=</span> cps.query(<span class="st">"w&gt;=1"</span>)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribución de los salarios</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>cps.loc[:,[<span class="st">"earnwke"</span>,<span class="st">"uhours"</span>,<span class="st">"w"</span>]].describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            earnwke        uhours             w
+count  18220.000000  18220.000000  18220.000000
+mean    1483.491212     42.970088     34.565432
+std      746.672256      9.135281     16.622801
+min       38.000000     20.000000      1.025556
+25%      923.000000     40.000000     21.634500
+50%     1346.000000     40.000000     31.250000
+75%     1923.070000     47.000000     45.673000
+max     2884.610000     99.000000    144.230500</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SALARIOS, SEXO Y EDAD</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>reg0 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ female"</span>, data<span class="op">=</span>cps).fit()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reg0.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              np.log(w)   R-squared:                       0.034
+Model:                            OLS   Adj. R-squared:                  0.034
+Method:                 Least Squares   F-statistic:                     645.5
+Date:                Wed, 15 Nov 2023   Prob (F-statistic):          5.68e-140
+Time:                        08:49:16   Log-Likelihood:                -13647.
+No. Observations:               18220   AIC:                         2.730e+04
+Df Residuals:                   18218   BIC:                         2.731e+04
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      3.5215      0.006    636.177      0.000       3.511       3.532
+female        -0.1930      0.008    -25.407      0.000      -0.208      -0.178
+==============================================================================
+Omnibus:                     1256.924   Durbin-Watson:                   1.853
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1732.098
+Skew:                          -0.603   Prob(JB):                         0.00
+Kurtosis:                       3.910   Cond. No.                         2.70
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma diferenciado por género</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ggplot(cps, aes(x<span class="op">=</span><span class="st">"w"</span>, y<span class="op">=</span><span class="st">"2*stat(count)/sum(stat(count))"</span>)) <span class="op">+</span> geom_histogram(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    binwidth<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span><span class="fl">0.25</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    show_legend<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    na_rm<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Hourly earnings (dollars)"</span>, y<span class="op">=</span><span class="st">"Percent"</span>) <span class="op">+</span> facet_wrap(<span class="st">'~female'</span>,labeller<span class="op">=</span>{<span class="st">'0'</span>:<span class="st">"Male"</span>,<span class="st">'1'</span>:<span class="st">"Female"</span>}</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> labs(</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"Hourly earnings (dollars)"</span>, y<span class="op">=</span><span class="st">"Percent"</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> scale_x_continuous(</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">100</span>),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> scale_y_continuous(</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    limits<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.20</span>), labels<span class="op">=</span>percent_format()</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> theme_bw()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;ggplot: (329785179)&gt;</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="p2c2-app5_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Densidad estimada diferenciada por género</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ggplot(cps, aes(x<span class="op">=</span><span class="st">"w"</span>, y<span class="op">=</span><span class="st">"stat(density)"</span>, color<span class="op">=</span><span class="st">"factor(female)"</span>)) <span class="op">+</span> geom_density(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    adjust<span class="op">=</span><span class="fl">1.5</span>, show_legend<span class="op">=</span><span class="va">False</span>, na_rm<span class="op">=</span><span class="va">True</span>, size<span class="op">=</span><span class="fl">0.7</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"Hourly wage (dollars)"</span>, y<span class="op">=</span><span class="st">"Density"</span>, color<span class="op">=</span><span class="st">""</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)  <span class="op">+</span> scale_x_continuous(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    expand<span class="op">=</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>), limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">100</span>),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> scale_y_continuous(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    expand<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>), limits<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.035</span>),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> geom_text(</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    aes(x<span class="op">=</span><span class="dv">55</span>, y<span class="op">=</span><span class="fl">0.028</span>, label<span class="op">=</span><span class="st">"'Male'"</span>),  size<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> geom_text(</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    aes(x<span class="op">=</span><span class="dv">55</span>, y<span class="op">=</span><span class="fl">0.020</span>, label<span class="op">=</span><span class="st">"'Female'"</span>), size<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> theme_bw()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;ggplot: (329879973)&gt;</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="p2c2-app5_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="614"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SALARIOS, EDAD Y GÉNERO</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>reg0 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ female"</span>, data<span class="op">=</span>cps).fit()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>reg1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ female + age"</span>, data<span class="op">=</span>cps).fit()</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>reg2 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ female*age"</span>, data<span class="op">=</span>cps).fit()</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>reg21 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ age"</span>, data<span class="op">=</span>cps.query(<span class="st">"female==1"</span>)).fit()</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>reg22 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ age"</span>, data<span class="op">=</span>cps.query(<span class="st">"female==0"</span>)).fit()</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>stargazer <span class="op">=</span> Stargazer([reg0, reg1, reg2])</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>stargazer.custom_columns([<span class="st">"log(w)"</span>, <span class="st">"log(w)"</span>, <span class="st">"log(w)"</span>], [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>])</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>stargazer.covariate_order([<span class="st">"female"</span>, <span class="st">"age"</span>, <span class="st">"female:age"</span>, <span class="st">"Intercept"</span>])</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>stargazer.rename_covariates({<span class="st">"Intercept"</span>: <span class="st">"Constant"</span>})</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>stargazer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table style="text-align:center"><tbody><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:np.log(w)</em></td></tr><tr><td style="text-align:left"></td></tr><tr><td></td><td colspan="1">log(w)</td><td colspan="1">log(w)</td><td colspan="1">log(w)</td></tr><tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td></tr><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">female</td><td>-0.193<sup>***</sup></td><td>-0.182<sup>***</sup></td><td>-0.036<sup></sup></td></tr><tr><td style="text-align:left"></td><td>(0.008)</td><td>(0.008)</td><td>(0.032)</td></tr><tr><td style="text-align:left">age</td><td></td><td>0.007<sup>***</sup></td><td>0.009<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td></td><td>(0.000)</td><td>(0.001)</td></tr><tr><td style="text-align:left">female:age</td><td></td><td></td><td>-0.003<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td></td><td></td><td>(0.001)</td></tr><tr><td style="text-align:left">Constant</td><td>3.522<sup>***</sup></td><td>3.196<sup>***</sup></td><td>3.117<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.006)</td><td>(0.017)</td><td>(0.023)</td></tr><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Observations</td><td>18,220</td><td>18,220</td><td>18,220</td></tr><tr><td style="text-align: left">R<sup>2</sup></td><td>0.034</td><td>0.057</td><td>0.058</td></tr><tr><td style="text-align: left">Adjusted R<sup>2</sup></td><td>0.034</td><td>0.057</td><td>0.058</td></tr><tr><td style="text-align: left">Residual Std. Error</td><td>0.512 (df=18218)</td><td>0.506 (df=18217)</td><td>0.505 (df=18216)</td></tr><tr><td style="text-align: left">F Statistic</td><td>645.532<sup>***</sup> (df=1; 18218)</td><td>548.583<sup>***</sup> (df=2; 18217)</td><td>373.761<sup>***</sup> (df=3; 18216)</td></tr><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Note:</td>
+ <td colspan="3" style="text-align: right">
+  <sup>*</sup>p&lt;0.1;
+  <sup>**</sup>p&lt;0.05;
+  <sup>***</sup>p&lt;0.01
+ </td></tr></tbody></table>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regresiones diferenciadas por sexo</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reg21.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              np.log(w)   R-squared:                       0.015
+Model:                            OLS   Adj. R-squared:                  0.014
+Method:                 Least Squares   F-statistic:                     143.3
+Date:                Wed, 15 Nov 2023   Prob (F-statistic):           8.67e-33
+Time:                        08:49:55   Log-Likelihood:                -7149.3
+No. Observations:                9672   AIC:                         1.430e+04
+Df Residuals:                    9670   BIC:                         1.432e+04
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      3.0812      0.021    144.730      0.000       3.039       3.123
+age            0.0057      0.000     11.970      0.000       0.005       0.007
+==============================================================================
+Omnibus:                      575.878   Durbin-Watson:                   1.904
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              939.605
+Skew:                          -0.483   Prob(JB):                    9.27e-205
+Kurtosis:                       4.183   Cond. No.                         184.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reg22.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              np.log(w)   R-squared:                       0.036
+Model:                            OLS   Adj. R-squared:                  0.036
+Method:                 Least Squares   F-statistic:                     317.4
+Date:                Wed, 15 Nov 2023   Prob (F-statistic):           9.74e-70
+Time:                        08:49:55   Log-Likelihood:                -6270.8
+No. Observations:                8548   AIC:                         1.255e+04
+Df Residuals:                    8546   BIC:                         1.256e+04
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      3.1167      0.023    133.395      0.000       3.071       3.163
+age            0.0091      0.001     17.815      0.000       0.008       0.010
+==============================================================================
+Omnibus:                      878.941   Durbin-Watson:                   1.886
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1248.166
+Skew:                          -0.805   Prob(JB):                    9.21e-272
+Kurtosis:                       3.956   Cond. No.                         197.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># No linealidad en la edad</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"age2"</span>] <span class="op">=</span> np.power(cps[<span class="st">"age"</span>], <span class="dv">2</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"age3"</span>] <span class="op">=</span> np.power(cps[<span class="st">"age"</span>], <span class="dv">3</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"age4"</span>] <span class="op">=</span> np.power(cps[<span class="st">"age"</span>], <span class="dv">4</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>reg3 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ female + age + age2 + age3 + age4"</span>, data<span class="op">=</span>cps).fit()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>stargazer <span class="op">=</span> Stargazer([reg1,reg3])</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>stargazer.covariate_order(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"female"</span>, <span class="st">"age"</span>, <span class="st">"age2"</span>,<span class="st">"age3"</span>,<span class="st">"age4"</span>,<span class="st">"Intercept"</span>]</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>stargazer.rename_covariates({<span class="st">"Intercept"</span>: <span class="st">"Constant"</span>})</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>stargazer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table style="text-align:center"><tbody><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="2"><em>Dependent variable:np.log(w)</em></td></tr><tr><td style="text-align:left"></td></tr><tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">female</td><td>-0.182<sup>***</sup></td><td>-0.180<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.008)</td><td>(0.007)</td></tr><tr><td style="text-align:left">age</td><td>0.007<sup>***</sup></td><td>0.525<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.000)</td><td>(0.103)</td></tr><tr><td style="text-align:left">age2</td><td></td><td>-0.016<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td></td><td>(0.004)</td></tr><tr><td style="text-align:left">age3</td><td></td><td>0.000<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td></td><td>(0.000)</td></tr><tr><td style="text-align:left">age4</td><td></td><td>-0.000<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td></td><td>(0.000)</td></tr><tr><td style="text-align:left">Constant</td><td>3.196<sup>***</sup></td><td>-3.131<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.017)</td><td>(1.059)</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Observations</td><td>18,220</td><td>18,220</td></tr><tr><td style="text-align: left">R<sup>2</sup></td><td>0.057</td><td>0.079</td></tr><tr><td style="text-align: left">Adjusted R<sup>2</sup></td><td>0.057</td><td>0.078</td></tr><tr><td style="text-align: left">Residual Std. Error</td><td>0.506 (df=18217)</td><td>0.500 (df=18214)</td></tr><tr><td style="text-align: left">F Statistic</td><td>548.583<sup>***</sup> (df=2; 18217)</td><td>310.523<sup>***</sup> (df=5; 18214)</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Note:</td>
+ <td colspan="2" style="text-align: right">
+  <sup>*</sup>p&lt;0.1;
+  <sup>**</sup>p&lt;0.05;
+  <sup>***</sup>p&lt;0.01
+ </td></tr></tbody></table>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SALARIOS, SEXO, EDAD Y NIVEL DE EDUCACIÓN</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"ed_MA"</span>] <span class="op">=</span> (cps[<span class="st">"grade92"</span>] <span class="op">==</span> <span class="dv">44</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"ed_PSD"</span>] <span class="op">=</span> (cps[<span class="st">"grade92"</span>] <span class="op">==</span> <span class="dv">45</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"ed_DD"</span>] <span class="op">=</span> (cps[<span class="st">"grade92"</span>] <span class="op">==</span> <span class="dv">46</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>reg4 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ female + age + age2 + age3 + age4 + ed_PSD + ed_DD"</span>, data<span class="op">=</span>cps).fit()</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>stargazer <span class="op">=</span> Stargazer([reg3,reg4])</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>stargazer.covariate_order(</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"female"</span>, <span class="st">"age"</span>, <span class="st">"age2"</span>, <span class="st">"age3"</span>, <span class="st">"age4"</span>, <span class="st">"ed_PSD"</span>, <span class="st">"ed_DD"</span>, <span class="st">"Intercept"</span>]</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>stargazer.rename_covariates({<span class="st">"Intercept"</span>: <span class="st">"Constant"</span>})</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>stargazer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table style="text-align:center"><tbody><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="2"><em>Dependent variable:np.log(w)</em></td></tr><tr><td style="text-align:left"></td></tr><tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">female</td><td>-0.180<sup>***</sup></td><td>-0.167<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.007)</td><td>(0.007)</td></tr><tr><td style="text-align:left">age</td><td>0.525<sup>***</sup></td><td>0.491<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.103)</td><td>(0.102)</td></tr><tr><td style="text-align:left">age2</td><td>-0.016<sup>***</sup></td><td>-0.014<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.004)</td><td>(0.004)</td></tr><tr><td style="text-align:left">age3</td><td>0.000<sup>***</sup></td><td>0.000<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.000)</td><td>(0.000)</td></tr><tr><td style="text-align:left">age4</td><td>-0.000<sup>***</sup></td><td>-0.000<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.000)</td><td>(0.000)</td></tr><tr><td style="text-align:left">ed_PSD</td><td></td><td>0.142<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td></td><td>(0.012)</td></tr><tr><td style="text-align:left">ed_DD</td><td></td><td>0.129<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td></td><td>(0.011)</td></tr><tr><td style="text-align:left">Constant</td><td>-3.131<sup>***</sup></td><td>-2.789<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(1.059)</td><td>(1.052)</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Observations</td><td>18,220</td><td>18,220</td></tr><tr><td style="text-align: left">R<sup>2</sup></td><td>0.079</td><td>0.091</td></tr><tr><td style="text-align: left">Adjusted R<sup>2</sup></td><td>0.078</td><td>0.091</td></tr><tr><td style="text-align: left">Residual Std. Error</td><td>0.500 (df=18214)</td><td>0.497 (df=18212)</td></tr><tr><td style="text-align: left">F Statistic</td><td>310.523<sup>***</sup> (df=5; 18214)</td><td>260.920<sup>***</sup> (df=7; 18212)</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Note:</td>
+ <td colspan="2" style="text-align: right">
+  <sup>*</sup>p&lt;0.1;
+  <sup>**</sup>p&lt;0.05;
+  <sup>***</sup>p&lt;0.01
+ </td></tr></tbody></table>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SALARIOS, SEXO, EDAD, EDUCACIÓN Y OTROS FACTORES (CUALITATIVOS) ADICIONALES </span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Construcción de factores condicionantes</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"white"</span>] <span class="op">=</span> (cps[<span class="st">"race"</span>] <span class="op">==</span> <span class="dv">1</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"afram"</span>] <span class="op">=</span> (cps[<span class="st">"race"</span>] <span class="op">==</span> <span class="dv">2</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"asian"</span>] <span class="op">=</span> (cps[<span class="st">"race"</span>] <span class="op">==</span> <span class="dv">4</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"hisp"</span>] <span class="op">=</span> (cps[<span class="st">"ethnic"</span>].notna()).astype(<span class="bu">int</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"othernonw"</span>] <span class="op">=</span> (</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    (cps[<span class="st">"white"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span> (cps[<span class="st">"afram"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span> (cps[<span class="st">"asian"</span>] <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span> (cps[<span class="st">"hisp"</span>] <span class="op">==</span> <span class="dv">0</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">"nonUSborn"</span>] <span class="op">=</span> (</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    (cps[<span class="st">"prcitshp"</span>] <span class="op">==</span> <span class="st">"Foreign Born, US Cit By Naturalization"</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> (cps[<span class="st">"prcitshp"</span>] <span class="op">==</span> <span class="st">"Foreign Born, Not a US Citizen"</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'married'</span>]<span class="op">=</span>((cps[<span class="st">'marital'</span>]<span class="op">==</span><span class="dv">1</span>)<span class="op">|</span>(cps[<span class="st">'marital'</span>]<span class="op">==</span><span class="dv">2</span>)).astype(<span class="bu">int</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'divorced'</span>]<span class="op">=</span>((cps[<span class="st">'marital'</span>]<span class="op">==</span><span class="dv">3</span>)<span class="op">&amp;</span>(cps[<span class="st">'marital'</span>]<span class="op">==</span><span class="dv">5</span>)).astype(<span class="bu">int</span>)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'wirowed'</span>]<span class="op">=</span>(cps[<span class="st">'marital'</span>]<span class="op">==</span><span class="dv">4</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'nevermar'</span>]<span class="op">=</span>(cps[<span class="st">'marital'</span>]<span class="op">==</span><span class="dv">7</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'child0'</span>]<span class="op">=</span>(cps[<span class="st">'chldpres'</span>]<span class="op">==</span><span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'child1'</span>]<span class="op">=</span>(cps[<span class="st">'chldpres'</span>]<span class="op">==</span><span class="dv">1</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'child2'</span>]<span class="op">=</span>(cps[<span class="st">'chldpres'</span>]<span class="op">==</span><span class="dv">2</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'child3'</span>]<span class="op">=</span>(cps[<span class="st">'chldpres'</span>]<span class="op">==</span><span class="dv">3</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'child4pl'</span>]<span class="op">=</span>(cps[<span class="st">'chldpres'</span>]<span class="op">&gt;=</span><span class="dv">4</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'fedgov'</span>]<span class="op">=</span>(cps[<span class="st">'class'</span>]<span class="op">==</span><span class="st">"Government - Federal"</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'stagov'</span>]<span class="op">=</span>(cps[<span class="st">'class'</span>]<span class="op">==</span><span class="st">"Government - State"</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'locgov'</span>]<span class="op">=</span>(cps[<span class="st">'class'</span>]<span class="op">==</span><span class="st">"Government - Local"</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'nonprof'</span>]<span class="op">=</span>(cps[<span class="st">'class'</span>]<span class="op">==</span><span class="st">"Private, Nonprofit"</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'ind2dig'</span>]<span class="op">=</span>((pd.Categorical(cps[<span class="st">"ind02"</span>]).codes<span class="op">+</span><span class="dv">1</span>)<span class="op">/</span><span class="dv">100</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'occ2dig'</span>]<span class="op">=</span>(cps[<span class="st">"occ2012"</span>]<span class="op">/</span><span class="dv">100</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>cps[<span class="st">'union'</span>]<span class="op">=</span>((cps[<span class="st">'unionmme'</span>]<span class="op">==</span><span class="st">"Yes"</span>)<span class="op">|</span>(cps[<span class="st">'unioncov'</span>]<span class="op">==</span><span class="st">"Yes"</span>)).astype(<span class="bu">int</span>)</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Regresión con factores</span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>reg5 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"np.log(w) ~ female + age + age2 + age3 + age4 + ed_DD + afram + hisp + asian + othernonw + nonUSborn +  married + divorced+ wirowed + child1 + child2 + child3 + child4pl + uhours + fedgov + stagov + locgov + nonprof + union + C(stfips) + C(ind2dig) + C(occ2dig)"</span>, data<span class="op">=</span>cps).fit()</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reg5.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              np.log(w)   R-squared:                       0.262
+Model:                            OLS   Adj. R-squared:                  0.255
+Method:                 Least Squares   F-statistic:                     38.65
+Date:                Wed, 15 Nov 2023   Prob (F-statistic):               0.00
+Time:                        08:49:56   Log-Likelihood:                -11194.
+No. Observations:               18220   AIC:                         2.272e+04
+Df Residuals:                   18053   BIC:                         2.403e+04
+Df Model:                         166                                         
+Covariance Type:            nonrobust                                         
+====================================================================================
+                       coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------------
+Intercept           -0.0673      0.978     -0.069      0.945      -1.984       1.849
+C(stfips)[T.AL]     -0.2414      0.047     -5.120      0.000      -0.334      -0.149
+C(stfips)[T.AR]     -0.2050      0.053     -3.846      0.000      -0.309      -0.101
+C(stfips)[T.AZ]     -0.1295      0.046     -2.787      0.005      -0.221      -0.038
+C(stfips)[T.CA]      0.0396      0.035      1.132      0.258      -0.029       0.108
+C(stfips)[T.CO]     -0.0921      0.039     -2.358      0.018      -0.169      -0.016
+C(stfips)[T.CT]      0.0258      0.039      0.669      0.504      -0.050       0.101
+C(stfips)[T.DC]      0.1292      0.037      3.526      0.000       0.057       0.201
+C(stfips)[T.DE]     -0.0844      0.044     -1.934      0.053      -0.170       0.001
+C(stfips)[T.FL]     -0.1402      0.038     -3.679      0.000      -0.215      -0.065
+C(stfips)[T.GA]     -0.1023      0.041     -2.519      0.012      -0.182      -0.023
+C(stfips)[T.HI]     -0.1536      0.045     -3.414      0.001      -0.242      -0.065
+C(stfips)[T.IA]     -0.1879      0.044     -4.275      0.000      -0.274      -0.102
+C(stfips)[T.ID]     -0.1747      0.049     -3.538      0.000      -0.272      -0.078
+C(stfips)[T.IL]     -0.0804      0.038     -2.138      0.033      -0.154      -0.007
+C(stfips)[T.IN]     -0.1358      0.046     -2.953      0.003      -0.226      -0.046
+C(stfips)[T.KS]     -0.1681      0.042     -3.972      0.000      -0.251      -0.085
+C(stfips)[T.KY]     -0.2147      0.045     -4.791      0.000      -0.303      -0.127
+C(stfips)[T.LA]     -0.1534      0.048     -3.204      0.001      -0.247      -0.060
+C(stfips)[T.MA]     -0.0010      0.039     -0.026      0.979      -0.078       0.076
+C(stfips)[T.MD]     -0.0354      0.038     -0.939      0.348      -0.109       0.039
+C(stfips)[T.ME]     -0.1641      0.044     -3.772      0.000      -0.249      -0.079
+C(stfips)[T.MI]     -0.0647      0.040     -1.600      0.110      -0.144       0.015
+C(stfips)[T.MN]     -0.0491      0.040     -1.241      0.215      -0.127       0.028
+C(stfips)[T.MO]     -0.1121      0.044     -2.571      0.010      -0.198      -0.027
+C(stfips)[T.MS]     -0.1887      0.049     -3.827      0.000      -0.285      -0.092
+C(stfips)[T.MT]     -0.2503      0.050     -5.035      0.000      -0.348      -0.153
+C(stfips)[T.NC]     -0.1553      0.042     -3.718      0.000      -0.237      -0.073
+C(stfips)[T.ND]     -0.1683      0.047     -3.609      0.000      -0.260      -0.077
+C(stfips)[T.NE]     -0.1980      0.043     -4.559      0.000      -0.283      -0.113
+C(stfips)[T.NH]     -0.0873      0.040     -2.160      0.031      -0.166      -0.008
+C(stfips)[T.NJ]      0.0441      0.039      1.119      0.263      -0.033       0.121
+C(stfips)[T.NM]     -0.1488      0.049     -3.050      0.002      -0.244      -0.053
+C(stfips)[T.NV]     -0.1505      0.048     -3.167      0.002      -0.244      -0.057
+C(stfips)[T.NY]      0.0363      0.036      1.005      0.315      -0.034       0.107
+C(stfips)[T.OH]     -0.1432      0.040     -3.581      0.000      -0.222      -0.065
+C(stfips)[T.OK]     -0.1949      0.049     -4.009      0.000      -0.290      -0.100
+C(stfips)[T.OR]     -0.0784      0.043     -1.819      0.069      -0.163       0.006
+C(stfips)[T.PA]     -0.0740      0.039     -1.919      0.055      -0.150       0.002
+C(stfips)[T.RI]     -0.0178      0.042     -0.426      0.670      -0.100       0.064
+C(stfips)[T.SC]     -0.2043      0.047     -4.386      0.000      -0.296      -0.113
+C(stfips)[T.SD]     -0.2440      0.047     -5.205      0.000      -0.336      -0.152
+C(stfips)[T.TN]     -0.1870      0.048     -3.914      0.000      -0.281      -0.093
+C(stfips)[T.TX]     -0.0901      0.037     -2.439      0.015      -0.163      -0.018
+C(stfips)[T.UT]     -0.1000      0.046     -2.154      0.031      -0.191      -0.009
+C(stfips)[T.VA]     -0.0159      0.039     -0.410      0.682      -0.092       0.060
+C(stfips)[T.VT]     -0.1170      0.042     -2.785      0.005      -0.199      -0.035
+C(stfips)[T.WA]     -0.0247      0.041     -0.602      0.547      -0.105       0.056
+C(stfips)[T.WI]     -0.0952      0.042     -2.268      0.023      -0.177      -0.013
+C(stfips)[T.WV]     -0.1922      0.047     -4.127      0.000      -0.283      -0.101
+C(stfips)[T.WY]     -0.1463      0.048     -3.050      0.002      -0.240      -0.052
+C(ind2dig)[T.1]      0.0220      0.009      2.372      0.018       0.004       0.040
+C(ind2dig)[T.2]     -0.0071      0.014     -0.526      0.599      -0.034       0.019
+C(occ2dig)[T.1]     -0.0451      0.023     -1.935      0.053      -0.091       0.001
+C(occ2dig)[T.2]     -0.1575      0.025     -6.293      0.000      -0.207      -0.108
+C(occ2dig)[T.3]     -0.0953      0.031     -3.085      0.002      -0.156      -0.035
+C(occ2dig)[T.4]     -0.0996      0.022     -4.532      0.000      -0.143      -0.056
+C(occ2dig)[T.5]     -0.2631      0.041     -6.457      0.000      -0.343      -0.183
+C(occ2dig)[T.6]     -0.2534      0.041     -6.180      0.000      -0.334      -0.173
+C(occ2dig)[T.7]     -0.0815      0.028     -2.959      0.003      -0.135      -0.027
+C(occ2dig)[T.8]     -0.1481      0.025     -5.837      0.000      -0.198      -0.098
+C(occ2dig)[T.9]     -0.1268      0.053     -2.396      0.017      -0.231      -0.023
+C(occ2dig)[T.10]    -0.0740      0.023     -3.190      0.001      -0.119      -0.029
+C(occ2dig)[T.11]    -0.0813      0.039     -2.067      0.039      -0.158      -0.004
+C(occ2dig)[T.12]    -0.1389      0.041     -3.351      0.001      -0.220      -0.058
+C(occ2dig)[T.13]    -0.1263      0.032     -3.976      0.000      -0.189      -0.064
+C(occ2dig)[T.14]    -0.0015      0.032     -0.046      0.963      -0.064       0.061
+C(occ2dig)[T.15]    -0.0629      0.039     -1.610      0.107      -0.139       0.014
+C(occ2dig)[T.16]    -0.2673      0.034     -7.822      0.000      -0.334      -0.200
+C(occ2dig)[T.17]    -0.1759      0.033     -5.392      0.000      -0.240      -0.112
+C(occ2dig)[T.18]    -0.2338      0.033     -7.171      0.000      -0.298      -0.170
+C(occ2dig)[T.19]    -0.3442      0.083     -4.163      0.000      -0.506      -0.182
+C(occ2dig)[T.20]    -0.4069      0.022    -18.488      0.000      -0.450      -0.364
+C(occ2dig)[T.21]    -0.0906      0.022     -4.185      0.000      -0.133      -0.048
+C(occ2dig)[T.22]    -0.3247      0.023    -14.069      0.000      -0.370      -0.279
+C(occ2dig)[T.23]    -0.3727      0.020    -18.384      0.000      -0.412      -0.333
+C(occ2dig)[T.24]    -0.4481      0.038    -11.844      0.000      -0.522      -0.374
+C(occ2dig)[T.25]    -0.4861      0.039    -12.331      0.000      -0.563      -0.409
+C(occ2dig)[T.26]    -0.2787      0.061     -4.547      0.000      -0.399      -0.159
+C(occ2dig)[T.27]    -0.4222      0.055     -7.655      0.000      -0.530      -0.314
+C(occ2dig)[T.28]    -0.2664      0.039     -6.852      0.000      -0.343      -0.190
+C(occ2dig)[T.29]    -0.3420      0.160     -2.136      0.033      -0.656      -0.028
+C(occ2dig)[T.30]    -0.0780      0.022     -3.564      0.000      -0.121      -0.035
+C(occ2dig)[T.31]    -0.0872      0.031     -2.859      0.004      -0.147      -0.027
+C(occ2dig)[T.32]    -0.1505      0.023     -6.421      0.000      -0.196      -0.105
+C(occ2dig)[T.33]    -0.3553      0.073     -4.850      0.000      -0.499      -0.212
+C(occ2dig)[T.34]    -0.6704      0.093     -7.173      0.000      -0.854      -0.487
+C(occ2dig)[T.35]    -0.2670      0.054     -4.982      0.000      -0.372      -0.162
+C(occ2dig)[T.36]    -0.6487      0.058    -11.238      0.000      -0.762      -0.536
+C(occ2dig)[T.37]    -0.2911      0.062     -4.690      0.000      -0.413      -0.169
+C(occ2dig)[T.38]    -0.5008      0.060     -8.324      0.000      -0.619      -0.383
+C(occ2dig)[T.39]    -0.6049      0.073     -8.269      0.000      -0.748      -0.462
+C(occ2dig)[T.40]    -1.0023      0.065    -15.425      0.000      -1.130      -0.875
+C(occ2dig)[T.41]    -1.0865      0.100    -10.840      0.000      -1.283      -0.890
+C(occ2dig)[T.42]    -0.9486      0.069    -13.672      0.000      -1.085      -0.813
+C(occ2dig)[T.43]    -0.4226      0.108     -3.930      0.000      -0.633      -0.212
+C(occ2dig)[T.44]    -1.2203      0.160     -7.625      0.000      -1.534      -0.907
+C(occ2dig)[T.45]    -0.9031      0.095     -9.465      0.000      -1.090      -0.716
+C(occ2dig)[T.46]    -0.7834      0.059    -13.257      0.000      -0.899      -0.668
+C(occ2dig)[T.47]    -0.4747      0.030    -15.604      0.000      -0.534      -0.415
+C(occ2dig)[T.48]    -0.2599      0.034     -7.664      0.000      -0.326      -0.193
+C(occ2dig)[T.49]    -0.4426      0.057     -7.832      0.000      -0.553      -0.332
+C(occ2dig)[T.50]    -0.3467      0.048     -7.211      0.000      -0.441      -0.252
+C(occ2dig)[T.51]    -0.5851      0.057    -10.327      0.000      -0.696      -0.474
+C(occ2dig)[T.52]    -0.5302      0.046    -11.584      0.000      -0.620      -0.441
+C(occ2dig)[T.53]    -0.6367      0.063    -10.116      0.000      -0.760      -0.513
+C(occ2dig)[T.54]    -0.6697      0.073     -9.165      0.000      -0.813      -0.527
+C(occ2dig)[T.55]    -0.6197      0.108     -5.763      0.000      -0.830      -0.409
+C(occ2dig)[T.56]    -0.4011      0.077     -5.220      0.000      -0.552      -0.251
+C(occ2dig)[T.57]    -0.6696      0.043    -15.436      0.000      -0.755      -0.585
+C(occ2dig)[T.58]    -0.6381      0.056    -11.332      0.000      -0.748      -0.528
+C(occ2dig)[T.59]    -0.4996      0.069     -7.220      0.000      -0.635      -0.364
+C(occ2dig)[T.60]    -0.5168      0.151     -3.417      0.001      -0.813      -0.220
+C(occ2dig)[T.62]    -0.6074      0.085     -7.114      0.000      -0.775      -0.440
+C(occ2dig)[T.63]    -0.4077      0.151     -2.696      0.007      -0.704      -0.111
+C(occ2dig)[T.64]    -0.4576      0.202     -2.264      0.024      -0.854      -0.061
+C(occ2dig)[T.66]    -0.2759      0.261     -1.058      0.290      -0.787       0.235
+C(occ2dig)[T.67]    -1.1496      0.226     -5.096      0.000      -1.592      -0.707
+C(occ2dig)[T.68]     0.4186      0.450      0.929      0.353      -0.464       1.301
+C(occ2dig)[T.70]    -0.3967      0.085     -4.660      0.000      -0.564      -0.230
+C(occ2dig)[T.71]    -0.3316      0.226     -1.469      0.142      -0.774       0.111
+C(occ2dig)[T.72]    -0.6387      0.151     -4.226      0.000      -0.935      -0.342
+C(occ2dig)[T.73]    -0.3348      0.143     -2.338      0.019      -0.616      -0.054
+C(occ2dig)[T.74]    -0.4782      0.226     -2.120      0.034      -0.920      -0.036
+C(occ2dig)[T.75]    -1.1064      0.450     -2.456      0.014      -1.989      -0.224
+C(occ2dig)[T.76]    -0.7803      0.451     -1.732      0.083      -1.664       0.103
+C(occ2dig)[T.77]    -0.3960      0.078     -5.089      0.000      -0.549      -0.244
+C(occ2dig)[T.78]    -0.7177      0.319     -2.251      0.024      -1.343      -0.093
+C(occ2dig)[T.79]    -1.1940      0.450     -2.651      0.008      -2.077      -0.311
+C(occ2dig)[T.80]     0.0937      0.450      0.208      0.835      -0.789       0.977
+C(occ2dig)[T.81]    -0.5483      0.202     -2.715      0.007      -0.944      -0.152
+C(occ2dig)[T.82]    -0.6376      0.185     -3.455      0.001      -0.999      -0.276
+C(occ2dig)[T.83]    -1.2454      0.260     -4.782      0.000      -1.756      -0.735
+C(occ2dig)[T.84]    -0.7570      0.319     -2.371      0.018      -1.383      -0.131
+C(occ2dig)[T.86]    -0.2736      0.171     -1.600      0.110      -0.609       0.062
+C(occ2dig)[T.87]    -0.4309      0.088     -4.882      0.000      -0.604      -0.258
+C(occ2dig)[T.88]    -0.9188      0.160     -5.738      0.000      -1.233      -0.605
+C(occ2dig)[T.89]    -0.4896      0.143     -3.416      0.001      -0.770      -0.209
+C(occ2dig)[T.90]    -0.1198      0.090     -1.330      0.183      -0.296       0.057
+C(occ2dig)[T.91]    -0.8280      0.068    -12.090      0.000      -0.962      -0.694
+C(occ2dig)[T.93]    -0.9628      0.226     -4.255      0.000      -1.406      -0.519
+C(occ2dig)[T.94]    -0.3066      0.171     -1.790      0.074      -0.642       0.029
+C(occ2dig)[T.96]    -0.8966      0.121     -7.386      0.000      -1.135      -0.659
+C(occ2dig)[T.97]    -1.1746      0.451     -2.606      0.009      -2.058      -0.291
+female              -0.1119      0.007    -15.065      0.000      -0.126      -0.097
+age                  0.2854      0.095      2.995      0.003       0.099       0.472
+age2                -0.0077      0.003     -2.262      0.024      -0.014      -0.001
+age3               9.42e-05   5.23e-05      1.803      0.071   -8.22e-06       0.000
+age4             -4.453e-07   2.94e-07     -1.512      0.131   -1.02e-06    1.32e-07
+ed_DD                0.0925      0.011      8.395      0.000       0.071       0.114
+afram               -0.0845      0.013     -6.312      0.000      -0.111      -0.058
+hisp                -0.0243      0.015     -1.573      0.116      -0.055       0.006
+asian                0.0222      0.014      1.574      0.116      -0.005       0.050
+othernonw            0.0213      0.026      0.815      0.415      -0.030       0.073
+nonUSborn           -0.0498      0.012     -4.288      0.000      -0.073      -0.027
+married              0.0388      0.008      4.566      0.000       0.022       0.055
+divorced           2.11e-16   2.12e-16      0.996      0.319   -2.04e-16    6.26e-16
+wirowed              0.0433      0.036      1.219      0.223      -0.026       0.113
+child1               0.0657      0.017      3.966      0.000       0.033       0.098
+child2               0.0171      0.020      0.839      0.401      -0.023       0.057
+child3               0.0303      0.012      2.447      0.014       0.006       0.055
+child4pl             0.0322      0.010      3.336      0.001       0.013       0.051
+uhours              -0.0044      0.000    -11.427      0.000      -0.005      -0.004
+fedgov               0.0863      0.015      5.617      0.000       0.056       0.116
+stagov              -0.0457      0.013     -3.589      0.000      -0.071      -0.021
+locgov              -0.0395      0.013     -3.006      0.003      -0.065      -0.014
+nonprof             -0.0744      0.011     -6.914      0.000      -0.096      -0.053
+union                0.0643      0.011      6.021      0.000       0.043       0.085
+==============================================================================
+Omnibus:                     2235.211   Durbin-Watson:                   1.947
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             5280.553
+Skew:                          -0.725   Prob(JB):                         0.00
+Kurtosis:                       5.204   Cond. No.                     1.32e+16
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The smallest eigenvalue is 4.69e-15. This might indicate that there are
+strong multicollinearity problems or that the design matrix is singular.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># COMPARACIÓN FINAL</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>stargazer <span class="op">=</span> Stargazer([reg0, reg5])</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>stargazer.covariate_order([<span class="st">"female"</span>])</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>stargazer.add_line(<span class="st">"Edad y educación"</span>, [<span class="st">""</span>, <span class="st">"Yes"</span>])</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>stargazer.add_line(<span class="st">"Características familliares"</span>, [<span class="st">""</span>, <span class="st">"Yes"</span>])</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>stargazer.add_line(<span class="st">"Características demográficas"</span>, [<span class="st">""</span>, <span class="st">"Yes"</span>])</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>stargazer.add_line(<span class="st">"Características laborales"</span>, [<span class="st">""</span>, <span class="st">"Yes"</span>])</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>stargazer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table style="text-align:center"><tbody><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="2"><em>Dependent variable:np.log(w)</em></td></tr><tr><td style="text-align:left"></td></tr><tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">female</td><td>-0.193<sup>***</sup></td><td>-0.112<sup>***</sup></td></tr><tr><td style="text-align:left"></td><td>(0.008)</td><td>(0.007)</td></tr><tr><td style="text-align: left">Edad y educación</td><td></td><td>Yes</td></tr><tr><td style="text-align: left">Características familliares</td><td></td><td>Yes</td></tr><tr><td style="text-align: left">Características demográficas</td><td></td><td>Yes</td></tr><tr><td style="text-align: left">Características laborales</td><td></td><td>Yes</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Observations</td><td>18,220</td><td>18,220</td></tr><tr><td style="text-align: left">R<sup>2</sup></td><td>0.034</td><td>0.262</td></tr><tr><td style="text-align: left">Adjusted R<sup>2</sup></td><td>0.034</td><td>0.255</td></tr><tr><td style="text-align: left">Residual Std. Error</td><td>0.512 (df=18218)</td><td>0.449 (df=18053)</td></tr><tr><td style="text-align: left">F Statistic</td><td>645.532<sup>***</sup> (df=1; 18218)</td><td>38.651<sup>***</sup> (df=166; 18053)</td></tr><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Note:</td>
+ <td colspan="2" style="text-align: right">
+  <sup>*</sup>p&lt;0.1;
+  <sup>**</sup>p&lt;0.05;
+  <sup>***</sup>p&lt;0.01
+ </td></tr></tbody></table>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p2c2-app4.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p2c2-app6.html" class="pagination-link">
+        <span class="nav-page-text">Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

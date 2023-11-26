@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Econometría - Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p2c2-app5.html" rel="next">
+<link href="./p2c2-app3.html" rel="prev">
+<link href="./EconMetricsRPy-logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.3/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p2-mrl-basico.html">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</a></li><li class="breadcrumb-item"><a href="./p2c2-app4.html">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Econometría</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/JulianRamajo/EconometriaRPy" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PREFACIO</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p0-aspectos-tecnicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 0: ASPECTOS TÉCNICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c1-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Instalación y configuración de R y Python en RStudio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c2-rpy-comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R versus Python: Comparación de lenguajes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p0c3-reticulate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Programación conjunta en R y Python con reticulate</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p1-introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 1: CONCEPTOS BÁSICOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Conceptos básicos de la econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del <em>tidyverse</em></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app1b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app2b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app3b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.3b (Gestión y representación gráfica de datos espaciales): Desarrollo humano al nivel mundial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.4 (Regresiones con datos de corte transversal): Demanda familiar de carne</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p1c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p2-mrl-basico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 2: EL MODELO DE REGRESIÓN LINEAL Y SUS HIPÓTESIS BÁSICAS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El modelo de regresión lineal y sus hipótesis básicas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app4.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p2c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./p3-mrl-extendido.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CAPÍTULO 3: DIAGNOSIS, CORRECCIONES Y EXTENSIONES DEL MODELO DE REGRESIÓN LINEAL</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c1-teoria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Diagnosis, correcciones y extensiones del modelo de regresión lineal</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas.</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8a.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas ‘morales’ en Francia en 1830</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app8b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas [Ohio, Estados Unidos]</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.9 (Información muestral - Falta de observaciones): Exclusión social en el comportamiento de las aseguradoras de Chicago</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.10 (Información muestral - Multicolinealidad): Análisis de la rentabilidad empresarial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p3c2-app13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aplicación 3.13 (Modelos econométricos para datos de panel): Productividad de la industria química en China</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">BIBLIOGRAFÍA</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#código-r" id="toc-código-r" class="nav-link active" data-scroll-target="#código-r">Código R</a></li>
+  <li><a href="#código-python" id="toc-código-python" class="nav-link" data-scroll-target="#código-python">Código Python</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+.justify { text-align: justify !important }
+</style>
+</div>
+<div class="justify">
+<p>Supongamos que somos consultores contratados por un cliente para asesorarle sobre cómo mejorar las ventas de un determinado producto. No es posible para el empresario incrementar las ventas del producto de una forma directa (vía mejoras de la calidad o reducciones en el precio, por ejemplo), sino de forma indirecta a través de campañas publicitarias. La idea es construir un modelo que pueda usarse para predecir las ventas en función de la inversión realizada en publicidad.</p>
+<p>Los datos que utilizaremos consisten en las <em>VENTAS</em> del producto analizado (en miles de unidades) en 200 mercados diferentes, junto con los gastos realizados (en miles de dólares) en publicitar el producto en cada uno de esos mercados en dos medios de difusión diferentes, <em>TV</em> y <em>RADIO</em>.</p>
+<p>Podría proponerse, en primer lugar, un modelo de regresión estándar de tipo aditivo como el siguiente,</p>
+<p><span class="math display">\[VENTAS_{i} = \beta_1 + \beta_2  TV_{i} +  \beta_3  RADIO_{i} + e_{i}\]</span></p>
+<p>en el que el efecto de un cambio unitario en una variable explicativa (ceteris paribus) sobre la variable de respuesta no depende de los valores de las otras variables explicativas. En nuestro caso, esto implica que el efecto sobre las ventas de un incremento en el gasto de publicidad en un determinado medio (televisión o radio) es constante y, por tanto, independiente de la cantidad gastada en los otros medios de promoción.</p>
+<p>Si se contempla la posibilidad de que existan <em>efectos sinergia</em>, es decir, que el gasto realizado en un medio, por ejemplo, la radio, incremente la efectividad del gasto en otro medio, por ejemplo, la televisión, hay que generalizar el modelo inicial permitiendo la aparición de términos de interacción:</p>
+<p><span class="math display">\[VENTAS_{i} = \beta_1 + \beta_2  TV_{i} +  \beta_3  RADIO_{i} +  \beta_4  (TV_i*RADIO_i)  + e_{i}\]</span></p>
+</div>
+<section id="código-r" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="código-r">Código R</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>PUB_VENTAS <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/PUB_VENTAS.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación del modelo lineal</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> PUB_VENTAS, <span class="at">formula =</span> VENTAS <span class="sc">~</span> TV <span class="sc">+</span> RADIO)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = VENTAS ~ TV + RADIO, data = PUB_VENTAS)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.7977 -0.8752  0.2422  1.1708  2.8328 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.92110    0.29449   9.919   &lt;2e-16 ***
+TV           0.04575    0.00139  32.909   &lt;2e-16 ***
+RADIO        0.18799    0.00804  23.382   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.681 on 197 degrees of freedom
+Multiple R-squared:  0.8972,    Adjusted R-squared:  0.8962 
+F-statistic: 859.6 on 2 and 197 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfica del ajuste</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(<span class="at">data =</span> PUB_VENTAS) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_trace</span>(<span class="at">x =</span> <span class="sc">~</span>TV, <span class="at">y =</span> <span class="sc">~</span>RADIO, <span class="at">z =</span> <span class="sc">~</span>VENTAS, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">mode =</span> <span class="st">"markers"</span>, <span class="at">type =</span> <span class="st">"scatter3d"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">marker =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">symbol =</span> <span class="dv">104</span>), </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">name =</span> <span class="st">"Observaciones"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_trace</span>(<span class="at">z =</span> model1<span class="sc">$</span>fitted.values, <span class="at">x =</span> <span class="sc">~</span>TV, <span class="at">y =</span> <span class="sc">~</span>RADIO, </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">type =</span> <span class="st">"mesh3d"</span>, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">name =</span> <span class="st">"Valores ajustados"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'TV'</span>), </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'RADIO'</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">camera =</span> <span class="fu">list</span>(<span class="at">eye =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">1.5</span>, <span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">z =</span> <span class="dv">0</span>)),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'VENTAS'</span>), <span class="at">aspectmode=</span><span class="st">'cube'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1e0651ad8e26597a418a" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-1e0651ad8e26597a418a">{"x":{"visdat":{"4d987067305e":["function () ","plotlyVisDat"]},"cur_data":"4d987067305e","attrs":{"4d987067305e":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"z":{},"mode":"markers","type":"scatter3d","marker":{"size":5,"color":"blue","symbol":104},"name":"Observaciones","inherit":true},"4d987067305e.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":[20.555464633410356,12.345362290581182,12.337017734015836,17.617115959636944,13.223908130179046,12.512084485517619,11.718212413863156,12.105515529312552,3.7093791981770448,12.551696958812958,7.0358597049840661,17.256520153493607,10.608661866183605,8.8109505070744127,18.44466773034295,20.828915392944165,12.903865070561416,23.241076256012207,9.941214763115946,14.153846193019044,18.121391607862734,14.742063573164193,6.5141716750022596,16.544026629864049,8.1403521486180779,15.608020595649137,14.967693830323979,17.046334602732685,19.399541450963262,9.1592974844660624,21.642921868865091,11.357918080510016,7.6504592801602049,18.833463335657147,7.5630276348465593,16.992800991431238,23.3672071888519,15.625899395498799,9.9125782940237759,20.440580099036154,16.378721224005954,17.298709354413944,21.562153703463661,13.966922660428391,8.9009973955840955,15.162638135560528,8.8864496705127305,21.699440459896135,16.286902683970524,8.1816294941247509,12.645694072123112,9.3196279241081523,20.66180115034491,19.961262419719926,20.355123566122746,21.308647431052457,8.537747830673684,12.762394880281645,21.890728576079326,18.107469139501003,5.7449709735533308,22.904186575003539,16.784137678707452,13.184748531246811,16.965709071505451,7.8265284619482687,8.9870345629486437,12.02066194197953,18.953134249459119,21.093690374950018,17.783506933610859,10.633296051173721,10.351138435584183,9.9133400782201555,17.309835429834393,11.909703990920837,4.4801480902772299,13.792390590763626,8.7892032898981949,9.6762140091063529,11.436213636889612,14.663880902786467,10.182720289908449,14.416472349922504,20.77350468115819,15.220023959746738,11.582033536675752,15.61872354487882,11.755102864648046,16.931102642954077,9.9871432909191817,4.5116789642263804,19.17972975168977,21.262772292906426,10.467086226945046,16.333478779612644,12.620231169548868,15.329043983620611,24.128425633225973,16.946510164137525,13.905345965351803,23.307017534681329,17.640340792591797,14.751930367766665,20.268098842558079,17.953621030025886,6.1329067827554438,7.1137334655285169,3.5956856808773612,19.663924385306302,14.794089820514669,21.12381933390699,13.855332015616979,16.383990225969068,15.297256259139761,12.937084458206778,11.97848761514536,6.5671631674236046,15.609467132899818,6.8166509512909634,14.424500559611484,7.8607651539660806,13.621364638934939,15.058117892410309,19.494043497938097,9.1292516633386285,10.59096288572356,6.5906360835114466,22.212602783567363,7.9040176118729875,10.397699657140134,15.600460134409428,8.4188833233265878,19.275814863402033,11.866029737178783,13.966786132941646,11.424198017184745,20.877225954896613,9.757607431217421,19.63411177322569,9.4754051933693848,18.43880321984253,19.251444965986693,8.7786206637134665,10.10502767910924,9.6976895016647102,15.279188872501779,23.260388049382005,12.235950219044492,9.8165911942272199,18.377596261299509,10.03658404324595,16.34251685663099,18.222270536045755,15.480532370075764,5.2894276831151377,15.395225908379638,10.019563709152749,10.393418211377137,12.406102831030555,14.216501019168369,13.572480879574432,14.94400257927548,17.320199721058465,11.047079373569808,14.289784424116547,10.808694023638028,13.360765653733294,17.213350833416236,17.921932647816366,7.3895736962545335,14.376846332896626,7.596578243454446,11.960969784430558,13.736151161393524,24.783525895626237,19.964021627445788,12.17492441024671,16.013843972099618,12.378039559346441,10.575088946446467,13.933695835739947,6.5640876128213819,24.163936480147932,18.53794901207085,20.779376628701691,9.6986844949079121,17.060279382223662,18.620096781335214,6.051445096901003,12.454977822992353,8.4059261000357282,4.4788590612869168,18.448760589317626,16.463190200719243,5.3645124877613917,8.1523752053660274,12.768048492864493,23.792922993123319,15.15754284629957],"x":{},"y":{},"type":"mesh3d","name":"Valores ajustados","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"TV"},"yaxis":{"title":"RADIO"},"camera":{"eye":{"x":-1.5,"y":1.5,"z":0}},"zaxis":{"title":"VENTAS"},"aspectmode":"cube"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[230.09999999999999,44.5,17.199999999999999,151.5,180.80000000000001,8.6999999999999993,57.5,120.2,8.5999999999999996,199.80000000000001,66.099999999999994,214.69999999999999,23.800000000000001,97.5,204.09999999999999,195.40000000000001,67.799999999999997,281.39999999999998,69.200000000000003,147.30000000000001,218.40000000000001,237.40000000000001,13.199999999999999,228.30000000000001,62.299999999999997,262.89999999999998,142.90000000000001,240.09999999999999,248.80000000000001,70.599999999999994,292.89999999999998,112.90000000000001,97.200000000000003,265.60000000000002,95.700000000000003,290.69999999999999,266.89999999999998,74.700000000000003,43.100000000000001,228,202.5,177,293.60000000000002,206.90000000000001,25.100000000000001,175.09999999999999,89.700000000000003,239.90000000000001,227.19999999999999,66.900000000000006,199.80000000000001,100.40000000000001,216.40000000000001,182.59999999999999,262.69999999999999,198.90000000000001,7.2999999999999998,136.19999999999999,210.80000000000001,210.69999999999999,53.5,261.30000000000001,239.30000000000001,102.7,131.09999999999999,69,31.5,139.30000000000001,237.40000000000001,216.80000000000001,199.09999999999999,109.8,26.800000000000001,129.40000000000001,213.40000000000001,16.899999999999999,27.5,120.5,5.4000000000000004,116,76.400000000000006,239.80000000000001,75.299999999999997,68.400000000000006,213.5,193.19999999999999,76.299999999999997,110.7,88.299999999999997,109.8,134.30000000000001,28.600000000000001,217.69999999999999,250.90000000000001,107.40000000000001,163.30000000000001,197.59999999999999,184.90000000000001,289.69999999999999,135.19999999999999,222.40000000000001,296.39999999999998,280.19999999999999,187.90000000000001,238.19999999999999,137.90000000000001,25,90.400000000000006,13.1,255.40000000000001,225.80000000000001,241.69999999999999,175.69999999999999,209.59999999999999,78.200000000000003,75.099999999999994,139.19999999999999,76.400000000000006,125.7,19.399999999999999,141.30000000000001,18.800000000000001,224,123.09999999999999,229.5,87.200000000000003,7.7999999999999998,80.200000000000003,220.30000000000001,59.600000000000001,0.69999999999999996,265.19999999999999,8.4000000000000004,219.80000000000001,36.899999999999999,48.299999999999997,25.600000000000001,273.69999999999999,43,184.90000000000001,73.400000000000006,193.69999999999999,220.5,104.59999999999999,96.200000000000003,140.30000000000001,240.09999999999999,243.19999999999999,38,44.700000000000003,280.69999999999999,121,197.59999999999999,171.30000000000001,187.80000000000001,4.0999999999999996,93.900000000000006,149.80000000000001,11.699999999999999,131.69999999999999,172.5,85.700000000000003,188.40000000000001,163.5,117.2,234.5,17.899999999999999,206.80000000000001,215.40000000000001,284.30000000000001,50,164.5,19.600000000000001,168.40000000000001,222.40000000000001,276.89999999999998,248.40000000000001,170.19999999999999,276.69999999999999,165.59999999999999,156.59999999999999,218.5,56.200000000000003,287.60000000000002,253.80000000000001,205,139.5,191.09999999999999,286,18.699999999999999,39.5,75.5,17.199999999999999,166.80000000000001,149.69999999999999,38.200000000000003,94.200000000000003,177,283.60000000000002,232.09999999999999],"y":[37.799999999999997,39.299999999999997,45.899999999999999,41.299999999999997,10.800000000000001,48.899999999999999,32.799999999999997,19.600000000000001,2.1000000000000001,2.6000000000000001,5.7999999999999998,24,35.100000000000001,7.5999999999999996,32.899999999999999,47.700000000000003,36.600000000000001,39.600000000000001,20.5,23.899999999999999,27.699999999999999,5.0999999999999996,15.9,16.899999999999999,12.6,3.5,29.300000000000001,16.699999999999999,27.100000000000001,16,28.300000000000001,17.399999999999999,1.5,20,1.3999999999999999,4.0999999999999996,43.799999999999997,49.399999999999999,26.699999999999999,37.700000000000003,22.300000000000001,33.399999999999999,27.699999999999999,8.4000000000000004,25.699999999999999,22.5,9.9000000000000004,41.5,15.800000000000001,11.699999999999999,3.1000000000000001,9.5999999999999996,41.700000000000003,46.200000000000003,28.800000000000001,49.399999999999999,28.100000000000001,19.199999999999999,49.600000000000001,29.5,2,42.700000000000003,15.5,29.600000000000001,42.799999999999997,9.3000000000000007,24.600000000000001,14.5,27.5,43.899999999999999,30.600000000000001,14.300000000000001,33,5.7000000000000002,24.600000000000001,43.700000000000003,1.6000000000000001,28.5,29.899999999999999,7.7000000000000002,26.699999999999999,4.0999999999999996,20.300000000000001,44.5,43,18.399999999999999,27.5,40.600000000000001,25.5,47.799999999999997,4.9000000000000004,1.5,33.5,36.5,14,31.600000000000001,3.5,21,42.299999999999997,41.700000000000003,4.2999999999999998,36.299999999999997,10.1,17.199999999999999,34.299999999999997,46.399999999999999,11,0.29999999999999999,0.40000000000000002,26.899999999999999,8.1999999999999993,38,15.4,20.600000000000001,46.799999999999997,35,14.300000000000001,0.80000000000000004,36.899999999999999,16,26.800000000000001,21.699999999999999,2.3999999999999999,34.600000000000001,32.299999999999997,11.800000000000001,38.899999999999999,0,49,12,39.600000000000001,2.8999999999999999,27.199999999999999,33.5,38.600000000000001,47,39,28.899999999999999,25.899999999999999,43.899999999999999,17,35.399999999999999,33.200000000000003,5.7000000000000002,14.800000000000001,1.8999999999999999,7.2999999999999998,49,40.299999999999997,25.800000000000001,13.9,8.4000000000000004,23.300000000000001,39.700000000000003,21.100000000000001,11.6,43.5,1.3,36.899999999999999,18.399999999999999,18.100000000000001,35.799999999999997,18.100000000000001,36.799999999999997,14.699999999999999,3.3999999999999999,37.600000000000001,5.2000000000000002,23.600000000000001,10.6,11.6,20.899999999999999,20.100000000000001,7.0999999999999996,3.3999999999999999,48.899999999999999,30.199999999999999,7.7999999999999998,2.2999999999999998,10,2.6000000000000001,5.4000000000000004,5.7000000000000002,43,21.300000000000001,45.100000000000001,2.1000000000000001,28.699999999999999,13.9,12.1,41.100000000000001,10.800000000000001,4.0999999999999996,42,35.600000000000001,3.7000000000000002,4.9000000000000004,9.3000000000000007,42,8.5999999999999996],"z":[22.100000000000001,10.4,9.3000000000000007,18.5,12.9,7.2000000000000002,11.800000000000001,13.199999999999999,4.7999999999999998,10.6,8.5999999999999996,17.399999999999999,9.1999999999999993,9.6999999999999993,19,22.399999999999999,12.5,24.399999999999999,11.300000000000001,14.6,18,12.5,5.5999999999999996,15.5,9.6999999999999993,12,15,15.9,18.899999999999999,10.5,21.399999999999999,11.9,9.5999999999999996,17.399999999999999,9.5,12.800000000000001,25.399999999999999,14.699999999999999,10.1,21.5,16.600000000000001,17.100000000000001,20.699999999999999,12.9,8.5,14.9,10.6,23.199999999999999,14.800000000000001,9.6999999999999993,11.4,10.699999999999999,22.600000000000001,21.199999999999999,20.199999999999999,23.699999999999999,5.5,13.199999999999999,23.800000000000001,18.399999999999999,8.0999999999999996,24.199999999999999,15.699999999999999,14,18,9.3000000000000007,9.5,13.4,18.899999999999999,22.300000000000001,18.300000000000001,12.4,8.8000000000000007,11,17,8.6999999999999993,6.9000000000000004,14.199999999999999,5.2999999999999998,11,11.800000000000001,12.300000000000001,11.300000000000001,13.6,21.699999999999999,15.199999999999999,12,16,12.9,16.699999999999999,11.199999999999999,7.2999999999999998,19.399999999999999,22.199999999999999,11.5,16.899999999999999,11.699999999999999,15.5,25.399999999999999,17.199999999999999,11.699999999999999,23.800000000000001,14.800000000000001,14.699999999999999,20.699999999999999,19.199999999999999,7.2000000000000002,8.6999999999999993,5.2999999999999998,19.800000000000001,13.4,21.800000000000001,14.1,15.9,14.6,12.6,12.199999999999999,9.4000000000000004,15.9,6.5999999999999996,15.5,7,11.6,15.199999999999999,19.699999999999999,10.6,6.5999999999999996,8.8000000000000007,24.699999999999999,9.6999999999999993,1.6000000000000001,12.699999999999999,5.7000000000000002,19.600000000000001,10.800000000000001,11.6,9.5,20.800000000000001,9.5999999999999996,20.699999999999999,10.9,19.199999999999999,20.100000000000001,10.4,11.4,10.300000000000001,13.199999999999999,25.399999999999999,10.9,10.1,16.100000000000001,11.6,16.600000000000001,19,15.6,3.2000000000000002,15.300000000000001,10.1,7.2999999999999998,12.9,14.4,13.300000000000001,14.9,18,11.9,11.9,8,12.199999999999999,17.100000000000001,15,8.4000000000000004,14.5,7.5999999999999996,11.699999999999999,11.5,27,20.199999999999999,11.699999999999999,11.800000000000001,12.6,10.5,12.199999999999999,8.6999999999999993,26.199999999999999,17.600000000000001,22.600000000000001,10.300000000000001,17.300000000000001,15.9,6.7000000000000002,10.800000000000001,9.9000000000000004,5.9000000000000004,19.600000000000001,17.300000000000001,7.5999999999999996,9.6999999999999993,12.800000000000001,25.5,13.4],"mode":"markers","type":"scatter3d","marker":{"color":"blue","size":5,"symbol":104,"line":{"color":"rgba(31,119,180,1)"}},"name":"Observaciones","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null},{"colorbar":{"title":"VENTAS","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[20.555464633410356,12.345362290581182,12.337017734015836,17.617115959636944,13.223908130179046,12.512084485517619,11.718212413863156,12.105515529312552,3.7093791981770448,12.551696958812958,7.0358597049840661,17.256520153493607,10.608661866183605,8.8109505070744127,18.44466773034295,20.828915392944165,12.903865070561416,23.241076256012207,9.941214763115946,14.153846193019044,18.121391607862734,14.742063573164193,6.5141716750022596,16.544026629864049,8.1403521486180779,15.608020595649137,14.967693830323979,17.046334602732685,19.399541450963262,9.1592974844660624,21.642921868865091,11.357918080510016,7.6504592801602049,18.833463335657147,7.5630276348465593,16.992800991431238,23.3672071888519,15.625899395498799,9.9125782940237759,20.440580099036154,16.378721224005954,17.298709354413944,21.562153703463661,13.966922660428391,8.9009973955840955,15.162638135560528,8.8864496705127305,21.699440459896135,16.286902683970524,8.1816294941247509,12.645694072123112,9.3196279241081523,20.66180115034491,19.961262419719926,20.355123566122746,21.308647431052457,8.537747830673684,12.762394880281645,21.890728576079326,18.107469139501003,5.7449709735533308,22.904186575003539,16.784137678707452,13.184748531246811,16.965709071505451,7.8265284619482687,8.9870345629486437,12.02066194197953,18.953134249459119,21.093690374950018,17.783506933610859,10.633296051173721,10.351138435584183,9.9133400782201555,17.309835429834393,11.909703990920837,4.4801480902772299,13.792390590763626,8.7892032898981949,9.6762140091063529,11.436213636889612,14.663880902786467,10.182720289908449,14.416472349922504,20.77350468115819,15.220023959746738,11.582033536675752,15.61872354487882,11.755102864648046,16.931102642954077,9.9871432909191817,4.5116789642263804,19.17972975168977,21.262772292906426,10.467086226945046,16.333478779612644,12.620231169548868,15.329043983620611,24.128425633225973,16.946510164137525,13.905345965351803,23.307017534681329,17.640340792591797,14.751930367766665,20.268098842558079,17.953621030025886,6.1329067827554438,7.1137334655285169,3.5956856808773612,19.663924385306302,14.794089820514669,21.12381933390699,13.855332015616979,16.383990225969068,15.297256259139761,12.937084458206778,11.97848761514536,6.5671631674236046,15.609467132899818,6.8166509512909634,14.424500559611484,7.8607651539660806,13.621364638934939,15.058117892410309,19.494043497938097,9.1292516633386285,10.59096288572356,6.5906360835114466,22.212602783567363,7.9040176118729875,10.397699657140134,15.600460134409428,8.4188833233265878,19.275814863402033,11.866029737178783,13.966786132941646,11.424198017184745,20.877225954896613,9.757607431217421,19.63411177322569,9.4754051933693848,18.43880321984253,19.251444965986693,8.7786206637134665,10.10502767910924,9.6976895016647102,15.279188872501779,23.260388049382005,12.235950219044492,9.8165911942272199,18.377596261299509,10.03658404324595,16.34251685663099,18.222270536045755,15.480532370075764,5.2894276831151377,15.395225908379638,10.019563709152749,10.393418211377137,12.406102831030555,14.216501019168369,13.572480879574432,14.94400257927548,17.320199721058465,11.047079373569808,14.289784424116547,10.808694023638028,13.360765653733294,17.213350833416236,17.921932647816366,7.3895736962545335,14.376846332896626,7.596578243454446,11.960969784430558,13.736151161393524,24.783525895626237,19.964021627445788,12.17492441024671,16.013843972099618,12.378039559346441,10.575088946446467,13.933695835739947,6.5640876128213819,24.163936480147932,18.53794901207085,20.779376628701691,9.6986844949079121,17.060279382223662,18.620096781335214,6.051445096901003,12.454977822992353,8.4059261000357282,4.4788590612869168,18.448760589317626,16.463190200719243,5.3645124877613917,8.1523752053660274,12.768048492864493,23.792922993123319,15.15754284629957],"x":[230.09999999999999,44.5,17.199999999999999,151.5,180.80000000000001,8.6999999999999993,57.5,120.2,8.5999999999999996,199.80000000000001,66.099999999999994,214.69999999999999,23.800000000000001,97.5,204.09999999999999,195.40000000000001,67.799999999999997,281.39999999999998,69.200000000000003,147.30000000000001,218.40000000000001,237.40000000000001,13.199999999999999,228.30000000000001,62.299999999999997,262.89999999999998,142.90000000000001,240.09999999999999,248.80000000000001,70.599999999999994,292.89999999999998,112.90000000000001,97.200000000000003,265.60000000000002,95.700000000000003,290.69999999999999,266.89999999999998,74.700000000000003,43.100000000000001,228,202.5,177,293.60000000000002,206.90000000000001,25.100000000000001,175.09999999999999,89.700000000000003,239.90000000000001,227.19999999999999,66.900000000000006,199.80000000000001,100.40000000000001,216.40000000000001,182.59999999999999,262.69999999999999,198.90000000000001,7.2999999999999998,136.19999999999999,210.80000000000001,210.69999999999999,53.5,261.30000000000001,239.30000000000001,102.7,131.09999999999999,69,31.5,139.30000000000001,237.40000000000001,216.80000000000001,199.09999999999999,109.8,26.800000000000001,129.40000000000001,213.40000000000001,16.899999999999999,27.5,120.5,5.4000000000000004,116,76.400000000000006,239.80000000000001,75.299999999999997,68.400000000000006,213.5,193.19999999999999,76.299999999999997,110.7,88.299999999999997,109.8,134.30000000000001,28.600000000000001,217.69999999999999,250.90000000000001,107.40000000000001,163.30000000000001,197.59999999999999,184.90000000000001,289.69999999999999,135.19999999999999,222.40000000000001,296.39999999999998,280.19999999999999,187.90000000000001,238.19999999999999,137.90000000000001,25,90.400000000000006,13.1,255.40000000000001,225.80000000000001,241.69999999999999,175.69999999999999,209.59999999999999,78.200000000000003,75.099999999999994,139.19999999999999,76.400000000000006,125.7,19.399999999999999,141.30000000000001,18.800000000000001,224,123.09999999999999,229.5,87.200000000000003,7.7999999999999998,80.200000000000003,220.30000000000001,59.600000000000001,0.69999999999999996,265.19999999999999,8.4000000000000004,219.80000000000001,36.899999999999999,48.299999999999997,25.600000000000001,273.69999999999999,43,184.90000000000001,73.400000000000006,193.69999999999999,220.5,104.59999999999999,96.200000000000003,140.30000000000001,240.09999999999999,243.19999999999999,38,44.700000000000003,280.69999999999999,121,197.59999999999999,171.30000000000001,187.80000000000001,4.0999999999999996,93.900000000000006,149.80000000000001,11.699999999999999,131.69999999999999,172.5,85.700000000000003,188.40000000000001,163.5,117.2,234.5,17.899999999999999,206.80000000000001,215.40000000000001,284.30000000000001,50,164.5,19.600000000000001,168.40000000000001,222.40000000000001,276.89999999999998,248.40000000000001,170.19999999999999,276.69999999999999,165.59999999999999,156.59999999999999,218.5,56.200000000000003,287.60000000000002,253.80000000000001,205,139.5,191.09999999999999,286,18.699999999999999,39.5,75.5,17.199999999999999,166.80000000000001,149.69999999999999,38.200000000000003,94.200000000000003,177,283.60000000000002,232.09999999999999],"y":[37.799999999999997,39.299999999999997,45.899999999999999,41.299999999999997,10.800000000000001,48.899999999999999,32.799999999999997,19.600000000000001,2.1000000000000001,2.6000000000000001,5.7999999999999998,24,35.100000000000001,7.5999999999999996,32.899999999999999,47.700000000000003,36.600000000000001,39.600000000000001,20.5,23.899999999999999,27.699999999999999,5.0999999999999996,15.9,16.899999999999999,12.6,3.5,29.300000000000001,16.699999999999999,27.100000000000001,16,28.300000000000001,17.399999999999999,1.5,20,1.3999999999999999,4.0999999999999996,43.799999999999997,49.399999999999999,26.699999999999999,37.700000000000003,22.300000000000001,33.399999999999999,27.699999999999999,8.4000000000000004,25.699999999999999,22.5,9.9000000000000004,41.5,15.800000000000001,11.699999999999999,3.1000000000000001,9.5999999999999996,41.700000000000003,46.200000000000003,28.800000000000001,49.399999999999999,28.100000000000001,19.199999999999999,49.600000000000001,29.5,2,42.700000000000003,15.5,29.600000000000001,42.799999999999997,9.3000000000000007,24.600000000000001,14.5,27.5,43.899999999999999,30.600000000000001,14.300000000000001,33,5.7000000000000002,24.600000000000001,43.700000000000003,1.6000000000000001,28.5,29.899999999999999,7.7000000000000002,26.699999999999999,4.0999999999999996,20.300000000000001,44.5,43,18.399999999999999,27.5,40.600000000000001,25.5,47.799999999999997,4.9000000000000004,1.5,33.5,36.5,14,31.600000000000001,3.5,21,42.299999999999997,41.700000000000003,4.2999999999999998,36.299999999999997,10.1,17.199999999999999,34.299999999999997,46.399999999999999,11,0.29999999999999999,0.40000000000000002,26.899999999999999,8.1999999999999993,38,15.4,20.600000000000001,46.799999999999997,35,14.300000000000001,0.80000000000000004,36.899999999999999,16,26.800000000000001,21.699999999999999,2.3999999999999999,34.600000000000001,32.299999999999997,11.800000000000001,38.899999999999999,0,49,12,39.600000000000001,2.8999999999999999,27.199999999999999,33.5,38.600000000000001,47,39,28.899999999999999,25.899999999999999,43.899999999999999,17,35.399999999999999,33.200000000000003,5.7000000000000002,14.800000000000001,1.8999999999999999,7.2999999999999998,49,40.299999999999997,25.800000000000001,13.9,8.4000000000000004,23.300000000000001,39.700000000000003,21.100000000000001,11.6,43.5,1.3,36.899999999999999,18.399999999999999,18.100000000000001,35.799999999999997,18.100000000000001,36.799999999999997,14.699999999999999,3.3999999999999999,37.600000000000001,5.2000000000000002,23.600000000000001,10.6,11.6,20.899999999999999,20.100000000000001,7.0999999999999996,3.3999999999999999,48.899999999999999,30.199999999999999,7.7999999999999998,2.2999999999999998,10,2.6000000000000001,5.4000000000000004,5.7000000000000002,43,21.300000000000001,45.100000000000001,2.1000000000000001,28.699999999999999,13.9,12.1,41.100000000000001,10.800000000000001,4.0999999999999996,42,35.600000000000001,3.7000000000000002,4.9000000000000004,9.3000000000000007,42,8.5999999999999996],"type":"mesh3d","name":"Valores ajustados","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación del modelo con interacción</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> PUB_VENTAS, <span class="at">formula =</span> VENTAS <span class="sc">~</span> TV <span class="sc">*</span> RADIO)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = VENTAS ~ TV * RADIO, data = PUB_VENTAS)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.3366 -0.4028  0.1831  0.5948  1.5246 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 6.750e+00  2.479e-01  27.233   &lt;2e-16 ***
+TV          1.910e-02  1.504e-03  12.699   &lt;2e-16 ***
+RADIO       2.886e-02  8.905e-03   3.241   0.0014 ** 
+TV:RADIO    1.086e-03  5.242e-05  20.727   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9435 on 196 degrees of freedom
+Multiple R-squared:  0.9678,    Adjusted R-squared:  0.9673 
+F-statistic:  1963 on 3 and 196 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfica del ajuste</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(<span class="at">data =</span> PUB_VENTAS) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_trace</span>(<span class="at">x =</span> <span class="sc">~</span>TV, <span class="at">y =</span> <span class="sc">~</span>RADIO, <span class="at">z =</span> <span class="sc">~</span>VENTAS, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">mode =</span> <span class="st">"markers"</span>, <span class="at">type =</span> <span class="st">"scatter3d"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">marker =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">symbol =</span> <span class="dv">104</span>), </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">name =</span> <span class="st">"Observaciones"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_trace</span>(<span class="at">z =</span> model2<span class="sc">$</span>fitted.values, <span class="at">x =</span> <span class="sc">~</span>TV, <span class="at">y =</span> <span class="sc">~</span>RADIO, <span class="at">type =</span> <span class="st">"mesh3d"</span>, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">name =</span> <span class="st">"Valores ajustados"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'TV'</span>), </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'RADIO'</span>),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">camera =</span> <span class="fu">list</span>(<span class="at">eye =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">1.5</span>, <span class="at">y =</span> <span class="fl">1.5</span>, <span class="at">z =</span> <span class="dv">0</span>)),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'VENTAS'</span>), <span class="at">aspectmode=</span><span class="st">'cube'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-3936037ff29a00fa9f96" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-3936037ff29a00fa9f96">{"x":{"visdat":{"4d98698a4f9":["function () ","plotlyVisDat"]},"cur_data":"4d98698a4f9","attrs":{"4d98698a4f9":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"z":{},"mode":"markers","type":"scatter3d","marker":{"size":5,"color":"blue","symbol":104},"name":"Observaciones","inherit":true},"4d98698a4f9.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":[21.686389994098363,10.634545599203353,9.2612141085447206,17.634107926933336,12.63691902973002,8.7898976058773997,10.84428009748671,12.171526528493542,6.9947182460576531,11.206063903969163,8.5967314920420375,17.142358792000934,9.1254596315481766,9.637006056051824,18.893946937284348,21.985968995078618,11.797676312325228,25.375420316536907,10.204952858700331,14.078542491428694,18.294271387538753,12.747465454698732,7.6892672892678453,15.790725001424713,9.1567339935163314,12.872641799261544,14.874492318242007,16.174840901926714,19.610351354829952,9.7878258647950318,22.167702953623149,11.543276727271945,8.8085460162693465,18.172132046321327,8.7641660042025471,13.716190195042326,25.813741744533417,13.612132213938926,9.5943530641269916,21.532373676822612,16.168111666077834,17.518184979404289,21.993884055334195,12.83294355919594,8.6722330264947693,15.024693365045025,9.7141437773849777,23.347250159972582,15.446232754963363,9.2161800141587182,11.329034894248322,9.9922343284617803,21.891566529237355,20.737223639607183,20.819408213872496,22.650652073377909,7.9235062506283205,12.747132079973419,23.568240309574943,18.379467255884979,7.9461032655207182,25.096242766623433,15.798414248342027,12.869023508874671,16.586002200039161,9.0337991061865672,8.9037931317635639,12.024031032023363,19.171655113640139,22.499036949265371,18.055795891489414,10.966169755394542,9.17541610934693,10.187779853585113,17.240059746513882,9.1366341337530024,7.3694820439802626,13.605713703435699,7.8917155987079823,10.158626448950184,11.196432123630577,12.517204958518715,10.435200892921625,12.648091340406975,22.04385865659642,14.833936193381815,11.281028983689087,14.919602376648584,11.619189476533414,15.929444589658493,10.171899650000102,7.3864120470366279,19.799096870446565,22.546037503618443,10.839373719025811,16.38802916066572,11.377023314868831,15.106826155158631,26.818836512220468,16.661644826974737,12.161435094250541,25.149352958940895,15.468632248728177,14.347130306746621,21.166949819396457,17.675379570503122,7.8439968296976277,8.5150811155808945,7.0176816384392442,19.869478666644007,13.311607584314325,22.442661867393966,13.490543733575512,16.039551627193337,13.570897919894918,12.050674057950447,11.984525426956147,8.2990370716279127,15.255692678472242,7.9197944280522545,14.337040626855803,8.1788361439191011,11.682225106627996,14.72779355957465,20.120127848061959,9.874345436404953,8.3515400223284608,8.2821263243247909,24.100727739542453,9.0120292902068204,7.9365780478221719,12.735121311107646,7.9439127771305991,19.91564402749535,10.11659680571274,11.495689658317987,9.4495172557200817,21.406344940211163,9.5290783263694596,20.368174654042978,9.9985928847242906,18.921826650828706,19.873963353602932,9.5604863320673843,10.56178422735055,9.774562399023516,13.451400363185961,25.757298030887871,10.302990687123566,9.6016458481447238,16.752259310046234,10.40819020282771,16.199346820879104,18.556816352457325,15.251677200794488,7.2149882364579465,14.237186389601497,9.8606634823218506,8.5077216651687699,12.429742752527231,13.959835661917852,12.753813321927909,14.576225044965966,17.472527581633894,11.284969578087297,12.193809394821866,8.908532596423143,12.018768977244926,17.068826135470115,15.760813788148454,8.6702207623005965,14.230951048614525,8.1327295333721956,11.470805970216965,11.917988009590937,28.162161841607507,20.517044753701278,11.668720521601626,12.793322204642358,12.001196648366484,10.258862429989872,12.361605764775986,8.3362522013634326,26.921146283682116,18.086323128914099,22.01272839819174,9.7937153380716406,17.187683393070095,16.933537065751683,7.7024615518189226,10.454742406740047,9.38997072497909,7.2737056726610243,18.759960850128422,16.427356979911455,7.740229641664607,9.1924612461672304,12.187990354600327,26.320874664053797,13.600486969269415],"x":{},"y":{},"type":"mesh3d","name":"Valores ajustados","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"TV"},"yaxis":{"title":"RADIO"},"camera":{"eye":{"x":-1.5,"y":1.5,"z":0}},"zaxis":{"title":"VENTAS"},"aspectmode":"cube"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[230.09999999999999,44.5,17.199999999999999,151.5,180.80000000000001,8.6999999999999993,57.5,120.2,8.5999999999999996,199.80000000000001,66.099999999999994,214.69999999999999,23.800000000000001,97.5,204.09999999999999,195.40000000000001,67.799999999999997,281.39999999999998,69.200000000000003,147.30000000000001,218.40000000000001,237.40000000000001,13.199999999999999,228.30000000000001,62.299999999999997,262.89999999999998,142.90000000000001,240.09999999999999,248.80000000000001,70.599999999999994,292.89999999999998,112.90000000000001,97.200000000000003,265.60000000000002,95.700000000000003,290.69999999999999,266.89999999999998,74.700000000000003,43.100000000000001,228,202.5,177,293.60000000000002,206.90000000000001,25.100000000000001,175.09999999999999,89.700000000000003,239.90000000000001,227.19999999999999,66.900000000000006,199.80000000000001,100.40000000000001,216.40000000000001,182.59999999999999,262.69999999999999,198.90000000000001,7.2999999999999998,136.19999999999999,210.80000000000001,210.69999999999999,53.5,261.30000000000001,239.30000000000001,102.7,131.09999999999999,69,31.5,139.30000000000001,237.40000000000001,216.80000000000001,199.09999999999999,109.8,26.800000000000001,129.40000000000001,213.40000000000001,16.899999999999999,27.5,120.5,5.4000000000000004,116,76.400000000000006,239.80000000000001,75.299999999999997,68.400000000000006,213.5,193.19999999999999,76.299999999999997,110.7,88.299999999999997,109.8,134.30000000000001,28.600000000000001,217.69999999999999,250.90000000000001,107.40000000000001,163.30000000000001,197.59999999999999,184.90000000000001,289.69999999999999,135.19999999999999,222.40000000000001,296.39999999999998,280.19999999999999,187.90000000000001,238.19999999999999,137.90000000000001,25,90.400000000000006,13.1,255.40000000000001,225.80000000000001,241.69999999999999,175.69999999999999,209.59999999999999,78.200000000000003,75.099999999999994,139.19999999999999,76.400000000000006,125.7,19.399999999999999,141.30000000000001,18.800000000000001,224,123.09999999999999,229.5,87.200000000000003,7.7999999999999998,80.200000000000003,220.30000000000001,59.600000000000001,0.69999999999999996,265.19999999999999,8.4000000000000004,219.80000000000001,36.899999999999999,48.299999999999997,25.600000000000001,273.69999999999999,43,184.90000000000001,73.400000000000006,193.69999999999999,220.5,104.59999999999999,96.200000000000003,140.30000000000001,240.09999999999999,243.19999999999999,38,44.700000000000003,280.69999999999999,121,197.59999999999999,171.30000000000001,187.80000000000001,4.0999999999999996,93.900000000000006,149.80000000000001,11.699999999999999,131.69999999999999,172.5,85.700000000000003,188.40000000000001,163.5,117.2,234.5,17.899999999999999,206.80000000000001,215.40000000000001,284.30000000000001,50,164.5,19.600000000000001,168.40000000000001,222.40000000000001,276.89999999999998,248.40000000000001,170.19999999999999,276.69999999999999,165.59999999999999,156.59999999999999,218.5,56.200000000000003,287.60000000000002,253.80000000000001,205,139.5,191.09999999999999,286,18.699999999999999,39.5,75.5,17.199999999999999,166.80000000000001,149.69999999999999,38.200000000000003,94.200000000000003,177,283.60000000000002,232.09999999999999],"y":[37.799999999999997,39.299999999999997,45.899999999999999,41.299999999999997,10.800000000000001,48.899999999999999,32.799999999999997,19.600000000000001,2.1000000000000001,2.6000000000000001,5.7999999999999998,24,35.100000000000001,7.5999999999999996,32.899999999999999,47.700000000000003,36.600000000000001,39.600000000000001,20.5,23.899999999999999,27.699999999999999,5.0999999999999996,15.9,16.899999999999999,12.6,3.5,29.300000000000001,16.699999999999999,27.100000000000001,16,28.300000000000001,17.399999999999999,1.5,20,1.3999999999999999,4.0999999999999996,43.799999999999997,49.399999999999999,26.699999999999999,37.700000000000003,22.300000000000001,33.399999999999999,27.699999999999999,8.4000000000000004,25.699999999999999,22.5,9.9000000000000004,41.5,15.800000000000001,11.699999999999999,3.1000000000000001,9.5999999999999996,41.700000000000003,46.200000000000003,28.800000000000001,49.399999999999999,28.100000000000001,19.199999999999999,49.600000000000001,29.5,2,42.700000000000003,15.5,29.600000000000001,42.799999999999997,9.3000000000000007,24.600000000000001,14.5,27.5,43.899999999999999,30.600000000000001,14.300000000000001,33,5.7000000000000002,24.600000000000001,43.700000000000003,1.6000000000000001,28.5,29.899999999999999,7.7000000000000002,26.699999999999999,4.0999999999999996,20.300000000000001,44.5,43,18.399999999999999,27.5,40.600000000000001,25.5,47.799999999999997,4.9000000000000004,1.5,33.5,36.5,14,31.600000000000001,3.5,21,42.299999999999997,41.700000000000003,4.2999999999999998,36.299999999999997,10.1,17.199999999999999,34.299999999999997,46.399999999999999,11,0.29999999999999999,0.40000000000000002,26.899999999999999,8.1999999999999993,38,15.4,20.600000000000001,46.799999999999997,35,14.300000000000001,0.80000000000000004,36.899999999999999,16,26.800000000000001,21.699999999999999,2.3999999999999999,34.600000000000001,32.299999999999997,11.800000000000001,38.899999999999999,0,49,12,39.600000000000001,2.8999999999999999,27.199999999999999,33.5,38.600000000000001,47,39,28.899999999999999,25.899999999999999,43.899999999999999,17,35.399999999999999,33.200000000000003,5.7000000000000002,14.800000000000001,1.8999999999999999,7.2999999999999998,49,40.299999999999997,25.800000000000001,13.9,8.4000000000000004,23.300000000000001,39.700000000000003,21.100000000000001,11.6,43.5,1.3,36.899999999999999,18.399999999999999,18.100000000000001,35.799999999999997,18.100000000000001,36.799999999999997,14.699999999999999,3.3999999999999999,37.600000000000001,5.2000000000000002,23.600000000000001,10.6,11.6,20.899999999999999,20.100000000000001,7.0999999999999996,3.3999999999999999,48.899999999999999,30.199999999999999,7.7999999999999998,2.2999999999999998,10,2.6000000000000001,5.4000000000000004,5.7000000000000002,43,21.300000000000001,45.100000000000001,2.1000000000000001,28.699999999999999,13.9,12.1,41.100000000000001,10.800000000000001,4.0999999999999996,42,35.600000000000001,3.7000000000000002,4.9000000000000004,9.3000000000000007,42,8.5999999999999996],"z":[22.100000000000001,10.4,9.3000000000000007,18.5,12.9,7.2000000000000002,11.800000000000001,13.199999999999999,4.7999999999999998,10.6,8.5999999999999996,17.399999999999999,9.1999999999999993,9.6999999999999993,19,22.399999999999999,12.5,24.399999999999999,11.300000000000001,14.6,18,12.5,5.5999999999999996,15.5,9.6999999999999993,12,15,15.9,18.899999999999999,10.5,21.399999999999999,11.9,9.5999999999999996,17.399999999999999,9.5,12.800000000000001,25.399999999999999,14.699999999999999,10.1,21.5,16.600000000000001,17.100000000000001,20.699999999999999,12.9,8.5,14.9,10.6,23.199999999999999,14.800000000000001,9.6999999999999993,11.4,10.699999999999999,22.600000000000001,21.199999999999999,20.199999999999999,23.699999999999999,5.5,13.199999999999999,23.800000000000001,18.399999999999999,8.0999999999999996,24.199999999999999,15.699999999999999,14,18,9.3000000000000007,9.5,13.4,18.899999999999999,22.300000000000001,18.300000000000001,12.4,8.8000000000000007,11,17,8.6999999999999993,6.9000000000000004,14.199999999999999,5.2999999999999998,11,11.800000000000001,12.300000000000001,11.300000000000001,13.6,21.699999999999999,15.199999999999999,12,16,12.9,16.699999999999999,11.199999999999999,7.2999999999999998,19.399999999999999,22.199999999999999,11.5,16.899999999999999,11.699999999999999,15.5,25.399999999999999,17.199999999999999,11.699999999999999,23.800000000000001,14.800000000000001,14.699999999999999,20.699999999999999,19.199999999999999,7.2000000000000002,8.6999999999999993,5.2999999999999998,19.800000000000001,13.4,21.800000000000001,14.1,15.9,14.6,12.6,12.199999999999999,9.4000000000000004,15.9,6.5999999999999996,15.5,7,11.6,15.199999999999999,19.699999999999999,10.6,6.5999999999999996,8.8000000000000007,24.699999999999999,9.6999999999999993,1.6000000000000001,12.699999999999999,5.7000000000000002,19.600000000000001,10.800000000000001,11.6,9.5,20.800000000000001,9.5999999999999996,20.699999999999999,10.9,19.199999999999999,20.100000000000001,10.4,11.4,10.300000000000001,13.199999999999999,25.399999999999999,10.9,10.1,16.100000000000001,11.6,16.600000000000001,19,15.6,3.2000000000000002,15.300000000000001,10.1,7.2999999999999998,12.9,14.4,13.300000000000001,14.9,18,11.9,11.9,8,12.199999999999999,17.100000000000001,15,8.4000000000000004,14.5,7.5999999999999996,11.699999999999999,11.5,27,20.199999999999999,11.699999999999999,11.800000000000001,12.6,10.5,12.199999999999999,8.6999999999999993,26.199999999999999,17.600000000000001,22.600000000000001,10.300000000000001,17.300000000000001,15.9,6.7000000000000002,10.800000000000001,9.9000000000000004,5.9000000000000004,19.600000000000001,17.300000000000001,7.5999999999999996,9.6999999999999993,12.800000000000001,25.5,13.4],"mode":"markers","type":"scatter3d","marker":{"color":"blue","size":5,"symbol":104,"line":{"color":"rgba(31,119,180,1)"}},"name":"Observaciones","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null},{"colorbar":{"title":"VENTAS","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333334","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[21.686389994098363,10.634545599203353,9.2612141085447206,17.634107926933336,12.63691902973002,8.7898976058773997,10.84428009748671,12.171526528493542,6.9947182460576531,11.206063903969163,8.5967314920420375,17.142358792000934,9.1254596315481766,9.637006056051824,18.893946937284348,21.985968995078618,11.797676312325228,25.375420316536907,10.204952858700331,14.078542491428694,18.294271387538753,12.747465454698732,7.6892672892678453,15.790725001424713,9.1567339935163314,12.872641799261544,14.874492318242007,16.174840901926714,19.610351354829952,9.7878258647950318,22.167702953623149,11.543276727271945,8.8085460162693465,18.172132046321327,8.7641660042025471,13.716190195042326,25.813741744533417,13.612132213938926,9.5943530641269916,21.532373676822612,16.168111666077834,17.518184979404289,21.993884055334195,12.83294355919594,8.6722330264947693,15.024693365045025,9.7141437773849777,23.347250159972582,15.446232754963363,9.2161800141587182,11.329034894248322,9.9922343284617803,21.891566529237355,20.737223639607183,20.819408213872496,22.650652073377909,7.9235062506283205,12.747132079973419,23.568240309574943,18.379467255884979,7.9461032655207182,25.096242766623433,15.798414248342027,12.869023508874671,16.586002200039161,9.0337991061865672,8.9037931317635639,12.024031032023363,19.171655113640139,22.499036949265371,18.055795891489414,10.966169755394542,9.17541610934693,10.187779853585113,17.240059746513882,9.1366341337530024,7.3694820439802626,13.605713703435699,7.8917155987079823,10.158626448950184,11.196432123630577,12.517204958518715,10.435200892921625,12.648091340406975,22.04385865659642,14.833936193381815,11.281028983689087,14.919602376648584,11.619189476533414,15.929444589658493,10.171899650000102,7.3864120470366279,19.799096870446565,22.546037503618443,10.839373719025811,16.38802916066572,11.377023314868831,15.106826155158631,26.818836512220468,16.661644826974737,12.161435094250541,25.149352958940895,15.468632248728177,14.347130306746621,21.166949819396457,17.675379570503122,7.8439968296976277,8.5150811155808945,7.0176816384392442,19.869478666644007,13.311607584314325,22.442661867393966,13.490543733575512,16.039551627193337,13.570897919894918,12.050674057950447,11.984525426956147,8.2990370716279127,15.255692678472242,7.9197944280522545,14.337040626855803,8.1788361439191011,11.682225106627996,14.72779355957465,20.120127848061959,9.874345436404953,8.3515400223284608,8.2821263243247909,24.100727739542453,9.0120292902068204,7.9365780478221719,12.735121311107646,7.9439127771305991,19.91564402749535,10.11659680571274,11.495689658317987,9.4495172557200817,21.406344940211163,9.5290783263694596,20.368174654042978,9.9985928847242906,18.921826650828706,19.873963353602932,9.5604863320673843,10.56178422735055,9.774562399023516,13.451400363185961,25.757298030887871,10.302990687123566,9.6016458481447238,16.752259310046234,10.40819020282771,16.199346820879104,18.556816352457325,15.251677200794488,7.2149882364579465,14.237186389601497,9.8606634823218506,8.5077216651687699,12.429742752527231,13.959835661917852,12.753813321927909,14.576225044965966,17.472527581633894,11.284969578087297,12.193809394821866,8.908532596423143,12.018768977244926,17.068826135470115,15.760813788148454,8.6702207623005965,14.230951048614525,8.1327295333721956,11.470805970216965,11.917988009590937,28.162161841607507,20.517044753701278,11.668720521601626,12.793322204642358,12.001196648366484,10.258862429989872,12.361605764775986,8.3362522013634326,26.921146283682116,18.086323128914099,22.01272839819174,9.7937153380716406,17.187683393070095,16.933537065751683,7.7024615518189226,10.454742406740047,9.38997072497909,7.2737056726610243,18.759960850128422,16.427356979911455,7.740229641664607,9.1924612461672304,12.187990354600327,26.320874664053797,13.600486969269415],"x":[230.09999999999999,44.5,17.199999999999999,151.5,180.80000000000001,8.6999999999999993,57.5,120.2,8.5999999999999996,199.80000000000001,66.099999999999994,214.69999999999999,23.800000000000001,97.5,204.09999999999999,195.40000000000001,67.799999999999997,281.39999999999998,69.200000000000003,147.30000000000001,218.40000000000001,237.40000000000001,13.199999999999999,228.30000000000001,62.299999999999997,262.89999999999998,142.90000000000001,240.09999999999999,248.80000000000001,70.599999999999994,292.89999999999998,112.90000000000001,97.200000000000003,265.60000000000002,95.700000000000003,290.69999999999999,266.89999999999998,74.700000000000003,43.100000000000001,228,202.5,177,293.60000000000002,206.90000000000001,25.100000000000001,175.09999999999999,89.700000000000003,239.90000000000001,227.19999999999999,66.900000000000006,199.80000000000001,100.40000000000001,216.40000000000001,182.59999999999999,262.69999999999999,198.90000000000001,7.2999999999999998,136.19999999999999,210.80000000000001,210.69999999999999,53.5,261.30000000000001,239.30000000000001,102.7,131.09999999999999,69,31.5,139.30000000000001,237.40000000000001,216.80000000000001,199.09999999999999,109.8,26.800000000000001,129.40000000000001,213.40000000000001,16.899999999999999,27.5,120.5,5.4000000000000004,116,76.400000000000006,239.80000000000001,75.299999999999997,68.400000000000006,213.5,193.19999999999999,76.299999999999997,110.7,88.299999999999997,109.8,134.30000000000001,28.600000000000001,217.69999999999999,250.90000000000001,107.40000000000001,163.30000000000001,197.59999999999999,184.90000000000001,289.69999999999999,135.19999999999999,222.40000000000001,296.39999999999998,280.19999999999999,187.90000000000001,238.19999999999999,137.90000000000001,25,90.400000000000006,13.1,255.40000000000001,225.80000000000001,241.69999999999999,175.69999999999999,209.59999999999999,78.200000000000003,75.099999999999994,139.19999999999999,76.400000000000006,125.7,19.399999999999999,141.30000000000001,18.800000000000001,224,123.09999999999999,229.5,87.200000000000003,7.7999999999999998,80.200000000000003,220.30000000000001,59.600000000000001,0.69999999999999996,265.19999999999999,8.4000000000000004,219.80000000000001,36.899999999999999,48.299999999999997,25.600000000000001,273.69999999999999,43,184.90000000000001,73.400000000000006,193.69999999999999,220.5,104.59999999999999,96.200000000000003,140.30000000000001,240.09999999999999,243.19999999999999,38,44.700000000000003,280.69999999999999,121,197.59999999999999,171.30000000000001,187.80000000000001,4.0999999999999996,93.900000000000006,149.80000000000001,11.699999999999999,131.69999999999999,172.5,85.700000000000003,188.40000000000001,163.5,117.2,234.5,17.899999999999999,206.80000000000001,215.40000000000001,284.30000000000001,50,164.5,19.600000000000001,168.40000000000001,222.40000000000001,276.89999999999998,248.40000000000001,170.19999999999999,276.69999999999999,165.59999999999999,156.59999999999999,218.5,56.200000000000003,287.60000000000002,253.80000000000001,205,139.5,191.09999999999999,286,18.699999999999999,39.5,75.5,17.199999999999999,166.80000000000001,149.69999999999999,38.200000000000003,94.200000000000003,177,283.60000000000002,232.09999999999999],"y":[37.799999999999997,39.299999999999997,45.899999999999999,41.299999999999997,10.800000000000001,48.899999999999999,32.799999999999997,19.600000000000001,2.1000000000000001,2.6000000000000001,5.7999999999999998,24,35.100000000000001,7.5999999999999996,32.899999999999999,47.700000000000003,36.600000000000001,39.600000000000001,20.5,23.899999999999999,27.699999999999999,5.0999999999999996,15.9,16.899999999999999,12.6,3.5,29.300000000000001,16.699999999999999,27.100000000000001,16,28.300000000000001,17.399999999999999,1.5,20,1.3999999999999999,4.0999999999999996,43.799999999999997,49.399999999999999,26.699999999999999,37.700000000000003,22.300000000000001,33.399999999999999,27.699999999999999,8.4000000000000004,25.699999999999999,22.5,9.9000000000000004,41.5,15.800000000000001,11.699999999999999,3.1000000000000001,9.5999999999999996,41.700000000000003,46.200000000000003,28.800000000000001,49.399999999999999,28.100000000000001,19.199999999999999,49.600000000000001,29.5,2,42.700000000000003,15.5,29.600000000000001,42.799999999999997,9.3000000000000007,24.600000000000001,14.5,27.5,43.899999999999999,30.600000000000001,14.300000000000001,33,5.7000000000000002,24.600000000000001,43.700000000000003,1.6000000000000001,28.5,29.899999999999999,7.7000000000000002,26.699999999999999,4.0999999999999996,20.300000000000001,44.5,43,18.399999999999999,27.5,40.600000000000001,25.5,47.799999999999997,4.9000000000000004,1.5,33.5,36.5,14,31.600000000000001,3.5,21,42.299999999999997,41.700000000000003,4.2999999999999998,36.299999999999997,10.1,17.199999999999999,34.299999999999997,46.399999999999999,11,0.29999999999999999,0.40000000000000002,26.899999999999999,8.1999999999999993,38,15.4,20.600000000000001,46.799999999999997,35,14.300000000000001,0.80000000000000004,36.899999999999999,16,26.800000000000001,21.699999999999999,2.3999999999999999,34.600000000000001,32.299999999999997,11.800000000000001,38.899999999999999,0,49,12,39.600000000000001,2.8999999999999999,27.199999999999999,33.5,38.600000000000001,47,39,28.899999999999999,25.899999999999999,43.899999999999999,17,35.399999999999999,33.200000000000003,5.7000000000000002,14.800000000000001,1.8999999999999999,7.2999999999999998,49,40.299999999999997,25.800000000000001,13.9,8.4000000000000004,23.300000000000001,39.700000000000003,21.100000000000001,11.6,43.5,1.3,36.899999999999999,18.399999999999999,18.100000000000001,35.799999999999997,18.100000000000001,36.799999999999997,14.699999999999999,3.3999999999999999,37.600000000000001,5.2000000000000002,23.600000000000001,10.6,11.6,20.899999999999999,20.100000000000001,7.0999999999999996,3.3999999999999999,48.899999999999999,30.199999999999999,7.7999999999999998,2.2999999999999998,10,2.6000000000000001,5.4000000000000004,5.7000000000000002,43,21.300000000000001,45.100000000000001,2.1000000000000001,28.699999999999999,13.9,12.1,41.100000000000001,10.800000000000001,4.0999999999999996,42,35.600000000000001,3.7000000000000002,4.9000000000000004,9.3000000000000007,42,8.5999999999999996],"type":"mesh3d","name":"Valores ajustados","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="código-python" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="código-python">Código Python</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>PUB_VENTAS <span class="op">=</span> pd.read_csv(<span class="st">'data/PUB_VENTAS.csv'</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación del modelo lineal</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> smf.ols(<span class="st">'VENTAS ~ TV + RADIO'</span>, data<span class="op">=</span>PUB_VENTAS)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model1.fit().summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                 VENTAS   R-squared:                       0.897
+Model:                            OLS   Adj. R-squared:                  0.896
+Method:                 Least Squares   F-statistic:                     859.6
+Date:                Tue, 14 Nov 2023   Prob (F-statistic):           4.83e-98
+Time:                        20:49:18   Log-Likelihood:                -386.20
+No. Observations:                 200   AIC:                             778.4
+Df Residuals:                     197   BIC:                             788.3
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      2.9211      0.294      9.919      0.000       2.340       3.502
+TV             0.0458      0.001     32.909      0.000       0.043       0.048
+RADIO          0.1880      0.008     23.382      0.000       0.172       0.204
+==============================================================================
+Omnibus:                       60.022   Durbin-Watson:                   2.081
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              148.679
+Skew:                          -1.323   Prob(JB):                     5.19e-33
+Kurtosis:                       6.292   Cond. No.                         425.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación del modelo con interacción</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> smf.ols(<span class="st">'VENTAS ~ TV * RADIO'</span>, data<span class="op">=</span>PUB_VENTAS)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model2.fit().summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                 VENTAS   R-squared:                       0.968
+Model:                            OLS   Adj. R-squared:                  0.967
+Method:                 Least Squares   F-statistic:                     1963.
+Date:                Tue, 14 Nov 2023   Prob (F-statistic):          6.68e-146
+Time:                        20:49:18   Log-Likelihood:                -270.14
+No. Observations:                 200   AIC:                             548.3
+Df Residuals:                     196   BIC:                             561.5
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      6.7502      0.248     27.233      0.000       6.261       7.239
+TV             0.0191      0.002     12.699      0.000       0.016       0.022
+RADIO          0.0289      0.009      3.241      0.001       0.011       0.046
+TV:RADIO       0.0011   5.24e-05     20.727      0.000       0.001       0.001
+==============================================================================
+Omnibus:                      128.132   Durbin-Watson:                   2.224
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1183.719
+Skew:                          -2.323   Prob(JB):                    9.09e-258
+Kurtosis:                      13.975   Cond. No.                     1.80e+04
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.8e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p2c2-app3.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Aplicación 2.3 (Modelo de regresión lineal con forma funcional polinómica): Curva de costes en el sector textil</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p2c2-app5.html" class="pagination-link">
+        <span class="nav-page-text">Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
