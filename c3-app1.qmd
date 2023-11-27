@@ -18,15 +18,15 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.1 (Evaluación, validación y especificación del MRL): El modelo APT de valoración de activos {.unnumbered}
+# Aplicación 3.1: Evaluación, validación y especificación del MRL (series temporales) {.unnumbered}
 
-En esta aplicación se estimará un modelo de regresión basado en la [teoría de los precios de arbitraje](https://es.wikipedia.org/wiki/Teor%C3%ADa_del_arbitraje), que desde el punto de vista econométrico es una generalización de la especificación CAPM expuesta en la Aplicación 2.1, a la que se le añaden factores macroeconómicos.
+## El modelo APT de valoración de activos {.unnumbered}
+
+En esta aplicación se estimará un modelo de regresión basado en la [teoría de los precios de arbitraje](https://es.wikipedia.org/wiki/Teor%C3%ADa_del_arbitraje). Desde el punto de vista econométrico, se trata de una generalización de la especificación CAPM expuesta en la aplicación 2.1, a la que se le añaden factores macroeconómicos como variables explicativas adicionales.
 
 Definamos la rentabilidad de un activo financiero (en porcentaje) como $R=100×log[⁡(p_{1}+d)/p_{0}$, donde $p_{1}$ y $p_{0}$ son, respectivamente, los precios de cotización del valor (título u obligación) al final y al principio de un período de tiempo y $d$ es el dividendo cobrado (si lo hay) durante ese período. Denominemos por $Rf$ al rendimiento de un activo libre de riesgo. Finalmente, denotemos por $Rm$ a la rentabilidad que ofrece la cartera de mercado.
 
-En este ejercicio se va a estimar el modelo APT con datos de series temporales de carácter mensual para el período que va desde marzo de 1986 hasta marzo de 2018.
-
-Se utilizará como rentabilidad de referencia la correspondiente a las acciones de la empresa Microsoft, que denotaremos por $R\_MICROSOFT$. Como rentabilidad sin riesgo, se usará el tipo de interés correspondiente a las letras del tesoro estadounidenses a tres meses, $R\_USTB3M$, y como rentabilidad del mercado se tomará la asociada al índice S&P500, $R\_SP500$. Las variables básicas que deben utilizarse en el modelo de regresión son, entonces, los 'excesos de rentabilidad', $erMSOFT$=($R\_MICROSOFT$-$R\_USTB3M$) y $erSP$=($R\_SP500$-$R\_USTB3M$).
+En este ejercicio se va a estimar el modelo APT con datos de series temporales de carácter mensual para el período que va desde marzo de 1986 hasta marzo de 2018. Se utilizará como rentabilidad de referencia la correspondiente a las acciones de la empresa Microsoft, que denotaremos por $R\_MICROSOFT$. Como rentabilidad sin riesgo, se usará el tipo de interés correspondiente a las letras del tesoro estadounidenses a tres meses, $R\_USTB3M$, Y, finalmente, como rentabilidad del mercado se tomará la asociada al índice Standard & Poor's 500, $R\_SP500$. Las variables básicas que deben utilizarse en el modelo de regresión son, entonces, los 'excesos de rentabilidad', $erMSOFT$=($R\_MICROSOFT$-$R\_USTB3M$) y $erSP$=($R\_SP500$-$R\_USTB3M$).
 
 La ecuación de valoración básica del modelo APT puede definirse del siguiente modo:
 
@@ -34,7 +34,7 @@ $$
 erMSOFT_{t} = \beta_1 + \beta_2  erSP_{t} + \gamma_1  F_{1,t} + \gamma_2  F_{2,t} + ...+ \gamma_m  F_{m,t} + e_{t}
 $$
 
-donde las variables $F_{j}$ representan distintos factores que pueden afectar a la rentabilidad observada del título.
+donde las variables $F_{j}$ representan distintos factores macroeconómicos que pueden afectar a la rentabilidad observada del título cada período.
 :::
 
 ## Código R {.unnumbered}
@@ -90,7 +90,7 @@ check_model(APT_msft)
 # Contraste de significación de variables irrelevantes
 library(car)
 linearHypothesis(APT_msft,c("dprod=0","dcredit=0","dmoney=0","dspread=0"))
-# Modelo sin variables no significativas: MCR
+# Modelo restringido, sin las variables no significativas -> MCR
 APT_msft_r  <-  lm(er_msoft ~ er_sp + dinflation + rterm, data = apt)
 summary(APT_msft_r)
 # Adecuación de la forma funcional: test RESET de Ramsey
@@ -154,7 +154,7 @@ print(APT_msft.summary())
 H_0 = 'dprod = dcredit = dmoney = dspread = 0'
 F_test = APT_msft.f_test(H_0)
 print(F_test)
-# Modelo sin variables no significativas: MCR
+# Modelo restringido, sin las variables no significativas -> MCR
 formula = 'er_msoft ~ er_sp + dinflation + rterm'
 APT_msft_r = smf.ols(formula, data).fit()
 print(APT_msft_r.summary())

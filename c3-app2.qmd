@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.2 (Evaluación, validación y especificación del MRL): Ventas en una cadena de supermercados {.unnumbered}
+# Aplicación 3.2: Evaluación, validación y especificación del MRL (corte transversal) {.unnumbered}
+
+## Ventas en una cadena de supermercados {.unnumbered}
 
 En esta aplicación se analizarán las ventas de una cadena de 75 supermercados ubicados en distintas ciudades españolas. Las ventas totales en cada tienda dependen básicamente de dos variables, el precio medio de los productos que se venden en la misma y el gasto en publicidad que se realice en cada ciudad. El objetivo de la regresión estimada consiste en determinar el efecto que tendrán sobre las ventas de cada supermercado distintas políticas de precios, así como distintas opciones de gasto en publicidad.
 
@@ -38,8 +40,14 @@ donde $V_{i}$ representan los ingresos mensuales por ventas en el supermercado d
 #| warning: false
 #| message: false
 
-# Lectura de datos
+# Lectura de librerías
 library(tidyverse)
+library(alr4)
+library(gvlma)
+library(performance)
+library(lmtest)
+library(car)
+# Lectura de datos
 VENTAS <- read_csv("data/VENTAS_SUPER.csv")
 # Estructura de la base de datos
 str(VENTAS)
@@ -48,7 +56,6 @@ head(VENTAS)
 tail(VENTAS)
 summary(VENTAS)
 # Matriz de diagramas de puntos y gráficas parciales
-library(alr4)
 scatterplotMatrix(~ V + P + A, data=VENTAS)
 scatterplot(V ~ P, data=VENTAS, 
             smooth=list(smoother=loessLine, var=FALSE, lwd.smooth=3), 
@@ -64,24 +71,20 @@ confint(modelo_ventas_1, level=.95)
 plot(allEffects(modelo_ventas_1), grid=TRUE, rug=TRUE)
 # Diagnósticos de la regresión
 # Validación global de las hipótesis básicas del MRL
-library(gvlma)
 gvmodel <- gvlma(modelo_ventas_1)
 summary(gvmodel)
 # Chequeo general del modelo estimado
-library(performance)
 model_performance(modelo_ventas_1)
 check_model(modelo_ventas_1)
 # Especificación del modelo
 # Adecuación de la forma funcional: test RESET de Ramsey
-library(lmtest)
 resettest(modelo_ventas_1, power=2, type="fitted")
 resettest(modelo_ventas_1, power=2:3, type="fitted")
 # Análisis gráfico de la hipótesis de linealidad
-library(car)
 # Residuos estandarizados (Pearson) 
 residualPlots(modelo_ventas_1)
 # Gráficos de variables añadidas (AV plots)
-# también denominados de regresiones parciales
+# (también denominados de regresiones parciales)
 avPlots(modelo_ventas_1) 
 # Gráficos componente+residuos
 # (Component-plus-Residual o Partial-residual plots)

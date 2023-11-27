@@ -18,12 +18,22 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.3 (Estabilidad de los parámetros estructurales): Diferenciación salarial por sexo. Exportaciones españolas. {.unnumbered}
+# Aplicación 3.3: Estabilidad de los parámetros estructurales {.unnumbered}
 
-En esta aplicación se estimarán varias regresiones que permiten parámetros no constantes.
+En esta aplicación se estimarán varias regresiones que, tras el correspondiente contraste de estabilidad estructural, permiten que los parámetros varíen a lo largo de la muestra.
 :::
 
-## Diferencia salarial por sexo {.unnumbered}
+## Diferenciación salarial por sexo {.unnumbered}
+
+::: justify
+En este ejemplo, al igual que en la aplicación 2.5, se usará como especificación econométrica de partida el siguiente modelo log-lineal, que se corresponde con la [ecuación de salarios de Mincer](https://es.wikipedia.org/wiki/Funci%C3%B3n_de_ingresos_de_Mincer):
+
+$$
+log(SALARIO_{i}) = \beta_1 + \beta_2  EDUC_{i} +  \beta_3  EXPER_{i} + e_{i}
+$$
+
+donde $SALARIO$, $EDUC$ y $EXPER$ representan, respectivamente, el salario percibido, el nivel de educación y el grado de experiencia de cada uno de los 526 indviduos que componen la base muestral.
+:::
 
 ### Código R {.unnumbered}
 
@@ -37,25 +47,40 @@ library(tidyverse)
 library(car)
 # Lectura de datos
 SAL_SEX <- read_csv("data/SAL_SEX.csv")
+dim(SAL_SEX)
+str(SAL_SEX)
+head(SAL_SEX)
+tail(SAL_SEX)
+# Distribución de la variable dependiente para la muestra completa
 Boxplot(~SALARIO, data=SAL_SEX, main="", ylab="SALARIO", id=list(method = "none"))
+# Conversión de variable numérica MUJER (0/1) al tipo cualitativo (factor)
 class(SAL_SEX$MUJER)
 SEXO <- factor(SAL_SEX$MUJER, labels=c("Hombre", "Mujer"))
 summary(SEXO)
+# Distribución de la variable dependiente por sexo
 Boxplot(SALARIO~SEXO, data=SAL_SEX, ylab="SALARIO", id=list(method = "none"))
-# Ecuación de salarios
+# Ecuación de salarios para la muestra completa
 summary(lm_SAL <- lm(log(SALARIO) ~ EDUC + EXPER , data = SAL_SEX))
 # Gráficas parciales con diferenciación por sexo
-scatterplot(log(SALARIO) ~ EDUC| SEXO, data=SAL_SEX, smooth=FALSE, boxplots=FALSE, ylab="Relación parcial log(Salario)/Educación")
-scatterplot(log(SALARIO) ~ EXPER| SEXO, data=SAL_SEX, smooth=FALSE, boxplots=FALSE, ylab="Relación parcial log(Salario)/Experiencia")
-# ¿Existe realmente diferenciación por sexos? (estadísticamente significativa)
-summary(lm_SAL_h <- lm(log(SALARIO) ~ EDUC + EXPER , data = SAL_SEX[which(SAL_SEX$MUJER==0),]))
-summary(lm_SAL_m <- lm(log(SALARIO) ~ EDUC + EXPER , data = SAL_SEX[which(SAL_SEX$MUJER==1),]))
+scatterplot(log(SALARIO) ~ EDUC| SEXO, data=SAL_SEX, smooth=FALSE, 
+            boxplots=FALSE, ylab="log(Salario)")
+scatterplot(log(SALARIO) ~ EXPER| SEXO, data=SAL_SEX, smooth=FALSE, 
+            boxplots=FALSE, ylab="log(Salario)")
+# Diferenciación por sexos:
+# ¿existe realmente una diferencia salarial por sexos estadísticamente significativa?
+# Hombres
+summary(lm_SAL_h <- lm(log(SALARIO) ~ EDUC + EXPER , 
+                       data = SAL_SEX[which(SAL_SEX$MUJER==0),]))
+# Mujeres
+summary(lm_SAL_m <- lm(log(SALARIO) ~ EDUC + EXPER , 
+                       data = SAL_SEX[which(SAL_SEX$MUJER==1),]))
+# Comparación de coeficientes estimados
 compareCoefs(lm_SAL_h, lm_SAL_m)
-# Test de Chow
-summary(lm_SAL_int <- lm(log(SALARIO) ~ EDUC + EXPER + MUJER/(EDUC + EXPER), data = SAL_SEX))
+# Test de Chow de cambio estructural
+lm_SAL_int <- lm(log(SALARIO) ~ (EDUC + EXPER)*MUJER, data = SAL_SEX)
 anova(lm_SAL, lm_SAL_int)
-# Regresión diferenciada por sexos
-summary(lm_SAL_int <- lm(log(SALARIO) ~ (EDUC + EXPER)*MUJER, data = SAL_SEX))
+# Regresión diferenciada por sexos (variables de interacción)
+summary(lm_SAL_int)
 ```
 
 ### Código Python {.unnumbered}
@@ -70,21 +95,28 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import scipy as sp
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import statsmodels.stats as smstats
+import scipy as sp
 # Lectura de datos
 SAL_SEX = pd.read_csv("data/SAL_SEX.csv")
+SAL_SEX.shape
+SAL_SEX.info()
+SAL_SEX.head()
+SAL_SEX.tail()
+# Distribución de la variable dependiente para la muestra completa
 plt.figure(1)
 sns.boxplot(x=SAL_SEX["SALARIO"])
 plt.show()
+# Conversión de variable numérica a cualitativa (factor)
 SAL_SEX['SEXO']=SAL_SEX['MUJER'].astype('category')
 SAL_SEX['SEXO']=SAL_SEX['SEXO'].cat.rename_categories(['Hombre', 'Mujer'])
+# Distribución de la variable dependiente por sexo
 plt.figure(2)
 sns.boxplot(x=SAL_SEX["SALARIO"] , y=SAL_SEX["SEXO"])
 plt.show()
-# Ecuación de salarios
+# Ecuación de salarios para la muestra total
 lm_SAL = smf.ols(formula='np.log(SALARIO) ~ EDUC + EXPER', data=SAL_SEX).fit()
 print(lm_SAL.summary())
 # Gráficas parciales con diferenciación por sexo
@@ -92,24 +124,39 @@ SAL_SEX['l_SALARIO']=np.log(SAL_SEX['SALARIO'])
 plt.figure(3)
 sns.lmplot(x="EDUC", y="l_SALARIO", hue="SEXO", data=SAL_SEX);
 plt.show()
-plt.figure(5)
+plt.figure(4)
 sns.lmplot(x="EXPER", y="l_SALARIO", hue="SEXO", data=SAL_SEX);
 plt.show()
-# Diferenciación por sexos
+# Diferenciación por sexos:
+# ¿existe realmente una diferencia salarial por sexos estadísticamente significativa?
 # Hombres
-lm_SAL_h = smf.ols(formula='np.log(SALARIO) ~ EDUC + EXPER', subset=(SAL_SEX['MUJER'] == 0), data=SAL_SEX).fit()
+lm_SAL_h = smf.ols(formula='np.log(SALARIO) ~ EDUC + EXPER', 
+subset=(SAL_SEX['MUJER'] == 0), data=SAL_SEX).fit()
 print(lm_SAL_h.summary())
 # Mujeres
-lm_SAL_m = smf.ols(formula='np.log(SALARIO) ~ EDUC + EXPER', subset=(SAL_SEX['MUJER'] == 1), data=SAL_SEX).fit()
+lm_SAL_m = smf.ols(formula='np.log(SALARIO) ~ EDUC + EXPER', 
+subset=(SAL_SEX['MUJER'] == 1), data=SAL_SEX).fit()
 print(lm_SAL_m.summary())
-# Regresión diferenciada por sexos
-lm_SAL_int = smf.ols(formula='np.log(SALARIO) ~ (EDUC + EXPER)*MUJER', data=SAL_SEX).fit()
+# Regresión diferenciada por sexos (variables de interacción)
+lm_SAL_int = smf.ols(formula='np.log(SALARIO) ~ (EDUC + EXPER)*MUJER', 
+data=SAL_SEX).fit()
 print(lm_SAL_int.summary())
-# Test de Chow
+# Test de Chow de cambio estructural
 sm.stats.anova_lm(lm_SAL,lm_SAL_int) 
 ```
 
-## Exportaciones españolas {.unnumbered}
+## Exportaciones antes y después de la entrada de España en la Unión Europea  {.unnumbered}
+
+::: justify
+Tanto la teoría económica como la experiencia econométrica internacional nos señalan que las exportaciones de bienes y servicios de un país dependen de dos variables básicas, un indicador de actividad económica mundial y un indicador de precios relativos. Para estimar una ecuación de exportaciones para el caso español, se han tomado series de datos históricos para el período 1970-1997 de las siguientes variables: las exportaciones reales de bienes y servicios, excluido el turismo ($XGS$); el índice anual del producto interior bruto real mundial ($WGDP$); y el tipo de cambio efectivo real respecto al conjunto de las diez monedas principales, corregido por la relación de precios de exportación de España respecto a la media ponderada de los precios de exportación de los principales países ($REER$).
+:::
+
+El modelo de regresión que se usará como soporte del ejemplo es el siguiente:
+
+$$
+log(XGS_{t}) = \beta_1 + \beta_2  log(WGDP_{t}) +  \beta_3  log(REER_{t}) + e_{t}
+$$
+
 
 ### Código R {.unnumbered}
 
@@ -123,25 +170,30 @@ library(tidyverse)
 library(car)
 # Lectura de datos
 EXP_ESP <- read_delim("data/EXP_ESP_Y.csv", delim = ";")
-# División de la muestra preUE (1970-1985) y postUE (1986-1997)
+# División de la muestra entre preUE (1970-1985) y postUE (1986-1997)
 Y1986 = match(as.Date("1986-01-01"), EXP_ESP$date)
 Y1986
+# Variables numérica y cualitativa de subperíodos
 UE <- factor(c(rep(0, 16), rep(1, 12)), labels=c("preUE", "postUE"))
 UE
 class(UE)
 EXP_ESP$D1986 <- as.numeric(UE)-1
 EXP_ESP$D1986
 class(EXP_ESP$D1986)
+# Formato de series temporales
 EXP_ESP_ts <- ts(EXP_ESP[,2:5], start=c(1970), end = c(1997), frequency = 1)
 plot(EXP_ESP_ts)
-# Ecuación de exportaciones (1970-1997)
+# Ecuación de exportaciones para el período completo (1970-1997)
 lm_X_ESP <- lm(log(XGS) ~ log(WGDP) + log(REER), data = EXP_ESP_ts)
 summary(lm_X_ESP)
-# Gráficas parciales con diferenciación por período
-scatterplot(log(XGS) ~ log(WGDP)| D1986, data=EXP_ESP_ts, smooth=FALSE, boxplots=FALSE, 
-            ylab="Relación parcial Exportaciones/PIB mundial (logs)")
-scatterplot(log(XGS) ~ log(REER)| D1986, data=EXP_ESP_ts, smooth=FALSE, boxplots=FALSE, 
-            ylab="Relación parcial Exportaciones/Tipo de cambio (logs)")
+# Gráficas parciales con diferenciación por subperíodos
+scatterplot(log(XGS) ~ log(WGDP)| D1986, data=EXP_ESP_ts, 
+            smooth=FALSE, boxplots=FALSE, 
+            ylab="log(XGS)")
+scatterplot(log(XGS) ~ log(REER)| D1986, data=EXP_ESP_ts, 
+            smooth=FALSE, boxplots=FALSE, 
+            ylab="log(XGS)")
+# Diferenciación por subperíodos
 # PreUE
 preUE <- window(EXP_ESP_ts, start=1970, end = 1985)
 lm_X_ESP_preUE <- lm(log(XGS) ~ log(WGDP) + log(REER) , data = preUE)
@@ -150,35 +202,42 @@ summary(lm_X_ESP_preUE)
 postUE <- window(EXP_ESP_ts, start=1986, end = 1997)
 lm_X_ESP_postUE <- lm(log(XGS) ~ log(WGDP) + log(REER) , data = postUE)
 summary(lm_X_ESP_postUE)
-# Comparación de parámetros
+# Comparación de coeficientes estimados
 compareCoefs(lm_X_ESP_preUE,lm_X_ESP_postUE)
 # ¿Existe diferenciación estadísticamente significativa por períodos?
 # Test de Chow de cambio estructural
 # Método 1 (ANOVA)
-summary(lm_X_EXP_int <- lm(log(XGS) ~ log(WGDP) + log(REER) + D1986/(log(WGDP) + log(REER)), data = EXP_ESP_ts))
+lm_X_EXP_int <- lm(log(XGS) ~ (log(WGDP) + log(REER))*D1986, 
+                   data = EXP_ESP_ts)
+summary(lm_X_EXP_int)
 anova(lm_X_ESP, lm_X_EXP_int)
 # Método 2 (librería structchange)
 library(strucchange)
-sctest(log(XGS) ~ log(WGDP) + log(REER), data=EXP_ESP_ts, type = "Chow", point = Y1986-1)
+sctest(log(XGS) ~ log(WGDP) + log(REER), data=EXP_ESP_ts, 
+       type = "Chow", point = Y1986-1)
 # Contrastes tipo Chow basados en estimaciones recursivas
-sbtest <- Fstats(log(XGS) ~ log(WGDP) + log(REER), data = EXP_ESP_ts, from = 0.15, to = 0.85)
+# [se elimina un % de observaciones en los extremmos]
+sbtest <- Fstats(log(XGS) ~ log(WGDP) + log(REER), data = EXP_ESP_ts, 
+                 from = 0.15, to = 0.85)
 sbtest[["Fstats"]]
-# Gráfica de los estadísticos F 
 plot(sbtest, alpha = 0.05)
 # Test de Chow (1960) [versión Chi2]
-Chow_F <- sbtest$Fstats[Y1986-4] # Punto de ruptura: 17 - 4 (15% suprimidos a la izquierda)
-Chow_F # Se puede comprobar que Chow_F/K=CHOW
+# [punto de ruptura conocido: 17 - 4 (15% suprimidos a la izquierda) ]
+Chow_F <- sbtest$Fstats[Y1986-4] 
+Chow_F 
+# Se puede comprobar que CHOW=Chow_F/K
 # Chow_F tiene una distribución asintótica Chi^2 mientras que
-# Chow_F/K tiene una distribución exacta F_K,T-2*K
+# CHOW tiene una distribución exacta F_K,T-2*K
 pval <-  1-pchisq(Chow_F,sbtest$nreg) 
 pval
-# Contrastes de Andrews (1993) y Andrews y Ploberger (1994) [punto de ruptura desconocido]
+# Contrastes de Andrews (1993) y Andrews y Ploberger (1994): supF, aveF, expF
+# [punto de ruptura desconocido]
 sctest(sbtest, type = "supF")
 sctest(sbtest, type = "aveF")
 sctest(sbtest, type = "expF")
 # Test CUSUM (Brown, Durbin y Evans, 1975)
 plot(efp(log(XGS) ~ log(WGDP) + log(REER), data = EXP_ESP_ts))
-# Regresión diferenciada por tramos
+# Regresión diferenciada por tramos temporales
 summary(lm(log(XGS) ~ (log(WGDP) + log(REER))*D1986, data=EXP_ESP_ts))
 ```
 
@@ -199,38 +258,45 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import statsmodels.stats as smstats
 # Lectura de datos
-EXP_ESP = pd.read_csv("data/EXP_ESP_Y.csv", sep=";", parse_dates=['date'], index_col='date')
+EXP_ESP = pd.read_csv("data/EXP_ESP_Y.csv", sep=";", 
+parse_dates=['date'], index_col='date')
 date = pd.date_range(start = '1970', periods = len(EXP_ESP.index), freq = 'Y')
 EXP_ESP.index = date
+EXP_ESP.index
 EXP_ESP.info()
 EXP_ESP.head()
-EXP_ESP.index
+EXP_ESP.tail()
+# Variables numérica y cualitativa de subperíodos
 EXP_ESP['D1986'] = np.where(EXP_ESP.index > '1985-12-31', 1, 0)
 EXP_ESP['UE']=EXP_ESP['D1986'].astype('category')
 EXP_ESP['UE']=EXP_ESP['UE'].cat.rename_categories(['preUE', 'postUE'])
-# Ecuación de exportaciones (1970-1997)
-lm_X_ESP = smf.ols(formula='np.log(XGS) ~ np.log(WGDP) + np.log(REER)', data=EXP_ESP).fit()
+# Ecuación de exportaciones para el período completo (1970-1997)
+lm_X_ESP = smf.ols(formula='np.log(XGS) ~ np.log(WGDP) + np.log(REER)', 
+data=EXP_ESP).fit()
 print(lm_X_ESP.summary())
-# Gráficas parciales con diferenciación por período
+# Gráficas parciales con diferenciación por subperíodos
 EXP_ESP['l_XGS']=np.log(EXP_ESP['XGS'])
 EXP_ESP['l_WGDP']=np.log(EXP_ESP['WGDP'])
 EXP_ESP['l_REER']=np.log(EXP_ESP['REER'])
-plt.figure(7)
+plt.figure(5)
 sns.lmplot(x="l_WGDP", y="l_XGS", hue="UE", data=EXP_ESP);
 plt.show()
-plt.figure(9)
+plt.figure(6)
 sns.lmplot(x="l_REER", y="l_XGS", hue="UE", data=EXP_ESP);
 plt.show()
-# Diferenciación por períodos
+# Diferenciación por subperíodos
 # PreUE
-lm_X_ESP_preUE = smf.ols(formula='np.log(XGS) ~ np.log(WGDP) + np.log(REER)', subset=(EXP_ESP['D1986'] == 0), data=EXP_ESP).fit()
+lm_X_ESP_preUE = smf.ols(formula='np.log(XGS) ~ np.log(WGDP) + np.log(REER)', 
+subset=(EXP_ESP['D1986'] == 0), data=EXP_ESP).fit()
 print(lm_X_ESP_preUE.summary())
 # PostUE
-lm_X_ESP_postUE = smf.ols(formula='np.log(XGS) ~ np.log(WGDP) + np.log(REER)', subset=(EXP_ESP['D1986'] == 1), data=EXP_ESP).fit()
+lm_X_ESP_postUE = smf.ols(formula='np.log(XGS) ~ np.log(WGDP) + np.log(REER)', 
+subset=(EXP_ESP['D1986'] == 1), data=EXP_ESP).fit()
 print(lm_X_ESP_postUE.summary())
-# Regresión diferenciada por tramos
-lm_X_ESP_int = smf.ols(formula='np.log(XGS) ~ (np.log(WGDP) + np.log(REER))*D1986', data=EXP_ESP).fit()
+# Regresión diferenciada por tramos temporales
+lm_X_ESP_int = smf.ols(formula='np.log(XGS) ~ (np.log(WGDP) + np.log(REER))*D1986', 
+data=EXP_ESP).fit()
 print(lm_X_ESP_int.summary())
-# Test de Chow
+# Test de Chow de cambio estructural
 sm.stats.anova_lm(lm_X_ESP,lm_X_ESP_int) 
 ```

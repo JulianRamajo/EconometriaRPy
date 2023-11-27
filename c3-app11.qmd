@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional {.unnumbered}
+# Aplicación 3.11: Regresores endógenos (estimador de variables instrumentales)  {.unnumbered}
+
+## Determinantes de la inflación al nivel internacional {.unnumbered}
 
 Para explicar las variaciones que se producen en la inflación observada al nivel internacional (muestra de 76 países) se propone el siguiente modelo econométrico, el cual se obtiene de la [teoría cuantitativa del dinero](https://es.wikipedia.org/wiki/Teor%C3%ADa_cuantitativa_del_dinero):
 
@@ -75,8 +77,8 @@ modelplot(model_list)
 #| message: false
 
 # Lectura de librerías
-import pandas as pd
 import numpy as np
+import pandas as pd
 import statsmodels.api as sm
 from linearmodels.iv import IV2SLS
 # Lectura de datos

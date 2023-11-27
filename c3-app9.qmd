@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.9 (Información muestral - Falta de observaciones): Exclusión social en el comportamiento de las aseguradoras de Chicago {.unnumbered}
+# Aplicación 3.9: Información muestral (falta de observaciones) {.unnumbered}
+
+## Exclusión social en el comportamiento de las aseguradoras de Chicago {.unnumbered}
 
 En esta aplicación se usarán los datos de un estudio de la década de 1970 sobre la relación entre la exclusión social de los seguros y la composición racial, los índices de incendio y robo, la antigüedad de las viviendas y los ingresos en 47 distritos postales de Chicago.
 :::
@@ -30,6 +32,8 @@ En esta aplicación se usarán los datos de un estudio de la década de 1970 sob
 #| warning: false
 #| message: false
 
+# Lectura de librerías
+library(tidyverse)
 # Lectura de datos
 # library(faraway)
 # help(chredlin, package="faraway")
@@ -51,18 +55,18 @@ md <- missing_data.frame(chmiss)
 image(md)
 summary(md@patterns)
 # Tratamiento de datos perdidos
-# Omisión de observaciones (opción por defecto en R): 
+# Omisión de observaciones (opción por defecto en R) 
 # Resultados con datos completos
 mod_1 <- lm(involact ~ race+fire+theft+age+log(income), chmiss)
 summary(mod_1)
 # Imputación simple
-# Uso de la media para predecir los datos faltantes de los regresores
+# Uso de la media para predecir los datos que faltan de los regresores
 (cmeans <- colMeans(chmiss,na.rm=TRUE))
 imput_1 <- chmiss
 for(i in c(1:4,6)) imput_1[is.na(chmiss[,i]),i] <- cmeans[i] # Sólo var. expl.
 mod_2 <- lm(involact ~ race+fire+theft+age+log(income), imput_1)
 summary(mod_2)
-# Uso de regresiones para predecir los datos faltantes 
+# Uso de regresiones para predecir los datos que faltan 
 # de las variables explicativas
 mod_race <- lm(race ~ fire+theft+age+income,chmiss)
 chmiss[is.na(chmiss$race),]
@@ -103,7 +107,7 @@ mod_3 <- lm(involact ~ race+fire+theft+age+log(income), imput_2)
 summary(mod_3)
 # Imputación múltiple 
 # Enfoque AMELIA (https://cran.r-project.org/web/packages/Amelia/index.html)
-require(Amelia)
+library(Amelia)
 imput_3 <- amelia(chmiss, m=10)
 summary(imput_3)
 betas <- NULL
@@ -189,9 +193,10 @@ summary(mod_full)
 #| message: false
 
 # Lectura de librerías
-import pandas as pd
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 # Lectura de datos
@@ -209,9 +214,10 @@ plt.show()
 chmiss.isna().sum(axis=0)
 # Tratamiento de datos perdidos
 # Omisión de los datos perdidos: resultados con datos completos
-mod_1 = smf.ols(formula='involact ~ race + fire + theft + age + np.log(income)', data=chmiss).fit()
+mod_1 = smf.ols(formula='involact ~ race + fire + theft + age + np.log(income)', 
+data=chmiss).fit()
 print(mod_1.summary())
-# Imputación simple: uso de la media para predecir los datos faltantes de los regresores
+# Imputación simple: uso de la media para predecir los datos que faltan de los regresores
 cmeans = chmiss.mean(axis=0)
 cmeans
 imput_1 = chmiss.copy()

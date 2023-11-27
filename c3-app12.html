@@ -3138,10 +3138,12 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 .justify { text-align: justify !important }
 </style>
 </div>
-<section id="aplicación-3.12-variable-dependiente-discreta-o-limitada-modelos-logitprobit-tobit-y-heckit" class="level1 unnumbered justify">
-<h1 class="unnumbered">Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit</h1>
-<section id="variable-dependiente-discreta-modelos-logit-y-probit-préstamos-hipotecarios" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="variable-dependiente-discreta-modelos-logit-y-probit-préstamos-hipotecarios">Variable dependiente discreta (modelos Logit y Probit): Préstamos hipotecarios</h2>
+<section id="aplicación-3.12-variable-dependiente-discreta-o-limitada" class="level1 unnumbered justify">
+<h1 class="unnumbered">Aplicación 3.12: Variable dependiente discreta o limitada</h1>
+<section id="variable-dependiente-discreta-modelos-logit-y-probit" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="variable-dependiente-discreta-modelos-logit-y-probit">Variable dependiente discreta (modelos Logit y Probit)</h2>
+<section id="préstamos-hipotecarios" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="préstamos-hipotecarios">Préstamos hipotecarios</h3>
 <p>En un artículo del año 1987, Dhillon y otros autores estudiaron el conjunto de características personales y financieras que determinan la elección por parte de los individuos de un tipo de interés fijo frente a uno variable a la hora de contratar un préstamo hipotecario. El interés de su trabajo radicaba en contrastar las dos posturas que dominan los planteamientos teóricos sobre el tema: la primera de ellas opina que, de acuerdo con la <em>hipótesis de mercados eficientes</em>, las características personales del prestatario no contienen información que no haya sido ya tenida en cuenta por el mercado a la hora de fijar el tipo de interés y, por tanto, sólo las variables de precios y los términos del contrato serían relevantes cuando un individuo elige el tipo de interés que se le aplicará; la segunda escuela de pensamiento supone que existe <em>información asimétrica</em>, es decir, dadas las condiciones del mercado, los prestatarios pueden favorecerse no revelando algunas de sus características personales a la hora de firmar el contrato.</p>
 <p>El modelo propuesto relaciona la probabilidad de que un individuo elija, dadas sus características personales y las condiciones del mercado, un tipo de interés variable frente a uno fijo para un préstamo hipotecario. Se dispone de una muestra de 78 clientes de un banco hipotecario norteamericano. Del total de observaciones, 46 eligieron un tipo de interés fijo (con vencimiento de 30 años) y 32 un tipo de interés variable (no acotado).</p>
 <p>Las variables disponibles para estimar el modelo son las siguientes:</p>
@@ -3152,6 +3154,7 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 </ul>
 <p>El modelo econométrico general que se estimará tiene la siguiente expresión:</p>
 <p><span class="math display">\[Y_{i} = \beta_1 + \beta_2 FI_{i} + \beta_3 MARG_{i} + \beta_4 YLD_{i} + \beta_5 PTS_{i} + \beta_6 MAT_{i} +\]</span> <span class="math display">\[+ \beta_7 BA_{i} + \beta_8 BS_{i} + \beta_9 FTB_{i} + \beta_{10} CB_{i} + \beta_{11} MC_{i} + \]</span> <span class="math display">\[+ \beta_{12} SE_{i} + \beta_{13} MOB_{i} + \beta_{14} NW_{i} + \beta_{15} LA_{i} + \beta_{16} STL_{i} + e_{i}\]</span></p>
+</section>
 </section>
 </section>
 <section id="código-r" class="level3 unnumbered">
@@ -3596,8 +3599,8 @@ Model:                            GLM   Df Residuals:                       74
 Model Family:                Binomial   Df Model:                            3
 Link Function:                  logit   Scale:                          1.0000
 Method:                          IRLS   Log-Likelihood:                -41.980
-Date:                Wed, 01 Nov 2023   Deviance:                       83.959
-Time:                        20:59:56   Pearson chi2:                     91.9
+Date:                Mon, 27 Nov 2023   Deviance:                       83.959
+Time:                        23:32:17   Pearson chi2:                     91.9
 No. Iterations:                     4   Pseudo R-squ. (CS):             0.2423
 Covariance Type:            nonrobust                                         
 ==============================================================================
@@ -3629,8 +3632,8 @@ YLD           -4.0305      1.713     -2.353      0.019      -7.388      -0.673
 Dep. Variable:                      Y   No. Observations:                   78
 Model:                          Logit   Df Residuals:                       74
 Method:                           MLE   Df Model:                            3
-Date:                Wed, 01 Nov 2023   Pseudo R-squ.:                  0.2050
-Time:                        20:59:56   Log-Likelihood:                -41.980
+Date:                Mon, 27 Nov 2023   Pseudo R-squ.:                  0.2050
+Time:                        23:32:17   Log-Likelihood:                -41.980
 converged:                       True   LL-Null:                       -52.802
 Covariance Type:            nonrobust   LLR p-value:                 7.731e-05
 ==============================================================================
@@ -3662,8 +3665,8 @@ YLD           -4.0305      1.713     -2.353      0.019      -7.388      -0.673
 Dep. Variable:                      Y   No. Observations:                   78
 Model:                         Probit   Df Residuals:                       74
 Method:                           MLE   Df Model:                            3
-Date:                Wed, 01 Nov 2023   Pseudo R-squ.:                  0.1990
-Time:                        20:59:56   Log-Likelihood:                -42.295
+Date:                Mon, 27 Nov 2023   Pseudo R-squ.:                  0.1990
+Time:                        23:32:17   Log-Likelihood:                -42.295
 converged:                       True   LL-Null:                       -52.802
 Covariance Type:            nonrobust   LLR p-value:                 0.0001046
 ==============================================================================
@@ -3756,12 +3759,15 @@ YLD           -0.7272      0.268     -2.719      0.007      -1.252      -0.203
 </div>
 </div>
 </section>
-<section id="variable-dependiente-limitada-valores-censurados---modelo-tobit-compra-de-automóviles" class="level2 unnumbered justify">
-<h2 class="unnumbered anchored" data-anchor-id="variable-dependiente-limitada-valores-censurados---modelo-tobit-compra-de-automóviles">Variable dependiente limitada (valores censurados -&gt; modelo Tobit): Compra de automóviles</h2>
+<section id="variable-dependiente-limitada-valores-censurados-modelo-tobit" class="level2 unnumbered justify">
+<h2 class="unnumbered anchored" data-anchor-id="variable-dependiente-limitada-valores-censurados-modelo-tobit">Variable dependiente limitada (valores censurados: modelo Tobit):</h2>
+<section id="compra-de-automóviles" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="compra-de-automóviles">Compra de automóviles</h3>
 <p>En un trabajo encargado por una asociación de fabricantes de automóviles, se estimó un modelo microeconométrico en el que se relacionaba el gasto en automóviles realizado por las familias que componían una muestra representativa con algunas características socioeconómicas de las mismas.</p>
 <p>La ecuación de comportamiento especificada fue la siguiente:</p>
 <p><span class="math display">\[GAUT_{i} = \beta_1 + \beta_2 Y_{i} + \beta_3 HIJOSM18_{i} + \beta_4 EDAD_{i} + e_{i}\]</span></p>
 <p>donde <span class="math inline">\(GAUT\)</span> es el gasto familiar efectuado en la adquisición de automóviles en el último año, <span class="math inline">\(Y\)</span> es la renta familiar total del último ejercicio fiscal, <span class="math inline">\(HIJOSM18\)</span> es el número de hijos con edades inferiores a dieciocho años, y <span class="math inline">\(EDAD\)</span> es la edad del cabeza de familia.</p>
+</section>
 </section>
 <section id="código-r-1" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="código-r-1">Código R</h3>
@@ -3930,12 +3936,15 @@ dtype: int64</code></pre>
 </div>
 </div>
 </section>
-<section id="variable-dependiente-limitada-truncamiento-selectivo---modelo-heckit-de-selección-muestral-salarios-de-las-mujeres-casadas" class="level2 unnumbered justify">
-<h2 class="unnumbered anchored" data-anchor-id="variable-dependiente-limitada-truncamiento-selectivo---modelo-heckit-de-selección-muestral-salarios-de-las-mujeres-casadas">Variable dependiente limitada (truncamiento selectivo -&gt; modelo Heckit de selección muestral): Salarios de las mujeres casadas</h2>
+<section id="variable-dependiente-limitada-truncamiento-selectivo-modelo-heckit-de-selección-muestral" class="level2 unnumbered justify">
+<h2 class="unnumbered anchored" data-anchor-id="variable-dependiente-limitada-truncamiento-selectivo-modelo-heckit-de-selección-muestral">Variable dependiente limitada (truncamiento selectivo: modelo Heckit de selección muestral):</h2>
+<section id="salarios-de-las-mujeres-casadas" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="salarios-de-las-mujeres-casadas">Salarios de las mujeres casadas</h3>
 <p>En esta aplicación se estima una ecuación Minceriana de salarios para las mujeres casadas basada en una investigación de Thomas A. Mroz del año 1987 para el Reino Uniod. El modelo propuesto es el siguiente:</p>
 <p><span class="math display">\[log(SALARIO_{i}) = \beta_1 + \beta_2 EDUC_{i} + \beta_3 EXPER_{i} + e_{i}\]</span></p>
 <p>donde <span class="math inline">\(SALARIO\)</span> representa el salario por hora trabajada observado, <span class="math inline">\(EDUC\)</span> es el nivel de educación y <span class="math inline">\(EXPER\)</span> es el nivel de experiencia.</p>
 <p>Al realizar una encuesta a una muestra de N = 753 mujeres casadas, representativa de la población femenina con ese estado civil en UK, preguntándoles entre otras cosas por su salario, muchas de ellas (325 mujeres) respondieron que esa cuestión no era relevante en su caso, ya que eran “amas de casa” (población no activa) y no recibían remuneración alguna por ese trabajo. Solo se observaron datos sobre salarios de mercado para aquellas mujeres (n = 428) que participaban en la fuerza de trabajo.</p>
+</section>
 </section>
 <section id="código-r-2" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="código-r-2">Código R</h3>
@@ -4082,8 +4091,8 @@ max     60.000000   60.000000  ...    0.941500  96000.000000
 Dep. Variable:                    PMT   No. Observations:                  753
 Model:                         Probit   Df Residuals:                      748
 Method:                           MLE   Df Model:                            4
-Date:                Wed, 01 Nov 2023   Pseudo R-squ.:                 0.04026
-Time:                        21:00:00   Log-Likelihood:                -494.15
+Date:                Mon, 27 Nov 2023   Pseudo R-squ.:                 0.04026
+Time:                        23:32:22   Log-Likelihood:                -494.15
 converged:                       True   LL-Null:                       -514.87
 Covariance Type:            nonrobust   LLR p-value:                 2.164e-08
 ==============================================================================
@@ -4110,8 +4119,8 @@ TMIMP         -1.3939      0.617     -2.261      0.024      -2.602      -0.185
 Dep. Variable:        np.log(SALARIO)   R-squared:                       0.162
 Model:                            OLS   Adj. R-squared:                  0.156
 Method:                 Least Squares   F-statistic:                     30.13
-Date:                Wed, 01 Nov 2023   Prob (F-statistic):           1.13e-17
-Time:                        21:00:00   Log-Likelihood:                -430.22
+Date:                Mon, 27 Nov 2023   Prob (F-statistic):           1.13e-17
+Time:                        23:32:22   Log-Likelihood:                -430.22
 No. Observations:                 428   AIC:                             868.4
 Df Residuals:                     424   BIC:                             884.7
 Df Model:                           3                                         
@@ -4152,8 +4161,8 @@ Notes:
 Dep. Variable:                 lSALARIO
 Model:                          Heckman
 Method:                Heckman Two-Step
-Date:                  Wed, 01 Nov 2023
-Time:                          21:00:00
+Date:                  Mon, 27 Nov 2023
+Time:                          23:32:22
 No. Total Obs.:                     753
 No. Censored Obs.:                  325
 No. Uncensored Obs.:                428
@@ -4495,320 +4504,326 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb88-18"><a href="#cb88-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb88-19"><a href="#cb88-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb88-20"><a href="#cb88-20" aria-hidden="true" tabindex="-1"></a>::: justify</span>
-<span id="cb88-21"><a href="#cb88-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit {.unnumbered}</span></span>
+<span id="cb88-21"><a href="#cb88-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Aplicación 3.12: Variable dependiente discreta o limitada {.unnumbered}</span></span>
 <span id="cb88-22"><a href="#cb88-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-23"><a href="#cb88-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Variable dependiente discreta (modelos Logit y Probit): Préstamos hipotecarios {.unnumbered}</span></span>
+<span id="cb88-23"><a href="#cb88-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Variable dependiente discreta (modelos Logit y Probit)  {.unnumbered}</span></span>
 <span id="cb88-24"><a href="#cb88-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-25"><a href="#cb88-25" aria-hidden="true" tabindex="-1"></a>En un artículo del año 1987, Dhillon y otros autores estudiaron el conjunto de características personales y financieras que determinan la elección por parte de los individuos de un tipo de interés fijo frente a uno variable a la hora de contratar un préstamo hipotecario. El interés de su trabajo radicaba en contrastar las dos posturas que dominan los planteamientos teóricos sobre el tema: la primera de ellas opina que, de acuerdo con la *hipótesis de mercados eficientes*, las características personales del prestatario no contienen información que no haya sido ya tenida en cuenta por el mercado a la hora de fijar el tipo de interés y, por tanto, sólo las variables de precios y los términos del contrato serían relevantes cuando un individuo elige el tipo de interés que se le aplicará; la segunda escuela de pensamiento supone que existe *información asimétrica*, es decir, dadas las condiciones del mercado, los prestatarios pueden favorecerse no revelando algunas de sus características personales a la hora de firmar el contrato.</span>
+<span id="cb88-25"><a href="#cb88-25" aria-hidden="true" tabindex="-1"></a><span class="fu">### Préstamos hipotecarios {.unnumbered}</span></span>
 <span id="cb88-26"><a href="#cb88-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-27"><a href="#cb88-27" aria-hidden="true" tabindex="-1"></a>El modelo propuesto relaciona la probabilidad de que un individuo elija, dadas sus características personales y las condiciones del mercado, un tipo de interés variable frente a uno fijo para un préstamo hipotecario. Se dispone de una muestra de 78 clientes de un banco hipotecario norteamericano. Del total de observaciones, 46 eligieron un tipo de interés fijo (con vencimiento de 30 años) y 32 un tipo de interés variable (no acotado).</span>
+<span id="cb88-27"><a href="#cb88-27" aria-hidden="true" tabindex="-1"></a>En un artículo del año 1987, Dhillon y otros autores estudiaron el conjunto de características personales y financieras que determinan la elección por parte de los individuos de un tipo de interés fijo frente a uno variable a la hora de contratar un préstamo hipotecario. El interés de su trabajo radicaba en contrastar las dos posturas que dominan los planteamientos teóricos sobre el tema: la primera de ellas opina que, de acuerdo con la *hipótesis de mercados eficientes*, las características personales del prestatario no contienen información que no haya sido ya tenida en cuenta por el mercado a la hora de fijar el tipo de interés y, por tanto, sólo las variables de precios y los términos del contrato serían relevantes cuando un individuo elige el tipo de interés que se le aplicará; la segunda escuela de pensamiento supone que existe *información asimétrica*, es decir, dadas las condiciones del mercado, los prestatarios pueden favorecerse no revelando algunas de sus características personales a la hora de firmar el contrato.</span>
 <span id="cb88-28"><a href="#cb88-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-29"><a href="#cb88-29" aria-hidden="true" tabindex="-1"></a>Las variables disponibles para estimar el modelo son las siguientes:</span>
+<span id="cb88-29"><a href="#cb88-29" aria-hidden="true" tabindex="-1"></a>El modelo propuesto relaciona la probabilidad de que un individuo elija, dadas sus características personales y las condiciones del mercado, un tipo de interés variable frente a uno fijo para un préstamo hipotecario. Se dispone de una muestra de 78 clientes de un banco hipotecario norteamericano. Del total de observaciones, 46 eligieron un tipo de interés fijo (con vencimiento de 30 años) y 32 un tipo de interés variable (no acotado).</span>
 <span id="cb88-30"><a href="#cb88-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-31"><a href="#cb88-31" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Variable dependiente: $Y$ toma el valor 1 si el individuo elige un tipo de interés variable y 0 si firma el préstamo a un tipo fijo.</span>
+<span id="cb88-31"><a href="#cb88-31" aria-hidden="true" tabindex="-1"></a>Las variables disponibles para estimar el modelo son las siguientes:</span>
 <span id="cb88-32"><a href="#cb88-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-33"><a href="#cb88-33" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Variables explicativas del mercado: $FI$ es el tipo de interés fijo que ofertó el banco, $MARG$ el margen del tipo fijo sobre el tipo de interés variable, $YLD$ la diferencia entre el tipo de interés de las letras del tesoro a 10 años y el tipo de las letras a 1 año (esta variable intenta anticipar el cambio futuro en los tipos de interés a corto plazo), $PTS$ la razón entre el tipo de interés fijo y el variable, y $MAT$ la razón entre los vencimientos de los préstamos hipotecarios con tipo fijo y variable.</span>
+<span id="cb88-33"><a href="#cb88-33" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Variable dependiente: $Y$ toma el valor 1 si el individuo elige un tipo de interés variable y 0 si firma el préstamo a un tipo fijo.</span>
 <span id="cb88-34"><a href="#cb88-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-35"><a href="#cb88-35" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Variables explicativas personales: $BA$ es la edad del prestatario, $BS$ los años de escolarización, $FTB$ una variable ficticia que toma el valor 1 si el prestatario compra vivienda por primera vez y 0 en otro caso, $CB$ una ficticia que toma el valor 1 si existe un co-prestatario y 0 en otro caso, $MC$ una ficticia que toma el valor 1 si el prestatario está casado y 0 si no lo está, $SE$ una ficticia que toma el valor 1 si trabaja por cuenta propia y 0 en otro caso, $MOB$ el número de años que el prestatario lleva residiendo en la dirección actual, $NW$ la riqueza neta, $LA$ los activos líquidos, y $STL$ los compromisos económicos del prestatario a corto plazo.</span>
+<span id="cb88-35"><a href="#cb88-35" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Variables explicativas del mercado: $FI$ es el tipo de interés fijo que ofertó el banco, $MARG$ el margen del tipo fijo sobre el tipo de interés variable, $YLD$ la diferencia entre el tipo de interés de las letras del tesoro a 10 años y el tipo de las letras a 1 año (esta variable intenta anticipar el cambio futuro en los tipos de interés a corto plazo), $PTS$ la razón entre el tipo de interés fijo y el variable, y $MAT$ la razón entre los vencimientos de los préstamos hipotecarios con tipo fijo y variable.</span>
 <span id="cb88-36"><a href="#cb88-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-37"><a href="#cb88-37" aria-hidden="true" tabindex="-1"></a>El modelo econométrico general que se estimará tiene la siguiente expresión:</span>
+<span id="cb88-37"><a href="#cb88-37" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Variables explicativas personales: $BA$ es la edad del prestatario, $BS$ los años de escolarización, $FTB$ una variable ficticia que toma el valor 1 si el prestatario compra vivienda por primera vez y 0 en otro caso, $CB$ una ficticia que toma el valor 1 si existe un co-prestatario y 0 en otro caso, $MC$ una ficticia que toma el valor 1 si el prestatario está casado y 0 si no lo está, $SE$ una ficticia que toma el valor 1 si trabaja por cuenta propia y 0 en otro caso, $MOB$ el número de años que el prestatario lleva residiendo en la dirección actual, $NW$ la riqueza neta, $LA$ los activos líquidos, y $STL$ los compromisos económicos del prestatario a corto plazo.</span>
 <span id="cb88-38"><a href="#cb88-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-39"><a href="#cb88-39" aria-hidden="true" tabindex="-1"></a>$$Y_{i} = \beta_1 + \beta_2 FI_{i} + \beta_3 MARG_{i} + \beta_4 YLD_{i} + \beta_5 PTS_{i} + \beta_6 MAT_{i} +$$ $$+ \beta_7 BA_{i} + \beta_8 BS_{i} + \beta_9 FTB_{i} + \beta_{10} CB_{i} + \beta_{11} MC_{i} + $$ $$+ \beta_{12} SE_{i} + \beta_{13} MOB_{i} + \beta_{14} NW_{i} + \beta_{15} LA_{i} + \beta_{16} STL_{i} + e_{i}$$</span>
-<span id="cb88-40"><a href="#cb88-40" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb88-41"><a href="#cb88-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-42"><a href="#cb88-42" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código R {.unnumbered}</span></span>
+<span id="cb88-39"><a href="#cb88-39" aria-hidden="true" tabindex="-1"></a>El modelo econométrico general que se estimará tiene la siguiente expresión:</span>
+<span id="cb88-40"><a href="#cb88-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-41"><a href="#cb88-41" aria-hidden="true" tabindex="-1"></a>$$Y_{i} = \beta_1 + \beta_2 FI_{i} + \beta_3 MARG_{i} + \beta_4 YLD_{i} + \beta_5 PTS_{i} + \beta_6 MAT_{i} +$$ $$+ \beta_7 BA_{i} + \beta_8 BS_{i} + \beta_9 FTB_{i} + \beta_{10} CB_{i} + \beta_{11} MC_{i} + $$ $$+ \beta_{12} SE_{i} + \beta_{13} MOB_{i} + \beta_{14} NW_{i} + \beta_{15} LA_{i} + \beta_{16} STL_{i} + e_{i}$$</span>
+<span id="cb88-42"><a href="#cb88-42" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb88-43"><a href="#cb88-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-46"><a href="#cb88-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb88-47"><a href="#cb88-47" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb88-48"><a href="#cb88-48" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb88-49"><a href="#cb88-49" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb88-50"><a href="#cb88-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-51"><a href="#cb88-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb88-52"><a href="#cb88-52" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb88-53"><a href="#cb88-53" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
-<span id="cb88-54"><a href="#cb88-54" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span>
-<span id="cb88-55"><a href="#cb88-55" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(margins)</span>
-<span id="cb88-56"><a href="#cb88-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb88-57"><a href="#cb88-57" aria-hidden="true" tabindex="-1"></a>PREST_HIP <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/PREST_HIP.csv&quot;</span>)</span>
-<span id="cb88-58"><a href="#cb88-58" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(PREST_HIP)</span>
-<span id="cb88-59"><a href="#cb88-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo logit</span></span>
-<span id="cb88-60"><a href="#cb88-60" aria-hidden="true" tabindex="-1"></a>modelo_logit <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> </span>
-<span id="cb88-61"><a href="#cb88-61" aria-hidden="true" tabindex="-1"></a>                      FI <span class="sc">+</span> MARG <span class="sc">+</span> YLD <span class="sc">+</span> PTS <span class="sc">+</span> MAT <span class="sc">+</span> BA <span class="sc">+</span> BS <span class="sc">+</span> FTB <span class="sc">+</span> CB <span class="sc">+</span> MC <span class="sc">+</span> </span>
-<span id="cb88-62"><a href="#cb88-62" aria-hidden="true" tabindex="-1"></a>                      SE <span class="sc">+</span> MOB <span class="sc">+</span> NW <span class="sc">+</span> LA <span class="sc">+</span> STL, </span>
-<span id="cb88-63"><a href="#cb88-63" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data=</span>PREST_HIP, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>))</span>
-<span id="cb88-64"><a href="#cb88-64" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_logit)</span>
-<span id="cb88-65"><a href="#cb88-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo probit</span></span>
-<span id="cb88-66"><a href="#cb88-66" aria-hidden="true" tabindex="-1"></a>modelo_probit <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> FI <span class="sc">+</span> MARG <span class="sc">+</span> YLD <span class="sc">+</span> PTS <span class="sc">+</span> MAT <span class="sc">+</span> BA <span class="sc">+</span> BS <span class="sc">+</span> FTB <span class="sc">+</span> CB <span class="sc">+</span> </span>
-<span id="cb88-67"><a href="#cb88-67" aria-hidden="true" tabindex="-1"></a>                       MC <span class="sc">+</span> SE <span class="sc">+</span> MOB <span class="sc">+</span> NW <span class="sc">+</span> LA <span class="sc">+</span> STL, </span>
-<span id="cb88-68"><a href="#cb88-68" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data=</span>PREST_HIP, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;probit&quot;</span>))</span>
-<span id="cb88-69"><a href="#cb88-69" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_probit)</span>
-<span id="cb88-70"><a href="#cb88-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Significación de las características personales</span></span>
-<span id="cb88-71"><a href="#cb88-71" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span> ( modelo_logit , <span class="fu">c</span>(<span class="st">&quot;BA = 0&quot;</span>, <span class="st">&quot;BS = 0&quot;</span>,<span class="st">&quot;FTB = 0&quot;</span>,<span class="st">&quot;CB = 0&quot;</span>,</span>
-<span id="cb88-72"><a href="#cb88-72" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;MC = 0&quot;</span>,<span class="st">&quot;SE = 0&quot;</span>,<span class="st">&quot;MOB = 0&quot;</span>,<span class="st">&quot;NW = 0&quot;</span>,</span>
-<span id="cb88-73"><a href="#cb88-73" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;LA = 0&quot;</span>,<span class="st">&quot;STL = 0&quot;</span>))</span>
-<span id="cb88-74"><a href="#cb88-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelos logit restringidos</span></span>
-<span id="cb88-75"><a href="#cb88-75" aria-hidden="true" tabindex="-1"></a>modelo_logit_1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> FI <span class="sc">+</span> MARG <span class="sc">+</span> YLD <span class="sc">+</span> PTS <span class="sc">+</span> MAT, <span class="at">data=</span>PREST_HIP, </span>
-<span id="cb88-76"><a href="#cb88-76" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>))</span>
-<span id="cb88-77"><a href="#cb88-77" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_logit_1)</span>
-<span id="cb88-78"><a href="#cb88-78" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span> ( modelo_logit_1, <span class="fu">c</span>(<span class="st">&quot;PTS = 0&quot;</span>, <span class="st">&quot;MAT = 0&quot;</span>))</span>
-<span id="cb88-79"><a href="#cb88-79" aria-hidden="true" tabindex="-1"></a>modelo_logit_2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> FI <span class="sc">+</span> MARG <span class="sc">+</span> YLD, </span>
-<span id="cb88-80"><a href="#cb88-80" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>PREST_HIP, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>))</span>
-<span id="cb88-81"><a href="#cb88-81" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_logit_2)</span>
-<span id="cb88-82"><a href="#cb88-82" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de convarianzas robusta</span></span>
-<span id="cb88-83"><a href="#cb88-83" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(modelo_logit_2, <span class="at">vcov. =</span> vcovHC, <span class="at">type =</span> <span class="st">&quot;HC1&quot;</span>) </span>
-<span id="cb88-84"><a href="#cb88-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajuste del modelo: pseudoR2</span></span>
-<span id="cb88-85"><a href="#cb88-85" aria-hidden="true" tabindex="-1"></a>pseudoR2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (modelo_logit_2<span class="sc">$</span>deviance) <span class="sc">/</span> (modelo_logit_2<span class="sc">$</span>null.deviance)</span>
-<span id="cb88-86"><a href="#cb88-86" aria-hidden="true" tabindex="-1"></a>pseudoR2</span>
-<span id="cb88-87"><a href="#cb88-87" aria-hidden="true" tabindex="-1"></a><span class="co"># Fórmula equivalente</span></span>
-<span id="cb88-88"><a href="#cb88-88" aria-hidden="true" tabindex="-1"></a>modelo_logit_0 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>PREST_HIP, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>))</span>
-<span id="cb88-89"><a href="#cb88-89" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">logLik</span>(modelo_logit_2)[<span class="dv">1</span>]<span class="sc">/</span><span class="fu">logLik</span>(modelo_logit_0)[<span class="dv">1</span>]</span>
-<span id="cb88-90"><a href="#cb88-90" aria-hidden="true" tabindex="-1"></a><span class="co"># ANOVA</span></span>
-<span id="cb88-91"><a href="#cb88-91" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(modelo_logit_2)</span>
-<span id="cb88-92"><a href="#cb88-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla de éxito-fracaso (confusion matrix)</span></span>
-<span id="cb88-93"><a href="#cb88-93" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">true=</span>PREST_HIP<span class="sc">$</span>Y, <span class="at">predicted=</span><span class="fu">round</span>(<span class="fu">fitted</span>(modelo_logit_2)))</span>
-<span id="cb88-94"><a href="#cb88-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficas de efectos marginales</span></span>
-<span id="cb88-95"><a href="#cb88-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfica conjunta</span></span>
-<span id="cb88-96"><a href="#cb88-96" aria-hidden="true" tabindex="-1"></a>effs <span class="ot">&lt;-</span> <span class="fu">Effect</span>(<span class="fu">c</span>(<span class="st">&quot;FI&quot;</span>, <span class="st">&quot;MARG&quot;</span>,<span class="st">&quot;YLD&quot;</span>), modelo_logit_2)</span>
-<span id="cb88-97"><a href="#cb88-97" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(effs, <span class="at">multiline=</span><span class="cn">TRUE</span>, <span class="at">grid=</span><span class="cn">TRUE</span>, <span class="at">lines=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), </span>
-<span id="cb88-98"><a href="#cb88-98" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;FI&quot;</span>,<span class="at">main=</span><span class="st">&quot;&quot;</span>, <span class="at">rotx=</span><span class="dv">45</span>, <span class="at">roty =</span> <span class="dv">45</span>,</span>
-<span id="cb88-99"><a href="#cb88-99" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&quot;Prob[Y=1]&quot;</span>, <span class="at">rescale.axis=</span><span class="cn">FALSE</span>, <span class="at">rug=</span><span class="cn">FALSE</span>)</span>
-<span id="cb88-100"><a href="#cb88-100" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficas separadas</span></span>
-<span id="cb88-101"><a href="#cb88-101" aria-hidden="true" tabindex="-1"></a><span class="co"># Función de probabilidad estimada para la variable FI</span></span>
-<span id="cb88-102"><a href="#cb88-102" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( Y <span class="sc">~</span> FI, PREST_HIP, <span class="at">xlab=</span><span class="st">&quot;FI&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Prob&quot;</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb88-103"><a href="#cb88-103" aria-hidden="true" tabindex="-1"></a>FInew <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="at">length=</span><span class="dv">78</span>)</span>
-<span id="cb88-104"><a href="#cb88-104" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(FInew, <span class="fu">predict</span>(modelo_logit_2, </span>
-<span id="cb88-105"><a href="#cb88-105" aria-hidden="true" tabindex="-1"></a>                     <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">FI=</span>FInew, </span>
-<span id="cb88-106"><a href="#cb88-106" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">MARG=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>MARG), <span class="dv">78</span>), </span>
-<span id="cb88-107"><a href="#cb88-107" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">YLD=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>YLD), <span class="dv">78</span>)),</span>
-<span id="cb88-108"><a href="#cb88-108" aria-hidden="true" tabindex="-1"></a>                     <span class="at">type=</span><span class="st">&quot;response&quot;</span>), <span class="at">lwd=</span><span class="fl">1.5</span>)</span>
-<span id="cb88-109"><a href="#cb88-109" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col=</span><span class="st">&quot;gray&quot;</span>, <span class="at">lty=</span><span class="st">&quot;solid&quot;</span>)</span>
-<span id="cb88-110"><a href="#cb88-110" aria-hidden="true" tabindex="-1"></a><span class="co"># Función de probabilidad estimada para la variable MARG</span></span>
-<span id="cb88-111"><a href="#cb88-111" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( Y <span class="sc">~</span> MARG, PREST_HIP, <span class="at">xlab=</span><span class="st">&quot;MARG&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Prob&quot;</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb88-112"><a href="#cb88-112" aria-hidden="true" tabindex="-1"></a>MARGnew <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">6</span>, <span class="at">length=</span><span class="dv">78</span>)</span>
-<span id="cb88-113"><a href="#cb88-113" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(MARGnew, <span class="fu">predict</span>(modelo_logit_2, </span>
-<span id="cb88-114"><a href="#cb88-114" aria-hidden="true" tabindex="-1"></a>                       <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">FI=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>FI), <span class="dv">78</span>), </span>
-<span id="cb88-115"><a href="#cb88-115" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">MARG=</span>MARGnew, </span>
-<span id="cb88-116"><a href="#cb88-116" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">YLD=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>YLD), <span class="dv">78</span>)),</span>
-<span id="cb88-117"><a href="#cb88-117" aria-hidden="true" tabindex="-1"></a>                       <span class="at">type=</span><span class="st">&quot;response&quot;</span>), <span class="at">lwd=</span><span class="fl">1.5</span>)</span>
-<span id="cb88-118"><a href="#cb88-118" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col=</span><span class="st">&quot;gray&quot;</span>, <span class="at">lty=</span><span class="st">&quot;solid&quot;</span>)</span>
-<span id="cb88-119"><a href="#cb88-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Función de probabilidad estimada para la variable YLD</span></span>
-<span id="cb88-120"><a href="#cb88-120" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( Y <span class="sc">~</span> YLD, PREST_HIP, <span class="at">xlab=</span><span class="st">&quot;YLD&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Prob&quot;</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb88-121"><a href="#cb88-121" aria-hidden="true" tabindex="-1"></a>YLDnew <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fl">2.5</span>, <span class="at">length=</span><span class="dv">78</span>)</span>
-<span id="cb88-122"><a href="#cb88-122" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(YLDnew, <span class="fu">predict</span>(modelo_logit_2, </span>
-<span id="cb88-123"><a href="#cb88-123" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">FI=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>FI), <span class="dv">78</span>), </span>
-<span id="cb88-124"><a href="#cb88-124" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">MARG=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>MARG), <span class="dv">78</span>), </span>
-<span id="cb88-125"><a href="#cb88-125" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">YLD=</span>YLDnew), </span>
-<span id="cb88-126"><a href="#cb88-126" aria-hidden="true" tabindex="-1"></a>                      <span class="at">type=</span><span class="st">&quot;response&quot;</span>), <span class="at">lwd=</span><span class="fl">1.5</span>)</span>
-<span id="cb88-127"><a href="#cb88-127" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col=</span><span class="st">&quot;gray&quot;</span>, <span class="at">lty=</span><span class="st">&quot;solid&quot;</span>)</span>
-<span id="cb88-128"><a href="#cb88-128" aria-hidden="true" tabindex="-1"></a><span class="co"># Efecto marginal en la media de las variables explicativas</span></span>
-<span id="cb88-129"><a href="#cb88-129" aria-hidden="true" tabindex="-1"></a>EMM_logit <span class="ot">=</span> mfx<span class="sc">::</span><span class="fu">logitmfx</span>(<span class="at">formula =</span> modelo_logit_2<span class="sc">$</span>formula, </span>
-<span id="cb88-130"><a href="#cb88-130" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> modelo_logit_2<span class="sc">$</span>data, <span class="at">atmean =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb88-131"><a href="#cb88-131" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(EMM_logit[[<span class="dv">1</span>]])</span>
-<span id="cb88-132"><a href="#cb88-132" aria-hidden="true" tabindex="-1"></a><span class="co"># Efecto marginal promedio (EMP)</span></span>
-<span id="cb88-133"><a href="#cb88-133" aria-hidden="true" tabindex="-1"></a>EMP_logit <span class="ot">=</span> mfx<span class="sc">::</span><span class="fu">logitmfx</span>(<span class="at">formula =</span> modelo_logit_2<span class="sc">$</span>formula, </span>
-<span id="cb88-134"><a href="#cb88-134" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> modelo_logit_2<span class="sc">$</span>data, <span class="at">atmean =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb88-135"><a href="#cb88-135" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(EMP_logit[[<span class="dv">1</span>]])</span>
-<span id="cb88-136"><a href="#cb88-136" aria-hidden="true" tabindex="-1"></a><span class="co"># Forma alternativa del EMP</span></span>
-<span id="cb88-137"><a href="#cb88-137" aria-hidden="true" tabindex="-1"></a><span class="fu">margins</span>(modelo_logit_2)</span>
-<span id="cb88-138"><a href="#cb88-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb88-139"><a href="#cb88-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-140"><a href="#cb88-140" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código Python {.unnumbered}</span></span>
+<span id="cb88-44"><a href="#cb88-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código R {.unnumbered}</span></span>
+<span id="cb88-45"><a href="#cb88-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-48"><a href="#cb88-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb88-49"><a href="#cb88-49" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb88-50"><a href="#cb88-50" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb88-51"><a href="#cb88-51" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb88-52"><a href="#cb88-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-53"><a href="#cb88-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb88-54"><a href="#cb88-54" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb88-55"><a href="#cb88-55" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
+<span id="cb88-56"><a href="#cb88-56" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span>
+<span id="cb88-57"><a href="#cb88-57" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(margins)</span>
+<span id="cb88-58"><a href="#cb88-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb88-59"><a href="#cb88-59" aria-hidden="true" tabindex="-1"></a>PREST_HIP <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/PREST_HIP.csv&quot;</span>)</span>
+<span id="cb88-60"><a href="#cb88-60" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(PREST_HIP)</span>
+<span id="cb88-61"><a href="#cb88-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo logit</span></span>
+<span id="cb88-62"><a href="#cb88-62" aria-hidden="true" tabindex="-1"></a>modelo_logit <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> </span>
+<span id="cb88-63"><a href="#cb88-63" aria-hidden="true" tabindex="-1"></a>                      FI <span class="sc">+</span> MARG <span class="sc">+</span> YLD <span class="sc">+</span> PTS <span class="sc">+</span> MAT <span class="sc">+</span> BA <span class="sc">+</span> BS <span class="sc">+</span> FTB <span class="sc">+</span> CB <span class="sc">+</span> MC <span class="sc">+</span> </span>
+<span id="cb88-64"><a href="#cb88-64" aria-hidden="true" tabindex="-1"></a>                      SE <span class="sc">+</span> MOB <span class="sc">+</span> NW <span class="sc">+</span> LA <span class="sc">+</span> STL, </span>
+<span id="cb88-65"><a href="#cb88-65" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data=</span>PREST_HIP, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb88-66"><a href="#cb88-66" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_logit)</span>
+<span id="cb88-67"><a href="#cb88-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo probit</span></span>
+<span id="cb88-68"><a href="#cb88-68" aria-hidden="true" tabindex="-1"></a>modelo_probit <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> FI <span class="sc">+</span> MARG <span class="sc">+</span> YLD <span class="sc">+</span> PTS <span class="sc">+</span> MAT <span class="sc">+</span> BA <span class="sc">+</span> BS <span class="sc">+</span> FTB <span class="sc">+</span> CB <span class="sc">+</span> </span>
+<span id="cb88-69"><a href="#cb88-69" aria-hidden="true" tabindex="-1"></a>                       MC <span class="sc">+</span> SE <span class="sc">+</span> MOB <span class="sc">+</span> NW <span class="sc">+</span> LA <span class="sc">+</span> STL, </span>
+<span id="cb88-70"><a href="#cb88-70" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data=</span>PREST_HIP, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;probit&quot;</span>))</span>
+<span id="cb88-71"><a href="#cb88-71" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_probit)</span>
+<span id="cb88-72"><a href="#cb88-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Significación de las características personales</span></span>
+<span id="cb88-73"><a href="#cb88-73" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span> ( modelo_logit , <span class="fu">c</span>(<span class="st">&quot;BA = 0&quot;</span>, <span class="st">&quot;BS = 0&quot;</span>,<span class="st">&quot;FTB = 0&quot;</span>,<span class="st">&quot;CB = 0&quot;</span>,</span>
+<span id="cb88-74"><a href="#cb88-74" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;MC = 0&quot;</span>,<span class="st">&quot;SE = 0&quot;</span>,<span class="st">&quot;MOB = 0&quot;</span>,<span class="st">&quot;NW = 0&quot;</span>,</span>
+<span id="cb88-75"><a href="#cb88-75" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;LA = 0&quot;</span>,<span class="st">&quot;STL = 0&quot;</span>))</span>
+<span id="cb88-76"><a href="#cb88-76" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelos logit restringidos</span></span>
+<span id="cb88-77"><a href="#cb88-77" aria-hidden="true" tabindex="-1"></a>modelo_logit_1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> FI <span class="sc">+</span> MARG <span class="sc">+</span> YLD <span class="sc">+</span> PTS <span class="sc">+</span> MAT, <span class="at">data=</span>PREST_HIP, </span>
+<span id="cb88-78"><a href="#cb88-78" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb88-79"><a href="#cb88-79" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_logit_1)</span>
+<span id="cb88-80"><a href="#cb88-80" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span> ( modelo_logit_1, <span class="fu">c</span>(<span class="st">&quot;PTS = 0&quot;</span>, <span class="st">&quot;MAT = 0&quot;</span>))</span>
+<span id="cb88-81"><a href="#cb88-81" aria-hidden="true" tabindex="-1"></a>modelo_logit_2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> FI <span class="sc">+</span> MARG <span class="sc">+</span> YLD, </span>
+<span id="cb88-82"><a href="#cb88-82" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>PREST_HIP, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb88-83"><a href="#cb88-83" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_logit_2)</span>
+<span id="cb88-84"><a href="#cb88-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de convarianzas robusta</span></span>
+<span id="cb88-85"><a href="#cb88-85" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(modelo_logit_2, <span class="at">vcov. =</span> vcovHC, <span class="at">type =</span> <span class="st">&quot;HC1&quot;</span>) </span>
+<span id="cb88-86"><a href="#cb88-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajuste del modelo: pseudoR2</span></span>
+<span id="cb88-87"><a href="#cb88-87" aria-hidden="true" tabindex="-1"></a>pseudoR2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (modelo_logit_2<span class="sc">$</span>deviance) <span class="sc">/</span> (modelo_logit_2<span class="sc">$</span>null.deviance)</span>
+<span id="cb88-88"><a href="#cb88-88" aria-hidden="true" tabindex="-1"></a>pseudoR2</span>
+<span id="cb88-89"><a href="#cb88-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Fórmula equivalente</span></span>
+<span id="cb88-90"><a href="#cb88-90" aria-hidden="true" tabindex="-1"></a>modelo_logit_0 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>PREST_HIP, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb88-91"><a href="#cb88-91" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">logLik</span>(modelo_logit_2)[<span class="dv">1</span>]<span class="sc">/</span><span class="fu">logLik</span>(modelo_logit_0)[<span class="dv">1</span>]</span>
+<span id="cb88-92"><a href="#cb88-92" aria-hidden="true" tabindex="-1"></a><span class="co"># ANOVA</span></span>
+<span id="cb88-93"><a href="#cb88-93" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(modelo_logit_2)</span>
+<span id="cb88-94"><a href="#cb88-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla de éxito-fracaso (confusion matrix)</span></span>
+<span id="cb88-95"><a href="#cb88-95" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">true=</span>PREST_HIP<span class="sc">$</span>Y, <span class="at">predicted=</span><span class="fu">round</span>(<span class="fu">fitted</span>(modelo_logit_2)))</span>
+<span id="cb88-96"><a href="#cb88-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficas de efectos marginales</span></span>
+<span id="cb88-97"><a href="#cb88-97" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfica conjunta</span></span>
+<span id="cb88-98"><a href="#cb88-98" aria-hidden="true" tabindex="-1"></a>effs <span class="ot">&lt;-</span> <span class="fu">Effect</span>(<span class="fu">c</span>(<span class="st">&quot;FI&quot;</span>, <span class="st">&quot;MARG&quot;</span>,<span class="st">&quot;YLD&quot;</span>), modelo_logit_2)</span>
+<span id="cb88-99"><a href="#cb88-99" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(effs, <span class="at">multiline=</span><span class="cn">TRUE</span>, <span class="at">grid=</span><span class="cn">TRUE</span>, <span class="at">lines=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), </span>
+<span id="cb88-100"><a href="#cb88-100" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;FI&quot;</span>,<span class="at">main=</span><span class="st">&quot;&quot;</span>, <span class="at">rotx=</span><span class="dv">45</span>, <span class="at">roty =</span> <span class="dv">45</span>,</span>
+<span id="cb88-101"><a href="#cb88-101" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&quot;Prob[Y=1]&quot;</span>, <span class="at">rescale.axis=</span><span class="cn">FALSE</span>, <span class="at">rug=</span><span class="cn">FALSE</span>)</span>
+<span id="cb88-102"><a href="#cb88-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficas separadas</span></span>
+<span id="cb88-103"><a href="#cb88-103" aria-hidden="true" tabindex="-1"></a><span class="co"># Función de probabilidad estimada para la variable FI</span></span>
+<span id="cb88-104"><a href="#cb88-104" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( Y <span class="sc">~</span> FI, PREST_HIP, <span class="at">xlab=</span><span class="st">&quot;FI&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Prob&quot;</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb88-105"><a href="#cb88-105" aria-hidden="true" tabindex="-1"></a>FInew <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="at">length=</span><span class="dv">78</span>)</span>
+<span id="cb88-106"><a href="#cb88-106" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(FInew, <span class="fu">predict</span>(modelo_logit_2, </span>
+<span id="cb88-107"><a href="#cb88-107" aria-hidden="true" tabindex="-1"></a>                     <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">FI=</span>FInew, </span>
+<span id="cb88-108"><a href="#cb88-108" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">MARG=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>MARG), <span class="dv">78</span>), </span>
+<span id="cb88-109"><a href="#cb88-109" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">YLD=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>YLD), <span class="dv">78</span>)),</span>
+<span id="cb88-110"><a href="#cb88-110" aria-hidden="true" tabindex="-1"></a>                     <span class="at">type=</span><span class="st">&quot;response&quot;</span>), <span class="at">lwd=</span><span class="fl">1.5</span>)</span>
+<span id="cb88-111"><a href="#cb88-111" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col=</span><span class="st">&quot;gray&quot;</span>, <span class="at">lty=</span><span class="st">&quot;solid&quot;</span>)</span>
+<span id="cb88-112"><a href="#cb88-112" aria-hidden="true" tabindex="-1"></a><span class="co"># Función de probabilidad estimada para la variable MARG</span></span>
+<span id="cb88-113"><a href="#cb88-113" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( Y <span class="sc">~</span> MARG, PREST_HIP, <span class="at">xlab=</span><span class="st">&quot;MARG&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Prob&quot;</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb88-114"><a href="#cb88-114" aria-hidden="true" tabindex="-1"></a>MARGnew <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">6</span>, <span class="at">length=</span><span class="dv">78</span>)</span>
+<span id="cb88-115"><a href="#cb88-115" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(MARGnew, <span class="fu">predict</span>(modelo_logit_2, </span>
+<span id="cb88-116"><a href="#cb88-116" aria-hidden="true" tabindex="-1"></a>                       <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">FI=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>FI), <span class="dv">78</span>), </span>
+<span id="cb88-117"><a href="#cb88-117" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">MARG=</span>MARGnew, </span>
+<span id="cb88-118"><a href="#cb88-118" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">YLD=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>YLD), <span class="dv">78</span>)),</span>
+<span id="cb88-119"><a href="#cb88-119" aria-hidden="true" tabindex="-1"></a>                       <span class="at">type=</span><span class="st">&quot;response&quot;</span>), <span class="at">lwd=</span><span class="fl">1.5</span>)</span>
+<span id="cb88-120"><a href="#cb88-120" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col=</span><span class="st">&quot;gray&quot;</span>, <span class="at">lty=</span><span class="st">&quot;solid&quot;</span>)</span>
+<span id="cb88-121"><a href="#cb88-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Función de probabilidad estimada para la variable YLD</span></span>
+<span id="cb88-122"><a href="#cb88-122" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( Y <span class="sc">~</span> YLD, PREST_HIP, <span class="at">xlab=</span><span class="st">&quot;YLD&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Prob&quot;</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb88-123"><a href="#cb88-123" aria-hidden="true" tabindex="-1"></a>YLDnew <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="fl">2.5</span>, <span class="at">length=</span><span class="dv">78</span>)</span>
+<span id="cb88-124"><a href="#cb88-124" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(YLDnew, <span class="fu">predict</span>(modelo_logit_2, </span>
+<span id="cb88-125"><a href="#cb88-125" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">FI=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>FI), <span class="dv">78</span>), </span>
+<span id="cb88-126"><a href="#cb88-126" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">MARG=</span><span class="fu">rep</span>(<span class="fu">mean</span>(PREST_HIP<span class="sc">$</span>MARG), <span class="dv">78</span>), </span>
+<span id="cb88-127"><a href="#cb88-127" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">YLD=</span>YLDnew), </span>
+<span id="cb88-128"><a href="#cb88-128" aria-hidden="true" tabindex="-1"></a>                      <span class="at">type=</span><span class="st">&quot;response&quot;</span>), <span class="at">lwd=</span><span class="fl">1.5</span>)</span>
+<span id="cb88-129"><a href="#cb88-129" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">col=</span><span class="st">&quot;gray&quot;</span>, <span class="at">lty=</span><span class="st">&quot;solid&quot;</span>)</span>
+<span id="cb88-130"><a href="#cb88-130" aria-hidden="true" tabindex="-1"></a><span class="co"># Efecto marginal en la media de las variables explicativas</span></span>
+<span id="cb88-131"><a href="#cb88-131" aria-hidden="true" tabindex="-1"></a>EMM_logit <span class="ot">=</span> mfx<span class="sc">::</span><span class="fu">logitmfx</span>(<span class="at">formula =</span> modelo_logit_2<span class="sc">$</span>formula, </span>
+<span id="cb88-132"><a href="#cb88-132" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> modelo_logit_2<span class="sc">$</span>data, <span class="at">atmean =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb88-133"><a href="#cb88-133" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(EMM_logit[[<span class="dv">1</span>]])</span>
+<span id="cb88-134"><a href="#cb88-134" aria-hidden="true" tabindex="-1"></a><span class="co"># Efecto marginal promedio (EMP)</span></span>
+<span id="cb88-135"><a href="#cb88-135" aria-hidden="true" tabindex="-1"></a>EMP_logit <span class="ot">=</span> mfx<span class="sc">::</span><span class="fu">logitmfx</span>(<span class="at">formula =</span> modelo_logit_2<span class="sc">$</span>formula, </span>
+<span id="cb88-136"><a href="#cb88-136" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> modelo_logit_2<span class="sc">$</span>data, <span class="at">atmean =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb88-137"><a href="#cb88-137" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(EMP_logit[[<span class="dv">1</span>]])</span>
+<span id="cb88-138"><a href="#cb88-138" aria-hidden="true" tabindex="-1"></a><span class="co"># Forma alternativa del EMP</span></span>
+<span id="cb88-139"><a href="#cb88-139" aria-hidden="true" tabindex="-1"></a><span class="fu">margins</span>(modelo_logit_2)</span>
+<span id="cb88-140"><a href="#cb88-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb88-141"><a href="#cb88-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-144"><a href="#cb88-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb88-145"><a href="#cb88-145" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb88-146"><a href="#cb88-146" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb88-147"><a href="#cb88-147" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb88-148"><a href="#cb88-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-149"><a href="#cb88-149" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb88-150"><a href="#cb88-150" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb88-151"><a href="#cb88-151" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb88-152"><a href="#cb88-152" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb88-153"><a href="#cb88-153" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
-<span id="cb88-154"><a href="#cb88-154" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb88-155"><a href="#cb88-155" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb88-156"><a href="#cb88-156" aria-hidden="true" tabindex="-1"></a>PREST_HIP <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/PREST_HIP.csv&quot;</span>)</span>
-<span id="cb88-157"><a href="#cb88-157" aria-hidden="true" tabindex="-1"></a>PREST_HIP.describe()</span>
-<span id="cb88-158"><a href="#cb88-158" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo logit</span></span>
-<span id="cb88-159"><a href="#cb88-159" aria-hidden="true" tabindex="-1"></a>modelo_logit <span class="op">=</span> smf.glm(<span class="st">&quot;Y ~ 1 + FI + MARG + YLD&quot;</span>, data <span class="op">=</span> PREST_HIP, </span>
-<span id="cb88-160"><a href="#cb88-160" aria-hidden="true" tabindex="-1"></a>family <span class="op">=</span> sm.families.Binomial(link <span class="op">=</span> sm.genmod.families.links.logit())).fit()</span>
-<span id="cb88-161"><a href="#cb88-161" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modelo_logit.summary())</span>
-<span id="cb88-162"><a href="#cb88-162" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulación alternativa del modelo logit</span></span>
-<span id="cb88-163"><a href="#cb88-163" aria-hidden="true" tabindex="-1"></a>modelo_logit <span class="op">=</span> smf.logit(<span class="st">&quot;Y ~ 1 + FI + MARG + YLD&quot;</span>, data <span class="op">=</span> PREST_HIP).fit()</span>
-<span id="cb88-164"><a href="#cb88-164" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modelo_logit.summary())</span>
-<span id="cb88-165"><a href="#cb88-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo probit</span></span>
-<span id="cb88-166"><a href="#cb88-166" aria-hidden="true" tabindex="-1"></a>modelo_probit <span class="op">=</span> smf.probit(<span class="st">&quot;Y ~ 1 + FI + MARG + YLD&quot;</span>, data <span class="op">=</span> PREST_HIP).fit()</span>
-<span id="cb88-167"><a href="#cb88-167" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modelo_probit.summary())</span>
-<span id="cb88-168"><a href="#cb88-168" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla de éxito-fracaso</span></span>
-<span id="cb88-169"><a href="#cb88-169" aria-hidden="true" tabindex="-1"></a>tmp_out_1 <span class="op">=</span> modelo_logit.pred_table(threshold <span class="op">=</span> <span class="fl">0.5</span>)</span>
-<span id="cb88-170"><a href="#cb88-170" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(tmp_out_1, </span>
-<span id="cb88-171"><a href="#cb88-171" aria-hidden="true" tabindex="-1"></a>                   columns <span class="op">=</span> [<span class="st">&quot;Predichos 0&quot;</span>, <span class="st">&quot;Predichos 1&quot;</span>],</span>
-<span id="cb88-172"><a href="#cb88-172" aria-hidden="true" tabindex="-1"></a>                   index <span class="op">=</span> [<span class="st">&quot;Observados 0&quot;</span>, <span class="st">&quot;Observados 1&quot;</span>]))</span>
-<span id="cb88-173"><a href="#cb88-173" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulación alternativa</span></span>
-<span id="cb88-174"><a href="#cb88-174" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn <span class="im">import</span> metrics</span>
-<span id="cb88-175"><a href="#cb88-175" aria-hidden="true" tabindex="-1"></a>predicted_probs_logit <span class="op">=</span> modelo_logit.predict(exog <span class="op">=</span> PREST_HIP)</span>
-<span id="cb88-176"><a href="#cb88-176" aria-hidden="true" tabindex="-1"></a>tmp_out_2 <span class="op">=</span> metrics.confusion_matrix(modelo_logit.model.endog, </span>
-<span id="cb88-177"><a href="#cb88-177" aria-hidden="true" tabindex="-1"></a>                                   np.where(predicted_probs_logit <span class="op">&gt;=</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb88-178"><a href="#cb88-178" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(tmp_out_2, </span>
-<span id="cb88-179"><a href="#cb88-179" aria-hidden="true" tabindex="-1"></a>                   columns <span class="op">=</span> [<span class="st">&quot;Predichos 0&quot;</span>, <span class="st">&quot;Predichos 1&quot;</span>],</span>
-<span id="cb88-180"><a href="#cb88-180" aria-hidden="true" tabindex="-1"></a>                   index <span class="op">=</span> [<span class="st">&quot;Observados 0&quot;</span>, <span class="st">&quot;Observados 1&quot;</span>]))</span>
-<span id="cb88-181"><a href="#cb88-181" aria-hidden="true" tabindex="-1"></a><span class="co"># Precisión global del modelo en términos de predicción</span></span>
-<span id="cb88-182"><a href="#cb88-182" aria-hidden="true" tabindex="-1"></a>tmp_accuracy <span class="op">=</span> metrics.accuracy_score(modelo_logit.model.endog,</span>
-<span id="cb88-183"><a href="#cb88-183" aria-hidden="true" tabindex="-1"></a>                       np.where(predicted_probs_logit <span class="op">&gt;=</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb88-184"><a href="#cb88-184" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.<span class="bu">round</span>(tmp_accuracy,<span class="dv">4</span>)) </span>
-<span id="cb88-185"><a href="#cb88-185" aria-hidden="true" tabindex="-1"></a><span class="co"># Efecto marginal en la media de las variables explicativas</span></span>
-<span id="cb88-186"><a href="#cb88-186" aria-hidden="true" tabindex="-1"></a>EMM_logit <span class="op">=</span> modelo_logit.get_margeff(at <span class="op">=</span> <span class="st">&quot;mean&quot;</span>)</span>
-<span id="cb88-187"><a href="#cb88-187" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(EMM_logit.summary())</span>
-<span id="cb88-188"><a href="#cb88-188" aria-hidden="true" tabindex="-1"></a><span class="co"># Efecto marginal promedio</span></span>
-<span id="cb88-189"><a href="#cb88-189" aria-hidden="true" tabindex="-1"></a>EMP_logit <span class="op">=</span> modelo_logit.get_margeff(at <span class="op">=</span> <span class="st">&quot;overall&quot;</span>)</span>
-<span id="cb88-190"><a href="#cb88-190" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(EMP_logit.summary())</span>
-<span id="cb88-191"><a href="#cb88-191" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb88-192"><a href="#cb88-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-193"><a href="#cb88-193" aria-hidden="true" tabindex="-1"></a>::: justify</span>
-<span id="cb88-194"><a href="#cb88-194" aria-hidden="true" tabindex="-1"></a><span class="fu">## Variable dependiente limitada (valores censurados -\&gt; modelo Tobit): Compra de automóviles {.unnumbered}</span></span>
-<span id="cb88-195"><a href="#cb88-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-196"><a href="#cb88-196" aria-hidden="true" tabindex="-1"></a>En un trabajo encargado por una asociación de fabricantes de automóviles, se estimó un modelo microeconométrico en el que se relacionaba el gasto en automóviles realizado por las familias que componían una muestra representativa con algunas características socioeconómicas de las mismas.</span>
+<span id="cb88-142"><a href="#cb88-142" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código Python {.unnumbered}</span></span>
+<span id="cb88-143"><a href="#cb88-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-146"><a href="#cb88-146" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb88-147"><a href="#cb88-147" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb88-148"><a href="#cb88-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb88-149"><a href="#cb88-149" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb88-150"><a href="#cb88-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-151"><a href="#cb88-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb88-152"><a href="#cb88-152" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb88-153"><a href="#cb88-153" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb88-154"><a href="#cb88-154" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb88-155"><a href="#cb88-155" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb88-156"><a href="#cb88-156" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb88-157"><a href="#cb88-157" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb88-158"><a href="#cb88-158" aria-hidden="true" tabindex="-1"></a>PREST_HIP <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/PREST_HIP.csv&quot;</span>)</span>
+<span id="cb88-159"><a href="#cb88-159" aria-hidden="true" tabindex="-1"></a>PREST_HIP.describe()</span>
+<span id="cb88-160"><a href="#cb88-160" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo logit</span></span>
+<span id="cb88-161"><a href="#cb88-161" aria-hidden="true" tabindex="-1"></a>modelo_logit <span class="op">=</span> smf.glm(<span class="st">&quot;Y ~ 1 + FI + MARG + YLD&quot;</span>, data <span class="op">=</span> PREST_HIP, </span>
+<span id="cb88-162"><a href="#cb88-162" aria-hidden="true" tabindex="-1"></a>family <span class="op">=</span> sm.families.Binomial(link <span class="op">=</span> sm.genmod.families.links.logit())).fit()</span>
+<span id="cb88-163"><a href="#cb88-163" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modelo_logit.summary())</span>
+<span id="cb88-164"><a href="#cb88-164" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulación alternativa del modelo logit</span></span>
+<span id="cb88-165"><a href="#cb88-165" aria-hidden="true" tabindex="-1"></a>modelo_logit <span class="op">=</span> smf.logit(<span class="st">&quot;Y ~ 1 + FI + MARG + YLD&quot;</span>, data <span class="op">=</span> PREST_HIP).fit()</span>
+<span id="cb88-166"><a href="#cb88-166" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modelo_logit.summary())</span>
+<span id="cb88-167"><a href="#cb88-167" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo probit</span></span>
+<span id="cb88-168"><a href="#cb88-168" aria-hidden="true" tabindex="-1"></a>modelo_probit <span class="op">=</span> smf.probit(<span class="st">&quot;Y ~ 1 + FI + MARG + YLD&quot;</span>, data <span class="op">=</span> PREST_HIP).fit()</span>
+<span id="cb88-169"><a href="#cb88-169" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modelo_probit.summary())</span>
+<span id="cb88-170"><a href="#cb88-170" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla de éxito-fracaso</span></span>
+<span id="cb88-171"><a href="#cb88-171" aria-hidden="true" tabindex="-1"></a>tmp_out_1 <span class="op">=</span> modelo_logit.pred_table(threshold <span class="op">=</span> <span class="fl">0.5</span>)</span>
+<span id="cb88-172"><a href="#cb88-172" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(tmp_out_1, </span>
+<span id="cb88-173"><a href="#cb88-173" aria-hidden="true" tabindex="-1"></a>                   columns <span class="op">=</span> [<span class="st">&quot;Predichos 0&quot;</span>, <span class="st">&quot;Predichos 1&quot;</span>],</span>
+<span id="cb88-174"><a href="#cb88-174" aria-hidden="true" tabindex="-1"></a>                   index <span class="op">=</span> [<span class="st">&quot;Observados 0&quot;</span>, <span class="st">&quot;Observados 1&quot;</span>]))</span>
+<span id="cb88-175"><a href="#cb88-175" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulación alternativa</span></span>
+<span id="cb88-176"><a href="#cb88-176" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn <span class="im">import</span> metrics</span>
+<span id="cb88-177"><a href="#cb88-177" aria-hidden="true" tabindex="-1"></a>predicted_probs_logit <span class="op">=</span> modelo_logit.predict(exog <span class="op">=</span> PREST_HIP)</span>
+<span id="cb88-178"><a href="#cb88-178" aria-hidden="true" tabindex="-1"></a>tmp_out_2 <span class="op">=</span> metrics.confusion_matrix(modelo_logit.model.endog, </span>
+<span id="cb88-179"><a href="#cb88-179" aria-hidden="true" tabindex="-1"></a>                                   np.where(predicted_probs_logit <span class="op">&gt;=</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb88-180"><a href="#cb88-180" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(tmp_out_2, </span>
+<span id="cb88-181"><a href="#cb88-181" aria-hidden="true" tabindex="-1"></a>                   columns <span class="op">=</span> [<span class="st">&quot;Predichos 0&quot;</span>, <span class="st">&quot;Predichos 1&quot;</span>],</span>
+<span id="cb88-182"><a href="#cb88-182" aria-hidden="true" tabindex="-1"></a>                   index <span class="op">=</span> [<span class="st">&quot;Observados 0&quot;</span>, <span class="st">&quot;Observados 1&quot;</span>]))</span>
+<span id="cb88-183"><a href="#cb88-183" aria-hidden="true" tabindex="-1"></a><span class="co"># Precisión global del modelo en términos de predicción</span></span>
+<span id="cb88-184"><a href="#cb88-184" aria-hidden="true" tabindex="-1"></a>tmp_accuracy <span class="op">=</span> metrics.accuracy_score(modelo_logit.model.endog,</span>
+<span id="cb88-185"><a href="#cb88-185" aria-hidden="true" tabindex="-1"></a>                       np.where(predicted_probs_logit <span class="op">&gt;=</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb88-186"><a href="#cb88-186" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.<span class="bu">round</span>(tmp_accuracy,<span class="dv">4</span>)) </span>
+<span id="cb88-187"><a href="#cb88-187" aria-hidden="true" tabindex="-1"></a><span class="co"># Efecto marginal en la media de las variables explicativas</span></span>
+<span id="cb88-188"><a href="#cb88-188" aria-hidden="true" tabindex="-1"></a>EMM_logit <span class="op">=</span> modelo_logit.get_margeff(at <span class="op">=</span> <span class="st">&quot;mean&quot;</span>)</span>
+<span id="cb88-189"><a href="#cb88-189" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(EMM_logit.summary())</span>
+<span id="cb88-190"><a href="#cb88-190" aria-hidden="true" tabindex="-1"></a><span class="co"># Efecto marginal promedio</span></span>
+<span id="cb88-191"><a href="#cb88-191" aria-hidden="true" tabindex="-1"></a>EMP_logit <span class="op">=</span> modelo_logit.get_margeff(at <span class="op">=</span> <span class="st">&quot;overall&quot;</span>)</span>
+<span id="cb88-192"><a href="#cb88-192" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(EMP_logit.summary())</span>
+<span id="cb88-193"><a href="#cb88-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb88-194"><a href="#cb88-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-195"><a href="#cb88-195" aria-hidden="true" tabindex="-1"></a>::: justify</span>
+<span id="cb88-196"><a href="#cb88-196" aria-hidden="true" tabindex="-1"></a><span class="fu">## Variable dependiente limitada (valores censurados: modelo Tobit):  {.unnumbered}</span></span>
 <span id="cb88-197"><a href="#cb88-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-198"><a href="#cb88-198" aria-hidden="true" tabindex="-1"></a>La ecuación de comportamiento especificada fue la siguiente:</span>
+<span id="cb88-198"><a href="#cb88-198" aria-hidden="true" tabindex="-1"></a><span class="fu">### Compra de automóviles {.unnumbered}</span></span>
 <span id="cb88-199"><a href="#cb88-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-200"><a href="#cb88-200" aria-hidden="true" tabindex="-1"></a>$$GAUT_{i} = \beta_1 + \beta_2 Y_{i} + \beta_3 HIJOSM18_{i} + \beta_4 EDAD_{i} + e_{i}$$</span>
+<span id="cb88-200"><a href="#cb88-200" aria-hidden="true" tabindex="-1"></a>En un trabajo encargado por una asociación de fabricantes de automóviles, se estimó un modelo microeconométrico en el que se relacionaba el gasto en automóviles realizado por las familias que componían una muestra representativa con algunas características socioeconómicas de las mismas.</span>
 <span id="cb88-201"><a href="#cb88-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-202"><a href="#cb88-202" aria-hidden="true" tabindex="-1"></a>donde $GAUT$ es el gasto familiar efectuado en la adquisición de automóviles en el último año, $Y$ es la renta familiar total del último ejercicio fiscal, $HIJOSM18$ es el número de hijos con edades inferiores a dieciocho años, y $EDAD$ es la edad del cabeza de familia.</span>
-<span id="cb88-203"><a href="#cb88-203" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb88-204"><a href="#cb88-204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-205"><a href="#cb88-205" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código R {.unnumbered}</span></span>
-<span id="cb88-206"><a href="#cb88-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-209"><a href="#cb88-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb88-210"><a href="#cb88-210" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb88-211"><a href="#cb88-211" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb88-212"><a href="#cb88-212" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb88-213"><a href="#cb88-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-214"><a href="#cb88-214" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb88-215"><a href="#cb88-215" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb88-216"><a href="#cb88-216" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(censReg) <span class="co"># http://www.sampleselection.org/</span></span>
-<span id="cb88-217"><a href="#cb88-217" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb88-218"><a href="#cb88-218" aria-hidden="true" tabindex="-1"></a>AUTOS <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/AUTOS.csv&quot;</span>)</span>
-<span id="cb88-219"><a href="#cb88-219" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(AUTOS)</span>
-<span id="cb88-220"><a href="#cb88-220" aria-hidden="true" tabindex="-1"></a><span class="co"># Datos censurados: modelo Tobit </span></span>
-<span id="cb88-221"><a href="#cb88-221" aria-hidden="true" tabindex="-1"></a><span class="co"># Librería censReg </span></span>
-<span id="cb88-222"><a href="#cb88-222" aria-hidden="true" tabindex="-1"></a><span class="co"># (https://cran.r-project.org/web/packages/censReg/vignettes/censReg.pdf)</span></span>
-<span id="cb88-223"><a href="#cb88-223" aria-hidden="true" tabindex="-1"></a>modelo_tobit_1 <span class="ot">&lt;-</span> <span class="fu">censReg</span>(GAUT <span class="sc">~</span> EDAD <span class="sc">+</span> HIJOSM18 <span class="sc">+</span> Y, <span class="at">data =</span> AUTOS)</span>
-<span id="cb88-224"><a href="#cb88-224" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_tobit_1)</span>
-<span id="cb88-225"><a href="#cb88-225" aria-hidden="true" tabindex="-1"></a><span class="co"># Efectos marginales</span></span>
-<span id="cb88-226"><a href="#cb88-226" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluados en un valor concreto de las var. explicativas </span></span>
-<span id="cb88-227"><a href="#cb88-227" aria-hidden="true" tabindex="-1"></a><span class="co"># (media de las variables en este caso)</span></span>
-<span id="cb88-228"><a href="#cb88-228" aria-hidden="true" tabindex="-1"></a><span class="fu">margEff</span>(modelo_tobit_1, </span>
-<span id="cb88-229"><a href="#cb88-229" aria-hidden="true" tabindex="-1"></a>        <span class="at">xValues =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="fu">mean</span>(AUTOS<span class="sc">$</span>EDAD),<span class="fu">mean</span>(AUTOS<span class="sc">$</span>HIJOSM18),<span class="fu">mean</span>(AUTOS<span class="sc">$</span>Y)))</span>
-<span id="cb88-230"><a href="#cb88-230" aria-hidden="true" tabindex="-1"></a><span class="co"># Efectos marginales promedio</span></span>
-<span id="cb88-231"><a href="#cb88-231" aria-hidden="true" tabindex="-1"></a><span class="fu">margEff</span>(modelo_tobit_1)</span>
-<span id="cb88-232"><a href="#cb88-232" aria-hidden="true" tabindex="-1"></a><span class="co"># Librería VGAM (https://www.stat.auckland.ac.nz/~yee/VGAM/)</span></span>
-<span id="cb88-233"><a href="#cb88-233" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span>
-<span id="cb88-234"><a href="#cb88-234" aria-hidden="true" tabindex="-1"></a>modelo_tobit_2 <span class="ot">&lt;-</span> <span class="fu">vglm</span>(GAUT <span class="sc">~</span> EDAD <span class="sc">+</span> HIJOSM18 <span class="sc">+</span> Y, <span class="at">family =</span> tobit, </span>
-<span id="cb88-235"><a href="#cb88-235" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> AUTOS)</span>
-<span id="cb88-236"><a href="#cb88-236" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_tobit_2)</span>
-<span id="cb88-237"><a href="#cb88-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb88-238"><a href="#cb88-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-239"><a href="#cb88-239" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código Python {.unnumbered}</span></span>
-<span id="cb88-240"><a href="#cb88-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-243"><a href="#cb88-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb88-244"><a href="#cb88-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb88-245"><a href="#cb88-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb88-246"><a href="#cb88-246" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb88-247"><a href="#cb88-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-248"><a href="#cb88-248" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
-<span id="cb88-249"><a href="#cb88-249" aria-hidden="true" tabindex="-1"></a><span class="fu">py_run_file</span>(<span class="st">&quot;tobit.py&quot;</span>)</span>
-<span id="cb88-250"><a href="#cb88-250" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb88-202"><a href="#cb88-202" aria-hidden="true" tabindex="-1"></a>La ecuación de comportamiento especificada fue la siguiente:</span>
+<span id="cb88-203"><a href="#cb88-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-204"><a href="#cb88-204" aria-hidden="true" tabindex="-1"></a>$$GAUT_{i} = \beta_1 + \beta_2 Y_{i} + \beta_3 HIJOSM18_{i} + \beta_4 EDAD_{i} + e_{i}$$</span>
+<span id="cb88-205"><a href="#cb88-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-206"><a href="#cb88-206" aria-hidden="true" tabindex="-1"></a>donde $GAUT$ es el gasto familiar efectuado en la adquisición de automóviles en el último año, $Y$ es la renta familiar total del último ejercicio fiscal, $HIJOSM18$ es el número de hijos con edades inferiores a dieciocho años, y $EDAD$ es la edad del cabeza de familia.</span>
+<span id="cb88-207"><a href="#cb88-207" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb88-208"><a href="#cb88-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-209"><a href="#cb88-209" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código R {.unnumbered}</span></span>
+<span id="cb88-210"><a href="#cb88-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-213"><a href="#cb88-213" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb88-214"><a href="#cb88-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb88-215"><a href="#cb88-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb88-216"><a href="#cb88-216" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb88-217"><a href="#cb88-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-218"><a href="#cb88-218" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb88-219"><a href="#cb88-219" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb88-220"><a href="#cb88-220" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(censReg) <span class="co"># http://www.sampleselection.org/</span></span>
+<span id="cb88-221"><a href="#cb88-221" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb88-222"><a href="#cb88-222" aria-hidden="true" tabindex="-1"></a>AUTOS <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/AUTOS.csv&quot;</span>)</span>
+<span id="cb88-223"><a href="#cb88-223" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(AUTOS)</span>
+<span id="cb88-224"><a href="#cb88-224" aria-hidden="true" tabindex="-1"></a><span class="co"># Datos censurados: modelo Tobit </span></span>
+<span id="cb88-225"><a href="#cb88-225" aria-hidden="true" tabindex="-1"></a><span class="co"># Librería censReg </span></span>
+<span id="cb88-226"><a href="#cb88-226" aria-hidden="true" tabindex="-1"></a><span class="co"># (https://cran.r-project.org/web/packages/censReg/vignettes/censReg.pdf)</span></span>
+<span id="cb88-227"><a href="#cb88-227" aria-hidden="true" tabindex="-1"></a>modelo_tobit_1 <span class="ot">&lt;-</span> <span class="fu">censReg</span>(GAUT <span class="sc">~</span> EDAD <span class="sc">+</span> HIJOSM18 <span class="sc">+</span> Y, <span class="at">data =</span> AUTOS)</span>
+<span id="cb88-228"><a href="#cb88-228" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_tobit_1)</span>
+<span id="cb88-229"><a href="#cb88-229" aria-hidden="true" tabindex="-1"></a><span class="co"># Efectos marginales</span></span>
+<span id="cb88-230"><a href="#cb88-230" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluados en un valor concreto de las var. explicativas </span></span>
+<span id="cb88-231"><a href="#cb88-231" aria-hidden="true" tabindex="-1"></a><span class="co"># (media de las variables en este caso)</span></span>
+<span id="cb88-232"><a href="#cb88-232" aria-hidden="true" tabindex="-1"></a><span class="fu">margEff</span>(modelo_tobit_1, </span>
+<span id="cb88-233"><a href="#cb88-233" aria-hidden="true" tabindex="-1"></a>        <span class="at">xValues =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="fu">mean</span>(AUTOS<span class="sc">$</span>EDAD),<span class="fu">mean</span>(AUTOS<span class="sc">$</span>HIJOSM18),<span class="fu">mean</span>(AUTOS<span class="sc">$</span>Y)))</span>
+<span id="cb88-234"><a href="#cb88-234" aria-hidden="true" tabindex="-1"></a><span class="co"># Efectos marginales promedio</span></span>
+<span id="cb88-235"><a href="#cb88-235" aria-hidden="true" tabindex="-1"></a><span class="fu">margEff</span>(modelo_tobit_1)</span>
+<span id="cb88-236"><a href="#cb88-236" aria-hidden="true" tabindex="-1"></a><span class="co"># Librería VGAM (https://www.stat.auckland.ac.nz/~yee/VGAM/)</span></span>
+<span id="cb88-237"><a href="#cb88-237" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VGAM)</span>
+<span id="cb88-238"><a href="#cb88-238" aria-hidden="true" tabindex="-1"></a>modelo_tobit_2 <span class="ot">&lt;-</span> <span class="fu">vglm</span>(GAUT <span class="sc">~</span> EDAD <span class="sc">+</span> HIJOSM18 <span class="sc">+</span> Y, <span class="at">family =</span> tobit, </span>
+<span id="cb88-239"><a href="#cb88-239" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> AUTOS)</span>
+<span id="cb88-240"><a href="#cb88-240" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_tobit_2)</span>
+<span id="cb88-241"><a href="#cb88-241" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb88-242"><a href="#cb88-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-243"><a href="#cb88-243" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código Python {.unnumbered}</span></span>
+<span id="cb88-244"><a href="#cb88-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-247"><a href="#cb88-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb88-248"><a href="#cb88-248" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb88-249"><a href="#cb88-249" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb88-250"><a href="#cb88-250" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
 <span id="cb88-251"><a href="#cb88-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-254"><a href="#cb88-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb88-255"><a href="#cb88-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb88-256"><a href="#cb88-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb88-257"><a href="#cb88-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb88-258"><a href="#cb88-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-259"><a href="#cb88-259" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb88-260"><a href="#cb88-260" aria-hidden="true" tabindex="-1"></a>AUTOS <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/AUTOS.csv&quot;</span>)</span>
-<span id="cb88-261"><a href="#cb88-261" aria-hidden="true" tabindex="-1"></a>AUTOS.describe()</span>
-<span id="cb88-262"><a href="#cb88-262" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación del modelo Tobit con los datos de la aplicación</span></span>
-<span id="cb88-263"><a href="#cb88-263" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> AUTOS.GAUT</span>
-<span id="cb88-264"><a href="#cb88-264" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> AUTOS.drop([<span class="st">&#39;GAUT&#39;</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb88-265"><a href="#cb88-265" aria-hidden="true" tabindex="-1"></a>cens <span class="op">=</span> pd.Series(np.zeros((<span class="bu">len</span>(y),)))</span>
-<span id="cb88-266"><a href="#cb88-266" aria-hidden="true" tabindex="-1"></a>cens[y<span class="op">==</span><span class="dv">0</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
-<span id="cb88-267"><a href="#cb88-267" aria-hidden="true" tabindex="-1"></a>cens.value_counts()</span>
-<span id="cb88-268"><a href="#cb88-268" aria-hidden="true" tabindex="-1"></a>modelo_tobit <span class="op">=</span> TobitModel()</span>
-<span id="cb88-269"><a href="#cb88-269" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> modelo_tobit.fit(x, y, cens, verbose<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb88-270"><a href="#cb88-270" aria-hidden="true" tabindex="-1"></a>res.coef_</span>
-<span id="cb88-271"><a href="#cb88-271" aria-hidden="true" tabindex="-1"></a>res.sigma_</span>
-<span id="cb88-272"><a href="#cb88-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb88-273"><a href="#cb88-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-274"><a href="#cb88-274" aria-hidden="true" tabindex="-1"></a>::: justify</span>
-<span id="cb88-275"><a href="#cb88-275" aria-hidden="true" tabindex="-1"></a><span class="fu">## Variable dependiente limitada (truncamiento selectivo -\&gt; modelo Heckit de selección muestral): Salarios de las mujeres casadas {.unnumbered}</span></span>
-<span id="cb88-276"><a href="#cb88-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-277"><a href="#cb88-277" aria-hidden="true" tabindex="-1"></a>En esta aplicación se estima una ecuación Minceriana de salarios para las mujeres casadas basada en una investigación de Thomas A. Mroz del año 1987 para el Reino Uniod. El modelo propuesto es el siguiente:</span>
-<span id="cb88-278"><a href="#cb88-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-279"><a href="#cb88-279" aria-hidden="true" tabindex="-1"></a>$$log(SALARIO_{i}) = \beta_1 + \beta_2 EDUC_{i} + \beta_3 EXPER_{i} + e_{i}$$</span>
+<span id="cb88-252"><a href="#cb88-252" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb88-253"><a href="#cb88-253" aria-hidden="true" tabindex="-1"></a><span class="fu">py_run_file</span>(<span class="st">&quot;tobit.py&quot;</span>)</span>
+<span id="cb88-254"><a href="#cb88-254" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb88-255"><a href="#cb88-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-258"><a href="#cb88-258" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb88-259"><a href="#cb88-259" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb88-260"><a href="#cb88-260" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb88-261"><a href="#cb88-261" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb88-262"><a href="#cb88-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-263"><a href="#cb88-263" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb88-264"><a href="#cb88-264" aria-hidden="true" tabindex="-1"></a>AUTOS <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/AUTOS.csv&quot;</span>)</span>
+<span id="cb88-265"><a href="#cb88-265" aria-hidden="true" tabindex="-1"></a>AUTOS.describe()</span>
+<span id="cb88-266"><a href="#cb88-266" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación del modelo Tobit con los datos de la aplicación</span></span>
+<span id="cb88-267"><a href="#cb88-267" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> AUTOS.GAUT</span>
+<span id="cb88-268"><a href="#cb88-268" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> AUTOS.drop([<span class="st">&#39;GAUT&#39;</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb88-269"><a href="#cb88-269" aria-hidden="true" tabindex="-1"></a>cens <span class="op">=</span> pd.Series(np.zeros((<span class="bu">len</span>(y),)))</span>
+<span id="cb88-270"><a href="#cb88-270" aria-hidden="true" tabindex="-1"></a>cens[y<span class="op">==</span><span class="dv">0</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb88-271"><a href="#cb88-271" aria-hidden="true" tabindex="-1"></a>cens.value_counts()</span>
+<span id="cb88-272"><a href="#cb88-272" aria-hidden="true" tabindex="-1"></a>modelo_tobit <span class="op">=</span> TobitModel()</span>
+<span id="cb88-273"><a href="#cb88-273" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> modelo_tobit.fit(x, y, cens, verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb88-274"><a href="#cb88-274" aria-hidden="true" tabindex="-1"></a>res.coef_</span>
+<span id="cb88-275"><a href="#cb88-275" aria-hidden="true" tabindex="-1"></a>res.sigma_</span>
+<span id="cb88-276"><a href="#cb88-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb88-277"><a href="#cb88-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-278"><a href="#cb88-278" aria-hidden="true" tabindex="-1"></a>::: justify</span>
+<span id="cb88-279"><a href="#cb88-279" aria-hidden="true" tabindex="-1"></a><span class="fu">## Variable dependiente limitada (truncamiento selectivo: modelo Heckit de selección muestral):  {.unnumbered}</span></span>
 <span id="cb88-280"><a href="#cb88-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-281"><a href="#cb88-281" aria-hidden="true" tabindex="-1"></a>donde $SALARIO$ representa el salario por hora trabajada observado, $EDUC$ es el nivel de educación y $EXPER$ es el nivel de experiencia.</span>
+<span id="cb88-281"><a href="#cb88-281" aria-hidden="true" tabindex="-1"></a><span class="fu">### Salarios de las mujeres casadas {.unnumbered}</span></span>
 <span id="cb88-282"><a href="#cb88-282" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-283"><a href="#cb88-283" aria-hidden="true" tabindex="-1"></a>Al realizar una encuesta a una muestra de N = 753 mujeres casadas, representativa de la población femenina con ese estado civil en UK, preguntándoles entre otras cosas por su salario, muchas de ellas (325 mujeres) respondieron que esa cuestión no era relevante en su caso, ya que eran &quot;amas de casa&quot; (población no activa) y no recibían remuneración alguna por ese trabajo. Solo se observaron datos sobre salarios de mercado para aquellas mujeres (n = 428) que participaban en la fuerza de trabajo.</span>
-<span id="cb88-284"><a href="#cb88-284" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb88-285"><a href="#cb88-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-286"><a href="#cb88-286" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código R {.unnumbered}</span></span>
-<span id="cb88-287"><a href="#cb88-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-290"><a href="#cb88-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb88-291"><a href="#cb88-291" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb88-292"><a href="#cb88-292" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb88-293"><a href="#cb88-293" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb88-294"><a href="#cb88-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-295"><a href="#cb88-295" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb88-296"><a href="#cb88-296" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb88-297"><a href="#cb88-297" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sampleSelection) <span class="co"># http://www.sampleselection.org/</span></span>
-<span id="cb88-298"><a href="#cb88-298" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb88-299"><a href="#cb88-299" aria-hidden="true" tabindex="-1"></a>SAL_MUJ <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/SAL_MUJ.csv&quot;</span>)</span>
-<span id="cb88-300"><a href="#cb88-300" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(SAL_MUJ)</span>
-<span id="cb88-301"><a href="#cb88-301" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo Heckit (https://cran.r-project.org/web/packages/sampleSelection/vignettes/selection.pdf)</span></span>
-<span id="cb88-302"><a href="#cb88-302" aria-hidden="true" tabindex="-1"></a>modelo_heckit <span class="ot">&lt;-</span> <span class="fu">selection</span>(PMT <span class="sc">~</span> EDUC <span class="sc">+</span> EDAD <span class="sc">+</span> HIJOSMEN <span class="sc">+</span> TMIMP, </span>
-<span id="cb88-303"><a href="#cb88-303" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">log</span>(SALARIO) <span class="sc">~</span> EDUC <span class="sc">+</span> EXPER, </span>
-<span id="cb88-304"><a href="#cb88-304" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data=</span>SAL_MUJ, <span class="at">method=</span><span class="st">&quot;ml&quot;</span>)</span>
-<span id="cb88-305"><a href="#cb88-305" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_heckit)</span>
-<span id="cb88-306"><a href="#cb88-306" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb88-307"><a href="#cb88-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-308"><a href="#cb88-308" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código Python {.unnumbered}</span></span>
-<span id="cb88-309"><a href="#cb88-309" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-312"><a href="#cb88-312" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb88-313"><a href="#cb88-313" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb88-314"><a href="#cb88-314" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb88-315"><a href="#cb88-315" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb88-316"><a href="#cb88-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-317"><a href="#cb88-317" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb88-318"><a href="#cb88-318" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb88-319"><a href="#cb88-319" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb88-320"><a href="#cb88-320" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb88-321"><a href="#cb88-321" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb88-322"><a href="#cb88-322" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
-<span id="cb88-323"><a href="#cb88-323" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb88-324"><a href="#cb88-324" aria-hidden="true" tabindex="-1"></a>SAL_MUJ <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/SAL_MUJ.csv&quot;</span>)</span>
-<span id="cb88-325"><a href="#cb88-325" aria-hidden="true" tabindex="-1"></a>SAL_MUJ.describe()</span>
-<span id="cb88-326"><a href="#cb88-326" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo Heckit</span></span>
-<span id="cb88-327"><a href="#cb88-327" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación en dos pasos (menos eficiente que la estimación ML)</span></span>
-<span id="cb88-328"><a href="#cb88-328" aria-hidden="true" tabindex="-1"></a><span class="co"># Realizando las regresiones &quot;manualmente&quot;</span></span>
-<span id="cb88-329"><a href="#cb88-329" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 1 (modelo Probit para todas las observaciones)</span></span>
-<span id="cb88-330"><a href="#cb88-330" aria-hidden="true" tabindex="-1"></a>reg_probit <span class="op">=</span> smf.probit(formula<span class="op">=</span><span class="st">&#39;PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP&#39;</span>, data<span class="op">=</span>SAL_MUJ)</span>
-<span id="cb88-331"><a href="#cb88-331" aria-hidden="true" tabindex="-1"></a>res_probit <span class="op">=</span> reg_probit.fit(disp<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb88-332"><a href="#cb88-332" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_probit.summary())</span>
-<span id="cb88-333"><a href="#cb88-333" aria-hidden="true" tabindex="-1"></a>pred_PMT <span class="op">=</span> res_probit.fittedvalues</span>
-<span id="cb88-334"><a href="#cb88-334" aria-hidden="true" tabindex="-1"></a>SAL_MUJ[<span class="st">&#39;inv_mills&#39;</span>] <span class="op">=</span> stats.norm.pdf(pred_PMT) <span class="op">/</span> stats.norm.cdf(pred_PMT)</span>
-<span id="cb88-335"><a href="#cb88-335" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 2 (regresión truncada con las observaciones seleccionadas y la inversa de la razón de Mills como variable explicativa adicional)</span></span>
-<span id="cb88-336"><a href="#cb88-336" aria-hidden="true" tabindex="-1"></a>reg_heckit <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">&#39;np.log(SALARIO) ~ EDUC + EXPER + inv_mills&#39;</span>, subset<span class="op">=</span>(SAL_MUJ[<span class="st">&#39;PMT&#39;</span>] <span class="op">==</span> <span class="dv">1</span>), data<span class="op">=</span>SAL_MUJ).fit(cov_type<span class="op">=</span><span class="st">&#39;HAC&#39;</span>, cov_kwds<span class="op">=</span>{<span class="st">&#39;maxlags&#39;</span>:<span class="dv">6</span>,<span class="st">&#39;use_correction&#39;</span>:<span class="va">True</span>})</span>
-<span id="cb88-337"><a href="#cb88-337" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reg_heckit.summary())</span>
-<span id="cb88-338"><a href="#cb88-338" aria-hidden="true" tabindex="-1"></a><span class="co"># Usando el script heckman.py (statsmodels): errores estándar correctos</span></span>
-<span id="cb88-339"><a href="#cb88-339" aria-hidden="true" tabindex="-1"></a>SAL_MUJ[<span class="st">&#39;lSALARIO&#39;</span>] <span class="op">=</span> np.log(SAL_MUJ[<span class="st">&#39;SALARIO&#39;</span>])</span>
-<span id="cb88-340"><a href="#cb88-340" aria-hidden="true" tabindex="-1"></a>lSALARIO <span class="op">=</span> SAL_MUJ[<span class="st">&#39;lSALARIO&#39;</span>].copy() <span class="co"># Variable dependiente regresión truncada</span></span>
-<span id="cb88-341"><a href="#cb88-341" aria-hidden="true" tabindex="-1"></a>Xs <span class="op">=</span> SAL_MUJ[[<span class="st">&#39;EDUC&#39;</span>, <span class="st">&#39;EXPER&#39;</span>]] <span class="co"># Variables exógenas regresión truncada</span></span>
-<span id="cb88-342"><a href="#cb88-342" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> sm.add_constant(Xs, prepend <span class="op">=</span> <span class="va">True</span>)</span>
-<span id="cb88-343"><a href="#cb88-343" aria-hidden="true" tabindex="-1"></a>Ws <span class="op">=</span> SAL_MUJ[[<span class="st">&#39;EDUC&#39;</span>, <span class="st">&#39;EDAD&#39;</span>, <span class="st">&#39;HIJOSMEN&#39;</span>, <span class="st">&#39;TMIMP&#39;</span>]] <span class="co"># Variables exógenas ecuación selección</span></span>
-<span id="cb88-344"><a href="#cb88-344" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> sm.add_constant(Ws, prepend <span class="op">=</span> <span class="va">True</span>)</span>
-<span id="cb88-345"><a href="#cb88-345" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> heckman <span class="im">as</span> heckman </span>
-<span id="cb88-346"><a href="#cb88-346" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> heckman.Heckman(lSALARIO, X, W).fit(method<span class="op">=</span><span class="st">&#39;twostep&#39;</span>)</span>
-<span id="cb88-347"><a href="#cb88-347" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res.summary()) </span>
-<span id="cb88-348"><a href="#cb88-348" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb88-283"><a href="#cb88-283" aria-hidden="true" tabindex="-1"></a>En esta aplicación se estima una ecuación Minceriana de salarios para las mujeres casadas basada en una investigación de Thomas A. Mroz del año 1987 para el Reino Uniod. El modelo propuesto es el siguiente:</span>
+<span id="cb88-284"><a href="#cb88-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-285"><a href="#cb88-285" aria-hidden="true" tabindex="-1"></a>$$log(SALARIO_{i}) = \beta_1 + \beta_2 EDUC_{i} + \beta_3 EXPER_{i} + e_{i}$$</span>
+<span id="cb88-286"><a href="#cb88-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-287"><a href="#cb88-287" aria-hidden="true" tabindex="-1"></a>donde $SALARIO$ representa el salario por hora trabajada observado, $EDUC$ es el nivel de educación y $EXPER$ es el nivel de experiencia.</span>
+<span id="cb88-288"><a href="#cb88-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-289"><a href="#cb88-289" aria-hidden="true" tabindex="-1"></a>Al realizar una encuesta a una muestra de N = 753 mujeres casadas, representativa de la población femenina con ese estado civil en UK, preguntándoles entre otras cosas por su salario, muchas de ellas (325 mujeres) respondieron que esa cuestión no era relevante en su caso, ya que eran &quot;amas de casa&quot; (población no activa) y no recibían remuneración alguna por ese trabajo. Solo se observaron datos sobre salarios de mercado para aquellas mujeres (n = 428) que participaban en la fuerza de trabajo.</span>
+<span id="cb88-290"><a href="#cb88-290" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb88-291"><a href="#cb88-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-292"><a href="#cb88-292" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código R {.unnumbered}</span></span>
+<span id="cb88-293"><a href="#cb88-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-296"><a href="#cb88-296" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb88-297"><a href="#cb88-297" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb88-298"><a href="#cb88-298" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb88-299"><a href="#cb88-299" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb88-300"><a href="#cb88-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-301"><a href="#cb88-301" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb88-302"><a href="#cb88-302" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb88-303"><a href="#cb88-303" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sampleSelection) <span class="co"># http://www.sampleselection.org/</span></span>
+<span id="cb88-304"><a href="#cb88-304" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb88-305"><a href="#cb88-305" aria-hidden="true" tabindex="-1"></a>SAL_MUJ <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/SAL_MUJ.csv&quot;</span>)</span>
+<span id="cb88-306"><a href="#cb88-306" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(SAL_MUJ)</span>
+<span id="cb88-307"><a href="#cb88-307" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo Heckit (https://cran.r-project.org/web/packages/sampleSelection/vignettes/selection.pdf)</span></span>
+<span id="cb88-308"><a href="#cb88-308" aria-hidden="true" tabindex="-1"></a>modelo_heckit <span class="ot">&lt;-</span> <span class="fu">selection</span>(PMT <span class="sc">~</span> EDUC <span class="sc">+</span> EDAD <span class="sc">+</span> HIJOSMEN <span class="sc">+</span> TMIMP, </span>
+<span id="cb88-309"><a href="#cb88-309" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">log</span>(SALARIO) <span class="sc">~</span> EDUC <span class="sc">+</span> EXPER, </span>
+<span id="cb88-310"><a href="#cb88-310" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data=</span>SAL_MUJ, <span class="at">method=</span><span class="st">&quot;ml&quot;</span>)</span>
+<span id="cb88-311"><a href="#cb88-311" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_heckit)</span>
+<span id="cb88-312"><a href="#cb88-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb88-313"><a href="#cb88-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-314"><a href="#cb88-314" aria-hidden="true" tabindex="-1"></a><span class="fu">### Código Python {.unnumbered}</span></span>
+<span id="cb88-315"><a href="#cb88-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-318"><a href="#cb88-318" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb88-319"><a href="#cb88-319" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb88-320"><a href="#cb88-320" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb88-321"><a href="#cb88-321" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb88-322"><a href="#cb88-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-323"><a href="#cb88-323" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb88-324"><a href="#cb88-324" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb88-325"><a href="#cb88-325" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb88-326"><a href="#cb88-326" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb88-327"><a href="#cb88-327" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb88-328"><a href="#cb88-328" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb88-329"><a href="#cb88-329" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb88-330"><a href="#cb88-330" aria-hidden="true" tabindex="-1"></a>SAL_MUJ <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/SAL_MUJ.csv&quot;</span>)</span>
+<span id="cb88-331"><a href="#cb88-331" aria-hidden="true" tabindex="-1"></a>SAL_MUJ.describe()</span>
+<span id="cb88-332"><a href="#cb88-332" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo Heckit</span></span>
+<span id="cb88-333"><a href="#cb88-333" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación en dos pasos (menos eficiente que la estimación ML)</span></span>
+<span id="cb88-334"><a href="#cb88-334" aria-hidden="true" tabindex="-1"></a><span class="co"># Realizando las regresiones &quot;manualmente&quot;</span></span>
+<span id="cb88-335"><a href="#cb88-335" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 1 (modelo Probit para todas las observaciones)</span></span>
+<span id="cb88-336"><a href="#cb88-336" aria-hidden="true" tabindex="-1"></a>reg_probit <span class="op">=</span> smf.probit(formula<span class="op">=</span><span class="st">&#39;PMT ~ EDUC + EDAD + HIJOSMEN + TMIMP&#39;</span>, data<span class="op">=</span>SAL_MUJ)</span>
+<span id="cb88-337"><a href="#cb88-337" aria-hidden="true" tabindex="-1"></a>res_probit <span class="op">=</span> reg_probit.fit(disp<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb88-338"><a href="#cb88-338" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_probit.summary())</span>
+<span id="cb88-339"><a href="#cb88-339" aria-hidden="true" tabindex="-1"></a>pred_PMT <span class="op">=</span> res_probit.fittedvalues</span>
+<span id="cb88-340"><a href="#cb88-340" aria-hidden="true" tabindex="-1"></a>SAL_MUJ[<span class="st">&#39;inv_mills&#39;</span>] <span class="op">=</span> stats.norm.pdf(pred_PMT) <span class="op">/</span> stats.norm.cdf(pred_PMT)</span>
+<span id="cb88-341"><a href="#cb88-341" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 2 (regresión truncada con las observaciones seleccionadas y la inversa de la razón de Mills como variable explicativa adicional)</span></span>
+<span id="cb88-342"><a href="#cb88-342" aria-hidden="true" tabindex="-1"></a>reg_heckit <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">&#39;np.log(SALARIO) ~ EDUC + EXPER + inv_mills&#39;</span>, subset<span class="op">=</span>(SAL_MUJ[<span class="st">&#39;PMT&#39;</span>] <span class="op">==</span> <span class="dv">1</span>), data<span class="op">=</span>SAL_MUJ).fit(cov_type<span class="op">=</span><span class="st">&#39;HAC&#39;</span>, cov_kwds<span class="op">=</span>{<span class="st">&#39;maxlags&#39;</span>:<span class="dv">6</span>,<span class="st">&#39;use_correction&#39;</span>:<span class="va">True</span>})</span>
+<span id="cb88-343"><a href="#cb88-343" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(reg_heckit.summary())</span>
+<span id="cb88-344"><a href="#cb88-344" aria-hidden="true" tabindex="-1"></a><span class="co"># Usando el script heckman.py (statsmodels): errores estándar correctos</span></span>
+<span id="cb88-345"><a href="#cb88-345" aria-hidden="true" tabindex="-1"></a>SAL_MUJ[<span class="st">&#39;lSALARIO&#39;</span>] <span class="op">=</span> np.log(SAL_MUJ[<span class="st">&#39;SALARIO&#39;</span>])</span>
+<span id="cb88-346"><a href="#cb88-346" aria-hidden="true" tabindex="-1"></a>lSALARIO <span class="op">=</span> SAL_MUJ[<span class="st">&#39;lSALARIO&#39;</span>].copy() <span class="co"># Variable dependiente regresión truncada</span></span>
+<span id="cb88-347"><a href="#cb88-347" aria-hidden="true" tabindex="-1"></a>Xs <span class="op">=</span> SAL_MUJ[[<span class="st">&#39;EDUC&#39;</span>, <span class="st">&#39;EXPER&#39;</span>]] <span class="co"># Variables exógenas regresión truncada</span></span>
+<span id="cb88-348"><a href="#cb88-348" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> sm.add_constant(Xs, prepend <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb88-349"><a href="#cb88-349" aria-hidden="true" tabindex="-1"></a>Ws <span class="op">=</span> SAL_MUJ[[<span class="st">&#39;EDUC&#39;</span>, <span class="st">&#39;EDAD&#39;</span>, <span class="st">&#39;HIJOSMEN&#39;</span>, <span class="st">&#39;TMIMP&#39;</span>]] <span class="co"># Variables exógenas ecuación selección</span></span>
+<span id="cb88-350"><a href="#cb88-350" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> sm.add_constant(Ws, prepend <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb88-351"><a href="#cb88-351" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> heckman <span class="im">as</span> heckman </span>
+<span id="cb88-352"><a href="#cb88-352" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> heckman.Heckman(lSALARIO, X, W).fit(method<span class="op">=</span><span class="st">&#39;twostep&#39;</span>)</span>
+<span id="cb88-353"><a href="#cb88-353" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res.summary()) </span>
+<span id="cb88-354"><a href="#cb88-354" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

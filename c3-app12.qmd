@@ -18,9 +18,11 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.12 (Variable dependiente discreta o limitada): Modelos Logit/Probit, Tobit y Heckit {.unnumbered}
+# Aplicación 3.12: Variable dependiente discreta o limitada {.unnumbered}
 
-## Variable dependiente discreta (modelos Logit y Probit): Préstamos hipotecarios {.unnumbered}
+## Variable dependiente discreta (modelos Logit y Probit)  {.unnumbered}
+
+### Préstamos hipotecarios {.unnumbered}
 
 En un artículo del año 1987, Dhillon y otros autores estudiaron el conjunto de características personales y financieras que determinan la elección por parte de los individuos de un tipo de interés fijo frente a uno variable a la hora de contratar un préstamo hipotecario. El interés de su trabajo radicaba en contrastar las dos posturas que dominan los planteamientos teóricos sobre el tema: la primera de ellas opina que, de acuerdo con la *hipótesis de mercados eficientes*, las características personales del prestatario no contienen información que no haya sido ya tenida en cuenta por el mercado a la hora de fijar el tipo de interés y, por tanto, sólo las variables de precios y los términos del contrato serían relevantes cuando un individuo elige el tipo de interés que se le aplicará; la segunda escuela de pensamiento supone que existe *información asimétrica*, es decir, dadas las condiciones del mercado, los prestatarios pueden favorecerse no revelando algunas de sus características personales a la hora de firmar el contrato.
 
@@ -187,7 +189,9 @@ print(EMP_logit.summary())
 ```
 
 ::: justify
-## Variable dependiente limitada (valores censurados -\> modelo Tobit): Compra de automóviles {.unnumbered}
+## Variable dependiente limitada (valores censurados: modelo Tobit):  {.unnumbered}
+
+### Compra de automóviles {.unnumbered}
 
 En un trabajo encargado por una asociación de fabricantes de automóviles, se estimó un modelo microeconométrico en el que se relacionaba el gasto en automóviles realizado por las familias que componían una muestra representativa con algunas características socioeconómicas de las mismas.
 
@@ -262,7 +266,9 @@ res.sigma_
 ```
 
 ::: justify
-## Variable dependiente limitada (truncamiento selectivo -\> modelo Heckit de selección muestral): Salarios de las mujeres casadas {.unnumbered}
+## Variable dependiente limitada (truncamiento selectivo: modelo Heckit de selección muestral):  {.unnumbered}
+
+### Salarios de las mujeres casadas {.unnumbered}
 
 En esta aplicación se estima una ecuación Minceriana de salarios para las mujeres casadas basada en una investigación de Thomas A. Mroz del año 1987 para el Reino Uniod. El modelo propuesto es el siguiente:
 

@@ -18,11 +18,11 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.7 (Autocorrelación y regresiones dinámicas): Modelos ARDL y VAR {.unnumbered}
+# Aplicación 3.7: Autocorrelación y regresiones dinámicas (modelos ARDL y VAR) {.unnumbered}
 
 ## Caso univariante (especificación ARDL): Tipos de interés en España en la década de 1980 {.unnumbered}
 
-En esta primera aplicación se estimará un modelo de regresión uniecuacional con autocorrelación en los errores y se propondrán soluciones al problema.
+En esta primera aplicación se estimará un modelo de regresión uniecuacional para explicar los tipos de interés, se analizará la autocorrelación de los errores y se propondrán soluciones al problema.
 :::
 
 ### Código R {.unnumbered}
@@ -42,20 +42,19 @@ library(orcutt)
 # Lectura de datos
 TIPOS_INT_ESP <- read_delim("data/TIPOS_INT_ESP.csv", delim = ";")
 str(TIPOS_INT_ESP)
-head(TIPOS_INT_ESP)
 # Gráfica de las series temporales
 ggplot(TIPOS_INT_ESP,aes(date,R3M)) +
   geom_line(color="blue") +
   geom_line(aes(date,RD),color="orange") +
   geom_line(aes(date,RL),color="green") +
   xlab("") + ylab("Tipos de interés")
-# Asignación del formata trimestral
+# Asignación del formato trimestral
 TIPOS_ESP_ts <- ts(TIPOS_INT_ESP[,2:4], start=c(1982,1), end = c(1990,3), frequency = 4)
 plot(TIPOS_ESP_ts)
-# Modelo de Klein-Monti (estático)
+# Modelo de regresión estático
 summary(lm_KM <- lm(RL ~ R3M + RD, data=TIPOS_ESP_ts))
-# Librería dynlm
-summary(dynlm_KM_0 <- dynlm(RL ~ R3M + RD, data=TIPOS_ESP_ts)) # Especificación ARDL(0,0,0) 
+# Librería dynlm (especificación ARDL(0,0,0))
+summary(dynlm_KM_0 <- dynlm(RL ~ R3M + RD, data=TIPOS_ESP_ts)) 
 # Contrastes de correlación en los errores (autocorrelación)
 # Errores estimados del modelo
 resid <-residuals(dynlm_KM_0)
@@ -71,11 +70,13 @@ dwtest(dynlm_KM_0, alternative = "greater")
 bgtest(dynlm_KM_0, order=1, type="Chisq", fill=0)
 # Corrección de la autocorrelación:
 # MCO corregidos: errores estándar robustos, HAC (Newey-West)
-summary(dynlm_KM_0 <- dynlm(RL ~ R3M + RD, data=TIPOS_ESP_ts), vcov.=vcovHAC(dynlm_KM_0))
+summary(dynlm_KM_0 <- dynlm(RL ~ R3M + RD, data=TIPOS_ESP_ts), 
+        vcov.=vcovHAC(dynlm_KM_0))
 # Mínimos cuadrados generalizados (MCG): errores AR(1)
 cochrane.orcutt(dynlm_KM_0)
 # Modelo dinámico ARDL(1,1,1) 
-summary(dynlm_KM_1 <- dynlm(RL ~ L(RL, 1:1) + L(R3M, 0:1) + L(RD, 0:1), data=TIPOS_ESP_ts))
+summary(dynlm_KM_1 <- dynlm(RL ~ L(RL, 1:1) + L(R3M, 0:1) + L(RD, 0:1), 
+                            data=TIPOS_ESP_ts))
 # Comparación de modelos
 compareCoefs(dynlm_KM_0,dynlm_KM_1)
 # Estimación de efectos parciales
@@ -104,19 +105,20 @@ nlWaldtest(dynlm_KM_1, "(b[5]+b[6])/(1-b[2])")
 #| message: false
 
 # Lectura de librerías
+import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import statsmodels.stats.api as sms
-import matplotlib.pyplot as plt
 from statsmodels.graphics import tsaplots
 import statsmodels.stats.diagnostic as smsdiag
 from statsmodels.compat import lzip
 # Lectura de datos y asignación del índice temporal
-TIPOS_INT_ESP = pd.read_csv("data/TIPOS_INT_ESP.csv", sep=";", parse_dates=['date'], index_col='date')
+TIPOS_INT_ESP = pd.read_csv("data/TIPOS_INT_ESP.csv", sep=";", 
+parse_dates=['date'], index_col='date')
 TIPOS_INT_ESP.info()
-TIPOS_INT_ESP.head()
-TIPOS_INT_ESP.index
 # Gráfica de las series temporales
 plt.figure(1)
 fig, ax = plt.subplots()
@@ -128,9 +130,8 @@ TIPOS_ESP_ts = pd.read_csv("data/TIPOS_INT_ESP.csv", sep=";").iloc[:,1:]
 date = pd.date_range(start = '1982', periods = len(TIPOS_ESP_ts.index), freq = 'QS')
 TIPOS_ESP_ts.index = date
 TIPOS_ESP_ts.info()
-TIPOS_ESP_ts.head()
 TIPOS_ESP_ts.index
-plt.figure(3)
+plt.figure(2)
 fig, ax = plt.subplots(3, 1, sharex = True)
 ax[0].plot(TIPOS_ESP_ts.R3M)
 ax[0].set_ylabel('R3M')
@@ -139,23 +140,24 @@ ax[1].set_ylabel('RD')
 ax[2].plot(TIPOS_ESP_ts.RL)
 ax[2].set_ylabel('RL')
 plt.show()
-# Modelo de Klein-Monti estático
+# Modelo de regresión estático
 model = smf.ols(formula = "RL ~ R3M + RD", data = TIPOS_ESP_ts)
 lm_KM = model.fit()
 print(lm_KM.summary())
 # Contrastes de correlación en los errores (autocorrelación)
 # Errores estimados (residuos)
 residuos = lm_KM.resid
-plt.figure(6)
+plt.figure(3)
 plt.plot(residuos, label='Residuos')
 plt.xlabel('Date')
 plt.legend()
 plt.show()
 # Correlograma de los residuos
 r = sm.tsa.stattools.acf(residuos, nlags=9, fft=True)
-plt.figure(7)
+plt.figure(4)
 fig, ax = plt.subplots()
-tsaplots.plot_acf(residuos, lags=15, alpha=0.05, zero=False, vlines_kwargs={"colors":'black'}, color='black', title='', ax=ax)
+tsaplots.plot_acf(residuos, lags=15, alpha=0.05, zero=False, 
+vlines_kwargs={"colors":'black'}, color='black', title='', ax=ax)
 plt.show()
 print(r)
 # Test de Durbin-Watson
@@ -170,9 +172,10 @@ lzip(name, BG_test)
 # (si maxlags=0 -> HAC=HC1)
 lm_KM_HAC = smf.ols(formula = "RL ~ R3M + RD", data = TIPOS_ESP_ts).fit(cov_type='HAC', cov_kwds={'maxlags':6,'use_correction':True})
 print(lm_KM_HAC.summary())
-# Modelo de Klein-Monti dinámico 
+# Modelo de regresión dinámico 
 # Especificación ARDL(1,1,1) 
-model = smf.ols(formula = "RL ~ RL.shift(1) + R3M + R3M.shift(1) + RD + RD.shift(1)", data = TIPOS_ESP_ts)
+model = smf.ols(formula = "RL ~ RL.shift(1) + R3M + R3M.shift(1) + RD + RD.shift(1)", 
+data = TIPOS_ESP_ts)
 lm_KM_dyn = model.fit()
 print(lm_KM_dyn.summary())
 b = lm_KM_dyn.params[1:]
@@ -205,15 +208,17 @@ En esta segunda aplicación se estimará un modelo vectorial autorregresivo para
 #| warning: false
 #| message: false
 
-# Lectura de datos
+# Lectura de librerías
+library(tidyverse)
 library(readxl)
+library(vars)
+# Lectura de datos
 data <- read_excel("data/TIPOS_CAMB.xls")
 data$reur = c(NA,100*diff(log(data$EUR)))
 data$rgbp = c(NA,100*diff(log(data$GBP)))
 data$rjpy = c(NA,100*diff(log(data$JPY)))
 data = data[-1,]
 # Modelo VAR
-library(vars)
 VARselect(data[c("reur","rgbp","rjpy")], lag.max = 10)
 VAR(data[c("reur","rgbp","rjpy")],p = 2)
 var = VAR(data[c("reur","rgbp","rjpy")],p = 2)
@@ -234,11 +239,13 @@ plot(vd)
 #| include: true
 #| warning: false
 #| message: false
+
 # Lectura de librerías
-import pandas as pd
 import numpy as np
-import statsmodels.tsa.api as smt
+import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.tsa.api as smt
 # Lectura de datos
 data = pd.read_excel("data/TIPOS_CAMB.xls", index_col=0)
 def LogDiff(x):
@@ -256,11 +263,11 @@ res = model.fit(maxlags=2)
 print(res.summary())
 # Funciones de respuesta al impulso y de descomposición de la varianza
 irf = res.irf(20)
-plt.figure(8)
+plt.figure(5)
 fig = irf.plot()
 plt.show()
 fevd = res.fevd(20)
-plt.figure(9)
+plt.figure(6)
 fig = fevd.plot()
 plt.show()
 ```

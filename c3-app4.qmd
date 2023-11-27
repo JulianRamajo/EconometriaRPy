@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.4 (No normalidad de los errores y observaciones atípicas): Muestra de datos con observaciones atípicas simuladas {.unnumbered}
+# Aplicación 3.4: No normalidad de los errores, observaciones atípicas y estimación robusta {.unnumbered}
+
+## Datos muestrales con observaciones atípicas simuladas {.unnumbered}
 
 En esta aplicación se tratará el tema de la no normalidad de los errores causada por la presencia de observaciones atípicas, y se propondrán estimadores que son 'robustos' ante la presencia de dichos datos en la base muestral.
 :::
@@ -49,9 +51,6 @@ ggplot(ATIP, aes(x=X, y=Y)) + geom_point() +
 summary(lm_YX <- lm(Y ~ X, data = ATIP))
 plot(Y ~ X , data=ATIP)
 abline(lm_YX)
-# ¿Qué pasa si se eliminan las tres observaciones atípicas?
-lmtr_YX <- lm(Y ~ X, data = ATIP[1:19,])
-compareCoefs(lm_YX,lmtr_YX)
 # Distribución de los errores del modelo
 par(mfrow=c(1,1))
 hist(lm_YX$residuals, main = "")
@@ -137,9 +136,13 @@ max(cooks.distance(lm_YX))
 which.max(cooks.distance(lm_YX))
 # Gráficos de variable añadida, buscando casos influyentes
 avPlots(lm_YX, id=list(cex=0.60, method="mahal")) 
+# Posibles soluciones ante la presencia de valores atípicos
+# ¿Qué pasa si se eliminan las tres observaciones atípicas?
+lmtr_YX <- lm(Y ~ X, data = ATIP[1:19,])
+compareCoefs(lm_YX,lmtr_YX)
 # Estimación robusta
 # Regresiones cuartilíticas
-# tau=0.5
+# tau=0.5 (estimador DAM)
 summary(qr_YX <- rq(Y ~ X, data = ATIP))
 # Comparación de regresiones
 plot(Y ~ X , data=ATIP)
@@ -171,14 +174,15 @@ legend("topleft", c("Regresión MCO", "Regresión MM"), lty = c(1, 2), bty = "n"
 # Lectura de librerías
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 import statsmodels.api as sm
 import statsmodels.stats.api as sms
 import statsmodels.formula.api as smf
 from statsmodels.compat import lmap
 from statsmodels.compat import lzip
 from scipy import stats
-import matplotlib.pyplot as plt
-import seaborn as sns
+
 # Lectura de datos
 ATIP  = pd.read_csv("data/ATIP.csv")
 ATIP .describe().round(2)

@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.6 (Regresiones con volatilidad variable en el tiempo): Relación entre los precios de los carburantes y el precio del petroleo {.unnumbered}
+# Aplicación 3.6: Regresiones con volatilidad variable en el tiempo  {.unnumbered}
+
+## Relación entre los precios de los carburantes y el precio del petroleo {.unnumbered}
 
 En esta aplicación se estimará un modelo dinámico para el precio de la gasolina en el que los errores muestran clústeres de volatilidad (heteroscedasticidad autorregresiva condicional, ARCH).
 :::
@@ -92,15 +94,17 @@ plot(resid_GARCH_fit, which=3)
 # Lectura de librerías
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import statsmodels.stats.api as sms
-import matplotlib.pyplot as plt
 import statsmodels.stats.diagnostic as smsdiag
 from statsmodels.compat import lzip
 from arch import arch_model
 # Lectura de datos y asignación del índice temporal
-GASOL_CRUDO_ts = pd.read_csv("data/GASOL_CRUDO.csv", parse_dates=['date'], index_col='date')
+GASOL_CRUDO_ts = pd.read_csv("data/GASOL_CRUDO.csv", 
+parse_dates=['date'], index_col='date')
 GASOL_CRUDO_ts.info()
 GASOL_CRUDO_ts.head()
 GASOL_CRUDO_ts.index

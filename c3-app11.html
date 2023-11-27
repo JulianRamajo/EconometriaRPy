@@ -3363,13 +3363,16 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 .justify { text-align: justify !important }
 </style>
 </div>
-<section id="aplicación-3.11-regresores-endógenos---el-estimador-de-variables-instrumentales-determinantes-de-la-inflación-al-nivel-internacional" class="level1 unnumbered justify">
-<h1 class="unnumbered">Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional</h1>
+<section id="aplicación-3.11-regresores-endógenos-estimador-de-variables-instrumentales" class="level1 unnumbered justify">
+<h1 class="unnumbered">Aplicación 3.11: Regresores endógenos (estimador de variables instrumentales)</h1>
+<section id="determinantes-de-la-inflación-al-nivel-internacional" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="determinantes-de-la-inflación-al-nivel-internacional">Determinantes de la inflación al nivel internacional</h2>
 <p>Para explicar las variaciones que se producen en la inflación observada al nivel internacional (muestra de 76 países) se propone el siguiente modelo econométrico, el cual se obtiene de la <a href="https://es.wikipedia.org/wiki/Teor%C3%ADa_cuantitativa_del_dinero">teoría cuantitativa del dinero</a>:</p>
 <p><span class="math display">\[INF_{i} = \beta_1 + \beta_2 RM_{i} + \beta_3 RY_{i} + e_{i}\]</span></p>
 <p>siendo <span class="math inline">\(INF\)</span> la inflación (tasa de variación del índice general de precios), <span class="math inline">\(RM\)</span> la tasa de crecimiento de la oferta monetaria, y <span class="math inline">\(RY\)</span> la tasa de crecimiento del PIB.</p>
 <p>Se asumirá que la variable <span class="math inline">\(RM\)</span> es exógena (política monetaria independiente), mientras que se supondrá que la variable <span class="math inline">\(RY\)</span> podría ser endógena y, por tanto, puede estar correlacionada con el término de error del modelo, <span class="math display">\[Cov(RY,e)≠0\]</span></p>
 <p>Como instrumentos para la variable potencialmente endógena <span class="math inline">\(RY\)</span> se tomarán el nivel inicial de PIB per cápita (<span class="math inline">\(YPC0\)</span>), el nivel de educación relativo de la población (<span class="math inline">\(EDUC\)</span>), el nivel de inversión (<span class="math inline">\(INV\)</span>) y la tasa de crecimiento de la población (<span class="math inline">\(RPOB\)</span> ).</p>
+</section>
 </section>
 <section id="código-r" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="código-r">Código R</h2>
@@ -3575,8 +3578,8 @@ Wald test:  6852 on 2 and 73 DF,  p-value: &lt; 2.2e-16 </code></pre>
 <details open>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels.iv <span class="im">import</span> IV2SLS</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
@@ -3613,8 +3616,8 @@ max     1.640000  374.300000   0.421000  ...   3.700000   9.600000   7.380000
 Dep. Variable:                    INF   R-squared:                      0.9948
 Estimator:                        OLS   Adj. R-squared:                 0.9947
 No. Observations:                  76   F-statistic:                 1.453e+04
-Date:                Wed, Nov 01 2023   P-value (F-stat)                0.0000
-Time:                        20:38:25   Distribution:                  chi2(2)
+Date:                Mon, Nov 27 2023   P-value (F-stat)                0.0000
+Time:                        23:27:36   Distribution:                  chi2(2)
 Cov. Estimator:            unadjusted                                         
                                                                               
                              Parameter Estimates                              
@@ -3642,8 +3645,8 @@ RY            -1.6620     0.2456    -6.7679     0.0000     -2.1433     -1.1807
 Dep. Variable:                    INF   R-squared:                      0.9947
 Estimator:                    IV-2SLS   Adj. R-squared:                 0.9946
 No. Observations:                  76   F-statistic:                 1.427e+04
-Date:                Wed, Nov 01 2023   P-value (F-stat)                0.0000
-Time:                        20:38:25   Distribution:                  chi2(2)
+Date:                Mon, Nov 27 2023   P-value (F-stat)                0.0000
+Time:                        23:27:36   Distribution:                  chi2(2)
 Cov. Estimator:            unadjusted                                         
                                                                               
                              Parameter Estimates                              
@@ -3670,7 +3673,7 @@ H0: All endogenous variables are exogenous
 Statistic: 1.1498
 P-value: 0.2872
 Distributed: F(1,72)
-WaldTestStatistic, id: 0x13ad90ac0</code></pre>
+WaldTestStatistic, id: 0x135550670</code></pre>
 </div>
 <details open>
 <summary>Code</summary>
@@ -4022,94 +4025,96 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>::: justify</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Aplicación 3.11 (Regresores endógenos - El estimador de variables instrumentales: Determinantes de la inflación al nivel internacional {.unnumbered}</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Aplicación 3.11: Regresores endógenos (estimador de variables instrumentales)  {.unnumbered}</span></span>
 <span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>Para explicar las variaciones que se producen en la inflación observada al nivel internacional (muestra de 76 países) se propone el siguiente modelo econométrico, el cual se obtiene de la <span class="co">[</span><span class="ot">teoría cuantitativa del dinero</span><span class="co">](https://es.wikipedia.org/wiki/Teor%C3%ADa_cuantitativa_del_dinero)</span>:</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Determinantes de la inflación al nivel internacional {.unnumbered}</span></span>
 <span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>$$INF_{i} = \beta_1 + \beta_2 RM_{i} + \beta_3 RY_{i} + e_{i}$$</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>Para explicar las variaciones que se producen en la inflación observada al nivel internacional (muestra de 76 países) se propone el siguiente modelo econométrico, el cual se obtiene de la <span class="co">[</span><span class="ot">teoría cuantitativa del dinero</span><span class="co">](https://es.wikipedia.org/wiki/Teor%C3%ADa_cuantitativa_del_dinero)</span>:</span>
 <span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>siendo $INF$ la inflación (tasa de variación del índice general de precios), $RM$ la tasa de crecimiento de la oferta monetaria, y $RY$ la tasa de crecimiento del PIB.</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>$$INF_{i} = \beta_1 + \beta_2 RM_{i} + \beta_3 RY_{i} + e_{i}$$</span>
 <span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>Se asumirá que la variable $RM$ es exógena (política monetaria independiente), mientras que se supondrá que la variable $RY$ podría ser endógena y, por tanto, puede estar correlacionada con el término de error del modelo, $$Cov(RY,e)≠0$$</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>siendo $INF$ la inflación (tasa de variación del índice general de precios), $RM$ la tasa de crecimiento de la oferta monetaria, y $RY$ la tasa de crecimiento del PIB.</span>
 <span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>Como instrumentos para la variable potencialmente endógena $RY$ se tomarán el nivel inicial de PIB per cápita ($YPC0$), el nivel de educación relativo de la población ($EDUC$), el nivel de inversión ($INV$) y la tasa de crecimiento de la población ($RPOB$ ).</span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código R {.unnumbered}</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>Se asumirá que la variable $RM$ es exógena (política monetaria independiente), mientras que se supondrá que la variable $RY$ podría ser endógena y, por tanto, puede estar correlacionada con el término de error del modelo, $$Cov(RY,e)≠0$$</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>Como instrumentos para la variable potencialmente endógena $RY$ se tomarán el nivel inicial de PIB per cápita ($YPC0$), el nivel de educación relativo de la población ($EDUC$), el nivel de inversión ($INV$) y la tasa de crecimiento de la población ($RPOB$ ).</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
-<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ivreg)</span>
-<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Para más detalles sobre el método de variables instrumentales </span></span>
-<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="co"># (IV o 2SLS en inglés) ver las páginas web: </span></span>
-<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="co"># https://cran.r-project.org/web/packages/ivreg/vignettes/ivreg.html </span></span>
-<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="co"># https://cran.r-project.org/web/packages/ivreg/vignettes/</span></span>
-<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co"># /Diagnostics-for-2SLS-Regression.html</span></span>
-<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>INF_INT <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/INF_INTERN.csv&quot;</span>)</span>
-<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(INF_INT)</span>
-<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación MCO</span></span>
-<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a>modelo_MCO <span class="ot">&lt;-</span> <span class="fu">lm</span>(INF <span class="sc">~</span> RM <span class="sc">+</span> RY, <span class="at">data=</span>INF_INT)</span>
-<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_MCO)</span>
-<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación VI</span></span>
-<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a>modelo_IV <span class="ot">&lt;-</span> <span class="fu">ivreg</span>(INF <span class="sc">~</span> RM <span class="sc">+</span> RY <span class="sc">|</span> RM <span class="sc">+</span> EDUC <span class="sc">+</span> INV <span class="sc">+</span> RPOB <span class="sc">+</span> YPC0, </span>
-<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data=</span>INF_INT)</span>
-<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_IV, <span class="at">diagnostics=</span><span class="cn">TRUE</span>)</span>
-<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de modelos</span></span>
-<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a><span class="co"># car::compareCoefs(modelo_MCO, modelo_IV)</span></span>
-<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;modelsummary&quot;</span>)</span>
-<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">MCO =</span> modelo_MCO, <span class="at">IV =</span> modelo_IV)</span>
-<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a><span class="fu">msummary</span>(model_list)</span>
-<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a><span class="fu">modelplot</span>(model_list)</span>
-<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código Python {.unnumbered}</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código R {.unnumbered}</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ivreg)</span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Para más detalles sobre el método de variables instrumentales </span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="co"># (IV o 2SLS en inglés) ver las páginas web: </span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co"># https://cran.r-project.org/web/packages/ivreg/vignettes/ivreg.html </span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co"># https://cran.r-project.org/web/packages/ivreg/vignettes/</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="co"># /Diagnostics-for-2SLS-Regression.html</span></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a>INF_INT <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/INF_INTERN.csv&quot;</span>)</span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(INF_INT)</span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación MCO</span></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a>modelo_MCO <span class="ot">&lt;-</span> <span class="fu">lm</span>(INF <span class="sc">~</span> RM <span class="sc">+</span> RY, <span class="at">data=</span>INF_INT)</span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_MCO)</span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación VI</span></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a>modelo_IV <span class="ot">&lt;-</span> <span class="fu">ivreg</span>(INF <span class="sc">~</span> RM <span class="sc">+</span> RY <span class="sc">|</span> RM <span class="sc">+</span> EDUC <span class="sc">+</span> INV <span class="sc">+</span> RPOB <span class="sc">+</span> YPC0, </span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data=</span>INF_INT)</span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_IV, <span class="at">diagnostics=</span><span class="cn">TRUE</span>)</span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de modelos</span></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a><span class="co"># car::compareCoefs(modelo_MCO, modelo_IV)</span></span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;modelsummary&quot;</span>)</span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">MCO =</span> modelo_MCO, <span class="at">IV =</span> modelo_IV)</span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a><span class="fu">msummary</span>(model_list)</span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a><span class="fu">modelplot</span>(model_list)</span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
-<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels.iv <span class="im">import</span> IV2SLS</span>
-<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a>INF_INT <span class="op">=</span> pd.read_csv(<span class="st">&#39;data/INF_INTERN.csv&#39;</span>)</span>
-<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a>INF_INT.describe()</span>
-<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación MCO</span></span>
-<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a>INF_INT <span class="op">=</span> sm.add_constant(INF_INT)</span>
-<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a>modelo_MCO <span class="op">=</span> IV2SLS(dependent <span class="op">=</span> INF_INT.INF,</span>
-<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a>               exog <span class="op">=</span> INF_INT[[<span class="st">&#39;const&#39;</span>,<span class="st">&#39;RM&#39;</span>,<span class="st">&#39;RY&#39;</span>]], </span>
-<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a>               endog <span class="op">=</span> <span class="va">None</span>, </span>
-<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a>               instruments <span class="op">=</span> <span class="va">None</span>)</span>
-<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a>res_modelo_MCO <span class="op">=</span> modelo_MCO.fit(cov_type<span class="op">=</span><span class="st">&#39;unadjusted&#39;</span>)</span>
-<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_modelo_MCO)</span>
-<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación IV (2SLS)</span></span>
-<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a>modelo_IV <span class="op">=</span> IV2SLS(dependent <span class="op">=</span> INF_INT.INF,</span>
-<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a>               exog <span class="op">=</span> INF_INT[[<span class="st">&#39;const&#39;</span>,<span class="st">&#39;RM&#39;</span>]],</span>
-<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a>               endog <span class="op">=</span> INF_INT.RY,</span>
-<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a>               instruments <span class="op">=</span> INF_INT[[<span class="st">&#39;EDUC&#39;</span>,<span class="st">&#39;INV&#39;</span>,<span class="st">&#39;RPOB&#39;</span>,<span class="st">&#39;YPC0&#39;</span>]])</span>
-<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a>res_modelo_IV <span class="op">=</span> modelo_IV.fit(cov_type<span class="op">=</span><span class="st">&#39;unadjusted&#39;</span>)</span>
-<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_modelo_IV)</span>
-<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a>res_modelo_IV.wu_hausman()</span>
-<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de resultados</span></span>
-<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> OrderedDict</span>
-<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels.iv.results <span class="im">import</span> compare</span>
-<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a>res_modelos <span class="op">=</span> OrderedDict()</span>
-<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a>res_modelos[<span class="st">&quot;MCO&quot;</span>] <span class="op">=</span> res_modelo_MCO</span>
-<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a>res_modelos[<span class="st">&quot;IV&quot;</span>] <span class="op">=</span> res_modelo_IV</span>
-<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(compare(res_modelos))</span>
-<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código Python {.unnumbered}</span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels.iv <span class="im">import</span> IV2SLS</span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a>INF_INT <span class="op">=</span> pd.read_csv(<span class="st">&#39;data/INF_INTERN.csv&#39;</span>)</span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a>INF_INT.describe()</span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación MCO</span></span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a>INF_INT <span class="op">=</span> sm.add_constant(INF_INT)</span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a>modelo_MCO <span class="op">=</span> IV2SLS(dependent <span class="op">=</span> INF_INT.INF,</span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a>               exog <span class="op">=</span> INF_INT[[<span class="st">&#39;const&#39;</span>,<span class="st">&#39;RM&#39;</span>,<span class="st">&#39;RY&#39;</span>]], </span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a>               endog <span class="op">=</span> <span class="va">None</span>, </span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a>               instruments <span class="op">=</span> <span class="va">None</span>)</span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a>res_modelo_MCO <span class="op">=</span> modelo_MCO.fit(cov_type<span class="op">=</span><span class="st">&#39;unadjusted&#39;</span>)</span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_modelo_MCO)</span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación IV (2SLS)</span></span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a>modelo_IV <span class="op">=</span> IV2SLS(dependent <span class="op">=</span> INF_INT.INF,</span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a>               exog <span class="op">=</span> INF_INT[[<span class="st">&#39;const&#39;</span>,<span class="st">&#39;RM&#39;</span>]],</span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a>               endog <span class="op">=</span> INF_INT.RY,</span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a>               instruments <span class="op">=</span> INF_INT[[<span class="st">&#39;EDUC&#39;</span>,<span class="st">&#39;INV&#39;</span>,<span class="st">&#39;RPOB&#39;</span>,<span class="st">&#39;YPC0&#39;</span>]])</span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a>res_modelo_IV <span class="op">=</span> modelo_IV.fit(cov_type<span class="op">=</span><span class="st">&#39;unadjusted&#39;</span>)</span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_modelo_IV)</span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a>res_modelo_IV.wu_hausman()</span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de resultados</span></span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> OrderedDict</span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels.iv.results <span class="im">import</span> compare</span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a>res_modelos <span class="op">=</span> OrderedDict()</span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a>res_modelos[<span class="st">&quot;MCO&quot;</span>] <span class="op">=</span> res_modelo_MCO</span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a>res_modelos[<span class="st">&quot;IV&quot;</span>] <span class="op">=</span> res_modelo_IV</span>
+<span id="cb19-113"><a href="#cb19-113" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(compare(res_modelos))</span>
+<span id="cb19-114"><a href="#cb19-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

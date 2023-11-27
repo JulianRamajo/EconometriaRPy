@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.8b (Dependencia espacial - Geometría: puntos): Precio de la vivienda en el condado de Lucas \[Ohio, Estados Unidos\] {.unnumbered}
+# Aplicación 3.8b: Dependencia espacial en los datos (geometría: puntos) {.unnumbered}
+
+## Precio de la vivienda en el condado de Lucas (Ohio, Estados Unidos) {.unnumbered}
 
 En esta aplicación se realiza un análisis de tipo espacial de la base de datos utilizada, que contiene información sobre los precios de venta y características de las viviendas del [condado de Lucas](https://en.wikipedia.org/wiki/Lucas_County,_Ohio), en el estado de Ohio, Estados Unidos. Concretamente, se proponen modelos de regresión en los que las variables de dicho modelo y/o los errores del mismo presentan autocorrelación espacial.
 :::
@@ -37,21 +39,17 @@ library(sf)
 library(geojsonsf)
 library(spdep)
 library(spatialreg)
-
 # Lectura de datos (house {spData} -> Lucas county OH housing)
 house <- geojson_sf("data/LUCAS_USA.geojson")
 class(house)
 str(house)
 house
-
 # Análisis exploratorio básico (EDA)
 summary(house)
-
 # Análisis exploratorio para datos espaciales (ESDA)
-
 # Gráficas: representación de datos espaciales
 ggplot(house) + geom_sf(aes(col = price)) + scale_color_viridis() + theme_bw()
-
+# Mapa interactivo
 library(leaflet)
 pal <- colorNumeric(palette = "viridis", domain = house$price)
 leaflet(house) %>% addTiles() %>%
@@ -59,9 +57,7 @@ leaflet(house) %>% addTiles() %>%
                lat = st_coordinates(house)[, 2],
                color = ~pal(price)) %>%
     addLegend(pal = pal, values = ~price, position = "bottomright")
-
 # Información sobre las coordenadas (longitud y latitud) de los datos
-# coords <- coordinates(house_sf)
 coords <- st_coordinates(house)
 # Construcción de matrices de pesos espaciales: 
 # Vecinos más próximos (k=6, mediana de vecinos)
@@ -73,7 +69,6 @@ plot(nb6nn, coords, add=TRUE, col="red")
 # Matriz espacial W estandarizada por filas
 Wnb6nn <- nb2listw(neighbours=nb6nn, style="W")
 Wnb6nn
-
 # Estadísticos de autocorrelación espacial
 # Globales
 moran.test(house$price, listw=Wnb6nn)
@@ -84,7 +79,6 @@ str(LocalI)
 house_LocalI <- bind_cols(house,LocalI)
 plot(house_LocalI["Z.Ii"])
 plot(house_LocalI["Pr(z != E(Ii))"])
-
 # Modelos econométricos espaciales
 form <- formula(log(price) ~ age + log(lotsize) + rooms)
 # Modelo lineal (LM) [estimación MCO]
@@ -115,7 +109,6 @@ warnings.filterwarnings("ignore")
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
 import geopandas as gpd
 import libpysal
 from libpysal  import weights
@@ -126,27 +119,21 @@ from splot.esda import moran_scatterplot, plot_moran, lisa_cluster, plot_local_a
 from splot.libpysal import plot_spatial_weights
 import statsmodels.formula.api as smf
 import spreg
-
 # Lectura de datos
 house = gpd.read_file("data/LUCAS_USA.geojson")
-house.head(5)
-
+house.info()
 # Análisis exploratorio básico (EDA)
 house.describe().round(2)
-
 # Análisis exploratorio para datos espaciales (ESDA)
-
-# Mapas básicos
+# Mapa básico
 house.plot('price', legend = True)
 plt.show()
-
 # Vecinos geográficos y matriz de pesos espaciales 
 Wnb6nn = weights.KNN.from_dataframe(house, k=6)
 # Estandarización por filas (Row-standardized W)
 Wnb6nn.transform = 'r'
 plot_spatial_weights(Wnb6nn, house)
 plt.show()
-
 # Estadísticos de autocorrelación espacial
 # Dependencia espacial global
 globalMoran = Moran(house['price'], Wnb6nn)
@@ -161,7 +148,6 @@ moran_scatterplot(localMoran, p=0.05, zstandard =False) # Nota: p-valor=0.05
 plt.show()
 lisa_cluster(localMoran, house, p=0.05)
 plt.show()
-
 # Modelos econométricos espaciales
 # Operaciones con variables
 house['l_price']=house['price'].map(lambda x:np.log(x))

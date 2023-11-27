@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.5 (Regresiones heteroscedásticas): Función de demanda con varianza no constante {.unnumbered}
+# Aplicación 3.5: Regresiones heteroscedásticas {.unnumbered}
+
+## Función de demanda con varianza no constante {.unnumbered}
 
 Empleando datos de corte transversal, en este ejemplo se va a estimar un modelo de demanda para un determinado producto:
 
@@ -26,11 +28,11 @@ $$log(Q_{A,i}) = \beta_1 + \beta_2 log(P_{A,i}) + \beta_3 log(P_{B,i}) + \beta_4
 
 donde $Q_{A}$ es la cantidad demandada del bien A analizado por el individuo i-ésimo, $P_{A}$, $P_{B}$ y $P_{C}$ son, respectivamente, los precios de los bienes A, B y C en el mercado, e $Y$ es el nivel de renta.
 
-Una vez chequeada la hipótesis de varianza constante (homoscedasticidad), se plantea la estimación por MCP de la función de demanda bajo la hipótesis de un modelo heteroscedasticidad asociada al logaritmo de la renta del tipo siguiente:
+Una vez chequeada la hipótesis de varianza constante (homoscedasticidad), se plantea la estimación por mínimos cuadrados ponderados (MCP) de la función de demanda bajo la hipótesis de un modelo heteroscedasticidad asociada al logaritmo de la renta del tipo siguiente:
 
 $${σ_i}^2 = e^{α_0 + α_1 log⁡(Y_i)}$$
 
-especificación equivale a suponer que
+Esta especificación para la varianza residual equivale a suponer que
 
 $${σ_i}^2 = σ^2 (Y_i)^{α_1}$$
 
@@ -77,8 +79,9 @@ DEM_HET$resid2 = resid(modelo_MCO)^2
 # Análisis gráfico
 ggplot(DEM_HET, aes(x = log(Y), y = resid2)) +
     geom_point(color = "blue") +
-    geom_smooth(method='lm', formula = y~x, se = TRUE, color = "blue", linetype = "dashed") +
-    xlab("Y (log)") + 
+    geom_smooth(method='lm', formula = y~x, se = TRUE, 
+                color = "blue", linetype = "dashed") +
+    xlab("log(Y)") + 
     ylab("resid2") +
     theme_minimal()
 # Regresión auxiliar
@@ -100,13 +103,14 @@ bptest(modelo_MCO, varformula = ~ log(Y), data=DEM_HET, studentize = FALSE)
 coeftest(modelo_MCO, vcov. = vcovHC(modelo_MCO,type="HC1"))
 # Otra versión, con idéntico resultado (librería car)
 coeftest(modelo_MCO, vcov.=hccm(modelo_MCO, type = "hc1")) 
-# Corrección avanzada: mínimos cuadrados ponderados (MCP)
+# Corrección avanzada: mínimos cuadrados ponderados (MCP <-> FGLS)
 # Regresión auxiliar para el logaritmo de la varianza estimada
 summary(modelo_l_resid2 <- lm(log(resid2) ~ log(Y), data=DEM_HET))
 # Estimación de la varianza residual (no constante)
 sigma2 <- exp(fitted(modelo_l_resid2))
-# MCO con ponderaciones: MCP (FGLS)
-summary(modelo_MCP <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), weights = 1/sigma2, data = DEM_HET))
+# MCO con ponderaciones
+summary(modelo_MCP <- lm(log(QA) ~ log(PA) + log(PB) + log(PC)+ log(Y), 
+                         weights = 1/sigma2, data = DEM_HET))
 ```
 
 ## Código Python {.unnumbered}
@@ -130,7 +134,9 @@ import seaborn as sns
 DEM_HET = pd.read_csv('data/DEM_HET.csv')
 DEM_HET.describe()
 # Estimación MCO
-modelo1 = smf.ols(formula = "np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", data = DEM_HET)
+modelo1 = smf.ols(formula = 
+"np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", 
+data = DEM_HET)
 modelo_MCO = modelo1.fit()
 print(modelo_MCO.summary())
 # Contrastes de heteroscedasticidad
@@ -142,7 +148,9 @@ print(pd.DataFrame([np.round(W_test, 8)], columns=name))
 BP_test = smsdiag.het_breuschpagan(modelo_MCO.resid, modelo_MCO.model.exog)
 print(pd.DataFrame([np.round(BP_test, 8)], columns=name))
 # Estimación MCO-HC
-modelo1 = smf.ols(formula = "np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", data = DEM_HET)
+modelo1 = smf.ols(formula = 
+"np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", 
+data = DEM_HET)
 # HC1 -> corrige la fórmula de White por grados de libertad
 modelo_MCO_HC1 = modelo1.fit(cov_type='HC1')
 print(modelo_MCO_HC1.summary())
@@ -161,8 +169,10 @@ print(modelo_l_resid2.summary())
 # Estimación de la varianza residual (no constante)
 sigma2 = np.exp(modelo_l_resid2.fittedvalues)
 w=list(1/sigma2)
-# MCO con ponderaciones (FGLS)
-modelo2 = smf.wls(formula = "np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", weights = w , data = DEM_HET)
+# MCO con ponderaciones
+modelo2 = smf.wls(formula = 
+"np.log(QA) ~ np.log(PA) + np.log(PB) + np.log(PC) + np.log(Y)", 
+weights = w , data = DEM_HET)
 modelo_MCP = modelo2.fit()
 print(modelo_MCP.summary())
 ```

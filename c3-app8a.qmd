@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 3.8a (Dependencia espacial - Geometría: polígonos): Estadísticas 'morales' en Francia en 1830 {.unnumbered}
+# Aplicación 3.8a: Dependencia espacial en los datos (geometría: polígonos) {.unnumbered}
+
+## Estadísticas 'morales' en Francia en 1830 {.unnumbered}
 
 En esta aplicación se analizarán con técnicas modernas de análisis estadístico espacial algunas de las cuestiones abordadas en el estudio fundacional de las ciencias sociales de André-Michel Guerry sobre la delincuencia, el suicidio, la alfabetización y otras "estadísticas morales" en la Francia de 1830.
 
@@ -33,7 +35,7 @@ Para una introducción asequible al análisis de datos espaciales puede consulta
 Para una revisión completa sobre los principales métodos y técnicas utilizados en ciencia de datos espaciales en R y Python las referencias básicas son los libros de Pebesma, E. y Bivand, R. (2023): "*Spatial Data Science: With Applications in R*", Chapman & Hall/CRC: <https://r-spatial.org/book/>, y Rey, S., Arribas-Bel, D. y Wolf, L. (2023): "*Geographic Data Science with Python*", Chapman & Hall/CRC: <https://geographicdata.science/book/>.
 :::
 
-# Código R {.unnumbered}
+## Código R {.unnumbered}
 
 ```{r}
 #| include: true
@@ -43,24 +45,19 @@ Para una revisión completa sobre los principales métodos y técnicas utilizado
 # Lectura de librerías
 library(tidyverse)
 library(sf) # https://r-spatial.github.io/sf/
-
 # Lectura de datos
 Guerry <- st_read("data/GUERRY_FRANCE.shp")
 class(Guerry)
 str(Guerry)
 Guerry
-
 # Análisis exploratorio básico (EDA)
 summary(Guerry)
-
 # Gráficas: representación de datos espaciales
 plot(Guerry['Crm_prs'])
-
+# Mapa interactivo
 library(mapview)
 mapview(Guerry, zcol = "Crm_prs")
-
 # ESTADÍSTICA ESPACIAL: ANÁLISIS EXPLORATORIO DE DATOS ESPACIALES (ESDA)
-
 # Librería rgeoda (https://geodacenter.github.io/rgeoda/)
 library(rgeoda)
 # Matriz de pesos espaciales 
@@ -74,7 +71,6 @@ LISA_Crm_prs
 lisa_colors <- lisa_colors(LISA_Crm_prs)
 lisa_labels <- lisa_labels(LISA_Crm_prs)
 lisa_clusters <- lisa_clusters(LISA_Crm_prs)
-
 plot(st_geometry(Guerry), 
      col=sapply(lisa_clusters, function(x){return(lisa_colors[[x+1]])}), 
      border = "#333333", lwd=0.2)
@@ -98,14 +94,11 @@ legend('bottomleft', legend = p_labels, fill = p_colors, border = "#eeeeee")
 # Librería spdep (https://r-spatial.github.io/spdep/)
 # [Ver también la librería sfdep: https://sfdep.josiahparry.com/]
 library(spdep)
-
 # Cálculo de los vecinos de cada región
 nb <- spdep::poly2nb(Guerry, queen = TRUE)
 nb
-
 plot(st_geometry(Guerry), border = "lightgrey")
 plot.nb(nb, st_geometry(Guerry), add = TRUE)
-
 # ¿Cómo funciona al nivel individual la lista nb?
 head(nb)
 id <- 1 # id de la región
@@ -114,16 +107,13 @@ Guerry$neighbors[id] <- "Región"
 Guerry$neighbors[nb[[id]]] <- "Vecinos"
 ggplot(Guerry) + geom_sf(aes(fill = neighbors)) + theme_bw() +
     scale_fill_manual(values = c("white","gray30", "gray"))
-
 # Construcción de la matriz W de pesos espaciales
 Wnb <- spdep::nb2listw(nb, style = "W")
 Wnb
 head(Wnb$weights)
 m <- listw2mat(Wnb)
 lattice::levelplot(t(m))
-
 # Cálculo de los estadísticos de autocorrelación espacial
-
 # I de Moran global
 moran.plot(Guerry$Crm_prs, Wnb)
 gmoran <- moran.test(Guerry$Crm_prs, Wnb,
@@ -134,11 +124,11 @@ gmoranMC
 hist(gmoranMC$res)
 abline(v = gmoranMC$statistic, col = "red")
 
-# I de Moran local (LISAs)
+#I de Moran local (LISAs)
 lmoran <- localmoran(Guerry$Crm_prs, Wnb, alternative = "greater")
 head(lmoran)
 tail(lmoran)
-
+# Mapas interactivos
 library(tmap)
 tmap_mode("view")
 Guerry$lmI <- lmoran[, "Ii"]
@@ -186,7 +176,7 @@ Guerry[(mp$x >= 0 & mp$wx <= 0) & (Guerry$lmpval2 <= 0.05), "quadrant"]<- 3
 Guerry[(mp$x <= 0 & mp$wx >= 0) & (Guerry$lmpval2 <= 0.05), "quadrant"]<- 4
 # Cuadrante NS (no significavo)
 Guerry[(Guerry$lmpval2 > 0.05), "quadrant"] <- 5
-
+#
 tm_shape(Guerry) + tm_fill(col = "quadrant", title = "",
 breaks = c(1, 2, 3, 4, 5, 6),
 palette =  c("red", "blue", "lightpink", "skyblue2", "white"),
@@ -197,17 +187,15 @@ tm_layout(frame = FALSE,  title = "Clusters")  +
 tm_layout(legend.outside = TRUE)
 
 # ECONOMETRÍA ESPACIAL: ANÁLISIS CONFIRMATORIO DE DATOS ESPACIALES
-
+#
 # Modelos econométricos para explicar la variable Crm_prs
-
+#
 # Regresión estándar (modelo lineal)
 Crm_LM <- lm(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
               data = Guerry)
 summary(Crm_LM)
-
 # Regresiones espaciales
 library(spatialreg)
-
 # Retardo espacial de la variable dependiente (SLM) [estimación S2SLS]
 Crm_SLM <- stsls(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
                  data = Guerry,
@@ -242,13 +230,14 @@ Crm_SAC_2 <- sacsarlm(Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids,
 summary(Crm_SAC_2)
 ```
 
-# Código Python {.unnumbered}
+## Código Python {.unnumbered}
 
 ```{python}
 #| include: true
 #| warning: false
 #| message: false
 
+# Lectura de librerías
 import warnings
 warnings.filterwarnings("ignore")
 import numpy as np
@@ -256,29 +245,23 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import geopandas as gpd
-
+#Lectura de datos
 Guerry  = gpd.read_file('data/GUERRY_FRANCE.shp')
 Guerry.info()
 Guerry
-
 Guerry.plot('Crm_prs', legend = True)
 plt.show()
 
 # ESTADÍSTICA ESPACIAL: ANÁLISIS EXPLORATORIO DE DATOS ESPACIALES (ESDA)
-
 # Librería pygeoda (https://geodacenter.github.io/pygeoda/)
 import pygeoda
-
 Guerry_geoda = pygeoda.open(Guerry)
 Guerry_geoda
-
 # Matriz de pesos espaciales
 Wq = pygeoda.queen_weights(Guerry_geoda)
-
 # Estadísticos de autocorrelación espacial para la variable Crm_prs
 LISA_Crm_prs = pygeoda.local_moran(Wq, Guerry_geoda['Crm_prs'])
 print(LISA_Crm_prs)
-
 fig, ax = plt.subplots(figsize = (10,10))
 lisa_colors = LISA_Crm_prs.lisa_colors()
 lisa_labels = LISA_Crm_prs.lisa_labels()
@@ -315,29 +298,24 @@ import splot
 from splot.esda import moran_scatterplot, plot_moran, lisa_cluster, plot_local_autocorrelation
 from splot.libpysal import plot_spatial_weights
 from libpysal.weights import Queen, Rook, KNN
-
 # Construcción de la matriz W de pesos espaciales
 Wnb = Queen.from_dataframe(Guerry)
 Wnb.transform = 'r'
 plot_spatial_weights(Wnb, Guerry)
 plt.show()
-
 Wnb.neighbors[0]
 Wnb.neighbors[1]
 Wnb.neighbors[2]
 Wnb.neighbors[3]
 Wnb.neighbors[4]
 Wnb.neighbors[5]
-
 # Cálculo de los estadísticos de autocorrelación espacial
-
 # I de Moran global
 gmoran = Moran(Guerry['Crm_prs'], Wnb)
 print(gmoran.I)
 print(gmoran.p_sim)
 moran_scatterplot(gmoran, aspect_equal=True, zstandard=True)
 plt.show()
-
 # I de Moran local (LISAs)
 lmoran = Moran_Local(Guerry['Crm_prs'], Wnb, permutations = 999, seed=12345)
 lmoran.p_sim
@@ -345,25 +323,22 @@ moran_scatterplot(lmoran, p=0.05, zstandard =False) # p-valor=0.05
 plt.show()
 lisa_cluster(lmoran, Guerry, p=0.05)
 plt.show()
-
 # ECONOMETRÍA ESPACIAL: ANÁLISIS CONFIRMATORIO DE DATOS ESPACIALES
-
+#
 # Modelos econométricos para explicar la variable Crm_prs
-
+#
 # Regresión estándar (modelo lineal)
 # Librería statsmodels (https://www.statsmodels.org/stable/)
 import statsmodels.formula.api as smf
 model = smf.ols(formula = "Crm_prs ~ Region + Litercy + Donatns + Infants + Suicids", data = Guerry)
 Crm_LM = model.fit()
 print(Crm_LM.summary())
-
 # Librería spreg (https://pysal.org/spreg/)
 import spreg
 Guerry["Region_E"] = (Guerry.Region == "E").astype(int)
 Guerry["Region_N"] = (Guerry.Region == "N").astype(int)
 Guerry["Region_S"] = (Guerry.Region == "S").astype(int)
 Guerry["Region_W"] = (Guerry.Region == "W").astype(int)
-
 # Método OLS
 variable_names = ["Region_E","Region_N","Region_S","Region_W","Litercy", "Donatns", "Infants", "Suicids",]
 spreg_LM = spreg.OLS(
@@ -377,7 +352,6 @@ spreg_LM = spreg.OLS(
     name_x=variable_names,
 )
 print(spreg_LM.summary)
-
 # Modelo con retardo espacial (SLM) [estimación STLS: MC2E-espacial]
 spreg_SLM = spreg.GM_Lag(
     # Variable dependiente
@@ -392,7 +366,6 @@ spreg_SLM = spreg.GM_Lag(
     w=Wnb, 
 )
 print(spreg_SLM.summary)
-
 # Modelo con errores espaciales (SEM) [estimación GMM]
 spreg_SEM = spreg.GM_Error(    # spreg.GM_Error_Het permite heteroscedasticidad
     # Variable dependiente
@@ -407,7 +380,6 @@ spreg_SEM = spreg.GM_Error(    # spreg.GM_Error_Het permite heteroscedasticidad
     w=Wnb, 
 )
 print(spreg_SEM.summary)
-
 # Modelo combinado (SAC -> SLM + SEM) [estimación GMM]
 spreg_SAC = spreg.GM_Combo(
     # Variable dependiente
@@ -422,7 +394,6 @@ spreg_SAC = spreg.GM_Combo(
     w=Wnb, 
 )
 print(spreg_SAC.summary)
-
 # Versiones estimadas por máxima verosimilitud
 # Modelo con retardo espacial (SLM)
 spreg_SLM_2 = spreg.ML_Lag(
@@ -438,7 +409,6 @@ spreg_SLM_2 = spreg.ML_Lag(
     w=Wnb, 
 )
 print(spreg_SLM_2.summary)
-
 # Modelo con errores espaciales (SEM)
 spreg_SEM_2 = spreg.ML_Error( 
     # Variable dependiente
