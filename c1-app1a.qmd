@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 1.1.a (Gestión y representación gráfica de datos): Gramática básica del *tidyverse* {.unnumbered}
+# Aplicación 1.1.a: Gestión y representación gráfica de datos  {.unnumbered}
+
+## Gramática básica del *tidyverse* {.unnumbered}
 
 En esta aplicación se pondrán ejemplos básicos en R y Python usando la filosofía *tidyverse*, que supone una 'forma de trabajar' dentro de cada lenguaje con el objetivo de "preparar" los datos originales para un tratamiento estadístico posterior:
 

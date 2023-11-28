@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 1.2a (Gestión y representación gráfica de datos financieros): Propiedades estadísticas básicas de los activos bursátiles {.unnumbered}
+# Aplicación 1.2a: Gestión y representación gráfica de datos financieros  {.unnumbered}
+
+## Propiedades estadísticas básicas de los activos bursátiles {.unnumbered}
 
 El objetivo de esta aplicación es familiarizarse con la descarga, manejo y visualización de datos bursátiles procedentes de la plataforma [Yahoo!Finanzas](https://es.finance.yahoo.com/), así como entender las propiedades estadísticas básicas de las series temporales asociadas. 
 
@@ -47,7 +49,7 @@ library(scales)
 pSAN <- tq_get("SAN.MC",
   get = "stock.prices",
   from = "2000-01-01",
-  to = "2023-10-31"
+  to = "2023-11-28"
 )
 head(pSAN)
 tail(pSAN)
@@ -143,7 +145,7 @@ warnings.filterwarnings("ignore")
 # Creación del ticker del Banco Santander
 SAN = yf.Ticker("SAN.MC")
 # Lectura de los datos para el período seleccionado
-pSAN = yf.download("SAN.MC", start="2000-01-01", end="2023-10-31")
+pSAN = yf.download("SAN.MC", start="2000-01-01", end="2023-11-28")
 print(pSAN)
 pSAN = (pSAN.reset_index())
 pSAN.head()

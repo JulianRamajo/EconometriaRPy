@@ -18,15 +18,11 @@ format:
 ```
 
 ::: justify
-# Aplicación 1.2b (Gestión y representación gráfica de datos financieros): Relaciones entre activos bursátiles {.unnumbered}
+# Aplicación 1.2b: Gestión y representación gráfica de datos financieros {.unnumbered}
 
-En esta aplicación se estimará un modelo de regresión lineal simple en un contexto financiero:
+## Relaciones entre activos bursátiles {.unnumbered}
 
-$$log(pSAN_t) = \beta_1 + \beta_2 log(pIBEX_t)  + e_t$$
-
-donde $pSAN$ es el precio de las acciones del Banco Santander y $pIBEX$ es el índice bursátil IBEX 35.
-
-Antes de llegar a la regresión final, se tendrán que ejecutar comandos específicos de filtrado (*filter*), selección (*select*), transformación (*mutate*) y fusión de ficheros (*join*).
+En esta aplicación se analizará gráficamente la relación existente entre las variables financieras  $log(pSAN_t)$ y $log(pIBEX_t)$, donde $pSAN$ es el precio de las acciones del Banco Santander y $pIBEX$ es el índice bursátil IBEX 35. Antes de llegar a la gráfica final, se tendrán que ejecutar comandos específicos de filtrado (*filter*), selección (*select*), transformación (*mutate*) y fusión de ficheros (*join*).
 :::
 
 ## Código R {.unnumbered}
@@ -90,11 +86,9 @@ p3
 # Lectura de librerías
 import numpy as np
 import pandas as pd
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
 from plotnine import *
 from datetime import datetime
-import matplotlib.pyplot as plt
 # Lectura de datos 30 mayores empresas del IBEX
 # (https://finance.yahoo.com/quote/%5EIBEX/components?p=%5EIBEX&guccounter=1)
 stock_data = pd.read_csv('data/IBEX_top30.csv')

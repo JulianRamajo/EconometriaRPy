@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 1.3.a (Gestión y representación gráfica de datos espaciales): Emisiones de CO2 al nivel mundial {.unnumbered}
+# Aplicación 1.3.a: Gestión y representación gráfica de datos espaciales  {.unnumbered}
+
+## Emisiones de CO2 al nivel mundial {.unnumbered}
 
 En esta aplicación se analizarán los datos de la publicación de 2022 del [*Global Carbon Project*](https://www.globalcarbonproject.org/) sobre emisiones de gases de efecto invernadero al nivel mundial y nacional, con el objetivo de encontrar los países más contaminantes, tanto en términos de emisiones de CO2 totales como en forma per capita. Pueden encontrarse los datos e información sobre los mismos en la siguiente dirección: <https://zenodo.org/record/7215364>.
 

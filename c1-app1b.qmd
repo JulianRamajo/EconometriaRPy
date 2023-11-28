@@ -21,28 +21,30 @@ editor:
 ```
 
 ::: justify
-# Aplicación 1.1.b (Gestión y representación gráfica de datos): Gestión de datos con R y Python {.unnumbered}
+# Aplicación 1.1.b: Gestión y representación gráfica de datos  {.unnumbered}
+
+## Gestión de datos con R y Python {.unnumbered}
 
 En esta aplicación se usarán las librerías estándar de R y Python en
 "ciencia de datos" (*data science*), replicando los resultados con los
 correspondientes comandos en ambos lenguajes. En concreto, para el
 lenguaje R se utilizará la colección de librerías contenidas en el
-paquete *Tidyverse* (<https://www.tidyverse.org/packages/>), y para
-Python se usarán las librerías *NumPy* (<https://numpy.org/>), *pandas*
-(<https://pandas.pydata.org/>), *Matplotlib* (<https://matplotlib.org/>)
-y *seaborn* (<https://seaborn.pydata.org/>). Las librerías
+paquete __*Tidyverse*__ (<https://www.tidyverse.org/packages/>), y para
+Python se usarán las librerías __*NumPy*__ (<https://numpy.org/>), __*pandas*__
+(<https://pandas.pydata.org/>), __*Matplotlib*__ (<https://matplotlib.org/>)
+y __*seaborn*__ (<https://seaborn.pydata.org/>). Las librerías
 especializadas en estadística y econometría se verán en aplicaciones
 posteriores.
 
-Sobre los datos utilizados:
-
--   Datos para el ejemplo : `palmerpenguins`
-    (<https://allisonhorst.github.io/palmerpenguins/>)
 :::
 
-# Código R {.unnumbered}
+## Código R {.unnumbered}
 
-## Lectura de librerías
+Sobre los datos utilizados:
+
+-   Datos para el ejemplo : `palmerpenguins`  (<https://allisonhorst.github.io/palmerpenguins/>)
+
+### Lectura de librerías
 
 ```{r}
 #| include: true
@@ -53,7 +55,7 @@ library(tidyverse)
 library(palmerpenguins)   # Datos de la aplicación
 ```
 
-## Lectura de datos
+### Lectura de datos
 
 ```{r}
 data("penguins")
@@ -62,7 +64,7 @@ df %>%
   head()
 ```
 
-## Análisis exploratorio
+### Análisis exploratorio
 
 Recuento de casos:
 
@@ -76,8 +78,7 @@ df %>%
   
 ```
 
-Para eliminar todas las filas con un NA habría que ejecutar el siguiente
-código
+Para eliminar todas las filas con un NA habría que ejecutar el siguiente código
 
 ```{r}
 # df <- df %>% na.omit()
@@ -143,8 +144,7 @@ df %>%
                    ~mean(.x, na.rm = TRUE)))
 ```
 
-Cálculo de los cuantiles 25, 50 y 75 para la longitud y profundidad del
-pico en la Isla Biscoe
+Cálculo de los cuantiles 25, 50 y 75 para la longitud y profundidad del pico en la Isla Biscoe
 
 ```{r}
 df %>%
@@ -193,8 +193,7 @@ df %>%
   facet_wrap(~species)
 ```
 
-Diagrama de dispersión de la masa corporal en relación con la longitud
-de las aletas
+Diagrama de dispersión de la masa corporal en relación con la longitud de las aletas  
 
 ```{r}
 df %>%
@@ -247,7 +246,7 @@ df %>%
   geom_line(aes(color = species))
 ```
 
-## Agrupación - resumen
+### Agrupación - resumen
 
 Media y desviación estándar de la longitud del pico para cada especie
 
@@ -258,8 +257,7 @@ df %>%
             sd_bill_length = sd(bill_length_mm, na.rm = TRUE))
 ```
 
-Media y desviación estándar de la longitud del pico de cada especie por
-sexo
+Media y desviación estándar de la longitud del pico de cada especie por sexo
 
 ```{r}
 df %>%
@@ -269,10 +267,9 @@ df %>%
             sd_bill_length = sd(bill_length_mm, na.rm = TRUE))
 ```
 
-## Agrupación - cálculo
+### Agrupación - cálculo
 
-Añadir una nueva columna al fichero de datos que muestre la longitud
-media de las aletas agrupadas por especies
+Añadir una nueva columna al fichero de datos que muestre la longitud media de las aletas agrupadas por especies
 
 ```{r}
 df <- df %>%
@@ -283,8 +280,7 @@ df %>%
   head()
 ```
 
-Puntuación estandarizada (z-score) por especie para la longitud de las
-aletas
+Puntuación estandarizada (z-score) por especie para la longitud de las aletas
 
 ```{r}
 df <- df %>%
@@ -294,8 +290,7 @@ df %>%
   head()
 ```
 
-Añadir una columna para la media y la desviación estándar por especie
-para la longitud del pico
+Añadir una columna para la media y la desviación estándar por especie para la longitud del pico
 
 ```{r}
 df <- df %>%
@@ -307,10 +302,12 @@ df %>%
   head()
 ```
 
-## Comandos ifelse / case_when
+### Comandos ifelse / case_when
 
-Crear una nueva columna que codifique las islas como: Biscoe = Isla1
-Sueño = Isla2 Torgersen = Isla3
+Crear una nueva columna que codifique las islas como:
+Biscoe = Isla1
+Sueño = Isla2
+Torgersen = Isla3
 
 ```{r}
 df <- df %>%
@@ -321,14 +318,13 @@ df %>%
   head()
 ```
 
-# Código Python {.unnumbered}
+## Código Python {.unnumbered}
 
 Sobre los datos utilizados:
 
--   Datos para el ejemplo : `palmerpenguins`
-    (<https://github.com/mcnakhaee/palmerpenguins>)
+-   Datos para el ejemplo : `palmerpenguins` (<https://github.com/mcnakhaee/palmerpenguins>)
 
-## Lectura de librerías
+### Lectura de librerías
 
 ```{python}
 #| include: true
@@ -342,14 +338,14 @@ import seaborn as sns
 from palmerpenguins import load_penguins   # Datos de la aplicación
 ```
 
-## Lectura de datos
+### Lectura de datos
 
 ```{python}
 df = load_penguins()
 df.head()
 ```
 
-## Análisis exploratorio
+### Análisis exploratorio
 
 Recuento de casos:
 
@@ -360,8 +356,7 @@ df.isnull().any()
 len(df) - df.count()
 ```
 
-Para eliminar todas las filas con un NA habría que ejecutar el siguiente
-código
+Para eliminar todas las filas con un NA habría que ejecutar el siguiente código
 
 ```{python}
 # df = df.dropna()
@@ -416,8 +411,7 @@ Cálculo de la media de la longitud y la profundidad del pico
 df[['bill_length_mm', 'bill_depth_mm']].mean()
 ```
 
-Cálculo de los cuantiles 25, 50 y 75 para la longitud y profundidad del
-pico en la Isla Biscoe
+Cálculo de los cuantiles 25, 50 y 75 para la longitud y profundidad del pico en la Isla Biscoe
 
 ```{python}
 df.loc[df['island'] == 'Biscoe', ['bill_length_mm', 'bill_depth_mm']].quantile([0.25, 0.5, 0.75])
@@ -460,8 +454,7 @@ sns.displot(x = 'bill_length_mm',
 plt.show()
 ```
 
-Diagrama de dispersión de la masa corporal en relación con la longitud
-de las aletas
+Diagrama de dispersión de la masa corporal en relación con la longitud de las aletas  
 
 ```{python}
 sns.relplot(x = 'flipper_length_mm', y = 'body_mass_g', data = df);
@@ -497,7 +490,7 @@ sns.relplot(x = 'year', y = 'body_mass_g', kind = 'line',
 plt.show()
 ```
 
-## Agrupación - resumen
+### Agrupación - resumen
 
 Media y desviación estándar de la longitud del pico para cada especie
 
@@ -510,8 +503,7 @@ species_bill_length = (df
 species_bill_length
 ```
 
-Media y desviación estándar de la longitud del pico de cada especie por
-sexo
+Media y desviación estándar de la longitud del pico de cada especie por sexo
 
 ```{python}
 species_bill_length_sex = (df
@@ -522,26 +514,23 @@ species_bill_length_sex = (df
 species_bill_length_sex
 ```
 
-## Agrupación - cálculo
+### Agrupación - cálculo
 
-Añadir una nueva columna al fichero de datos que muestre la longitud
-media de las aletas agrupadas por especies
+Añadir una nueva columna al fichero de datos que muestre la longitud media de las aletas agrupadas por especies
 
 ```{python}
 df['mean_flipper_length'] = df.groupby('species')['flipper_length_mm'].transform('mean')
 df.head()
 ```
 
-Puntuación estandarizada (z-score) por especie para la longitud de las
-aletas
+Puntuación estandarizada (z-score) por especie para la longitud de las aletas
 
 ```{python}
 df['flipper_z'] = df.groupby('species')['flipper_length_mm'].transform(lambda x: (x - x.mean()) / x.std()).round(2)
 df.head()
 ```
 
-Añadir una columna para la media y la desviación estándar por especie
-para la longitud del pico
+Añadir una columna para la media y la desviación estándar por especie para la longitud del pico
 
 ```{python}
 df = df.assign(
@@ -550,10 +539,12 @@ df = df.assign(
 df.head()
 ```
 
-## Comandos def / where
+### Comandos def / where
 
-Crear una nueva columna que codifique las islas como: Biscoe = Isla1
-Sueño = Isla2 Torgersen = Isla3
+Crear una nueva columna que codifique las islas como:
+Biscoe = Isla1
+Sueño = Isla2
+Torgersen = Isla3
 
 ```{python}
 # def
