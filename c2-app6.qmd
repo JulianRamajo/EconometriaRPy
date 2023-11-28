@@ -18,11 +18,13 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.6 (Series temporales de alta frecuencia y estacionalidad): Demanda de electricidad en el estado de Victoria, Australia {.unnumbered}
+# Aplicación 2.6: Series temporales de alta frecuencia y con estacionalidad  {.unnumbered}
+
+## Demanda de electricidad en el estado de Victoria (Australia) {.unnumbered}
 
 En esta aplicación se estimará una función de demanda de electricidad para el estado de Victoria, en Australia. Se explicará el consumo de electricidad en función de la temperatura y de otras variables de control, usando datos semi-horarios (cada media hora) para el período 2012-2014.
 
-Desde el punto de vista técnico se verán los problemas a los que se enfrenta el económetra al tratar con datos de frecuencia alta que además poseen distintos tipos de estacionalidad.
+Desde el punto de vista técnico se verán los problemas a los que se enfrenta el económetra al tratar con datos de frecuencia alta que además poseen distintos tipos de estacionalidad de forma simultánea.
 :::
 
 ## Código R {.unnumbered}
@@ -34,8 +36,6 @@ Desde el punto de vista técnico se verán los problemas a los que se enfrenta e
 
 # Lectura de librerías
 library(tidyverse)
-library(car)
-library(lmtest)
 library(fpp3)
 # Lectura de datos
 load("data/DEM_ELEC.RData")
@@ -97,8 +97,8 @@ dem_elec <- lm(log(Demanda) ~ Temperatura + I(Temperatura^2) +
                data = dem_elec_vict)
 summary(dem_elec)
 # Predicción de consumo para un lunes laborable, suponiendo una 
-# temparatura media de 26ª (podrían usarse predicciones del servicio 
-# de meteorología)
+# temperatura media de 26ª (podrían usarse predicciones del servicio 
+# de meteorología local o nacional)
 Xs_1d <- new_data(dem_elec_vict, 1) %>%
     mutate(Temperatura = 26, Dia_sem = "lun" , Dia_lab = TRUE, 
            Frio = FALSE, Calor = FALSE)
@@ -118,19 +118,16 @@ exp(pred_dem_IC)
 # Lectura de librerías
 import numpy as np
 import pandas as pd
-import statsmodels.stats.api as sms
-import statsmodels.formula.api as smf
-import scipy as sp
 import matplotlib.pyplot as plt
-import seaborn as sns
+import statsmodels.formula.api as smf
 # Lectura de datos
 dem_elec_vict = pd.read_csv('data/DEM_ELEC.csv', index_col=0)
 # Gráfica consumo versus temperatura
 plt.figure(3)
 plt.scatter(dem_elec_vict['Temperatura'], dem_elec_vict['Demanda'])
-plt.xlabel('Temperatura')
-plt.ylabel('Demanda')
-plt.title('Consumo electricidad versus temperatura')
+plt.xlabel('Temperatura (ºC)')
+plt.ylabel('Demanda (MWh)')
+plt.title('Consumo de electricidad versus temperatura')
 plt.grid(True)
 plt.show()
 # Modelo de demanda de electricidad

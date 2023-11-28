@@ -18,9 +18,12 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos {.unnumbered}
+# Aplicación 2.2: Predicción con el modelo de regresión lineal {.unnumbered}
 
-En esta aplicación se estimará una curva de Engel que relaciona el gasto familiar en alimentación ($GALIM$) con la renta disponible ($RENTA$), usando una muestra de 235 familias americanas:
+## Curva de Engel para el gasto en alimentos {.unnumbered}
+
+En esta aplicación se estimará una curva de Engel que relaciona el gasto familiar en alimentación con la renta disponible, 
+usando una muestra de 235 familias americanas:
 
 $$
 GALIM_{i} = f(RENTA_{i}) + e_{i}

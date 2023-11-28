@@ -18,17 +18,19 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.5 (Modelo de regresión lineal con variables cualitativas): Brecha salarial entre hombres y mujeres en Estados Unidos {.unnumbered}
+# Aplicación 2.5: Modelo de regresión lineal con variables cualitativas  {.unnumbered}
 
-Desde el punto de vista metodológico, el objetivo de esta aplicación es la introducción del uso de *variables ficticias* en el modelo de regresión lineal, mostrando su potencial para modelizar situaciones donde alguno de los regresores es de tipo cualitativo.
+## Brecha salarial entre hombres y mujeres en Estados Unidos {.unnumbered}
 
-Por otra parte, desde el punto de vista económico, estamos interesados en cuantificar el alcance de la discriminación salarial de las mujeres en el mercado laboral americano. Así, en primer lugar compararemos los salarios de hombres y mujeres que comparten similitudes en los dos factores más relevantes para la determinación del salario, que son la edad o el nivel de educación, y luego extenderemos la especificación básica con diferentes variables de control para tener una aproximación más realista del concepto *ceteris paribus* (para poder aproximarse a la verdadera relación causal hay que tratar de condicionar sobre \`todas' las variables relevantes para la determinación del salario).
+Desde un punto de vista económico, el objetivo de esta aplicación es cuantificar el alcance de la discriminación salarial de las mujeres en el mercado laboral americano. Así, en primer lugar compararemos los salarios de hombres y mujeres que comparten similitudes en los dos factores más relevantes para la determinación del salario, que son la edad o el nivel de educación, y luego extenderemos la especificación básica con diferentes **variables de control** para tener una aproximación más realista del concepto *ceteris paribus* (para poder aproximarse a la verdadera relación causal hay que tratar de condicionar sobre "todas" las variables relevantes para la determinación del salario).
 
-Como especificación de partida se usará el siguiente modelo log-lineal, que se corresponde con la [ecuación de salarios de Mincer](https://es.wikipedia.org/wiki/Funci%C3%B3n_de_ingresos_de_Mincer):
+Como especificación econométrica base se usará el siguiente modelo log-lineal, que se corresponde con la [ecuación de salarios de Mincer](https://es.wikipedia.org/wiki/Funci%C3%B3n_de_ingresos_de_Mincer):
 
 $$
-log(w_{i}) = \beta_1 + \beta_2  female_{i} +  \beta_3  age_{i} +  \beta_4  educ_{i} + e_{i}
+log(w_{i}) = \beta_1 + \beta_2  age_{i} +  \beta_3  educ_{i} + e_{i}
 $$
+
+Desde un punto de vista metodológico,  en este ejemplo se introduce el concepto de *variables ficticia* y su uso en econometría, mostrando su potencial para modelizar situaciones donde algunos de los regresores son de tipo cualitativo. Asimismo, se mostrará cómo debe cambiarse la especificación base en función de las características específicas de los datos con los que se trabaje.
 :::
 
 ## Código R {.unnumbered}
@@ -41,11 +43,6 @@ $$
 # Lectura de librerías
 library(tidyverse)
 library(huxtable)
-library(car)
-library(lmtest)
-library(sandwich)
-library(moments)
-library(corrplot)
 #
 # INFORMACIÓN SOBRE EL CONJUNTO ORIGINAL DE DATOS Y SOBRE
 # LA OBTENCIÓN DE LA SUBMUESTRA USADA EN LA APLICACIÓN
@@ -69,22 +66,22 @@ library(corrplot)
 # - Occupational classification (census 2010) codes:
 #   <https://www.bls.gov/cps/cenocc2010.htm>
 #
-# FILTRADO DE OBSERVACIONES: 
+# FILTRADO PREVIO DE OBSERVACIONES: 
 #
 # Edad entre 24 to 64 años; 
 # Haber trabajado más de 20 horas semanales; 
 # Ingresos semanales positivos; 
 # Empleados con estudios universitarios (grade92>44)
 #
-# Selección sobre el fichero original [cps = read_csv("MORG14_USA.csv")]:
+# Operación sobre el fichero original [cps = read_csv("MORG14_USA.csv")]:
 # cps <- cps %>% 
 # filter(age>=24 & age<=64 & uhours>=20 & earnwke>0 & grade92>=44)
 #
 # Lectura de datos
 cps <- read_csv("data/CPS2014_USA.csv")
-# TRASNSFORMACIÓN DE VARIABLES
+# Transformación de variables
 cps <- cps %>% mutate(female=sex==2, w=earnwke/uhours) %>% filter(w>=1)
-# DISTRIBUCIÓN DE LOS SALARIOS
+# Distribución de los salarios
 cps %>% dplyr::select(earnwke,uhours,w) %>% summary()
 # Histograma diferenciado por género
 earnings_hist<- ggplot(data = cps, 
@@ -105,7 +102,7 @@ reg0 <- lm(log(w) ~ female, data=cps)
 reg1 <- lm(log(w) ~ female + age, data=cps)
 reg2 <- lm(log(w) ~ female*age, data=cps) # Interacción entre género y edad
 reg21 <- lm(log(w) ~ age, data=cps %>% filter(female==1)) # Ec. mujeres
-reg22 <- lm(log(w) ~ age, data=cps %>% filter(female==0)) # Ecu. hombres
+reg22 <- lm(log(w) ~ age, data=cps %>% filter(female==0)) # Ec. hombres
 huxreg(reg0, reg1, reg2, reg21, reg22, 
        statistics = c(N = "nobs", R2 = "r.squared"))
 # No linealidad en la edad
@@ -134,7 +131,8 @@ cps <- cps %>% mutate(white=as.numeric(race==1),
 )
 # Factores demográficos (potencialmente endógenos)
 cps <- cps %>% mutate(married = as.numeric(marital==1 | marital==2),
-                      divorced = as.numeric(marital==3 | marital==5 | marital==6),
+                      divorced = as.numeric(marital==3 | marital==5 | 
+                                              marital==6),
                       wirowed = as.numeric(marital==4),
                       nevermar = as.numeric(marital==7),
                       child0 = as.numeric(chldpres==0),
@@ -170,21 +168,19 @@ summary(reg5)
 #| message: false
 
 # Lectura de librerías
-import os
-import sys
-import warnings
 import numpy as np
 import pandas as pd
-from mizani.formatters import percent_format
 from plotnine import *
-from datetime import datetime
 from scipy.stats import norm
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from mizani import transforms
+from mizani.formatters import percent_format
 from stargazer.stargazer import Stargazer
 #
-# Filtrado sobre el fichero original cps = pd.read_csv('data/MORG14_USA.csv')
+# FILTRADO PREVIO DE OBSERVACIONES: 
+#
+# Operación sobre el fichero original: cps = pd.read_csv('data/MORG14_USA.csv')
 # cps = cps.query("age>=24 & age<=64 & uhours>=20 & earnwke>0 & grade92>=44")
 #
 # Lectura de datos
@@ -193,11 +189,11 @@ cps = pd.read_csv('data/CPS2014_USA.csv')
 cps["female"] = (cps.sex == 2).astype(int)
 cps["w"] = cps["earnwke"] / cps["uhours"]
 cps = cps.query("w>=1")
-# DISTRIBUCIÓN DE LOS SALARIOS
+# Distribución de los salarios
 cps.loc[:,["earnwke","uhours","w"]].describe()
 # SALARIOS, SEXO Y EDAD
-reg1 = smf.ols(formula="np.log(w) ~ female", data=cps).fit()
-print(reg1.summary())
+reg0 = smf.ols(formula="np.log(w) ~ female", data=cps).fit()
+print(reg0.summary())
 # Histograma diferenciado por género
 ggplot(cps, aes(x="w", y="2*stat(count)/sum(stat(count))")) + geom_histogram(
     binwidth=4,

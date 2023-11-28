@@ -18,19 +18,21 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.4 (Modelo de regresión lineal con términos de interacción): Efectos diferenciados de la publicidad sobre las ventas {.unnumbered}
+# Aplicación 2.4: Modelo de regresión lineal con términos de interacción  {.unnumbered}
+
+## Efectos diferenciados de la publicidad sobre las ventas {.unnumbered}
 
 Supongamos que somos consultores contratados por un cliente para asesorarle sobre cómo mejorar las ventas de un determinado producto. No es posible para el empresario incrementar las ventas del producto de una forma directa (vía mejoras de la calidad o reducciones en el precio, por ejemplo), sino de forma indirecta a través de campañas publicitarias. La idea es construir un modelo que pueda usarse para predecir las ventas en función de la inversión realizada en publicidad.
 
-Los datos que utilizaremos consisten en las $VENTAS$ del producto analizado (en miles de unidades) en 200 mercados diferentes, junto con los gastos realizados (en miles de dólares) en publicitar el producto en cada uno de esos mercados en dos medios de difusión diferentes, $TV$ y $RADIO$.
+Los datos que utilizaremos consisten en las _VENTAS_ del producto analizado (en miles de unidades) en 200 mercados diferentes, junto con los gastos realizados (en miles de dólares) en publicitar el producto en cada uno de esos mercados en dos medios de difusión diferentes, _TV_ y _RADIO_.
 
-Podría proponerse, en primer lugar, un modelo de regresión estándar de tipo aditivo como el siguiente, 
+Podría proponerse, en primer lugar, un modelo de regresión estándar de tipo aditivo como el siguiente,
 
 $$VENTAS_{i} = \beta_1 + \beta_2  TV_{i} +  \beta_3  RADIO_{i} + e_{i}$$
 
-en el que el efecto de un cambio unitario en una variable explicativa (ceteris paribus) sobre la variable de respuesta no depende de los valores de las otras variables explicativas. En nuestro caso, esto implica que el efecto sobre las ventas de un incremento en el gasto de publicidad en un determinado medio (televisión o radio) es constante y, por tanto, independiente de la cantidad gastada en los otros medios de promoción. 
+en el que el efecto de un cambio unitario en una variable explicativa (ceteris paribus) sobre la variable de respuesta no depende de los valores de las otras variables explicativas. En nuestro caso, esto implica que el efecto sobre las ventas de un incremento en el gasto de publicidad en un determinado medio (televisión o radio) es constante y, por tanto, independiente de la cantidad gastada en los otros medios de promoción.
 
-Si se contempla la posibilidad de que existan _efectos sinergia_, es decir, que el gasto realizado en un medio, por ejemplo, la radio, incremente la efectividad del gasto en otro medio, por ejemplo, la televisión, hay que generalizar el modelo inicial permitiendo la aparición de términos de interacción:
+Si se contempla la posibilidad de que existan *efectos sinergia*, es decir, que el gasto realizado en un medio, por ejemplo, la radio, incremente la efectividad del gasto en otro medio, por ejemplo, la televisión, hay que generalizar el modelo inicial permitiendo la aparición de términos de interacción:
 
 $$VENTAS_{i} = \beta_1 + \beta_2  TV_{i} +  \beta_3  RADIO_{i} +  \beta_4  (TV_i*RADIO_i)  + e_{i}$$
 :::
@@ -45,7 +47,6 @@ $$VENTAS_{i} = \beta_1 + \beta_2  TV_{i} +  \beta_3  RADIO_{i} +  \beta_4  (TV_i
 # Lectura de librerías
 library(tidyverse)
 library(plotly)
-library(magrittr)
 # Lectura de datos
 PUB_VENTAS <- read_csv("data/PUB_VENTAS.csv")
 # Estimación del modelo lineal
@@ -53,11 +54,15 @@ model1 <- lm(data = PUB_VENTAS, formula = VENTAS ~ TV + RADIO)
 summary(model1)
 # Gráfica del ajuste
 plot_ly(data = PUB_VENTAS) %>%
-    add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, mode = "markers", type = "scatter3d",
-              marker = list(size = 5, color = "blue", symbol = 104), name = "Observaciones") %>% 
-    add_trace(z = model1$fitted.values, x = ~TV, y = ~RADIO, type = "mesh3d", 
+    add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, 
+              mode = "markers", type = "scatter3d",
+              marker = list(size = 5, color = "blue", symbol = 104), 
+              name = "Observaciones") %>% 
+    add_trace(z = model1$fitted.values, x = ~TV, y = ~RADIO, 
+              type = "mesh3d", 
               name = "Valores ajustados") %>%
-    layout(scene = list(xaxis = list(title = 'TV'), yaxis = list(title = 'RADIO'),
+    layout(scene = list(xaxis = list(title = 'TV'), 
+                        yaxis = list(title = 'RADIO'),
                         camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
                         zaxis = list(title = 'VENTAS'), aspectmode='cube'))
 # Estimación del modelo con interacción
@@ -65,11 +70,14 @@ model2 <- lm(data = PUB_VENTAS, formula = VENTAS ~ TV * RADIO)
 summary(model2)
 # Gráfica del ajuste
 plot_ly(data = PUB_VENTAS) %>%
-    add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, mode = "markers", type = "scatter3d",
-              marker = list(size = 5, color = "blue", symbol = 104), name = "Observaciones") %>% 
+    add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, 
+              mode = "markers", type = "scatter3d",
+              marker = list(size = 5, color = "blue", symbol = 104), 
+              name = "Observaciones") %>% 
     add_trace(z = model2$fitted.values, x = ~TV, y = ~RADIO, type = "mesh3d", 
               name = "Valores ajustados") %>%
-    layout(scene = list(xaxis = list(title = 'TV'), yaxis = list(title = 'RADIO'),
+    layout(scene = list(xaxis = list(title = 'TV'), 
+                        yaxis = list(title = 'RADIO'),
                         camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
                         zaxis = list(title = 'VENTAS'), aspectmode='cube'))
 ```
@@ -82,11 +90,11 @@ plot_ly(data = PUB_VENTAS) %>%
 #| message: false
 
 # Lectura de librerías
-import pandas as pd
 import numpy as np
-import statsmodels.formula.api as smf
+import pandas as pd
 import matplotlib.pyplot as plt
-# # Lectura de datos
+import statsmodels.formula.api as smf
+# Lectura de datos
 PUB_VENTAS = pd.read_csv('data/PUB_VENTAS.csv')
 # Estimación del modelo lineal
 model1 = smf.ols('VENTAS ~ TV + RADIO', data=PUB_VENTAS)

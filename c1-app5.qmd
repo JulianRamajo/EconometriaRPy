@@ -19,16 +19,20 @@ format:
 ```
 
 ::: justify
-# Aplicación 1.5 (Regresiones con datos de series temporales): Consumo privado en Estados Unidos {.unnumbered}
+# Aplicación 1.5: Regresiones con datos de series temporales  {.unnumbered}
+
+## Consumo privado en Estados Unidos {.unnumbered}
 
 En esta aplicación se estimará una función de consumo de tipo Keynesiano agregada (consumidor representativo), usando datos de series temporales para Estados Unidos del período 1959-2015:
 
 $$C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}$$
 
 donde $C$ representa la consumo privado, e $Y$ es la renta disponible neta (después de impuestos).
+
+Desde el punto de vista técnico, el objetivo principal del ejemplo es la introducción de las principales funciones y librerías especializadas de R y Python para el análisis de series temporales.
 :::
 
-# Código R {.unnumbered}
+## Código R {.unnumbered}
 
 ```{r}
 #| include: true
@@ -37,12 +41,10 @@ donde $C$ representa la consumo privado, e $Y$ es la renta disponible neta (desp
 
 # Lectura de librerías
 library(tidyverse)
-
 # Lectura de datos
 CONS_USA <- read_delim("data/CONS_USA_ts.csv", delim = ";")
 head(CONS_USA)
 tail(CONS_USA)
-
 # Asignación del formato de series temporales
 # (https://cran.r-project.org/web/views/TimeSeries.html)
 # Aquí se usará la clase básica "ts", válida para series temporales 
@@ -56,16 +58,13 @@ tail(CONS_USA)
 #
 ts_CONS_USA <- ts(CONS_USA[,2:3], start=c(1959), end = c(2015))
 #
-# Análisis exploratorio (EDA)
 # Estadística descriptiva
 summary(ts_CONS_USA)
 # Gráficas
-# ts.plot(ts_CONS_USA[,"C"])
 g1 <- ggplot(data = CONS_USA, aes(x = date)) +
   geom_line(aes(y = C)) +
   labs(y = "Consumo privado en Estados Unidos (millones US $)", x = "Año")
 g1
-# ts.plot(ts_CONS_USA[,"Y"])
 g2 <- ggplot(data = CONS_USA, aes(x = date)) +
   geom_line(aes(y = Y)) +
   labs(y = "Renta disponible en Estados Unidos (millones US $)", x = "Año")
@@ -76,29 +75,28 @@ g3 <- ggplot(CONS_USA, aes(x = Y, y = C)) +
                stat_smooth(method = lm) +  
                labs(x = "Renta disponible",y = "Consumo privado")
 g3
-
 # Regresión por MCO
 KEYNES_model <- lm (formula = C ~ Y, data = ts_CONS_USA)
 summary(KEYNES_model)
 ```
 
 ```{r}
-# ANEXO: La  librería fpp3 y el tidyverts'
-#
+# ANEXO: La  librería fpp3 y el tidyverts' (https://tidyverts.org/)
 # La macro-librería `fpp3` contiene varias librerías específicas
-# (https://tidyverts.org/) y otras generales, como `tidyverse` y  `lubridate`.
+# y otras generales, como `tidyverse` y  `lubridate`.
 # La clase `tsibble` proporciona una infraestructura de datos para ordenar
-# y manipular series temporales.Se pueden encontrar los detalles en la
+# y manipular series temporales. Se pueden encontrar los detalles en la
 # página web https://tsibble.tidyverts.org/index.html.
 # Toda la información de la librería fpp3 se encuentra en:
 # https://github.com/robjhyndman/fpp3package. 
 # El libro de texto que acompaña a esta librería es el siguiente:
 # FORECASTING: PRINCIPLES AND PRACTICE -> https://otexts.com/fpp3/.
+#
 # NOTA:
-# Existen otras librerías específicas para series temporales, entre las que
-# cabe destacar `TSstudio` (https://ramikrispin.github.io/TSstudio/),
-# `timetk` (https://business-science.github.io/timetk/) y `tsbox`
-# (https://docs.ropensci.org/tsbox/).
+# Existen otras librerías especializadas en el análisis de series temporales, 
+# como `TSstudio` (https://ramikrispin.github.io/TSstudio/),
+# `timetk` (https://business-science.github.io/timetk/) o 
+# `tsbox`(https://docs.ropensci.org/tsbox/).
 #
 library(fpp3) 
 # Creación del objeto tsibble
@@ -125,7 +123,7 @@ CONS_USA_ts %>%
   report()
 ```
 
-# Código Python {.unnumbered}
+## Código Python {.unnumbered}
 
 ```{python}
 #| include: true
@@ -135,23 +133,21 @@ CONS_USA_ts %>%
 # Lectura de librerías
 import numpy as np
 import pandas as pd
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
-
+import statsmodels.formula.api as smf
 # Lectura de datos 
-CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';')
-#
+# (al introducir la opción index_col se está asignando en este caso
+# de forma implícita un formato temporal para el resto de columnas)
+CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', index_col=0)
 # Asignación del formato temporal 
 # (https://pandas.pydata.org/docs/user_guide/timeseries.html)
 # Un análisis detallado puede encontrarse en la siguiente página web:
-# https://jakevdp.github.io/PythonDataScienceHandbook/03.11-working-with-time-series.html
-ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', parse_dates=['date'], index_col='date')
-# ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', index_col=0)
+# https://jakevdp.github.io/PythonDataScienceHandbook/
+# 03.11-working-with-time-series.html
+ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', 
+parse_dates=['date'], index_col='date')
 ts_CONS_USA.head()
 ts_CONS_USA.tail()
-
-# Análisis exploratorio (EDA)
 # Estadística descriptiva
 ts_CONS_USA.describe()
 # Gráficas
@@ -171,9 +167,25 @@ plt.plot(ts_CONS_USA["Y"], res.fittedvalues, color = "blue")
 plt.xlabel("Renta disponible")
 plt.ylabel("Consumo privado")
 plt.show()
-
 # Regresión por MCO
 model = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
 KEYNES_model = model.fit()
 print(KEYNES_model.summary())
+```
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# ANEXO: Clases de modelos y funciones específicas de la librería
+# `statsmodels` para el análisis de series temporales 
+# (https://www.statsmodels.org/stable/tsa.html)
+#
+from statsmodels.tsa.api import ARDL
+endog = ts_CONS_USA[["C"]]
+exog = ts_CONS_USA[["Y"]]   # exogs = data[["X2", "X3",...]]
+model = ARDL(endog, 0, exog, 0) # retardos=0 equivale a mod. estático
+KEYNES_ardl_model = model.fit()
+print(KEYNES_ardl_model.summary())
 ```

@@ -3138,12 +3138,15 @@ return!"\t\n\x0B\f\r                　\u2028\u2029
 .justify { text-align: justify !important }
 </style>
 </div>
-<section id="aplicación-2.2-predicción-con-el-modelo-de-regresión-lineal-curva-de-engel-para-el-gasto-en-alimentos" class="level1 unnumbered justify">
-<h1 class="unnumbered">Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos</h1>
-<p>En esta aplicación se estimará una curva de Engel que relaciona el gasto familiar en alimentación (<span class="math inline">\(GALIM\)</span>) con la renta disponible (<span class="math inline">\(RENTA\)</span>), usando una muestra de 235 familias americanas:</p>
+<section id="aplicación-2.2-predicción-con-el-modelo-de-regresión-lineal" class="level1 unnumbered justify">
+<h1 class="unnumbered">Aplicación 2.2: Predicción con el modelo de regresión lineal</h1>
+<section id="curva-de-engel-para-el-gasto-en-alimentos" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="curva-de-engel-para-el-gasto-en-alimentos">Curva de Engel para el gasto en alimentos</h2>
+<p>En esta aplicación se estimará una curva de Engel que relaciona el gasto familiar en alimentación con la renta disponible, usando una muestra de 235 familias americanas:</p>
 <p><span class="math display">\[
 GALIM_{i} = f(RENTA_{i}) + e_{i}
 \]</span></p>
+</section>
 </section>
 <section id="código-r" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="código-r">Código R</h2>
@@ -3264,8 +3267,8 @@ F-statistic:  1141 on 1 and 233 DF,  p-value: &lt; 2.2e-16</code></pre>
 Dep. Variable:                  GALIM   R-squared:                       0.830
 Model:                            OLS   Adj. R-squared:                  0.830
 Method:                 Least Squares   F-statistic:                     1141.
-Date:                Wed, 01 Nov 2023   Prob (F-statistic):           9.92e-92
-Time:                        16:50:47   Log-Likelihood:                -1445.7
+Date:                Tue, 28 Nov 2023   Prob (F-statistic):           9.92e-92
+Time:                        07:27:36   Log-Likelihood:                -1445.7
 No. Observations:                 235   AIC:                             2895.
 Df Residuals:                     233   BIC:                             2902.
 Df Model:                           1                                         
@@ -3640,84 +3643,87 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>::: justify</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Aplicación 2.2 (Predicción con el modelo de regresión lineal): Curva de Engel para el gasto en alimentos {.unnumbered}</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># Aplicación 2.2: Predicción con el modelo de regresión lineal {.unnumbered}</span></span>
 <span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>En esta aplicación se estimará una curva de Engel que relaciona el gasto familiar en alimentación ($GALIM$) con la renta disponible ($RENTA$), usando una muestra de 235 familias americanas:</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Curva de Engel para el gasto en alimentos {.unnumbered}</span></span>
 <span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>GALIM_{i} = f(RENTA_{i}) + e_{i}</span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código R {.unnumbered}</span></span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>ENGEL_ALIM <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">&quot;data/ENGEL_ALIM_USA.csv&quot;</span>, <span class="st">&quot;;&quot;</span>, </span>
-<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>                         <span class="at">escape_double =</span> <span class="cn">FALSE</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagrama de puntos (scatter plot) de las variables RENTA y GALIM</span></span>
-<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ENGEL_ALIM, <span class="fu">aes</span>(<span class="at">x =</span> RENTA, <span class="at">y =</span> GALIM)) <span class="sc">+</span> </span>
-<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">350</span>, <span class="dv">5000</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
-<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Renta&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Gasto en alimentos&quot;</span>)</span>
-<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ENGEL_ALIM, <span class="fu">aes</span>(<span class="at">x =</span> RENTA, <span class="at">y =</span> GALIM)) <span class="sc">+</span> </span>
-<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
-<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">350</span>, <span class="dv">5000</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
-<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Renta&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Gasto en alimentos&quot;</span>)</span>
-<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación de una curva de Engel lineal por MCO</span></span>
-<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a>CURVA_ENGEL_LINEAL <span class="ot">&lt;-</span> <span class="fu">lm</span>(GALIM <span class="sc">~</span> RENTA, <span class="at">data =</span> ENGEL_ALIM)</span>
-<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(CURVA_ENGEL_LINEAL)</span>
-<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción</span></span>
-<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector que contiene los nuevos valores de las variables explicativas</span></span>
-<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a>new_RENTA <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">RENTA=</span><span class="fu">c</span>(<span class="dv">400</span>, <span class="dv">2000</span>, <span class="dv">4500</span>))</span>
-<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a>new_RENTA</span>
-<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción puntual</span></span>
-<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a>pred_GALIM <span class="ot">&lt;-</span> <span class="fu">predict</span>(CURVA_ENGEL_LINEAL, new_RENTA)</span>
-<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pred_GALIM) <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Renta = 400&quot;</span>, <span class="st">&quot;2000&quot;</span>, <span class="st">&quot;4500&quot;</span>)</span>
-<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a>pred_GALIM</span>
-<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción del valor esperado con intervalo de confianza</span></span>
-<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a>pred_GALIM_IC <span class="ot">&lt;-</span> <span class="fu">predict</span>(CURVA_ENGEL_LINEAL, new_RENTA, <span class="at">interval=</span><span class="st">&quot;confidence&quot;</span>, <span class="at">level=</span><span class="fl">0.95</span>)</span>
-<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a>pred_GALIM_IC</span>
-<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código Python {.unnumbered}</span></span>
-<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
-<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
-<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
-<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a>ENGEL_ALIM <span class="op">=</span> pd.read_csv(<span class="st">&#39;data/ENGEL_ALIM_USA.csv&#39;</span>, delimiter<span class="op">=</span><span class="st">&#39;;&#39;</span>)</span>
-<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación del modelo</span></span>
-<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a>CURVA_ENGEL_LINEAL <span class="op">=</span> smf.ols(<span class="st">&#39;GALIM ~ RENTA&#39;</span>, data<span class="op">=</span>ENGEL_ALIM)</span>
-<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a>results<span class="op">=</span>CURVA_ENGEL_LINEAL.fit()</span>
-<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results.summary())</span>
-<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción</span></span>
-<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Generar un vector que contiene los nuevos valores de las variables explicativas</span></span>
-<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a>new_RENTA <span class="op">=</span> pd.DataFrame({<span class="st">&#39;RENTA&#39;</span>: [<span class="dv">400</span>, <span class="dv">2000</span>, <span class="dv">4500</span>]}, index<span class="op">=</span>[<span class="st">&#39;newRENTA1&#39;</span>, <span class="st">&#39;newRENTA2&#39;</span>, <span class="st">&#39;newRENTA3&#39;</span>])</span>
-<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;new_RENTA: </span><span class="ch">\n</span><span class="sc">{</span>new_RENTA<span class="sc">}</span><span class="ch">\n</span><span class="ss">&#39;</span>)</span>
-<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción puntual</span></span>
-<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a>pred_GALIM <span class="op">=</span> results.predict(new_RENTA)</span>
-<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;pred_GALIM: </span><span class="ch">\n</span><span class="sc">{</span>pred_GALIM<span class="sc">}</span><span class="ch">\n</span><span class="ss">&#39;</span>)</span>
-<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción con intervalo de confianza</span></span>
-<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a>pred_GALIM_IC <span class="op">=</span> results.get_prediction(new_RENTA).summary_frame(alpha<span class="op">=</span><span class="fl">0.05</span>)</span>
-<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;pred_GALIM_IC: </span><span class="ch">\n</span><span class="sc">{</span>pred_GALIM_IC<span class="sc">}</span><span class="ch">\n</span><span class="ss">&#39;</span>)</span>
-<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>En esta aplicación se estimará una curva de Engel que relaciona el gasto familiar en alimentación con la renta disponible, </span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>usando una muestra de 235 familias americanas:</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>GALIM_{i} = f(RENTA_{i}) + e_{i}</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código R {.unnumbered}</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>ENGEL_ALIM <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">&quot;data/ENGEL_ALIM_USA.csv&quot;</span>, <span class="st">&quot;;&quot;</span>, </span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>                         <span class="at">escape_double =</span> <span class="cn">FALSE</span>, <span class="at">trim_ws =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagrama de puntos (scatter plot) de las variables RENTA y GALIM</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ENGEL_ALIM, <span class="fu">aes</span>(<span class="at">x =</span> RENTA, <span class="at">y =</span> GALIM)) <span class="sc">+</span> </span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">350</span>, <span class="dv">5000</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Renta&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Gasto en alimentos&quot;</span>)</span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ENGEL_ALIM, <span class="fu">aes</span>(<span class="at">x =</span> RENTA, <span class="at">y =</span> GALIM)) <span class="sc">+</span> </span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">350</span>, <span class="dv">5000</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Renta&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Gasto en alimentos&quot;</span>)</span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación de una curva de Engel lineal por MCO</span></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a>CURVA_ENGEL_LINEAL <span class="ot">&lt;-</span> <span class="fu">lm</span>(GALIM <span class="sc">~</span> RENTA, <span class="at">data =</span> ENGEL_ALIM)</span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(CURVA_ENGEL_LINEAL)</span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción</span></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector que contiene los nuevos valores de las variables explicativas</span></span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a>new_RENTA <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">RENTA=</span><span class="fu">c</span>(<span class="dv">400</span>, <span class="dv">2000</span>, <span class="dv">4500</span>))</span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a>new_RENTA</span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción puntual</span></span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a>pred_GALIM <span class="ot">&lt;-</span> <span class="fu">predict</span>(CURVA_ENGEL_LINEAL, new_RENTA)</span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pred_GALIM) <span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;Renta = 400&quot;</span>, <span class="st">&quot;2000&quot;</span>, <span class="st">&quot;4500&quot;</span>)</span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a>pred_GALIM</span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción del valor esperado con intervalo de confianza</span></span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a>pred_GALIM_IC <span class="ot">&lt;-</span> <span class="fu">predict</span>(CURVA_ENGEL_LINEAL, new_RENTA, <span class="at">interval=</span><span class="st">&quot;confidence&quot;</span>, <span class="at">level=</span><span class="fl">0.95</span>)</span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a>pred_GALIM_IC</span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a><span class="fu">## Código Python {.unnumbered}</span></span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de librerías</span></span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de datos</span></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a>ENGEL_ALIM <span class="op">=</span> pd.read_csv(<span class="st">&#39;data/ENGEL_ALIM_USA.csv&#39;</span>, delimiter<span class="op">=</span><span class="st">&#39;;&#39;</span>)</span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación del modelo</span></span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a>CURVA_ENGEL_LINEAL <span class="op">=</span> smf.ols(<span class="st">&#39;GALIM ~ RENTA&#39;</span>, data<span class="op">=</span>ENGEL_ALIM)</span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a>results<span class="op">=</span>CURVA_ENGEL_LINEAL.fit()</span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results.summary())</span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción</span></span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Generar un vector que contiene los nuevos valores de las variables explicativas</span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a>new_RENTA <span class="op">=</span> pd.DataFrame({<span class="st">&#39;RENTA&#39;</span>: [<span class="dv">400</span>, <span class="dv">2000</span>, <span class="dv">4500</span>]}, index<span class="op">=</span>[<span class="st">&#39;newRENTA1&#39;</span>, <span class="st">&#39;newRENTA2&#39;</span>, <span class="st">&#39;newRENTA3&#39;</span>])</span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;new_RENTA: </span><span class="ch">\n</span><span class="sc">{</span>new_RENTA<span class="sc">}</span><span class="ch">\n</span><span class="ss">&#39;</span>)</span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción puntual</span></span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a>pred_GALIM <span class="op">=</span> results.predict(new_RENTA)</span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;pred_GALIM: </span><span class="ch">\n</span><span class="sc">{</span>pred_GALIM<span class="sc">}</span><span class="ch">\n</span><span class="ss">&#39;</span>)</span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción con intervalo de confianza</span></span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a>pred_GALIM_IC <span class="op">=</span> results.get_prediction(new_RENTA).summary_frame(alpha<span class="op">=</span><span class="fl">0.05</span>)</span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;pred_GALIM_IC: </span><span class="ch">\n</span><span class="sc">{</span>pred_GALIM_IC<span class="sc">}</span><span class="ch">\n</span><span class="ss">&#39;</span>)</span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

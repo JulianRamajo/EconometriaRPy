@@ -18,7 +18,9 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.1 (Estimación MCO y contrastes de hipótesis): Modelo CAPM para las acciones del Banco Santander {.unnumbered}
+# Aplicación 2.1: Estimación MCO y contrastes de hipótesis  {.unnumbered}
+
+## Modelo CAPM para las acciones del Banco Santander {.unnumbered}
 
 En esta aplicación se estimará una versión simple del [modelo CAPM](https://es.wikipedia.org/wiki/Modelo_de_valoraci%C3%B3n_de_activos_financieros) para las acciones del Banco Santander:
 
@@ -26,7 +28,7 @@ $$erSAN_{t} = \beta_{1} + \beta_{2}\, erIBEX_{t} + e_{t}$$
 
 donde *erSAN* representa el *exceso de rendimiento* de las acciones del Banco Santander, definido como la diferencia entre la rentabilidad de las acciones del banco y la rentabilidad de un activo libre de riesgo, en nuestro caso las letras del tesoro, y *erIBEX* es el exceso de rendimiento del mercado, representado por el índice IBEX35 de la bolsa española.
 
-Como ejercicio, se pueden repetir todos los cálculos de la aplicación para analizar las empresas Telefónica e Inditex.
+Como ejercicio, se pueden repetir todos los cálculos de la aplicación para analizar las empresas Telefónica e Inditex, cuyos datos están contenidos en el fichero de usado en la aplicación.
 :::
 
 ## Código R {.unnumbered}
@@ -105,7 +107,8 @@ plot(res)
 ehat <- resid(CAPM_SANTANDER)
 ebar <- mean(ehat)
 sdehat <- sd(ehat)
-hist(ehat, col="grey", breaks = 20, freq=FALSE, main="", ylab="density", xlab="ehat")
+hist(ehat, col="grey", breaks = 20, freq=FALSE, main="", 
+     ylab="density", xlab="ehat")
 curve(dnorm(x, ebar, sdehat), col=2, add=TRUE, ylab="density", xlab="ehat")
 # Contrastes de hipótesis bilaterales
 #
@@ -127,7 +130,8 @@ t_c
 # del valor crítico y del estadístico t_0
 curve(dt(x, df), -5, 5, ylab=" ", xlab="t")
 abline(v=c(-t_c, t_c, t_0), col=c("red", "red", "blue"), lty=c(2,2,3))
-legend("topleft", legend=c("-t_c", "t_c", "t_0"), col=c("red", "red", "blue"), lty=c(2, 2, 3))
+legend("topleft", legend=c("-t_c", "t_c", "t_0"), 
+       col=c("red", "red", "blue"), lty=c(2, 2, 3))
 # Método del P-valor
 p <- 2*(1-pt(abs(t_0), df))
 p
@@ -166,7 +170,8 @@ t_c
 # y del estadístico t_0
 curve(dt(x, df), -6, 6, ylab=" ", xlab="t")
 abline(v=c(-t_c, t_c, t_0), col=c("red", "red", "blue"), lty=c(2,2,3))
-legend("topleft", legend=c("-t_c", "t_c", "t_0"), col=c("red", "red", "blue"), lty=c(2, 2, 3))
+legend("topleft", legend=c("-t_c", "t_c", "t_0"), 
+       col=c("red", "red", "blue"), lty=c(2, 2, 3))
 # Método del P-valor
 p <- 2*(1-pt(abs(t_0), df))
 p
@@ -211,7 +216,7 @@ legend("topleft", legend=c("t_c", "t_0"), col=c("red", "blue"), lty=c(2, 3))
 p <- pt(t_0, df)
 p
 # NOTA:
-# Distribuciones de probabilidad en R
+# Distribuciones de probabilidad en R ->
 # https://rstudio.github.io/r-manuals/r-intro/Probability-distributions.html
 ```
 
@@ -223,14 +228,16 @@ p
 #| message: false
 
 # Lectura de librerías
-import pandas as pd
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
-import matplotlib.pyplot as plt
-import scipy as sp
+# Librería SciPy (stats): https://docs.scipy.org/doc/scipy/tutorial/stats.html
+import scipy as sp 
 # Lectura de datos
-CAPM_ESP = pd.read_csv('data/CAPM_ESP.csv', delimiter=';', parse_dates=['date'], index_col='date')
+CAPM_ESP = pd.read_csv('data/CAPM_ESP.csv', delimiter=';', 
+parse_dates=['date'], index_col='date')
 CAPM_ESP.head()
 CAPM_ESP.tail()
 # Transformación de variables
@@ -244,8 +251,8 @@ CAPM_ESP['er_IBEX'] = LogDiff(CAPM_ESP['P_IBEX35']) - CAPM_ESP['R_LT1Y']/12
 CAPM_ESP['er_SAN'] = LogDiff(CAPM_ESP['P_SANTANDER']) - CAPM_ESP['R_LT1Y']/12
 # Gráficas de las variables del modelo
 plt.figure(1)
-plt.plot(CAPM_ESP['er_IBEX'], label='Exceso de rendimiento del IBEX35')
-plt.plot(CAPM_ESP['er_SAN'], label='Exceso de rendimiento del Banco Santander')
+plt.plot(CAPM_ESP['er_IBEX'], label='Exceso de rendimiento IBEX35')
+plt.plot(CAPM_ESP['er_SAN'], label='Exceso de rendimiento Banco Santander')
 plt.xlabel('Date')
 plt.ylabel('%')
 plt.title('Variables del modelo CAPM para el Banco Santander')
@@ -294,9 +301,11 @@ ebar = np.mean(CAPM_SANTANDER.resid)
 sdehat = np.std(CAPM_SANTANDER.resid)
 plt.figure(4)
 fig, ax = plt.subplots()
-ax.hist(CAPM_SANTANDER.resid, bins=20, density=True, edgecolor='white', linewidth=1.2)
+ax.hist(CAPM_SANTANDER.resid, bins=20, density=True, 
+edgecolor='white', linewidth=1.2)
 x = np.linspace(min(CAPM_SANTANDER.resid), max(CAPM_SANTANDER.resid), 100)
-ax.plot(x, sp.stats.norm.pdf(x, ebar, sdehat), color='black', label = 'Distribución normal')
+ax.plot(x, sp.stats.norm.pdf(x, ebar, sdehat), color='black', 
+label = 'Distribución normal')
 plt.title('Residuos del modelo CAPM para el Banco Santander')
 plt.xlabel('Residuos')
 plt.ylabel('Densidad')
@@ -335,6 +344,6 @@ t_0, 1-sp.stats.t.cdf(t_0, CAPM_SANTANDER.df_resid)
 t_0 = (CAPM_SANTANDER.params['er_IBEX']-2)/CAPM_SANTANDER.bse['er_IBEX']
 t_0, sp.stats.t.cdf(t_0, CAPM_SANTANDER.df_resid)
 # NOTA:
-# Distribuciones de probabilidad en Python: librería scipy
-# https://docs.scipy.org/doc/scipy/reference/stats.html#
+# Distribuciones de probabilidad en Python (librería SciPy) ->
+# https://docs.scipy.org/doc/scipy/reference/stats.html
 ```
