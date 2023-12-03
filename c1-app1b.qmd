@@ -23,7 +23,7 @@ editor:
 ::: justify
 # Aplicación 1.1.b: Gestión y representación gráfica de datos  {.unnumbered}
 
-## Gestión de datos con R y Python {.unnumbered}
+## Comparación de librerías de R y Python {.unnumbered}
 
 En esta aplicación se usarán las librerías estándar de R y Python en
 "ciencia de datos" (*data science*), replicando los resultados con los
