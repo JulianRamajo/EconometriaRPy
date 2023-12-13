@@ -152,39 +152,51 @@ AVG_lifeExp_gdpPercap
 # Gramática de gráficas (ggplot2) [https://ggplot2.tidyverse.org/]
 # (https://es.r4ds.hadley.nz/03-visualize.html)
 #
-# Gráfica 0: diagrama de puntos básico
+gapminder <- gapminder %>% 
+   filter(year>=1980) %>% 
+   select(year, region, country, pop, lifeExp, gdpPercap)
+gapminder <- gapminder %>% na.omit()
+gapminder <- arrange(gapminder, year)
+# Gráfica 1: diagrama de puntos básico
 ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) + 
   geom_point(alpha = 0.7)
-# Gráfica 0 plus: con ajuste no paramétrico
+# Gráfica 2: con ajuste no paramétrico
 ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) + 
   geom_point(alpha = 0.2) + geom_smooth(method = "loess")
-# Gráfica 1: colores por regiones
+# Gráfica 3: colores por regiones
 ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) + 
   geom_point(aes(col = region), alpha = 0.3)
-# Gráfica 2: colores por regiones y tamaño por población
+# Gráfica 4: colores por regiones y tamaño por población
 ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) + 
   geom_point(aes(size = pop, col = region), alpha = 0.3)
-# Gráfica 3: colores por regiones y tamaño por población (esc. log)
-ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) +
+# Gráfica 5: colores por regiones y tamaño por población (esc. log)
+gapminder <-  gapminder %>% mutate(l_gdpPercap=log(gdpPercap))
+ggplot(data = gapminder, aes(x = l_gdpPercap, y = lifeExp)) +
     geom_point(aes(size = pop, col = region), alpha = 0.3) +
-    scale_x_log10(labels = scales::dollar) + # Esc.log. eje X, unidades $
     labs(x = "PIB per capita (log)", y = "Experanza de vida al nacer") + 
     theme_minimal() # Tema b&w
-# Gráfica 4: burbujas de Hans-Rosling 
+# Gráfica 6 (interactiva): burbujas de Hans-Rosling 
 # (https://www.gapminder.org/fw/world-health-chart/)
+# Escalas de color: https://cran.r-project.org/web/packages/viridis/index.html
+# Librería gganimate: https://gganimate.com/
+# Librería plotly en R: https://plotly.com/r/
 library(viridis)
 library(gganimate)
-ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
-    geom_point(alpha = 0.7, show.legend = FALSE) +
-    scale_x_log10(labels = scales::dollar) +
-    labs(title = 'Año: {frame_time}', x = 'PIB per capita (log)', 
-         y = 'Experanza de vida al nacer') +
-    transition_time(year) +
-    ease_aes('linear')
-# Gráfica 4 plus: animación con cambio de la relación por años
-ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+library(plotly)
+plot_ly(gapminder, 
+        y = ~lifeExp, 
+        x = ~l_gdpPercap,
+        frame = ~year,
+        type = 'scatter', 
+        mode = 'markers',
+        size = ~pop,
+        color = ~region, 
+        colors = 'Set1') %>%
+    layout(xaxis = list(title = "PIB per capita (log)"),
+           yaxis = list(title = "Experanza de vida al nacer"))
+# Gráfica 7 (interactiva): animación con cambio de la relación por años
+ggplot(gapminder, aes(l_gdpPercap, lifeExp, size = pop, colour = region)) +
   geom_point(alpha = 0.7, show.legend = FALSE) +
-  scale_x_log10(labels = scales::dollar) +
   facet_wrap(~region) +
   labs(title = 'Año: {frame_time}', x = 'PIB per capita (log)', 
        y = 'Experanza de vida al nacer') +
@@ -252,11 +264,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from plotnine import *
-# Lectura de datos (reticulate)
-gapminder = r.gapminder
+# Lectura de datos
+gapminder = pd.read_csv('data/GAPMINDER.csv')
 gapminder.shape
 gapminder.columns
 gapminder.info()
+# Cambio de nombres de variables
+gapminder.rename(columns={'date': 'year'}, inplace=True)
+gapminder.rename(columns={'NY.GDP.PCAP.CD': 'gdpPercap'}, inplace=True)
+gapminder.rename(columns={'SP.DYN.LE00.IN': 'lifeExp'}, inplace=True)
+gapminder.rename(columns={'SP.POP.TOTL': 'pop'}, inplace=True)
 # Datos iniciales y finales
 gapminder.head()
 gapminder.tail()
@@ -283,37 +300,59 @@ gapminder[(gapminder["year"] >= 1980)].groupby('region')['country'].nunique()
 gapminder[(gapminder["year"] >= 1980)].groupby('year')['lifeExp'].mean()
 gapminder[(gapminder["year"] >= 1980)].groupby(['year', 'region'])[['lifeExp', 'gdpPercap']].mean()
 # Operaciones gráficas del tidyverse con `plotnine`
-# Gráfica 0: diagrama de puntos básico
+gapminder = gapminder[(gapminder["year"] >= 1980)][['year', 'region', 'country', 'pop', 'lifeExp', 'gdpPercap']]
+gapminder = gapminder.dropna()
+gapminder['l_gdpPercap']=gapminder['gdpPercap'].map(lambda x:np.log(x))
+gapminder = gapminder = gapminder.sort_values(by=['year'])
+# Gráfica 1: diagrama de puntos básico
 (
     ggplot(gapminder, aes(x='gdpPercap', y='lifeExp'))
     + geom_point(alpha=0.7)
     + labs(x='gdpPercap', y='lifeExp')
 )
-# Gráfica 0 plus: con ajuste no paramétrico
+# Gráfica 2: con ajuste no paramétrico
 (
     ggplot(gapminder, aes(x='gdpPercap', y='lifeExp'))
     + geom_point(alpha=0.2) + geom_smooth(method = "loess")
     + labs(x='gdpPercap', y='lifeExp')
 )
-# Gráfica 1: colores por regiones
+# Gráfica 3: colores por regiones
 (
     ggplot(gapminder, aes(x='gdpPercap', y='lifeExp', color='factor(region)'))
     + geom_point(alpha=0.3)
     +  labs(x='gdpPercap', y='lifeExp')
 )
-# Gráfica 2: colores por regiones y tamaño por población
+# Gráfica 4: colores por regiones y tamaño por población
 (
     ggplot(gapminder, aes(x='gdpPercap', y='lifeExp', color='region', size='pop'))
     + geom_point(alpha=0.3)
     +  labs(x='gdpPercap', y='lifeExp')
 )
-# Gráfica 3: colores por regiones y tamaño por población (esc. log.)
-gapminder['l_gdpPercap']=gapminder['gdpPercap'].map(lambda x:np.log(x))
-
+# Gráfica 5: colores por regiones y tamaño por población (esc. log.)
 (
     ggplot(gapminder, aes(x='l_gdpPercap', y='lifeExp', color='region', size='pop'))
     + geom_point(alpha=0.3)
     +  labs(x='PIB per capita (log)', y='Experanza de vida al nacer')
+)
+# Gráfica 6 (interactiva): burbujas de Hans-Rosling
+# Librería plotly en Python: https://plotly.com/python/
+import plotly.express as px
+px.scatter(gapminder,
+            y = "lifeExp", 
+            x = "l_gdpPercap",
+            hover_name = "country",
+            hover_data= ['country'], 
+            color = "region", 
+            size = "pop", size_max = 45,
+            animation_frame= 'year'
+)
+# Gráfica 7 (interactiva): animación con cambio de la relación por años
+px.scatter(  
+  gapminder, x="l_gdpPercap", y="lifeExp", 
+  animation_frame="year", animation_group="country", 
+  size="pop", size_max=45,
+  color="region", hover_name="country",
+  facet_col='region', facet_col_wrap=4
 )
 # Unir, combinar y remodelar ficheros de datos
 # (https://wesmckinney.com/book/data-wrangling)
