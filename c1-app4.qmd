@@ -107,7 +107,6 @@ import statsmodels.formula.api as smf
 # https://scikit-learn.org/stable/modules/linear_model.html
 from sklearn import linear_model
 from sklearn.metrics import r2_score
-# from skimpy import skim
 # Lectura de datos
 DEM_CARNE = pd.read_csv("data/DEM_CARNE.csv")
 # Descripción de la base muestral
@@ -120,7 +119,8 @@ DEM_CARNE.tail()
 # Resultados estándar (Python 'base')
 DEM_CARNE.describe()
 # Librería Skimpy (https://aeturrell.github.io/skimpy/)
-# skim(DEM_CARNE)
+from skimpy import skim
+skim(DEM_CARNE)
 # Gráficas parciales
 # Librería seaborn
 sns.pairplot(data = DEM_CARNE, diag_kind = 'kde');
