@@ -18,23 +18,18 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.4: Modelo de regresión lineal con términos de interacción  {.unnumbered}
+# Aplicación 2.4: Predicción con el modelo de regresión lineal {.unnumbered}
 
-## Efectos diferenciados de la publicidad sobre las ventas {.unnumbered}
+## Curva de Engel para el gasto en alimentos {.unnumbered}
 
-Supongamos que somos consultores contratados por un cliente para asesorarle sobre cómo mejorar las ventas de un determinado producto. No es posible para el empresario incrementar las ventas del producto de una forma directa (vía mejoras de la calidad o reducciones en el precio, por ejemplo), sino de forma indirecta a través de campañas publicitarias. La idea es construir un modelo que pueda usarse para predecir las ventas en función de la inversión realizada en publicidad.
+En esta aplicación se estimará una curva de Engel que relaciona el gasto familiar en alimentación con la renta disponible, 
+usando una muestra de 235 familias americanas:
 
-Los datos que utilizaremos consisten en las _VENTAS_ del producto analizado (en miles de unidades) en 200 mercados diferentes, junto con los gastos realizados (en miles de dólares) en publicitar el producto en cada uno de esos mercados en dos medios de difusión diferentes, _TV_ y _RADIO_.
+$$
+GALIM_{i} = f(RENTA_{i}) + e_{i}
+$$
 
-Podría proponerse, en primer lugar, un modelo de regresión estándar de tipo aditivo como el siguiente,
-
-$$VENTAS_{i} = \beta_1 + \beta_2  TV_{i} +  \beta_3  RADIO_{i} + e_{i}$$
-
-en el que el efecto de un cambio unitario en una variable explicativa (ceteris paribus) sobre la variable de respuesta no depende de los valores de las otras variables explicativas. En nuestro caso, esto implica que el efecto sobre las ventas de un incremento en el gasto de publicidad en un determinado medio (televisión o radio) es constante y, por tanto, independiente de la cantidad gastada en los otros medios de promoción.
-
-Si se contempla la posibilidad de que existan *efectos sinergia*, es decir, que el gasto realizado en un medio, por ejemplo, la radio, incremente la efectividad del gasto en otro medio, por ejemplo, la televisión, hay que generalizar el modelo inicial permitiendo la aparición de términos de interacción:
-
-$$VENTAS_{i} = \beta_1 + \beta_2  TV_{i} +  \beta_3  RADIO_{i} +  \beta_4  (TV_i*RADIO_i)  + e_{i}$$
+Una vez estimado el modelo, se usa la ecuación estimada para predecir el valor esperado del gasto en alimentos de distintos tipos de familia en función de su renta familiar.
 :::
 
 ## Código R {.unnumbered}
@@ -46,40 +41,35 @@ $$VENTAS_{i} = \beta_1 + \beta_2  TV_{i} +  \beta_3  RADIO_{i} +  \beta_4  (TV_i
 
 # Lectura de librerías
 library(tidyverse)
-library(plotly)
 # Lectura de datos
-PUB_VENTAS <- read_csv("data/PUB_VENTAS.csv")
-# Estimación del modelo lineal
-model1 <- lm(data = PUB_VENTAS, formula = VENTAS ~ TV + RADIO)
-summary(model1)
-# Gráfica del ajuste
-plot_ly(data = PUB_VENTAS) %>%
-    add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, 
-              mode = "markers", type = "scatter3d",
-              marker = list(size = 5, color = "blue", symbol = 104), 
-              name = "Observaciones") %>% 
-    add_trace(z = model1$fitted.values, x = ~TV, y = ~RADIO, 
-              type = "mesh3d", 
-              name = "Valores ajustados") %>%
-    layout(scene = list(xaxis = list(title = 'TV'), 
-                        yaxis = list(title = 'RADIO'),
-                        camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
-                        zaxis = list(title = 'VENTAS'), aspectmode='cube'))
-# Estimación del modelo con interacción
-model2 <- lm(data = PUB_VENTAS, formula = VENTAS ~ TV * RADIO)
-summary(model2)
-# Gráfica del ajuste
-plot_ly(data = PUB_VENTAS) %>%
-    add_trace(x = ~TV, y = ~RADIO, z = ~VENTAS, 
-              mode = "markers", type = "scatter3d",
-              marker = list(size = 5, color = "blue", symbol = 104), 
-              name = "Observaciones") %>% 
-    add_trace(z = model2$fitted.values, x = ~TV, y = ~RADIO, type = "mesh3d", 
-              name = "Valores ajustados") %>%
-    layout(scene = list(xaxis = list(title = 'TV'), 
-                        yaxis = list(title = 'RADIO'),
-                        camera = list(eye = list(x = -1.5, y = 1.5, z = 0)),
-                        zaxis = list(title = 'VENTAS'), aspectmode='cube'))
+ENGEL_ALIM <- read_delim("data/ENGEL_ALIM_USA.csv", ";", 
+                         escape_double = FALSE, trim_ws = TRUE)
+# Diagrama de puntos (scatter plot) de las variables RENTA y GALIM
+ggplot(ENGEL_ALIM, aes(x = RENTA, y = GALIM)) + 
+  geom_point() + 
+  scale_x_continuous(limits = c(350, 5000), expand = c(0, 0)) + 
+  theme_bw() + 
+  labs(x = "Renta", y = "Gasto en alimentos")
+ggplot(ENGEL_ALIM, aes(x = RENTA, y = GALIM)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  scale_x_continuous(limits = c(350, 5000), expand = c(0, 0)) + 
+  theme_bw() + 
+  labs(x = "Renta", y = "Gasto en alimentos")
+# Estimación de una curva de Engel lineal por MCO
+CURVA_ENGEL_LINEAL <- lm(GALIM ~ RENTA, data = ENGEL_ALIM)
+summary(CURVA_ENGEL_LINEAL)
+# Predicción
+# Vector que contiene los nuevos valores de las variables explicativas
+new_RENTA <- data.frame(RENTA=c(400, 2000, 4500))
+new_RENTA
+# Predicción puntual
+pred_GALIM <- predict(CURVA_ENGEL_LINEAL, new_RENTA)
+names(pred_GALIM) <-c("Renta = 400", "2000", "4500")
+pred_GALIM
+# Predicción del valor esperado con intervalo de confianza
+pred_GALIM_IC <- predict(CURVA_ENGEL_LINEAL, new_RENTA, interval="confidence", level=0.95)
+pred_GALIM_IC
 ```
 
 ## Código Python {.unnumbered}
@@ -95,11 +85,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
 # Lectura de datos
-PUB_VENTAS = pd.read_csv('data/PUB_VENTAS.csv')
-# Estimación del modelo lineal
-model1 = smf.ols('VENTAS ~ TV + RADIO', data=PUB_VENTAS)
-print(model1.fit().summary())
-# Estimación del modelo con interacción
-model2 = smf.ols('VENTAS ~ TV * RADIO', data=PUB_VENTAS)
-print(model2.fit().summary())
+ENGEL_ALIM = pd.read_csv('data/ENGEL_ALIM_USA.csv', delimiter=';')
+# Estimación del modelo
+CURVA_ENGEL_LINEAL = smf.ols('GALIM ~ RENTA', data=ENGEL_ALIM)
+results=CURVA_ENGEL_LINEAL.fit()
+print(results.summary())
+# Predicción
+# Generar un vector que contiene los nuevos valores de las variables explicativas
+new_RENTA = pd.DataFrame({'RENTA': [400, 2000, 4500]}, index=['newRENTA1', 'newRENTA2', 'newRENTA3'])
+print(f'new_RENTA: \n{new_RENTA}\n')
+# Predicción puntual
+pred_GALIM = results.predict(new_RENTA)
+print(f'pred_GALIM: \n{pred_GALIM}\n')
+# Predicción con intervalo de confianza
+pred_GALIM_IC = results.get_prediction(new_RENTA).summary_frame(alpha=0.05)
+print(f'pred_GALIM_IC: \n{pred_GALIM_IC}\n')
 ```

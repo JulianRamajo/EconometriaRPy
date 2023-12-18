@@ -13,21 +13,23 @@ format:
     code-block-bg: "#282c34"
 ---
 
+
 ```{css, echo = FALSE}
 .justify { text-align: justify !important }
 ```
 
 ::: justify
-# Aplicación 2.2: Predicción con el modelo de regresión lineal {.unnumbered}
+# Aplicación 2.2: Regresiones con datos de series temporales  {.unnumbered}
 
-## Curva de Engel para el gasto en alimentos {.unnumbered}
+## Consumo privado en Estados Unidos {.unnumbered}
 
-En esta aplicación se estimará una curva de Engel que relaciona el gasto familiar en alimentación con la renta disponible, 
-usando una muestra de 235 familias americanas:
+En esta aplicación se estimará una función de consumo de tipo Keynesiano agregada (consumidor representativo), usando datos de series temporales para Estados Unidos del período 1959-2015:
 
-$$
-GALIM_{i} = f(RENTA_{i}) + e_{i}
-$$
+$$C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}$$
+
+donde $C$ representa la consumo privado, e $Y$ es la renta disponible neta (después de impuestos).
+
+Desde el punto de vista técnico, el objetivo principal del ejemplo es la introducción de las principales funciones y librerías especializadas de R y Python para el análisis de series temporales.
 :::
 
 ## Código R {.unnumbered}
@@ -40,34 +42,86 @@ $$
 # Lectura de librerías
 library(tidyverse)
 # Lectura de datos
-ENGEL_ALIM <- read_delim("data/ENGEL_ALIM_USA.csv", ";", 
-                         escape_double = FALSE, trim_ws = TRUE)
-# Diagrama de puntos (scatter plot) de las variables RENTA y GALIM
-ggplot(ENGEL_ALIM, aes(x = RENTA, y = GALIM)) + 
-  geom_point() + 
-  scale_x_continuous(limits = c(350, 5000), expand = c(0, 0)) + 
-  theme_bw() + 
-  labs(x = "Renta", y = "Gasto en alimentos")
-ggplot(ENGEL_ALIM, aes(x = RENTA, y = GALIM)) + 
-  geom_point() + 
-  geom_smooth(method = "lm", se = FALSE) + 
-  scale_x_continuous(limits = c(350, 5000), expand = c(0, 0)) + 
-  theme_bw() + 
-  labs(x = "Renta", y = "Gasto en alimentos")
-# Estimación de una curva de Engel lineal por MCO
-CURVA_ENGEL_LINEAL <- lm(GALIM ~ RENTA, data = ENGEL_ALIM)
-summary(CURVA_ENGEL_LINEAL)
-# Predicción
-# Vector que contiene los nuevos valores de las variables explicativas
-new_RENTA <- data.frame(RENTA=c(400, 2000, 4500))
-new_RENTA
-# Predicción puntual
-pred_GALIM <- predict(CURVA_ENGEL_LINEAL, new_RENTA)
-names(pred_GALIM) <-c("Renta = 400", "2000", "4500")
-pred_GALIM
-# Predicción del valor esperado con intervalo de confianza
-pred_GALIM_IC <- predict(CURVA_ENGEL_LINEAL, new_RENTA, interval="confidence", level=0.95)
-pred_GALIM_IC
+CONS_USA <- read_delim("data/CONS_USA_ts.csv", delim = ";")
+head(CONS_USA)
+tail(CONS_USA)
+# Asignación del formato de series temporales
+# (https://cran.r-project.org/web/views/TimeSeries.html)
+# Aquí se usará la clase básica "ts", válida para series temporales 
+# regulares (espaciadas de forma homogénea en el tiempo).
+# Pueden usarse otras clases más generales, siendo las más usadas:
+# "zoo": https://cran.r-project.org/web/packages/zoo/index.html 
+# "xts": https://github.com/joshuaulrich/xts
+# "tsibble": https://github.com/robjhyndman/fpp3package
+# Ver anexo para una demostración sobre el tidyverts, 
+# el complemento al tidyverse para el análisis de series temporales.
+#
+ts_CONS_USA <- ts(CONS_USA[,2:3], start=c(1959), end = c(2015))
+#
+# Estadística descriptiva
+summary(ts_CONS_USA)
+# Gráficas
+g1 <- ggplot(data = CONS_USA, aes(x = date)) +
+  geom_line(aes(y = C)) +
+  labs(y = "Consumo privado en Estados Unidos (millones US $)", x = "Año")
+g1
+g2 <- ggplot(data = CONS_USA, aes(x = date)) +
+  geom_line(aes(y = Y)) +
+  labs(y = "Renta disponible en Estados Unidos (millones US $)", x = "Año")
+g2
+# Diagrama de puntos con línea de regresión
+g3 <- ggplot(CONS_USA, aes(x = Y, y = C)) + 
+               geom_point() +  
+               stat_smooth(method = lm) +  
+               labs(x = "Renta disponible",y = "Consumo privado")
+g3
+# Regresión por MCO
+KEYNES_model <- lm (formula = C ~ Y, data = ts_CONS_USA)
+summary(KEYNES_model)
+```
+
+```{r}
+# ANEXO: La  librería fpp3 y el tidyverts' (https://tidyverts.org/)
+# La macro-librería `fpp3` contiene varias librerías específicas
+# y otras generales, como `tidyverse` y  `lubridate`.
+# La clase `tsibble` proporciona una infraestructura de datos para ordenar
+# y manipular series temporales. Se pueden encontrar los detalles en las
+# páginas webs https://tsibble.tidyverts.org/index.html y
+# https://robjhyndman.com/publications/tsibble/.
+# Toda la información de la librería fpp3 se encuentra en:
+# https://github.com/robjhyndman/fpp3package. 
+# El libro de texto que acompaña a esta librería es el siguiente:
+# FORECASTING: PRINCIPLES AND PRACTICE -> https://otexts.com/fpp3/.
+#
+# NOTA:
+# Existen otras librerías especializadas en el análisis de series temporales, 
+# como `TSstudio` (https://ramikrispin.github.io/TSstudio/),
+# `timetk` (https://business-science.github.io/timetk/) o 
+# `tsbox`(https://docs.ropensci.org/tsbox/).
+#
+library(fpp3) 
+# Creación del objeto tsibble
+CONS_USA_ts <-  CONS_USA[,2:3] %>%
+  mutate(Year = 1959:2015) %>%
+  as_tsibble(index = Year)
+# Gráficas individuales
+CONS_USA_ts %>% autoplot(C) +
+  ggtitle("Consumo privado en Estados Unidos") +
+  ylab("$ million") + xlab("Year")
+CONS_USA_ts %>% autoplot(Y) +
+  ggtitle("Renta disponible en Estados Unidos") +
+  ylab("$ million") + xlab("Year")
+# Diagrama de puntos junto con la recta de regresión estimada
+CONS_USA_ts %>%
+  ggplot(aes(x=Y, y=C)) +
+  ylab("Consumo") +
+  xlab("Renta") +
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+# Regresión por MCO
+CONS_USA_ts %>%
+  model(tslm = TSLM(C ~ Y)) %>%
+  report()
 ```
 
 ## Código Python {.unnumbered}
@@ -82,20 +136,57 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
-# Lectura de datos
-ENGEL_ALIM = pd.read_csv('data/ENGEL_ALIM_USA.csv', delimiter=';')
-# Estimación del modelo
-CURVA_ENGEL_LINEAL = smf.ols('GALIM ~ RENTA', data=ENGEL_ALIM)
-results=CURVA_ENGEL_LINEAL.fit()
-print(results.summary())
-# Predicción
-# Generar un vector que contiene los nuevos valores de las variables explicativas
-new_RENTA = pd.DataFrame({'RENTA': [400, 2000, 4500]}, index=['newRENTA1', 'newRENTA2', 'newRENTA3'])
-print(f'new_RENTA: \n{new_RENTA}\n')
-# Predicción puntual
-pred_GALIM = results.predict(new_RENTA)
-print(f'pred_GALIM: \n{pred_GALIM}\n')
-# Predicción con intervalo de confianza
-pred_GALIM_IC = results.get_prediction(new_RENTA).summary_frame(alpha=0.05)
-print(f'pred_GALIM_IC: \n{pred_GALIM_IC}\n')
+# Lectura de datos 
+# (al introducir la opción index_col se está asignando en este caso
+# de forma implícita un formato temporal para el resto de columnas)
+CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', index_col=0)
+# Asignación del formato temporal 
+# (https://pandas.pydata.org/docs/user_guide/timeseries.html)
+# Un análisis detallado puede encontrarse en la siguiente página web:
+# https://jakevdp.github.io/PythonDataScienceHandbook/
+# 03.11-working-with-time-series.html
+ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', 
+parse_dates=['date'], index_col='date')
+ts_CONS_USA.head()
+ts_CONS_USA.tail()
+# Estadística descriptiva
+ts_CONS_USA.describe()
+# Gráficas
+plt.plot(ts_CONS_USA["C"])
+plt.xlabel("Date")
+plt.ylabel("Consumo privado en Estados Unidos (mill. US $)")
+plt.show()
+plt.plot(ts_CONS_USA["Y"])
+plt.xlabel("Date")
+plt.ylabel("Renta disponible en Estados Unidos (mill. US $)")
+plt.show()
+# Diagrama de puntos con línea de regresión
+reg = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
+res = reg.fit()
+plt.scatter(ts_CONS_USA["Y"], ts_CONS_USA["C"], color = "black")
+plt.plot(ts_CONS_USA["Y"], res.fittedvalues, color = "blue")
+plt.xlabel("Renta disponible")
+plt.ylabel("Consumo privado")
+plt.show()
+# Regresión por MCO
+model = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
+KEYNES_model = model.fit()
+print(KEYNES_model.summary())
+```
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# ANEXO: Clases de modelos y funciones específicas de la librería
+# `statsmodels` para el análisis de series temporales 
+# (https://www.statsmodels.org/stable/tsa.html)
+#
+from statsmodels.tsa.api import ARDL
+endog = ts_CONS_USA[["C"]]
+exog = ts_CONS_USA[["Y"]]   # exogs = data[["X2", "X3",...]]
+model = ARDL(endog, 0, exog, 0) # retardos=0 equivale a mod. estático
+KEYNES_ardl_model = model.fit()
+print(KEYNES_ardl_model.summary())
 ```
