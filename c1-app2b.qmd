@@ -20,9 +20,13 @@ format:
 ::: justify
 # Aplicación 1.2b: Gestión y representación gráfica de datos financieros {.unnumbered}
 
-## Relaciones entre activos bursátiles {.unnumbered}
+## Comportamiento de activos bursátiles {.unnumbered}
 
-En esta aplicación se analizará gráficamente la relación existente entre las variables financieras  $log(pSAN_t)$ y $log(pIBEX_t)$, donde $pSAN$ es el precio de las acciones del Banco Santander y $pIBEX$ es el índice bursátil IBEX 35. Antes de llegar a la gráfica final, se tendrán que ejecutar comandos específicos de filtrado (*filter*), selección (*select*), transformación (*mutate*) y fusión de ficheros (*join*).
+En la primera parte de esta aplicación se analizará gráficamente la relación existente entre las variables financieras $rSAN_t$ y $rIBEX_t$, donde $rSAN$ es el rendimiento (no el precio) de las acciones del Banco Santander y $rIBEX$ es el rendimiento del índice bursátil Ibex 35 (<https://en.wikipedia.org/wiki/IBEX_35>).
+
+En la segunda parte se analizará el rendimiento en 2023 de las 30 principales empresas por capitalización del Ibex 35 (<https://finance.yahoo.com/quote/%5EIBEX/components?p=%5EIBEX>).
+
+Durante la aplicación, se tendrán que ejecutar comandos específicos de filtrado, selección, transformación, fusión de ficheros, agrupación, ordenación y resumen, todas ellos asociados a operaciones básicas en la gestión de datos.
 :::
 
 ## Código R {.unnumbered}
@@ -32,48 +36,196 @@ En esta aplicación se analizará gráficamente la relación existente entre las
 #| warning: false
 #| message: false
 
+# Comportamiento Banco Santander/Ibex 35
 # Lectura de librerías
 library(tidyverse)
 library(lubridate)
 library(scales)
-# Lectura de datos de las 30 mayores empresas del IBEX
-# (https://finance.yahoo.com/quote/%5EIBEX/components?p=%5EIBEX&guccounter=1)
-stock_data <- read_csv("data/IBEX_top30.csv")
-head(stock_data)
-tail(stock_data)
+# Lectura de datos de las 30 mayores empresas del Ibex 35
+datos_acciones <- read_csv("data/IBEX_top30.csv")
+head(datos_acciones)
+tail(datos_acciones)
 # filter
-SAN <- stock_data %>% filter(symbol == "SAN.MC")
+SAN <- datos_acciones %>% filter(symbol == "SAN.MC")
 # select
-p_SAN <- SAN %>% select(date,adjusted)
-head(p_SAN)
-tail(p_SAN)
-# Lectura de datos del índice IBEX 
+pSAN <- SAN %>% select(date, adjusted)
+head(pSAN)
+tail(pSAN)
+# Lectura de datos del índice Ibex 35 
 IBEX <- read_csv("data/IBEX.csv")
 # select
-p_IBEX <- IBEX %>% select(date,adjusted)
-head(p_IBEX)
-tail(p_IBEX)
+pIBEX <- IBEX %>% select(date,adjusted)
+head(pIBEX)
+tail(pIBEX)
 # join
-data_daily <- inner_join(p_IBEX,p_SAN, by = "date") %>% rename(pIBEX = adjusted.x, pSAN = adjusted.y)
+IBEX_SAN <- inner_join(pIBEX, pSAN, by = "date") %>% 
+  rename(pIBEX = adjusted.x, pSAN = adjusted.y)
 # mutate
-data_daily <- data_daily %>% mutate(year = year(date), month = month(date))
-data_daily <- data_daily %>% mutate(l_pSAN = log(pSAN), l_pIBEX = log(pIBEX))
-head(data_daily)
-tail(data_daily)
+IBEX_SAN <- IBEX_SAN %>% 
+  mutate(year = year(date), month = month(date))
+IBEX_SAN  <- IBEX_SAN %>% 
+  mutate(rSAN = 100*(pSAN / lag(pSAN) - 1), 
+         rIBEX = 100*(pIBEX / lag(pIBEX) - 1))
+head(IBEX_SAN)
+tail(IBEX_SAN)
+# Eliminación de datos perdidos (missing data)
+IBEX_SAN <- IBEX_SAN |> drop_na()
 # ggplot
-p1 <- ggplot(data = data_daily, aes(x = date)) +
-  geom_line(aes(y = pSAN), linewidth = 0.5) +
-  labs(y = "Precio de las acciones de Banco Santander, S.A.", x = "Fecha")
+p1 <- ggplot(data = IBEX_SAN, aes(x = date)) +
+  geom_line(aes(y = rSAN), linewidth = 0.5) +
+  labs(y = "Rendimiento de las acciones de Banco Santander", 
+       x = "Fecha (día)")
 p1
-p2 <- ggplot(data = data_daily,aes(x = date)) +
-  geom_line(aes(y = pIBEX), linewidth = 0.5) +
-  labs(y = "Indice IBEX 35 (Bolsa de Madrid)", x = "Fecha")
+p2 <- ggplot(data = IBEX_SAN, aes(x = date)) +
+  geom_line(aes(y = rIBEX), linewidth = 0.5) +
+  labs(y = "Rendimiento del Ibex 35", 
+       x = "Fecha (día)")
 p2
-p3 <- ggplot(data_daily, aes(x = l_pIBEX,y = l_pSAN)) + 
+p3 <- ggplot(IBEX_SAN, aes(x = rIBEX, y = rSAN)) + 
                geom_point() +  
-               stat_smooth(method = lm, se=FALSE) +  
-               labs(x = "Indice IBEX 35 (log)",y = "Precio acciones Banco Santander (log)")
+               stat_smooth(method = lm, se = FALSE) +  
+               labs(x = "Rendimiento Ibex 35",
+                    y = "Rendimiento acciones Banco Santander")
 p3
+```
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Comportamiento en 2023 del top30 del Ibex 35
+library(tidyquant)
+library(plotly)
+# Cálculo de los rendimientos diarios
+# group_by / tq_transmute (mutate)
+rend_diarios  <-  datos_acciones %>% 
+    group_by(company_name, symbol) %>% 
+    tq_transmute(select     = adjusted, 
+                 mutate_fun = periodReturn, 
+                 period     = "daily")
+rend_diarios$daily.returns <- (rend_diarios$daily.returns)*100
+# Análisis rentabilidad-riesgo en 2023
+# filter / group_by / summarise / arrange
+rend_diarios_2023 <-
+  rend_diarios %>% filter(date >= "2023-01-01" & date <= "2023-12-31")
+Rend_Volat  <- rend_diarios_2023 %>% 
+  group_by(company_name, symbol) %>% 
+  summarise(Rendimiento = round(mean(daily.returns), 3), 
+            Volatilidad = round(sd(daily.returns), 3)) %>%
+  arrange(desc(Rendimiento), desc(Volatilidad))
+p4 <- plot_ly(Rend_Volat, 
+                 x = ~Rendimiento, 
+                 y = ~Volatilidad, 
+                 type = 'scatter', 
+                 mode = 'text', 
+                 text = ~symbol, 
+                 textposition = 'middle right', 
+                 textfont = list(size = 10)) %>%
+  layout(title = 'Rentabilidad versus Riesgo en 2023',
+         xaxis = list(title = 'Rendimiento medio', zeroline = FALSE),
+         yaxis = list(title = 'Volatilidad'))
+p4
+# Las 10 empresas con mayor y menor rentabilidad en 2023
+Rend_Volat %>% head(n = 10)
+Rend_Volat %>% head(10) %>% 
+  ggplot(aes(reorder(company_name, -Rendimiento), 
+             Rendimiento, fill = Rendimiento)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Las 10 mejores acciones en 2023", 
+       x = "Empresa", 
+       y = "Rendimiento medio") +
+  theme_classic() +
+  theme(legend.position = "none")
+Rend_Volat %>% tail(n = 10)
+Rend_Volat %>% tail(10) %>% 
+  ggplot(aes(reorder(company_name, Rendimiento), 
+             Rendimiento, 
+             fill = Rendimiento)) +
+    geom_col() +
+    coord_flip() + 
+    labs(title = "Las 10 peores acciones en 2023", 
+         x = "Empresa", 
+         y = "Rendimiento medio") +
+    theme_classic() +
+    theme(legend.position = "none")
+```
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Análisis del ganador:
+# Industria de Diseño Textil, S.A. [INDITEX]
+# Largo plazo (5 años)
+datos_acciones  %>% 
+  filter(symbol %in% c('ITX.MC')) %>%
+  filter(date >= "2019-01-01") %>% 
+  ggplot(aes(date, adjusted)) +
+  geom_line() +
+  facet_wrap(~symbol) +
+  labs(title = "Precio de las acciones de INDITEX 2019-2023") +
+  theme_classic()
+# Medio plazo (2 años)
+datos_acciones  %>% 
+  filter(symbol %in% c('ITX.MC')) %>%
+  filter(date >= "2022-01-01") %>% 
+  ggplot(aes(date, adjusted)) +
+  geom_point(alpha = 0.3, color = 'black') +
+  geom_line() +
+  facet_wrap(~symbol) +
+  labs(title = "Precio de las acciones de INDITEX 2022-2023") +
+  theme_classic()
+# Corto plazo (últimos 12 meses)
+datos_acciones  %>% 
+  filter(symbol %in% c('ITX.MC')) %>%
+  filter(date >= "2023-01-01") %>% 
+  ggplot(aes(date, adjusted)) +
+  geom_point(alpha = 0.3, color = 'black') +
+  geom_line() +
+  facet_wrap(~symbol) +
+  labs(title = "Precio de las acciones de INDITEX 2023") +
+  theme_classic()
+```
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Análisis del perdedor:
+# Acciona, S.A. [ACCIONA]
+# Largo plazo (5 años)
+datos_acciones %>% 
+  filter(symbol %in% c('ANA.MC')) %>%
+  filter(date >= "2019-01-01") %>% 
+  ggplot(aes(date, adjusted)) +
+  geom_line() +
+  facet_wrap(~symbol) +
+  labs(title = "Precio de las acciones de ACCIONA 2019-2023") +
+  theme_classic()
+# Medio plazo (2 años)
+datos_acciones  %>% 
+  filter(symbol %in% c('ANA.MC')) %>%
+  filter(date >= "2022-01-01") %>% 
+  ggplot(aes(date, adjusted)) +
+  geom_point(alpha = 0.3, color = 'black') +
+  geom_line() +
+  facet_wrap(~symbol) +
+  labs(title = "Precio de las acciones de ACCIONA 2022-2023") +
+  theme_classic()
+# Corto plazo (últimos 12 meses)
+datos_acciones  %>% 
+  filter(symbol %in% c('ANA.MC')) %>%
+  filter(date >= "2023-01-01") %>% 
+  ggplot(aes(date, adjusted)) +
+  geom_point(alpha = 0.3, color = 'black') +
+  geom_line() +
+  facet_wrap(~symbol) +
+  labs(title = "Precio de las acciones de ACCIONA 2023") +
+  theme_classic()
 ```
 
 ## Código Python {.unnumbered}
@@ -83,45 +235,54 @@ p3
 #| warning: false
 #| message: false
 
+# Comportamiento Banco Santander/Ibex 35
 # Lectura de librerías
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from plotnine import *
 from datetime import datetime
-# Lectura de datos 30 mayores empresas del IBEX
-# (https://finance.yahoo.com/quote/%5EIBEX/components?p=%5EIBEX&guccounter=1)
-stock_data = pd.read_csv('data/IBEX_top30.csv')
-stock_data.head()
-stock_data.tail()
+# Lectura de datos 30 mayores empresas del Ibex 35
+datos_acciones = pd.read_csv('data/IBEX_top30.csv')
+datos_acciones.head()
+datos_acciones.tail()
 # filter
-SAN = stock_data[stock_data['symbol']=='SAN.MC']
+SAN = datos_acciones[datos_acciones['symbol']=='SAN.MC']
 # select
-p_SAN = SAN[['date','adjusted']]
-p_SAN['date']=pd.to_datetime(p_SAN['date'])
-p_SAN.head()
-p_SAN.tail()
-# Lectura de datos del índice IBEX
+pSAN = SAN[['date','adjusted']]
+pSAN['date'] = pd.to_datetime(pSAN['date'])
+pSAN.head()
+pSAN.tail()
+# Lectura de datos del índice Ibex 35
 IBEX = pd.read_csv('data/IBEX.csv')
-p_IBEX = IBEX[['date','adjusted']]
-p_IBEX['date']=pd.to_datetime(p_IBEX['date'])
-p_IBEX.head()
-p_IBEX.tail()
+# select
+pIBEX = IBEX[['date','adjusted']]
+# mutate
+pIBEX['date'] = pd.to_datetime(pIBEX['date'])
+pIBEX.head()
+pIBEX.tail()
 # merge (join)
-data_daily=pd.merge(p_IBEX,p_SAN,how='inner',on='date').\
+IBEX_SAN = pd.merge(pIBEX, pSAN, how='inner', on='date').\
     rename(columns={'adjusted_x':'pIBEX','adjusted_y':'pSAN'})
 # time
-data_daily['year'] = data_daily['date'].dt.year
-data_daily['month'] = data_daily['date'].dt.month
-# mutate
-data_daily['l_pSAN']=data_daily['pSAN'].map(lambda x:np.log(x))
-data_daily['l_pIBEX']=data_daily['pIBEX'].map(lambda x:np.log(x))
-data_daily.head()
-data_daily.tail()
-# ggplot (Python)
-(ggplot(data_daily) + geom_line(aes('date','pSAN'), size = 0.5) 
-+ labs(y = "Precio de las acciones de Banco Santander, S.A.",x= "Date (day)") + theme_bw())
-(ggplot(data_daily) + geom_line(aes('date','pIBEX'), size = 0.5) + scale_y_continuous(expand = [0.01,0.01]) 
-+ labs(y = "Indice IBEX 35 (Bolsa de Madrid)",x= "Date (day)") + theme_bw())
-(ggplot(data_daily,aes('l_pIBEX','l_pSAN')) + geom_point() + geom_smooth(method='lm',se=False, color = "blue") + labs(x="Indice IBEX 35 (log)",y="Precio acciones Banco Santander (log)") + theme_bw())
+IBEX_SAN['year'] = IBEX_SAN['date'].dt.year
+IBEX_SAN['month'] = IBEX_SAN['date'].dt.month
+# Cálculo de los rendimientos netos diarios
+IBEX_SAN['rSAN'] = 100*(IBEX_SAN['pSAN']/IBEX_SAN['pSAN'].shift(1)-1)
+IBEX_SAN['rIBEX'] = 100*(IBEX_SAN['pIBEX']/IBEX_SAN['pIBEX'].shift(1)-1)
+IBEX_SAN.head()
+IBEX_SAN.tail()
+# Eliminación de datos perdidos (missing data)
+IBEX_SAN = IBEX_SAN.dropna()
+# ggplot (plotnine)
+(ggplot(IBEX_SAN) + geom_line(aes('date','rSAN'), size = 0.5) + 
+labs(y = "Rendimiento de las acciones de Banco Santander", x = "Fecha (día)") + 
+theme_bw())
+(ggplot(IBEX_SAN) + geom_line(aes('date','rIBEX'), size = 0.5) + 
+labs(y = "Rendimiento del Ibex 35", x = "Fecha (día)") + 
+theme_bw())
+(ggplot(IBEX_SAN, aes('rIBEX','rSAN')) + geom_point() + 
+geom_smooth(method = 'lm', se = False, color = "blue") + 
+labs(x="Rendimiento Ibex 35", y="Rendimiento acciones Banco Santander") + 
+theme_bw())
 ```

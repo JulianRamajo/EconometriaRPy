@@ -1,0 +1,212 @@
+---
+engine: knitr
+excerpt: ""
+draft: false
+format: 
+  html:
+    theme: simplex
+    self-contained: true
+    max-width: 1920px
+    code-fold: show
+    code-tools: true
+    highlight-style: atom-one-dark
+    code-block-bg: "#282c34"
+---
+
+```{css, echo = FALSE}
+.justify { text-align: justify !important }
+```
+
+::: justify
+# Aplicación 2.9: Mix econométrico (datos espaciales, forma funcional, inferencia estadística y predicción) {.unnumbered}
+
+## Medición de la calidad de vida {.unnumbered}
+
+La renta per cápita es la forma más usual de cuantificar el nivel de bienestar de un país, permitiendo además la comparación entre distintas economías, independientemente de su tamaño. Sin embargo, utilizar sólo el PIB de los habitantes de un territorio como indicador del bienestar social y del progreso del país resulta bastante inapropiado, como se reconoce en el [Informe Stiglitz-Sen-Fitoussi](https://ec.europa.eu/eurostat/documents/8131721/8131772/Stiglitz-Sen-Fitoussi-Commission-report.pdf) del año 2009.
+
+Distintos organismos, como la OCDE, las Naciones Unidas o la Comisión Europea, han reconocido la debilidad del PIB o la renta per cápita para valorar el nivel de desarrollo humano de una sociedad, proponiendo distintas alternativas para determinar la calidad de vida de las personas que residen en un determinado territorio.
+
+Para este ejercicio utilizaremos los datos del año 2021 elaborados por las Naciones Unidas para construir el *Índice de Desarrollo Humano* (<https://hdr.undp.org/data-center/human-development-index#/indicies/HDI>), que es un indicador de bienestar agregado de los países (con escala entre 0 y 100) que engloba tanto los niveles de salud \[medida por la variable *LifeExp*, la esperanza de vida al nacer, medida en años\] y educación \[medida por la variable *ExpEduc*, el grado de escolarización esperado para cada persona, medido en años\] como el nivel económico de cada país \[medido por la variable *GNIpc*, la renta per cápita, medida en dólares constantes en términos de paridad de poder adquisitivo\].
+:::
+
+## Código R
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+library(readxl)
+library(sf)
+library(geojsonsf)
+library(viridis)
+library(car)
+library(alr4)
+# Lectura de los datos
+datos <- read_excel("data/HDI.xlsx")
+summary(datos[,2:5])
+# Lectura del mapa
+mapa <- geojson_sf("data/WORLDmap.geojson")
+# Fusión de datos y mapa
+datos_geo <- left_join(mapa, datos, by = "name")
+# Gráfica del HDI
+ggplot(datos_geo) +
+    geom_sf(aes(fill=HDI)) +
+    theme_bw() +
+    labs(title = "Índice de Desarrollo Humano 2021 (Escala 0-100)") +
+    scale_fill_viridis(option="magma")
+# Regresión para explicar la variable HDI: 
+# HDI = f(LifeExp, ExpEduc, GNIpc) + e
+# Gráficas parciales
+# Variables originales
+scatterplotMatrix(~ HDI + LifeExp + ExpEduc + GNIpc, data=datos)
+# Variables transformadas
+scatterplot(log(HDI) ~ LifeExp, data=datos, 
+            smooth=list(smoother=loessLine, var=FALSE, lwd.smooth=3), 
+            col="blue", regLine=list(lwd=3))
+scatterplot(log(HDI) ~ ExpEduc, data=datos, 
+            smooth=list(smoother=loessLine, var=FALSE, lwd.smooth=3), 
+            col="blue", regLine=list(lwd=3))
+scatterplot(log(HDI) ~ log(GNIpc), data=datos, 
+            smooth=list(smoother=loessLine, var=FALSE, lwd.smooth=3), 
+            col="blue", regLine=list(lwd=3))
+# Regresión por MCO del modelo 
+# log(HDI) = beta1 + beta2*LifeExp + beta3*ExpEduc + beta4*log(GNIpc) + e
+# Interpretación beta2 y beta3: semi-elasticidades
+# Interpretación beta4: elasticidad
+mod_log <- lm(log(HDI) ~ LifeExp + ExpEduc + log(GNIpc), data = datos)
+summary(mod_log)
+# Intervalo de confianza del 95% para los parámetros del modelo
+confint(mod_log, level=.95)
+# Gráficos de efectos
+plot(allEffects(mod_log), grid=TRUE, rug=TRUE)
+# Contrastes de hipótesis:
+# test t de la hipótesis {R*beta (>)(=)(<) r}
+t_test<-function(model,R,r){
+  VCOV<-vcov(model)
+  Rbeta<-as.numeric(t(R) %*% coef(model))
+  varRbeta<-as.numeric(t(R) %*% VCOV %*% R)
+  t_0<-(Rbeta-r)/sqrt(varRbeta)
+  df<-df.residual(model)
+  pval_unilat_izqda = pt(t_0,df)
+  pval_bilat = 2*(1-pt(abs(t_0),df))
+  pval_unilat_dcha = 1-pt(t_0,df)
+  list<-c(t_0, pval_unilat_izqda, pval_bilat, pval_unilat_dcha)
+  return(list)
+}
+# Ejecución del contraste H_0 : {beta2 <= beta3} 
+R <- c(0,1,-1,0)
+r <- 0
+p <- t_test(mod_log,R,r)
+cat(" Estadístico t0 = ",p[[1]],"\n",
+    " p-valor unilat_izqda  (Ho: Rbeta >= r) = ",p[[2]],"\n",
+    " p-valor bilateral     (Ho: Rbeta = r)  = ",p[[3]],"\n",
+    " p-valor unilat_dcha   (Ho: Rbeta <= r)  = ",p[[4]]," ")
+# Predicción del HDI para un país con los siguientes indicadores parciales:
+# LifeExp = 71.7, ExpEduc = 13.4, GNIpc = 12306.3
+nuevo_PAIS <- data.frame(LifeExp=c(71.7), ExpEduc=c(13.4), GNIpc=c(12306.3))
+nuevo_PAIS
+# HDI esperado con intervalo de confianza
+pred_log_HDI_IC <- predict(mod_log,  nuevo_PAIS, 
+                          interval="confidence", level=0.95)
+pred_log_HDI_IC
+pred_HDI_IC=exp(pred_log_HDI_IC)
+pred_HDI_IC
+```
+
+## Código Python
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy.stats as scs
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+# Lectura de los datos
+datos = pd.read_excel('data/HDI.xlsx')
+datos.describe()
+# Lectura del mapa
+mapa = gpd.read_file("data/WORLDmap.geojson")
+# Fusión de datos y mapa
+datos_geo  = mapa.merge(datos, on = 'name', how = 'left')
+# Gráfica del HDI
+fig, ax = plt.subplots(1,1)
+datos_geo.plot(column="HDI",
+           legend=True,
+           cmap='magma',
+           ax=ax)
+plt.title('Índice de Desarrollo Humano 2021 (Escala 0-100)')
+plt.tight_layout()
+plt.show()
+# Regresión para explicar la variable HDI: 
+# HDI = f(LifeExp, ExpEduc, GNIpc) + e
+# Gráficas parciales
+# Variables originales
+plt.figure(2)
+sns.pairplot(data = datos, diag_kind = 'kde');
+plt.show()
+# Variables tranformadas
+plt.figure(3)
+sns.regplot(data = datos, x="LifeExp", y="HDI");
+plt.yscale('log')
+plt.show()
+plt.figure(4)
+sns.regplot(data = datos, x="ExpEduc", y="HDI");
+plt.yscale('log')
+plt.show()
+plt.figure(5)
+sns.regplot(data = datos, x="GNIpc", y="HDI", logx=True);
+plt.xscale('log')
+plt.yscale('log')
+plt.show()
+# Regresión por MCO del modelo 
+# log(HDI) = beta1 + beta2*LifeExp + beta3*ExpEduc + beta4*log(GNIpc) + e
+# Interpretación beta2 y beta3: semi-elasticidades
+# Interpretación beta4: elasticidad
+mod_log = smf.ols(formula = "np.log(HDI) ~ LifeExp + ExpEduc + np.log(GNIpc)",
+data = datos).fit()
+print(mod_log.summary())
+# Intervalo de confianza del 95% para los parámetros del modelo
+mod_log.conf_int()
+# Contraste de hipótesis:
+# test t de la hipótesis {R*beta (>)(=)(<) r}
+def t_test(model, R, r):
+  VCOV = model.cov_params()
+  b = model.params
+  Rbeta = R.T.dot(b)
+  varRbeta = R.T.dot(VCOV).dot(R)
+  t_0 = (Rbeta - r)/np.sqrt(varRbeta)
+  df = model.df_resid
+  pval_unilat_izqda = scs.t.cdf(t_0, df)
+  pval_bilat = 2*(1 - scs.t.cdf(np.abs(t_0), df))
+  pval_unilat_dcha = 1 - scs.t.cdf(t_0, df)
+  return(t_0, pval_unilat_izqda, pval_bilat, pval_unilat_dcha)
+# Ejecución del contraste H_0 : {beta2 <= beta3} 
+R = np.array([0, 1, -1, 0])
+r = 0
+p = t_test(mod_log, R, r)
+print('Resultados:', '\n',
+'Estadístico t0 = ', round(p[0], 4), '\n',
+' p-valor unilat_izqda  (Ho: Rbeta >= r)  = ', round(p[1], 4), '\n',
+' p-valor bilateral     (Ho: Rbeta = r)   = ', round(p[2], 4), '\n',
+' p-valor unilat_dcha   (Ho: Rbeta <= r)  = ', round(p[3], 4))
+# Predicción del HDI para un país con los siguientes indicadores parciales:
+# LifeExp = 71.7, ExpEduc = 13.4, GNIpc = 12306.3
+nuevo_PAIS = pd.DataFrame({'LifeExp': [71.7], 'ExpEduc': [13.4], 'GNIpc': [12306.3]})
+print(nuevo_PAIS)
+# HDI esperado con intervalo de confianza
+pred_log_HDI_IC = mod_log.get_prediction(nuevo_PAIS).summary_frame(alpha=0.05)
+print(pred_log_HDI_IC[['mean','mean_ci_lower', 'mean_ci_upper']])
+pred_HDI_IC=np.exp(pred_log_HDI_IC)
+print(pred_HDI_IC[['mean','mean_ci_lower', 'mean_ci_upper']])
+```

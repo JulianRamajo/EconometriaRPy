@@ -50,7 +50,7 @@ library(scales)
 pSAN <- tq_get("SAN.MC",
   get = "stock.prices",
   from = "2000-01-01",
-  to = "2023-11-30"
+  to = "2023-12-31"
 )
 head(pSAN)
 tail(pSAN)
@@ -61,12 +61,12 @@ pSAN |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Precio de las acciones del Santander desde el año 2000 (EUR)"
+    title = "Precio de las acciones del Banco Santander (EUR)"
   )
 # Cálculo de los rendimientos netos diarios (returns)
 rSAN <- pSAN |>
   arrange(date) |>
-  mutate(ret = adjusted / lag(adjusted) - 1) |>
+  mutate(ret = 100*(adjusted / lag(adjusted) - 1)) |>
   select(symbol, date, ret)
 head(rSAN)
 tail(rSAN)
@@ -80,9 +80,10 @@ rSAN |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Rendimiento diario de las acciones del Banco Santarder"
+    title = "Rendimiento de las acciones del Banco Santander (%)"
   )
-# Distribución de los rendimientos diarios (detección de asimetrías)
+# Distribución de los rendimientos diarios 
+# (detección de asimetrías y exceso de curtosis)
 q5 <- quantile(rSAN |> pull(ret), probs = 0.05)
 q95 <- quantile(rSAN |> pull(ret), probs = 0.95)
 rSAN |>
@@ -93,7 +94,7 @@ rSAN |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Distribución de los rendimientos diarios del Banco Santander"
+    title = "Distribución de los rendimientos del Banco Santander"
   ) +
   scale_x_continuous(labels = percent)
 # Estadística resumen global
@@ -107,7 +108,7 @@ rSAN |>
       máximo = max
     )
   ))
-# Estadística resumen por año
+# Estadística resumen por años
 rSAN |>
   group_by(year = year(date)) |>
   summarize(across(
@@ -128,8 +129,8 @@ rSAN |>
 #| warning: false
 #| message: false
 
-# ANEXO: Librerías especializadas en análisis de series temporales y 
-# datos financieros
+# ANEXO: Librerías especializadas en el análisis de series temporales 
+# y de datos financieros
 #
 # Lectura de librerías
 library(tidyverse)
@@ -148,97 +149,91 @@ library(TSstudio)
 tq_index_options()
 SP500 <- tq_index("SP500")
 head(SP500,10)
-FAANG_prices <- tq_get(c("META", "AAPL", "AMZN", "NFLX", "GOOG"), 
+datos_FAANG <- tq_get(c("META", "AAPL", "AMZN", "NFLX", "GOOG"), 
                        get = "stock.prices", 
                        from = "2015-01-01", 
-                       to = "2023-11-30")
-FAANG_prices %>%
-  group_by(symbol) %>%
-  select(symbol, date, adjusted) %>%
-  plot_time_series(date, adjusted, .interactive = FALSE) # series y tendencias
-# Agrupación de series temporales de precios
-FAANG_prices_ts <- FAANG_prices %>%
+                       to = "2023-12-31")
+# Series temporales de precios
+datos_FAANG_ts <- datos_FAANG %>%
   group_by(symbol) %>%
   select(symbol, date, adjusted) %>%
   pivot_wider(names_from = symbol, values_from = adjusted)
-ts_plot(FAANG_prices_ts, 
+ts_plot(datos_FAANG_ts, 
         title = "Precio de las acciones del grupo FAANG", 
-        Ytitle = "Index")
-# Si se quiere una periodicidad anual, mensual o semanal
-# se pueden usar el comando tq_transmute.
-# Opciones disponibles:
-# tq_transmute_fun_options() %>% str()
-# tq_mutate_fun_options()
-FAANG_daily <- FAANG_prices %>% 
+        Ytitle = "USD")
+# Rentabilidades diarias de las acciones
+# Precios
+FAANG_precios <- datos_FAANG %>% 
   group_by(symbol) %>% 
-  select(symbol, date, adjusted) 
-FAANG_monthly <- FAANG_daily %>%   
-  tq_transmute(select     = adjusted, 
-               mutate_fun = to.period, 
-               period     = "months") # semanal: "weeks"
-FAANG_monthly %>% 
+  select(symbol, date, adjusted)
+FAANG_precios %>% 
   ggplot(aes(x = date, y = adjusted, color = symbol)) +
   geom_line(linewidth = 1) +
   labs(title = "Precio de las acciones del grupo FAANG",
-       x = "Meses", y = "Precios corregidos", color = "") +
+       x = "Día", y = "Precios corregidos", color = "") +
   facet_wrap(~ symbol, ncol = 2, scales = "free_y") +
-  scale_y_continuous(labels = scales::dollar) +
+  theme_tq() + 
+  scale_color_tq()
+# Rentabilidades
+FAANG_rentabilidades <- FAANG_precios %>% 
+  group_by(symbol) %>% 
+  tq_transmute(select = adjusted, mutate_fun = periodReturn, 
+               period = "daily", type  = "log")
+FAANG_rentabilidades %>% ggplot(aes(x = date, y = daily.returns, 
+                                   fill = symbol)) + geom_col() +
+  geom_hline(yintercept = 0, color = palette_light()[[1]]) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Rendimiento de las acciones del grupo FAANG", 
+       subtitle = "(Log-returns)", 
+       y = "Rendimiento", x = "Día") + 
+  facet_wrap(~ symbol, ncol = 2, scales = "free_y") +
+  theme_tq() + 
+  scale_fill_tq()
+# Distribución de rendimientos
+FAANG_rentabilidades %>% ggplot(aes(x = daily.returns, fill = symbol)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Distribución de los rendimientos diarios",  
+       subtitle = "(Log-returns)", 
+       x = "Día", y = "Densidad") +
+  theme_tq() +
+  scale_fill_tq() + 
+  facet_wrap(~ symbol, ncol = 2)
+# Anomalías (valores atípicos)
+FAANG_rentabilidades %>%
+  group_by(symbol) %>%
+  plot_anomaly_diagnostics(date, daily.returns, 
+                           .facet_ncol = 3, .interactive = FALSE)
+# Si se quiere una periodicidad anual, mensual o semanal
+# se puede usar el comando tq_transmute.
+# Caso mensual:
+FAANG_precios_m <- FAANG_precios %>%   
+  tq_transmute(select     = adjusted, 
+               mutate_fun = to.period, 
+               period     = "months") # semanal: "weeks"
+FAANG_precios_m %>% 
+  ggplot(aes(x = date, y = adjusted, color = symbol)) +
+  geom_line(linewidth = 1) +
+  labs(title = "Precio de las acciones del grupo FAANG",
+       x = "Mes", y = "Precios corregidos", color = "") +
+  facet_wrap(~ symbol, ncol = 2, scales = "free_y") +
   theme_tq() + 
   scale_color_tq()
 # Rendimientos anuales o mensuales (cambiar "yearly" por "monthly")
-FAANG_yearly_returns <- FAANG_prices %>%
+FAANG_rentabilidades_a <- FAANG_precios %>%
   group_by(symbol) %>%
   tq_transmute(select = adjusted, mutate_fun = periodReturn, 
                period = "yearly", type = "arithmetic")
-FAANG_yearly_returns %>% ggplot(aes(x = date, y = yearly.returns, 
+FAANG_rentabilidades_a %>% ggplot(aes(x = date, 
+                                    y = yearly.returns, 
                                     fill = symbol)) +
   geom_col() +
   geom_hline(yintercept = 0, color = palette_light()[[1]]) +
   scale_y_continuous(labels = scales::percent) +
   labs(title = "Rendimientos anuales del grupo FAANG", 
-       subtitle = "X", y = "Rendimiento", x = "") + 
+       y = "Rendimiento", x = "Año") + 
   facet_wrap(~ symbol, ncol = 2, scales = "free_y") +
   theme_tq() + 
   scale_fill_tq()
-# Rendimiento diario de las acciones
-FAANG_daily %>% 
-  ggplot(aes(x = date, y = adjusted, color = symbol)) +
-  geom_line(linewidth = 1) +
-  labs(title = "Precio de las acciones del grupo FAANG",
-       x = "Días", y = "Precios corregidos", color = "") +
-  facet_wrap(~ symbol, ncol = 2, scales = "free_y") +
-  scale_y_continuous(labels = scales::dollar) +
-  theme_tq() + 
-  scale_color_tq()
-FAANG_daily_returns <- FAANG_prices %>% 
-  group_by(symbol) %>% 
-  tq_transmute(select = adjusted, mutate_fun = periodReturn, 
-               period = "daily", type  = "log")
-# Rentabilidad
-FAANG_daily_returns %>% ggplot(aes(x = date, y = daily.returns, 
-                                   fill = symbol)) + geom_col() +
-  geom_hline(yintercept = 0, color = palette_light()[[1]]) +
-  scale_y_continuous(labels = scales::percent) +
-  labs(title = "Rendimiento diario de las acciones del grupo FAANG", 
-       subtitle = "(Log-returns)", 
-       y = "Rendimiento", x = "") + 
-  facet_wrap(~ symbol, ncol = 2, scales = "free_y") +
-  theme_tq() + 
-  scale_fill_tq()
-# Distribución
-FAANG_daily_returns %>% ggplot(aes(x = daily.returns, fill = symbol)) +
-  geom_density(alpha = 0.5) +
-  labs(title = "Distribución de los rendimientos diarios del grupo FAANG",  
-       subtitle = "(Log-returns)", 
-       x = "", y = "Densidad") +
-  theme_tq() +
-  scale_fill_tq() + 
-  facet_wrap(~ symbol, ncol = 2)
-# Anomalías
-FAANG_daily_returns %>%
-  group_by(symbol) %>%
-  plot_anomaly_diagnostics(date, daily.returns, 
-                           .facet_ncol = 3, .interactive = FALSE)
 ```
 
 ## Código Python {.unnumbered}
@@ -264,7 +259,7 @@ warnings.filterwarnings("ignore")
 # Creación del ticker del Banco Santander
 SAN = yf.Ticker("SAN.MC")
 # Lectura de los datos para el período seleccionado
-pSAN = yf.download("SAN.MC", start="2000-01-01", end="2023-11-30")
+pSAN = yf.download("SAN.MC", start="2000-01-01", end="2023-12-31")
 print(pSAN)
 pSAN = (pSAN.reset_index())
 pSAN.head()
@@ -273,30 +268,25 @@ pSAN.tail()
 (
   ggplot(pSAN, aes(y="Adj Close", x="Date")) 
   + geom_line() 
-  + labs(x="", y="", title="Precio de las acciones del Banco Santander desde el año 2000 (EUR)")
+  + labs(x="Día", y="", title="Precio de las acciones del Banco Santander (EUR)")
 )
 # Cálculo de los rendimientos netos diarios
 def ret(x):
-    x_change = (x/x.shift(1)-1)
+    x_change = 100*(x/x.shift(1)-1)
     return x_change
 pSAN['ret'] = ret(pSAN['Adj Close'])
 pSAN['ret']
-# Cálculo alternativo de la rentabilidad diaria
-ret2 = (pSAN
-  .sort_values("Date")
-  .assign(ret2 = lambda x: x["Adj Close"].pct_change())
-  .get(["Date", "ret2"])
-)
-ret2.head()
 # Eliminación de datos perdidos (missing data)
 pSAN = pSAN.dropna()
 # Evolución temporal de las rentabilidades diarias
 (
   ggplot(pSAN, aes(y="ret", x="Date"))
  + geom_line()
- + labs(x="", y="", title="Rendimiento diario de las acciones del Banco Santarder")
+ + labs(x="Día", y="", 
+ title="Rendimiento de las acciones del Banco Santander (%)")
 )
-# Distribución de los rendimientos diarios (detección de asimetrías)
+# Distribución de los rendimientos diarios 
+# (detección de asimetrías y exceso de curtosis)
 q5 = pSAN["ret"].quantile(0.05)
 q95 = pSAN["ret"].quantile(0.95)
 (
@@ -304,23 +294,20 @@ q95 = pSAN["ret"].quantile(0.95)
  + geom_histogram(bins=100)
  + geom_vline(aes(xintercept=q5), linetype="dashed")
  + geom_vline(aes(xintercept=q95), linetype="dashed")
- + labs(x=None, y=None, title="Distribución de los rendimientos diarios del Banco Santander")
+ + labs(x=None, y=None, 
+ title="Distribución de los rendimientos del Banco Santander")
  + scale_x_continuous(labels=percent_format())
 )
 # Estadística resumen global
-pSAN["ret"].describe()
-# Selección de estadísticos y precisión
 est_res = pSAN['ret'].agg({
     'media': 'mean',
     'desv_típica': 'std',
     'mínimo': 'min',
     'máximo': 'max'
 })
-est_res.round(4)
-# Estadística resumen por año
-pSAN["ret"].groupby(pSAN["Date"].dt.year).describe()
-# Selección de estadísticos y precisión
+est_res.round(3)
+# Estadística resumen por años
 pSAN['year'] = pSAN["Date"].dt.year
 est_anual = pSAN.groupby('year').agg({'ret': ['mean', 'std', 'min', 'max']})
-est_anual.round(4)
+est_anual.round(3)
 ```

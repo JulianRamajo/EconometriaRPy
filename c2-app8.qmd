@@ -18,7 +18,7 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.8: Series temporales de alta frecuencia y con estacionalidad  {.unnumbered}
+# Aplicación 2.8: Modelos de regresión con variables de alta frecuencia y con estacionalidad  {.unnumbered}
 
 ## Demanda de electricidad en el estado de Victoria (Australia) {.unnumbered}
 
