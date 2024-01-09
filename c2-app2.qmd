@@ -21,15 +21,15 @@ format:
 ::: justify
 # Aplicación 2.2: Regresiones con datos de series temporales  {.unnumbered}
 
-## Consumo privado en Estados Unidos {.unnumbered}
+## Consumo privado en España {.unnumbered}
 
-En esta aplicación se estimará una función de consumo de tipo Keynesiano agregada (consumidor representativo), usando datos de series temporales para Estados Unidos del período 1959-2015:
+En esta aplicación se estimará una función de consumo de tipo Keynesiano agregada (para un consumidor representativo), usando datos de series temporales para España del período 1964-2022:
 
 $$C_{t} = \beta_0 + \beta_1  Y_{t} + e_{t}$$
 
-donde $C$ representa la consumo privado, e $Y$ es la renta disponible neta (después de impuestos).
+donde $C$ representa el consumo privado (gasto en consumo final de los hogares e ISFLSH, en millones de € constantes de 2015), e $Y$ es la renta (renta disponible bruta de los hogares e ISFLSH, en millones de € constantes de 2015).
 
-Desde el punto de vista técnico, el objetivo principal del ejemplo es la introducción de las principales funciones y librerías especializadas de R y Python para el análisis de series temporales.
+Desde el punto de vista técnico, el objetivo principal del ejemplo es la introducción de las principales funciones y librerías especializadas de R y Python para regresiones con series temporales.
 :::
 
 ## Código R {.unnumbered}
@@ -42,9 +42,9 @@ Desde el punto de vista técnico, el objetivo principal del ejemplo es la introd
 # Lectura de librerías
 library(tidyverse)
 # Lectura de datos
-CONS_USA <- read_delim("data/CONS_USA_ts.csv", delim = ";")
-head(CONS_USA)
-tail(CONS_USA)
+CONS_ESP <- read_csv("data/CONS_ESP_ts.csv")
+head(CONS_ESP)
+tail(CONS_ESP)
 # Asignación del formato de series temporales
 # (https://cran.r-project.org/web/views/TimeSeries.html)
 # Aquí se usará la clase básica "ts", válida para series temporales 
@@ -56,27 +56,27 @@ tail(CONS_USA)
 # Ver anexo para una demostración sobre el tidyverts, 
 # el complemento al tidyverse para el análisis de series temporales.
 #
-ts_CONS_USA <- ts(CONS_USA[,2:3], start=c(1959), end = c(2015))
+ts_CONS_ESP <- ts(CONS_ESP[,2:3], start=c(1964), end = c(2022))
 #
 # Estadística descriptiva
-summary(ts_CONS_USA)
+summary(ts_CONS_ESP)
 # Gráficas
-g1 <- ggplot(data = CONS_USA, aes(x = date)) +
+g1 <- ggplot(data = CONS_ESP, aes(x = Date)) +
   geom_line(aes(y = C)) +
-  labs(y = "Consumo privado en Estados Unidos (millones US $)", x = "Año")
+  labs(y = "Consumo privado en España (millones €)", x = "Año")
 g1
-g2 <- ggplot(data = CONS_USA, aes(x = date)) +
+g2 <- ggplot(data = CONS_ESP, aes(x = Date)) +
   geom_line(aes(y = Y)) +
-  labs(y = "Renta disponible en Estados Unidos (millones US $)", x = "Año")
+  labs(y = "Renta disponible en España (millones €)", x = "Año")
 g2
 # Diagrama de puntos con línea de regresión
-g3 <- ggplot(CONS_USA, aes(x = Y, y = C)) + 
+g3 <- ggplot(CONS_ESP, aes(x = Y, y = C)) + 
                geom_point() +  
                stat_smooth(method = lm) +  
                labs(x = "Renta disponible",y = "Consumo privado")
 g3
 # Regresión por MCO
-KEYNES_model <- lm (formula = C ~ Y, data = ts_CONS_USA)
+KEYNES_model <- lm (formula = C ~ Y, data = ts_CONS_ESP)
 summary(KEYNES_model)
 ```
 
@@ -101,25 +101,25 @@ summary(KEYNES_model)
 #
 library(fpp3) 
 # Creación del objeto tsibble
-CONS_USA_ts <-  CONS_USA[,2:3] %>%
-  mutate(Year = 1959:2015) %>%
+CONS_ESP_ts <-  CONS_ESP[,2:3] %>%
+  mutate(Year = 1964:2022) %>%
   as_tsibble(index = Year)
 # Gráficas individuales
-CONS_USA_ts %>% autoplot(C) +
-  ggtitle("Consumo privado en Estados Unidos") +
-  ylab("$ million") + xlab("Year")
-CONS_USA_ts %>% autoplot(Y) +
-  ggtitle("Renta disponible en Estados Unidos") +
-  ylab("$ million") + xlab("Year")
+CONS_ESP_ts %>% autoplot(C) +
+  ggtitle("Consumo privado en España") +
+  ylab("Millones €") + xlab("Año")
+CONS_ESP_ts %>% autoplot(Y) +
+  ggtitle("Renta disponible en España") +
+  ylab("Millones €") + xlab("Año")
 # Diagrama de puntos junto con la recta de regresión estimada
-CONS_USA_ts %>%
+CONS_ESP_ts %>%
   ggplot(aes(x=Y, y=C)) +
-  ylab("Consumo") +
-  xlab("Renta") +
+  ylab("Consumo privado") +
+  xlab("Renta disponible") +
   geom_point() +
   geom_smooth(method="lm", se=FALSE)
 # Regresión por MCO
-CONS_USA_ts %>%
+CONS_ESP_ts %>%
   model(tslm = TSLM(C ~ Y)) %>%
   report()
 ```
@@ -139,37 +139,37 @@ import statsmodels.formula.api as smf
 # Lectura de datos 
 # (al introducir la opción index_col se está asignando en este caso
 # de forma implícita un formato temporal para el resto de columnas)
-CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', index_col=0)
+CONS_ESP = pd.read_csv("data/CONS_ESP_ts.csv", index_col=0)
 # Asignación del formato temporal 
 # (https://pandas.pydata.org/docs/user_guide/timeseries.html)
 # Un análisis detallado puede encontrarse en la siguiente página web:
 # https://jakevdp.github.io/PythonDataScienceHandbook/
 # 03.11-working-with-time-series.html
-ts_CONS_USA = pd.read_csv("data/CONS_USA_ts.csv", delimiter=';', 
-parse_dates=['date'], index_col='date')
-ts_CONS_USA.head()
-ts_CONS_USA.tail()
+ts_CONS_ESP = pd.read_csv("data/CONS_ESP_ts.csv", 
+parse_dates=['Date'], index_col='Date')
+ts_CONS_ESP.head()
+ts_CONS_ESP.tail()
 # Estadística descriptiva
-ts_CONS_USA.describe()
+ts_CONS_ESP.describe()
 # Gráficas
-plt.plot(ts_CONS_USA["C"])
-plt.xlabel("Date")
-plt.ylabel("Consumo privado en Estados Unidos (mill. US $)")
+plt.plot(ts_CONS_ESP["C"])
+plt.xlabel("Año")
+plt.ylabel("Consumo privado en España (millones €)")
 plt.show()
-plt.plot(ts_CONS_USA["Y"])
-plt.xlabel("Date")
-plt.ylabel("Renta disponible en Estados Unidos (mill. US $)")
+plt.plot(ts_CONS_ESP["Y"])
+plt.xlabel("Año")
+plt.ylabel("Renta disponible en España (millones €)")
 plt.show()
 # Diagrama de puntos con línea de regresión
-reg = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
+reg = smf.ols(formula = "C ~ Y", data = ts_CONS_ESP)
 res = reg.fit()
-plt.scatter(ts_CONS_USA["Y"], ts_CONS_USA["C"], color = "black")
-plt.plot(ts_CONS_USA["Y"], res.fittedvalues, color = "blue")
+plt.scatter(ts_CONS_ESP["Y"], ts_CONS_ESP["C"], color = "black")
+plt.plot(ts_CONS_ESP["Y"], res.fittedvalues, color = "blue")
 plt.xlabel("Renta disponible")
 plt.ylabel("Consumo privado")
 plt.show()
 # Regresión por MCO
-model = smf.ols(formula = "C ~ Y", data = ts_CONS_USA)
+model = smf.ols(formula = "C ~ Y", data = ts_CONS_ESP)
 KEYNES_model = model.fit()
 print(KEYNES_model.summary())
 ```
@@ -184,8 +184,8 @@ print(KEYNES_model.summary())
 # (https://www.statsmodels.org/stable/tsa.html)
 #
 from statsmodels.tsa.api import ARDL
-endog = ts_CONS_USA[["C"]]
-exog = ts_CONS_USA[["Y"]]   # exogs = data[["X2", "X3",...]]
+endog = ts_CONS_ESP[["C"]]
+exog = ts_CONS_ESP[["Y"]]   # exogs = data[["X2", "X3",...]]
 model = ARDL(endog, 0, exog, 0) # retardos=0 equivale a mod. estático
 KEYNES_ardl_model = model.fit()
 print(KEYNES_ardl_model.summary())
