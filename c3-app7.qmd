@@ -198,7 +198,7 @@ W_test
 ::: justify
 ## Caso multivariante (especificación VAR): Evolución temporal de los tipos de cambio {.unnumbered}
 
-En esta segunda aplicación se estimará un modelo vectorial autorregresivo para explicar la evolución en el tiempo de los tipos de cambio de las principales de monedas al nivel mundial.
+En esta segunda aplicación se estimará un modelo vectorial autorregresivo para explicar la evolución en el tiempo de los tipos de cambio de tres de las principales monedas al nivel mundial.
 :::
 
 ### Código R {.unnumbered}
