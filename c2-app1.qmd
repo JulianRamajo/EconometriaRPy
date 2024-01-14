@@ -18,7 +18,7 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.1: Regresiones con datos de corte transversal  {.unnumbered}
+# Aplicación 2.1: Regresiones con datos de corte transversal {.unnumbered}
 
 ## Demanda familiar de carne {.unnumbered}
 
@@ -151,4 +151,86 @@ print("Efectos marginales: \n", lin_model_2.coef_)
 model = smf.ols(formula = "np.log(Q) ~ np.log(P) + np.log(Y)", data = DEM_CARNE)
 log_model = model.fit()
 print(log_model.summary())
+```
+
+## Anexo: regresiones Bayesianas {.unnumbered}
+
+::: justify
+Aunque en este libro sólo se utilizará en el método frecuentista para la modelización econométrica, a continuación se estimará el modelo de demanda propuesto en esta aplicación usando métodos de estadística Bayesiana.
+
+El objetivo no es mostrar los detalles teóricos de dicho enfoque, sino sólo presentar la principales librerías de R y Python que usan el método de estimación Bayesiano. Para una exposición reciente de los métodos estadísticos frecuentista y Bayesiano puede consultarse el libro de Inchausti, P. (2023): "*Statistical Modeling with R. A dual frequentist and Bayesian approach for life scientists*", Oxford University Press: <https://sites.google.com/view/statistical-modeling-with-r/home>.
+:::
+
+### Código R {.unnumbered}
+
+```{r}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+library(tidyverse)
+# Lectura de datos
+DEM_CARNE <- read_csv("data/DEM_CARNE.csv")
+# Regresión frecuentista
+linFrec_model <- lm(formula = Q ~ P + Y, data = DEM_CARNE)
+summary(linFrec_model)
+# Regresión Bayesiana
+# Enfoque STAN: https://mc-stan.org/
+# Librería brms: https://paul-buerkner.github.io/brms/
+library(brms)
+get_prior(formula=Q ~ P + Y, data=DEM_CARNE, family=gaussian)
+linBayes_model_1 <- brm(Q ~ P + Y,
+            data = DEM_CARNE, family = gaussian, iter = 2000, chains = 4)
+summary(linBayes_model_1)
+bayes_R2(linBayes_model_1)
+plot(linBayes_model_1)
+plot(conditional_effects(linBayes_model_1))
+# Enfoque INLA -> R-INLA Project: https://www.r-inla.org/
+# Librería brinla: http://julianfaraway.github.io/brinla/ 
+library(INLA)
+library(brinla)
+linBayes_model_3 <- inla(Q ~ P + Y, family = "gaussian", data = DEM_CARNE)
+summary(linBayes_model_3)
+bri.hyperpar.summary(linBayes_model_3)
+bri.fixed.plot(linBayes_model_3)
+bri.hyperpar.plot(linBayes_model_3)
+```
+
+### Código Python {.unnumbered}
+
+```{python}
+#| include: true
+#| warning: false
+#| message: false
+
+# Lectura de librerías
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import arviz as az
+import bambi as bmb
+import matplotlib.pyplot as plt
+# Config
+az.style.use("arviz-darkgrid")
+plt.rcParams["figure.dpi"] = 300
+# Lectura de datos
+DEM_CARNE = pd.read_csv("data/DEM_CARNE.csv")
+# Regresión frecuentista
+model = smf.ols(formula = "Q ~ P + Y", data = DEM_CARNE)
+linFrec = model.fit()
+print(linFrec.summary())
+# Regresión Bayesiana
+# Librería Bambi: https://bambinos.github.io/bambi/
+# Inicialización y ajuste del modelo
+model = bmb.Model("Q ~ P + Y", DEM_CARNE)
+linBayes = model.fit(draws=2000, chains=4)
+# Inspección del modelo y priors
+model
+model.plot_priors(figsize = (14, 10))
+plt.show()
+az.summary(linBayes)
+az.plot_trace(linBayes, compact=False)
+plt.show()
 ```

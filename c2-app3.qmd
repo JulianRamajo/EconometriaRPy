@@ -18,7 +18,7 @@ format:
 ```
 
 ::: justify
-# Aplicación 2.3: Estimación MCO y contrastes de hipótesis  {.unnumbered}
+# Aplicación 2.3: Estimación por MCO y contrastes de hipótesis {.unnumbered}
 
 ## Modelo CAPM para las acciones del Banco Santander {.unnumbered}
 
@@ -28,7 +28,7 @@ $$erSAN_{t} = \beta_{1} + \beta_{2}\, erIBEX_{t} + e_{t}$$
 
 donde *erSAN* representa el *exceso de rendimiento* de las acciones del Banco Santander, definido como la diferencia entre la rentabilidad de las acciones del banco y la rentabilidad de un activo libre de riesgo, en nuestro caso las letras del tesoro, y *erIBEX* es el exceso de rendimiento del mercado, representado por el índice IBEX35 de la bolsa española.
 
-Como ejercicio, se pueden repetir todos los cálculos de la aplicación para analizar las empresas Telefónica e Inditex, cuyos datos están contenidos en el fichero de usado en la aplicación.
+Como ejercicio, se pueden repetir todos los cálculos de la aplicación para analizar las empresas Telefónica e Inditex, cuyos datos están contenidos en el fichero usado en la aplicación.
 :::
 
 ## Código R {.unnumbered}
@@ -69,7 +69,7 @@ df <- df.residual(CAPM_SANTANDER) # grados de libertad
 t_c <- qt(1-alpha/2, df)
 b1 <- coef(CAPM_SANTANDER)[[1]] # estimación del parámetro beta1
 b1
-seb1 <- sqrt(vcov(CAPM_SANTANDER)[1,1]) # eest. desviación típica beta1
+seb1 <- sqrt(vcov(CAPM_SANTANDER)[1,1]) # est. desviación típica beta1
 seb1
 inf_b1 <- b1-t_c*seb1 # cota inferior
 sup_b1 <- b1+t_c*seb1 # cota superior
@@ -157,7 +157,7 @@ legend("topleft", legend=c("F","Fcr"), col=c("blue","red"), lty=c(2,3))
 alpha <- 0.05 # nivel de significación
 b2 <- coef(CAPM_SANTANDER)[[2]] # estimación del parámetro beta2
 b2
-seb2 <- sqrt(vcov(CAPM_SANTANDER)[2,2]) # eest. desviación típica beta2
+seb2 <- sqrt(vcov(CAPM_SANTANDER)[2,2]) # est. desviación típica beta2
 seb2
 c <- 1
 df <- df.residual(CAPM_SANTANDER) # grados de libertad

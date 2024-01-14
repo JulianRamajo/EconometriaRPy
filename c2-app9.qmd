@@ -82,8 +82,22 @@ summary(mod_log)
 confint(mod_log, level=.95)
 # Gráficos de efectos
 plot(allEffects(mod_log), grid=TRUE, rug=TRUE)
-# Contrastes de hipótesis:
-# test t de la hipótesis {R*beta (>)(=)(<) r}
+# Inferencia estadística: contraste de la hipótesis {beta2<=beta3}
+# Test t específico: H_0:{beta2-beta3<=0}
+# t_0 = (beta2-beta3-0)/se(beta2-beta3)
+b2 <- coef(mod_log)[[2]] # estimación del parámetro beta2
+b3 <- coef(mod_log)[[3]] # estimación del parámetro beta3
+varb2 <- vcov(mod_log)[2,2] # estim. var(beta2)
+varb3 <- vcov(mod_log)[3,3] # estim. var(beta3)
+covb2b3 <- vcov(mod_log)[2,3] # estim. cov(beta2,beta3)
+se_beta2_menos_beta3 <- sqrt(varb2 + varb3 - 2 * covb2b3)
+t_0 <- (b2-b3)/se_beta2_menos_beta3
+cat("Estadístico t0 = ", round(t_0,3))
+df <- df.residual(mod_log)
+pval = 1-pt(t_0,df)
+cat("p-valor = ", round(pval,3))
+# Test t general de la hipótesis {R*beta (>)(=)(<) r}
+# Definición del contraste
 t_test<-function(model,R,r){
   VCOV<-vcov(model)
   Rbeta<-as.numeric(t(R) %*% coef(model))
@@ -96,7 +110,7 @@ t_test<-function(model,R,r){
   list<-c(t_0, pval_unilat_izqda, pval_bilat, pval_unilat_dcha)
   return(list)
 }
-# Ejecución del contraste H_0 : {beta2 <= beta3} 
+# Ejecución del contraste 
 R <- c(0,1,-1,0)
 r <- 0
 p <- t_test(mod_log,R,r)
@@ -129,6 +143,7 @@ import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import scipy as sp
 import scipy.stats as scs
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -178,8 +193,22 @@ data = datos).fit()
 print(mod_log.summary())
 # Intervalo de confianza del 95% para los parámetros del modelo
 mod_log.conf_int()
-# Contraste de hipótesis:
-# test t de la hipótesis {R*beta (>)(=)(<) r}
+# Inferencia estadística: contraste de la hipótesis {beta2<=beta3}
+# Test t específico: H_0:{beta2-beta3<=0}
+# t_0 = (beta2-beta3-0)/se(beta2-beta3)
+b2 = mod_log.params['LifeExp'] # estimación del parámetro beta2
+b3 = mod_log.params['ExpEduc'] # estimación del parámetro beta3
+varb2 = (mod_log.bse['LifeExp'])**2 # estim. var(beta2)
+varb3 = (mod_log.bse['ExpEduc'])**2 # estim. var(beta3)
+covb2b3 = mod_log.cov_params().loc['LifeExp', 'ExpEduc'] # estim. cov(beta2,beta3)
+se_beta2_menos_beta3 = np.sqrt(varb2 + varb3 - 2 * covb2b3)
+t_0 = (b2-b3)/se_beta2_menos_beta3
+print("Estadístico t0 = ", t_0.round(3))
+df = mod_log.df_resid
+pval = 1-sp.stats.t.cdf(t_0, df)
+print("p-valor = ", pval.round(3))
+# Test t general de la hipótesis {R*beta (>)(=)(<) r}
+# Definición del contraste
 def t_test(model, R, r):
   VCOV = model.cov_params()
   b = model.params
@@ -191,7 +220,7 @@ def t_test(model, R, r):
   pval_bilat = 2*(1 - scs.t.cdf(np.abs(t_0), df))
   pval_unilat_dcha = 1 - scs.t.cdf(t_0, df)
   return(t_0, pval_unilat_izqda, pval_bilat, pval_unilat_dcha)
-# Ejecución del contraste H_0 : {beta2 <= beta3} 
+# Ejecución del contraste 
 R = np.array([0, 1, -1, 0])
 r = 0
 p = t_test(mod_log, R, r)
